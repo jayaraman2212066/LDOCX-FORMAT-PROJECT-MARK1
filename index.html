@@ -12,6 +12,133 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;800;900&family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
+
+/* ── Native Desktop App Menu Bar (Antigravity Style) ────────────────────────── */
+#desktop-menubar {
+  height: 32px;
+  background: #090c14;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  user-select: none;
+  z-index: 10000;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  color: #cbd5e1;
+  position: relative;
+  flex-shrink: 0;
+}
+.dmenu-brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 10px;
+  margin-right: 6px;
+  border-radius: 6px;
+  color: #f8fafc;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  background: rgba(245,158,11,.1);
+  border: 1px solid rgba(245,158,11,.25);
+}
+.dmenu-brand img {
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  object-fit: contain;
+}
+.dmenu-brand span {
+  background: linear-gradient(135deg, #fef08a, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.dmenu-items {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.dmenu-item {
+  position: relative;
+}
+.dmenu-btn {
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #cbd5e1;
+  font-weight: 500;
+  font-size: 12px;
+  transition: all 0.12s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.dmenu-btn:hover, .dmenu-item.active .dmenu-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+.dmenu-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 240px;
+  background: rgba(14, 16, 26, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 20px rgba(124, 58, 237, 0.2);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  z-index: 10001;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+.dmenu-item.active .dmenu-dropdown {
+  display: flex;
+  animation: dmenuFadeIn 0.12s ease;
+}
+@keyframes dmenuFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.dmenu-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #e2e8f0;
+  font-size: 12px;
+  transition: all 0.12s;
+}
+.dmenu-entry:hover {
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.35), rgba(245, 158, 11, 0.25));
+  color: #fef08a;
+}
+.dmenu-entry .hotkey {
+  color: #64748b;
+  font-size: 10.5px;
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: 18px;
+}
+.dmenu-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 5px 6px;
+}
+.dmenu-section-hdr {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold);
+  padding: 4px 12px 2px;
+  font-weight: 800;
+  font-family: 'Cinzel', serif;
+}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#070710;--surface:rgba(18,18,32,.72);--surface2:rgba(26,26,44,.68);--border:rgba(255,255,255,.12);
@@ -1011,6 +1138,93 @@ body::before{
 </head>
 <body>
 
+<!-- Native Desktop Menu Bar (Antigravity Style) -->
+<div id="desktop-menubar">
+  <div class="dmenu-brand" onclick="alert('LDOCX Living Document Studio v2.4.0 (Enterprise Reactive 3D Edition)')">
+    <img src="ldoc_logo.png" alt="LDOC">
+    <span>LDOC Studio</span>
+  </div>
+  <div class="dmenu-items">
+    <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
+      <div class="dmenu-btn">File ▾</div>
+      <div class="dmenu-dropdown">
+        <div class="dmenu-entry" onclick="location.href='creator.html'"><span>📄 New Document (+Creator)</span><span class="hotkey">Ctrl+N</span></div>
+        <div class="dmenu-entry" onclick="document.getElementById('file-input').click()"><span>📂 Open .ldocx File...</span><span class="hotkey">Ctrl+O</span></div>
+        <div class="dmenu-entry" onclick="saveDoc()"><span>💾 Save / Export .ldocx</span><span class="hotkey">Ctrl+S</span></div>
+        <div class="dmenu-divider"></div>
+        <div class="dmenu-entry" onclick="location.href='creator.html'"><span>🎨 Open Visual Creator</span><span class="hotkey">Ctrl+Shift+C</span></div>
+        <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Universal Document Converter</span></div>
+        <div class="dmenu-entry" onclick="switchTab('templates')"><span>🌟 Template Gallery</span></div>
+        <div class="dmenu-divider"></div>
+        <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.pdf')"><span>📕 Architecture &amp; Security Spec (PDF)</span></div>
+        <div class="dmenu-entry" onclick="window.close()"><span>✕ Exit Studio</span><span class="hotkey">Alt+F4</span></div>
+      </div>
+    </div>
+
+    <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
+      <div class="dmenu-btn">Edit ▾</div>
+      <div class="dmenu-dropdown">
+        <div class="dmenu-entry" onclick="toggleFreeTextTool()"><span>✍️ Add In-Canvas Free Text</span><span class="hotkey">Ctrl+T</span></div>
+        <div class="dmenu-entry" onclick="switchTab('editor')"><span>🛠️ Open In-Place Block Editor</span></div>
+        <div class="dmenu-divider"></div>
+        <div class="dmenu-entry" onclick="prevSlide()"><span>◀ Previous Slide</span><span class="hotkey">Left</span></div>
+        <div class="dmenu-entry" onclick="nextSlide()"><span>▶ Next Slide</span><span class="hotkey">Right</span></div>
+      </div>
+    </div>
+
+    <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
+      <div class="dmenu-btn">View ▾</div>
+      <div class="dmenu-dropdown">
+        <div class="dmenu-section-hdr">Presentation Artifact Modes</div>
+        <div class="dmenu-entry" onclick="setPresentationMode('paper')"><span>📜 Enchanted Tactile Paper</span></div>
+        <div class="dmenu-entry" onclick="setPresentationMode('glass')"><span>💎 Frosted Glass Cards</span></div>
+        <div class="dmenu-entry" onclick="setPresentationMode('deck')"><span>🎬 Keynote Slide Deck</span></div>
+        <div class="dmenu-entry" onclick="setPresentationMode('gazette')"><span>📰 Living Editorial Gazette</span></div>
+        <div class="dmenu-divider"></div>
+        <div class="dmenu-entry" onclick="toggle3DPerspectiveTilt()"><span>📐 Toggle 3D Perspective Tilt</span><span class="hotkey">Ctrl+M</span></div>
+        <div class="dmenu-entry" onclick="toggleLivingMotion()"><span>🪄 Toggle Living Animations</span></div>
+        <div class="dmenu-entry" onclick="if(document.fullscreenElement){document.exitFullscreen()}else{document.documentElement.requestFullscreen()}"><span>⛶ Toggle Fullscreen</span><span class="hotkey">F11</span></div>
+      </div>
+    </div>
+
+    <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
+      <div class="dmenu-btn">FX &amp; Magic ▾</div>
+      <div class="dmenu-dropdown">
+        <div class="dmenu-section-hdr">Dynamic Canvas Visuals</div>
+        <div class="dmenu-entry" onclick="setVisualFx('water')"><span>🌊 Fluid Water Waves</span></div>
+        <div class="dmenu-entry" onclick="setVisualFx('stardust')"><span>✨ Cyber Stardust</span></div>
+        <div class="dmenu-entry" onclick="setVisualFx('warp')"><span>🏎️ Hyperspace Warp</span></div>
+        <div class="dmenu-entry" onclick="setVisualFx('embers')"><span>⚡ Golden Magick Embers</span></div>
+        <div class="dmenu-entry" onclick="setVisualFx('shards')"><span>💎 Crystal Diamond Shards</span></div>
+        <div class="dmenu-divider"></div>
+        <div class="dmenu-entry" onclick="toggleFxWizard()"><span>⚜ Living Enhancement Wizard</span><span class="hotkey">Ctrl+W</span></div>
+        <div class="dmenu-entry" onclick="GlobalAudio.toggle()"><span>🎵 Atmospheric Soundtrack</span><span class="hotkey">Ctrl+Shift+M</span></div>
+      </div>
+    </div>
+
+    <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
+      <div class="dmenu-btn">Window ▾</div>
+      <div class="dmenu-dropdown">
+        <div class="dmenu-entry" onclick="location.reload()"><span>🔄 Reload Window</span><span class="hotkey">Ctrl+R</span></div>
+        <div class="dmenu-entry" onclick="toggleAiHelper()"><span>🧠 AI Document Copilot</span><span class="hotkey">Ctrl+Shift+H</span></div>
+        <div class="dmenu-entry" onclick="togglePagesPanel()"><span>📑 Pages Overview Panel</span></div>
+      </div>
+    </div>
+
+    <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
+      <div class="dmenu-btn">Help ▾</div>
+      <div class="dmenu-dropdown">
+        <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.pdf')"><span>📕 Architecture &amp; Security Guide (PDF)</span></div>
+        <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md')"><span>📄 Technical Specification (Markdown)</span></div>
+        <div class="dmenu-divider"></div>
+        <div class="dmenu-entry" onclick="window.open('https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1')"><span>🌐 GitHub Repository</span></div>
+        <div class="dmenu-entry" onclick="alert('LDOCX Living Document Studio\nVersion 2.4.0 (Enterprise Reactive 3D Edition)\nBuilt with Three.js WebGL & Dynamic Tactile Physics')"><span>ℹ️ About LDOC Studio</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div id="toolbar">
   <div style="display:inline-flex;align-items:center;gap:9px;margin-right:6px">
     <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 12px rgba(245,158,11,.45)">
@@ -1054,7 +1268,7 @@ body::before{
   <input type="file" id="file-input" accept=".ldocx,.ldoc">
 </div>
 
-  <button class="toolbar-btn primary" id="ai-helper-toggle" onclick="toggleAiHelper()"><img src="ldoc_logo.png" alt="LDOC AI" style="width:18px;height:18px;object-fit:contain;border-radius:4px" /> AI Helper</button>
+  <button class="toolbar-btn primary" id="ai-helper-toggle" onclick="toggleAiHelper()"><img src="ai-brain.png" alt="AI Brain" style="width:18px;height:18px;object-fit:contain;border-radius:4px" /> AI Helper</button>
 
 <div id="main">
   <div id="viewer-panel" style="display:flex;flex:1;overflow:hidden;position:relative">
@@ -1272,7 +1486,7 @@ body::before{
   <!-- Header -->
   <div class="ai-helper-header">
     <div class="ai-helper-header-left">
-      <img class="ai-helper-brand" src="ldoc_logo.png" alt="LDOC AI" style="width:24px;height:24px;border-radius:6px;object-fit:contain" />
+      <img class="ai-helper-brand" src="ai-brain.png" alt="AI Brain" style="width:24px;height:24px;border-radius:6px;object-fit:contain" />
       <div>
         <strong id="ai-panel-title">LDOCX AI Assistant</strong>
         <span id="ai-panel-subtitle">Document Intelligence &amp; Live Sync</span>
@@ -5682,6 +5896,18 @@ async function buildAndSave() {
     btn.disabled = false;
   }
 }
+
+// ── Desktop Menu Bar Dropdown Engine ──────────────────────────────────────────
+function toggleDesktopMenu(el, evt) {
+  if (evt) evt.stopPropagation();
+  const wasActive = el.classList.contains('active');
+  document.querySelectorAll('.dmenu-item').forEach(m => m.classList.remove('active'));
+  if (!wasActive) el.classList.add('active');
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.dmenu-item').forEach(m => m.classList.remove('active'));
+});
+
 </script>
 </body>
 </html>
