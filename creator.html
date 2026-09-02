@@ -4,25 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LDOC Creator</title>
+<link rel="icon" type="image/png" href="ldoc_logo.png">
+<link rel="shortcut icon" href="app.ico">
+<link rel="apple-touch-icon" href="ldoc_logo.png">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0f0f17;--s1:#16161f;--s2:#1e1e2e;--border:#2a2a3e;
+  --bg:#080812;--s1:rgba(18,18,30,.76);--s2:rgba(26,26,44,.70);--border:rgba(255,255,255,.12);
   --accent:#a78bfa;--accent2:#60a5fa;--green:#34d399;--red:#f87171;
   --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
   --r:12px;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:#080812 url('ldoc_background_image.png') no-repeat center center fixed;
+  background-size:cover;
+  color:var(--text);
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  position:relative;
+}
+body::before{
+  content:'';
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(circle at 50% 15%,rgba(10,10,24,0.60) 0%,rgba(4,4,10,0.85) 100%);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  pointer-events:none;
+  z-index:0;
+}
 
 /* toolbar */
-#tb{background:rgba(15,15,23,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;gap:12px;padding:0 20px;flex-shrink:0;z-index:100}
+#tb{position:relative;z-index:100;background:rgba(12,12,24,.75);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border-bottom:1px solid rgba(255,255,255,.12);height:52px;display:flex;align-items:center;gap:12px;padding:0 20px;flex-shrink:0}
 .logo{font-weight:800;font-size:15px;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px}
 .nav-link{color:var(--text2);font-size:13px;font-weight:600;text-decoration:none;padding:5px 12px;border-radius:7px;border:1px solid transparent;transition:all .15s}
 .nav-link:hover{border-color:var(--border);color:var(--text)}
 .nav-link.active{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.3);color:var(--accent)}
 .spacer{flex:1}
-.btn{background:var(--s2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-.btn:hover{background:var(--border)}
+.btn{background:var(--s2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;backdrop-filter:blur(8px)}
+.btn:hover{background:rgba(255,255,255,.14)}
 .btn.primary{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none}
 .btn.primary:hover{opacity:.9}
 .btn.green{background:linear-gradient(135deg,#059669,#0284c7);color:#fff;border:none}
@@ -30,10 +53,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn:disabled{opacity:.4;cursor:default}
 
 /* layout */
-#main{display:flex;flex:1;overflow:hidden}
+#main{position:relative;z-index:1;display:flex;flex:1;overflow:hidden}
 
 /* left panel - doc meta + pages */
-#left{width:260px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+#left{width:260px;background:rgba(14,14,26,.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-right:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
 .panel-hdr{padding:12px 14px 8px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .panel-hdr .btn{padding:2px 8px;font-size:11px}
 
@@ -173,13 +196,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 /* ── Live Slide Presentation Preview Pane (Split View) ─────────────────────── */
 #creator-preview-pane{
   width:0;min-width:0;overflow:hidden;
-  background:radial-gradient(circle at top center,#151528 0%,#090910 100%);
-  border-left:1.5px solid var(--border);transition:width .3s cubic-bezier(.4,0,.2,1);
+  background:rgba(10,10,22,.78);
+  backdrop-filter:blur(24px) saturate(140%);
+  -webkit-backdrop-filter:blur(24px) saturate(140%);
+  border-left:1.5px solid rgba(255,255,255,.12);transition:width .3s cubic-bezier(.4,0,.2,1);
   display:flex;flex-direction:column;position:relative;z-index:2;flex-shrink:0;
 }
 #creator-preview-pane.open{width:clamp(360px,36vw,620px)}
 #creator-preview-pane .preview-header{
-  padding:10px 16px;background:rgba(10,10,18,.96);border-bottom:1px solid var(--border);
+  padding:10px 16px;background:rgba(10,10,18,.75);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.1);
   display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:800;
   text-transform:uppercase;letter-spacing:1px;color:var(--accent);flex-shrink:0;
 }
@@ -320,7 +345,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <body>
 
 <div id="tb">
-  <span class="logo">◈ LDOC</span>
+  <div style="display:inline-flex;align-items:center;gap:8px;margin-right:6px">
+    <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 10px rgba(167,139,250,.45)">
+    <span class="logo">◈ LDOC</span>
+  </div>
   <a href="./" class="nav-link">Studio</a>
   <a href="./creator.html" class="nav-link active">Creator</a>
   <a href="./?tab=converter" class="nav-link">⚡ Converter</a>
@@ -472,7 +500,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div id="creator-preview-pane" class="open">
     <div class="preview-header">
       <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:14px">👁️</span>
+        <img src="ldoc_logo.png" alt="LDOC" style="width:18px;height:18px;border-radius:4px;object-fit:contain;box-shadow:0 0 6px rgba(167,139,250,.4)">
         <span style="letter-spacing:1px">Slide Presentation Preview</span>
         <span id="creator-preview-badge" style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(167,139,250,.2);color:var(--accent);margin-left:4px">Slide 1</span>
       </div>
@@ -635,6 +663,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div id="ldoc-loader-overlay">
   <div id="ldoc-loader-container">
     <div class="ldoc-logo-loader">
+      <img src="ldoc_logo.png" alt="LDOC Logo" style="width:58px;height:58px;border-radius:14px;box-shadow:0 0 30px rgba(167,139,250,.6);margin-bottom:12px;object-fit:contain">
       <div class="ldoc-gems-row">
         <span class="ldoc-gem-symbol">◈</span>
         <span class="ldoc-gem-symbol">◈</span>
@@ -812,6 +841,7 @@ function escapeHtml(str) {
 function ldocLoaderHtml(caption = 'LDOC STUDIO', sub = 'Processing Living Document…') {
   return `
     <div class="ldoc-logo-loader">
+      <img src="ldoc_logo.png" alt="LDOC Logo" style="width:58px;height:58px;border-radius:14px;box-shadow:0 0 30px rgba(167,139,250,.6);margin-bottom:12px;object-fit:contain">
       <div class="ldoc-gems-row">
         <span class="ldoc-gem-symbol">◈</span>
         <span class="ldoc-gem-symbol">◈</span>

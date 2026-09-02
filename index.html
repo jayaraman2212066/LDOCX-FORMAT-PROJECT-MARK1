@@ -4,22 +4,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>LDOCX Living Document Studio</title>
+<link rel="icon" type="image/png" href="ldoc_logo.png">
+<link rel="shortcut icon" href="app.ico">
+<link rel="apple-touch-icon" href="ldoc_logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0a12;--surface:#12121e;--surface2:#1a1a2c;--border:#2e2e48;
+  --bg:#070710;--surface:rgba(18,18,32,.72);--surface2:rgba(26,26,44,.68);--border:rgba(255,255,255,.12);
   --accent:#a78bfa;--accent2:#60a5fa;--accent3:#34d399;--gold:#f59e0b;--gold-glow:rgba(245,158,11,.35);
   --text:#f1f5f9;--text2:#cbd5e1;--text3:#94a3b8;
   --radius:18px;--shadow:0 12px 48px rgba(0,0,0,.7);
 }
-body{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+body{
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#070710 url('ldoc_background_image.png') no-repeat center center fixed;
+  background-size:cover;
+  color:var(--text);
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  position:relative;
+}
+body::before{
+  content:'';
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(circle at 50% 15%,rgba(10,10,24,0.60) 0%,rgba(4,4,10,0.85) 100%);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  pointer-events:none;
+  z-index:0;
+}
 
 /* ── Top Navigation Toolbar ─────────────────────────────────────────────────── */
-#toolbar{background:rgba(10,10,18,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 22px;height:54px;display:flex;align-items:center;gap:12px;flex-shrink:0;z-index:100}
-.logo{font-family:'Cinzel',serif;font-weight:900;font-size:18px;background:linear-gradient(135deg,#f59e0b,#c084fc,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;margin-right:4px}
+#toolbar{position:relative;z-index:100;background:rgba(10,10,20,.75);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border-bottom:1px solid rgba(255,255,255,.12);padding:0 22px;height:54px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.logo{font-family:'Cinzel',serif;font-weight:900;font-size:17px;background:linear-gradient(135deg,#f59e0b,#c084fc,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
 .doc-title{font-family:'Cinzel',serif;font-size:13px;color:var(--text2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.5px}
 #validation-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;display:none}
 #validation-badge.valid{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
@@ -27,19 +50,26 @@ body{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif
 .tab-btn{background:transparent;border:none;color:var(--text3);font-size:13px;font-weight:700;padding:6px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;height:54px;letter-spacing:.3px}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-btn:hover{color:var(--text)}
-.toolbar-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
-.toolbar-btn:hover{background:var(--border);border-color:var(--gold);color:var(--gold)}
+.toolbar-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;backdrop-filter:blur(10px)}
+.toolbar-btn:hover{background:rgba(255,255,255,.14);border-color:var(--gold);color:var(--gold)}
 .toolbar-btn.primary{background:linear-gradient(135deg,#f59e0b,#7c3aed);color:#fff;border:none;box-shadow:0 4px 14px rgba(245,158,11,.35)}
 .toolbar-btn.primary:hover{opacity:.95;transform:translateY(-1px);box-shadow:0 6px 18px rgba(245,158,11,.5)}
 #file-input{display:none}
 
 /* ── Main Layout ────────────────────────────────────────────────────────────── */
-#main{display:flex;flex:1;overflow:hidden;position:relative}
+#main{position:relative;z-index:1;display:flex;flex:1;overflow:hidden}
 #viewer-panel{display:flex;flex:1;overflow:hidden}
-#content-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(circle at top center,#151528 0%,#090910 100%)}
+#content-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:rgba(10,10,20,.60);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 #page-canvas{flex:1;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;min-height:0;padding:24px 0 60px;transition:opacity .2s}
 #page-canvas::-webkit-scrollbar{width:6px}
 #page-canvas::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ── Slide App Header Bar (Claude/Gemini Desktop Style) ─────────────────────── */
+.slide-app-header{background:rgba(12,12,24,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);padding:7px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:10}
+.slide-app-brand{display:inline-flex;align-items:center;gap:8px}
+.slide-app-brand img{width:18px;height:18px;border-radius:4px;object-fit:contain;box-shadow:0 0 8px rgba(245,158,11,.35)}
+.slide-app-brand .brand-title{font-size:11px;font-weight:800;letter-spacing:1px;color:var(--text2);text-transform:uppercase}
+.slide-app-brand .live-indicator{font-size:9px;font-weight:800;padding:2px 7px;border-radius:8px;background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3);letter-spacing:.5px}
 
 /* ── Drop Zone & Loading ────────────────────────────────────────────────────── */
 #drop-zone{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--text3);padding:40px;cursor:pointer;transition:background .2s}
@@ -837,7 +867,10 @@ body{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif
 <body>
 
 <div id="toolbar">
-  <span class="logo">&#9672; LDOC</span>
+  <div style="display:inline-flex;align-items:center;gap:9px;margin-right:6px">
+    <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 12px rgba(245,158,11,.45)">
+    <span class="logo">&#9672; LDOC</span>
+  </div>
   <button class="tab-btn active" id="tab-viewer" onclick="switchTab('viewer')">Viewer</button>
   <button class="tab-btn" id="tab-editor" onclick="switchTab('editor')">Editor</button>
   <button class="tab-btn" id="tab-converter" onclick="switchTab('converter')">⚡ Converter</button>
@@ -882,6 +915,17 @@ body{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif
   <div id="viewer-panel" style="display:flex;flex:1;overflow:hidden;position:relative">
     <canvas id="fx-bg-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
     <div id="content-area" style="position:relative;z-index:1">
+      <div class="slide-app-header" id="slide-top-bar">
+        <div class="slide-app-brand">
+          <img src="ldoc_logo.png" alt="LDOC Logo">
+          <span class="brand-title">LDOC Living Document Presentation</span>
+          <span class="live-indicator">ACTIVE</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span id="slide-meta-info" style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace"></span>
+          <button class="toolbar-btn" style="padding:2px 10px;font-size:11px" onclick="toggleFxWizard()">⚜ FX Wizard</button>
+        </div>
+      </div>
       <div id="drop-zone">
         <div class="drop-icon">&#128196;</div>
         <h2>Open an LDOCX Document</h2>
@@ -889,6 +933,7 @@ body{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif
       </div>
       <div id="loading">
         <div class="ldoc-logo-loader">
+          <img src="ldoc_logo.png" alt="LDOC Logo" style="width:58px;height:58px;border-radius:14px;box-shadow:0 0 30px rgba(245,158,11,.6);margin-bottom:12px;object-fit:contain">
           <div class="ldoc-gems-row">
             <span class="ldoc-gem-symbol">◈</span>
             <span class="ldoc-gem-symbol">◈</span>
@@ -2223,6 +2268,8 @@ async function openDoc(id){
 
   const pc=doc.manifest.page_count;
   document.getElementById('doc-title').textContent=doc.manifest.title+(pc>1?' \u2014 '+pc+' pages':'');
+  const metaInfo = document.getElementById('slide-meta-info');
+  if(metaInfo) metaInfo.textContent = `${doc.manifest.title} • ${pc} Page${pc!==1?'s':''}`;
   const badge=document.getElementById('validation-badge');badge.style.display='inline';
   if(doc.validation.valid){badge.textContent='\u2713 Valid';badge.className='valid';}
   else{badge.textContent='\u2717 '+doc.validation.fatal_count+' error(s)';badge.className='invalid';}
