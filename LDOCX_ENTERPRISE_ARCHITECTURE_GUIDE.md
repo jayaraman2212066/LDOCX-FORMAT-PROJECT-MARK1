@@ -1,7 +1,7 @@
 # LDOCX Living Document Format: Enterprise Architecture, Security & 3D Engineering Specification
 
 > **A Comprehensive Technical Blueprint for Senior Developers, Security Engineers, and 3D Artists**  
-> *Version 2.4.0 — Specification & Implementation Manual*
+> *Version 2.5.0 — Specification & Implementation Manual*
 
 ---
 
@@ -244,7 +244,7 @@ The project runs as a lightweight, zero-dependency stack:
 - `GET /documents/:id/pages/:num/content` - Returns parsed AST JSON for slide `:num`.
 - `GET /documents/:id/assets/:assetId` - Streams binary asset with caching headers.
 - `POST /api/convert` - Ingests Markdown, plaintext, or `.docx` and packages a valid `.ldocx` archive.
-- `POST /api/validate` - Validates AST schema against schema version 2.4.0.
+- `POST /api/validate` - Validates AST schema against schema version 2.5.0.
 
 ---
 
@@ -271,7 +271,15 @@ The project runs as a lightweight, zero-dependency stack:
 | * Zip Slip Traversal  | * DOM XSS Injection  | * Loopback Binding |
 | * Malicious SVG/XML   | * LocalStorage Leak  | * CORS Origin Lock |
 | * Decompression Bomb  | * Parent Frame Theft | * CSRF Protection  |
+| * Oversized Assets    | * Rich-Text Paste    | * PDF Export Route |
 +-----------------------+----------------------+--------------------+
+
+### 3.1.1 Extension Pack v2.5.0 Attack Surface Additions
+| Vector | Threat | Mitigation |
+|---|---|---|
+| **Rich-Text Paste** | DOM XSS via clipboard HTML (Word / Google Docs paste) | Strict allow-list tag and attribute sanitizer ahead of existing `escapeHtml()` stage; never raw clipboard `innerHTML`. |
+| **Image / 3D Upload** | Decompression bomb, oversized texture, malformed GLTF | Enforce size ceilings (max 10MB texture, <60k triangles) in AST parser and `/api/convert`. |
+| **`POST /api/export/pdf`** | Unauthorized PDF generation / loopback abuse | Reuses existing Origin, Referer, and loopback verification (`127.0.0.1:8080`). |
 ```
 
 ---

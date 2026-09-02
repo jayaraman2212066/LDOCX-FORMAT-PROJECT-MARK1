@@ -931,6 +931,419 @@ body::before{
   cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:all .15s;
 }
 .ldoc-btn-minimal:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4)}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   EXTENSION PACK v2.5.0: UNIVERSAL EDITOR SUITE (DOCX / PDF / PHOTO / 3D)
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Module E: Draggable Frosted Glass Pop-Up Shell */
+.ldoc-popup-shell {
+  position: fixed;
+  z-index: 8000;
+  background: rgba(14, 16, 28, 0.96);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.85), 0 0 35px rgba(124, 58, 237, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.98);
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #f1f5f9;
+}
+.ldoc-popup-shell.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+.ldoc-popup-shell.heavy-panel {
+  width: clamp(740px, 72vw, 1140px);
+  height: clamp(540px, 78vh, 840px);
+  z-index: 8500;
+}
+.ldoc-popup-shell.light-panel {
+  min-width: 320px;
+  max-width: 90vw;
+  z-index: 8000;
+}
+.shell-header {
+  padding: 10px 16px;
+  background: rgba(22, 24, 38, 0.94);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: grab;
+  user-select: none;
+  flex-shrink: 0;
+}
+.shell-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fef08a;
+  letter-spacing: 0.5px;
+}
+.shell-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.shell-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.shell-close-btn:hover {
+  background: rgba(248, 113, 113, 0.25);
+  color: #f87171;
+  border-color: #f87171;
+}
+.shell-body {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Module A: Floating Format Popover */
+#ldoc-format-popover {
+  position: absolute;
+  z-index: 9000;
+  background: rgba(14, 16, 28, 0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1.5px solid var(--gold);
+  border-radius: 12px;
+  padding: 5px 8px;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.85), 0 0 20px rgba(245,158,11,0.25);
+  user-select: none;
+  animation: popoverFadeIn 0.15s ease;
+}
+@keyframes popoverFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fmt-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #f1f5f9;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.fmt-btn:hover, .fmt-btn.active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(245, 158, 11, 0.3));
+  border-color: var(--gold);
+  color: #fef08a;
+}
+.fmt-select {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #f1f5f9;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 11px;
+  cursor: pointer;
+  outline: none;
+}
+.fmt-select option { background: #12121e; color: #fff; }
+.fmt-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255,255,255,0.12);
+  margin: 0 2px;
+}
+
+/* Rich Text & Table Pro Styles */
+.ldoc-rich-text {
+  line-height: 1.65;
+  color: inherit;
+  outline: none;
+}
+.ldoc-rich-text:focus {
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.4);
+  border-radius: 6px;
+}
+.table-pro-wrap {
+  margin: 18px 0;
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(14, 16, 28, 0.7);
+}
+.table-pro {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.table-pro th, .table-pro td {
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 8px 12px;
+  outline: none;
+  min-width: 60px;
+}
+.table-pro th {
+  background: rgba(245, 158, 11, 0.12);
+  font-weight: 800;
+  color: #fef08a;
+  font-family: 'Cinzel', serif;
+}
+.table-pro-controls {
+  display: flex;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(20, 20, 36, 0.9);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.table-pro-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text2);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.table-pro-btn:hover { color: #fff; border-color: var(--gold); }
+
+/* Module B: PDF / Acrobat-Style Annotation Layer */
+#annotate-toolbar {
+  position: fixed;
+  top: 96px;
+  right: 24px;
+  z-index: 7500;
+  background: rgba(14, 16, 28, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1.5px solid var(--accent);
+  border-radius: 30px;
+  padding: 4px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.8), 0 0 20px rgba(167,139,250,0.3);
+  user-select: none;
+}
+.annot-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #f1f5f9;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.annot-btn:hover, .annot-btn.active {
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+  border-color: #a78bfa;
+  color: #fff;
+  transform: translateY(-1px);
+}
+.annotation-canvas-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 45;
+}
+.annotation-canvas-overlay.drawing-active {
+  pointer-events: auto;
+  cursor: crosshair;
+}
+.sticky-note-card {
+  position: absolute;
+  width: 200px;
+  background: #fef08a;
+  color: #854d0e;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  padding: 8px;
+  z-index: 50;
+  font-size: 12px;
+  cursor: move;
+  border: 1px solid #facc15;
+}
+.sticky-note-hdr {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 800;
+}
+.sticky-note-body {
+  width: 100%;
+  height: 60px;
+  background: transparent;
+  border: none;
+  resize: none;
+  outline: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+/* Module C: Photo Studio ("Photoshop Area") */
+.photo-studio-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+}
+.photo-canvas-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #070912;
+  position: relative;
+  overflow: hidden;
+}
+.photo-canvas-area canvas {
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 0 16px 50px rgba(0,0,0,0.85);
+  border-radius: 8px;
+}
+.photo-controls-sidebar {
+  width: 320px;
+  background: rgba(18, 20, 34, 0.98);
+  border-left: 1px solid rgba(255,255,255,0.1);
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.photo-ctrl-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.photo-ctrl-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--gold);
+  display: flex;
+  justify-content: space-between;
+}
+.photo-slider {
+  width: 100%;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+
+/* Module D: 3D Scene Editor (Unity-Style Three-Pane) */
+.scene-editor-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+}
+.scene-hierarchy-pane {
+  width: 220px;
+  background: rgba(16, 18, 30, 0.96);
+  border-right: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.scene-viewport-pane {
+  flex: 1;
+  background: #050710;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.scene-inspector-pane {
+  width: 280px;
+  background: rgba(16, 18, 30, 0.96);
+  border-left: 1px solid rgba(255,255,255,0.1);
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.scene-tree-item {
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.12s;
+  border-left: 3px solid transparent;
+}
+.scene-tree-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.scene-tree-item.selected {
+  background: rgba(167, 139, 250, 0.15);
+  border-left-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+.scene-budget-hud {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(10, 12, 22, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  pointer-events: none;
+  font-family: 'JetBrains Mono', monospace;
+}
+.budget-badge {
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.budget-green { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+.budget-amber { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.budget-red { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+
 </style>
 </head>
 <body class="mode-presentation">
@@ -2157,7 +2570,28 @@ function renderCreatorSlideBlock(b, container) {
       h.style.cssText = 'font-size:15px;font-weight:700;color:#fff;margin:4px 0';
     }
     container.appendChild(h);
-  } else if (t === 'paragraph') {
+    } else if (t === 'rich_text') {
+    const p = document.createElement('div');
+    p.className = 'ldoc-rich-text ldoc-in-place-editable';
+    p.style.cssText = 'font-size:13.5px;line-height:1.7;color:var(--text);margin:6px 0;outline:none';
+    p.innerHTML = window.sanitizeClipboardHtml ? window.sanitizeClipboardHtml(b.text || '') : (b.text || '');
+    container.appendChild(p);
+  } else if (t === 'table_pro') {
+    const wrap = document.createElement('div');
+    wrap.className = 'table-pro-wrap';
+    wrap.innerHTML = b.html || '<table class="table-pro"><thead><tr><th>Header 1</th><th>Header 2</th></tr></thead><tbody><tr><td>Data 1</td><td>Data 2</td></tr></tbody></table>';
+    container.appendChild(wrap);
+  } else if (t === 'comment_thread') {
+    const c = document.createElement('div');
+    c.className = 'ldoc-comment-thread';
+    c.innerHTML = `<div class="comment-hdr"><span>💬 ${escapeHtml(b.author || 'Reviewer')}</span></div><div class="comment-body">${escapeHtml(b.text || '')}</div>`;
+    container.appendChild(c);
+  } else if (t === 'form_field') {
+    const f = document.createElement('div');
+    f.className = 'ldoc-form-field-card';
+    f.innerHTML = `<label style="font-size:11px;font-weight:700;color:var(--gold);display:block;margin-bottom:4px">${escapeHtml(b.label || 'Field')}</label><input type="${b.fieldType || 'text'}" class="btn" style="width:100%;padding:7px 10px" placeholder="Enter ${escapeHtml(b.label || 'value')}...">`;
+    container.appendChild(f);
+} else if (t === 'paragraph') {
     const p = document.createElement('p');
     p.style.cssText = 'font-size:13.5px;line-height:1.7;color:var(--text);margin:4px 0';
     p.textContent = b.text || '';
@@ -3387,8 +3821,13 @@ updateCreatorLivePreview();
   </div>
 
   <div class="elements-grid-category">
-    <div class="elements-category-title">📝 Core Typography &amp; Content</div>
+    <div class="elements-category-title">📝 Core Typography &amp; Content (Docx / PDF Suite)</div>
     <div class="elements-button-grid">
+      <button class="add-btn" onclick="addBlockAndClose('rich_text')">📝 Rich Text (Docx)</button>
+      <button class="add-btn" onclick="addBlockAndClose('table_pro')">📊 Table Pro (Excel/Acrobat)</button>
+      <button class="add-btn" onclick="addBlockAndClose('comment_thread')">💬 Review Comment</button>
+      <button class="add-btn" onclick="addBlockAndClose('form_field')">✍️ PDF Form / Signature</button>
+
       <button class="add-btn" onclick="addBlockAndClose('heading')">🏷️ H1–H6 Heading</button>
       <button class="add-btn" onclick="addBlockAndClose('paragraph')">📝 Paragraph Text</button>
       <button class="add-btn" onclick="addBlockAndClose('quote')">📜 Callout Quote</button>
