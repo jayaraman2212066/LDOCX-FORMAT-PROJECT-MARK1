@@ -10,7 +10,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;800;900&family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -71,6 +71,154 @@ body::before{
 .slide-app-brand img{width:18px;height:18px;border-radius:4px;object-fit:contain;box-shadow:0 0 8px rgba(245,158,11,.35)}
 .slide-app-brand .brand-title{font-size:11px;font-weight:800;letter-spacing:1px;color:var(--text2);text-transform:uppercase}
 .slide-app-brand .live-indicator{font-size:9px;font-weight:800;padding:2px 7px;border-radius:8px;background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3);letter-spacing:.5px}
+
+/* ── 🎭 Presentation Modes Selector Pllls ──────────────────────────────────── */
+.pres-mode-selector{display:inline-flex;align-items:center;background:rgba(0,0,0,.45);padding:3px;border-radius:24px;border:1px solid rgba(255,255,255,.1);gap:3px}
+.mode-pill-btn{background:transparent;border:none;color:var(--text3);font-size:11px;font-weight:700;padding:4px 11px;border-radius:18px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.mode-pill-btn:hover{color:var(--text);background:rgba(255,255,255,.08)}
+.mode-pill-btn.active{background:linear-gradient(135deg,#f59e0b,#c084fc);color:#0f0f1b;font-weight:800;box-shadow:0 2px 10px rgba(245,158,11,.4)}
+
+/* ── 📜 Enchanted Tactile Paper Mode (Human Hand & Real Paper Reaction) ─────── */
+.pres-mode-paper .pres-page{
+  background:radial-gradient(ellipse at 30% 20%,#fcf9f2 0%,#f5eedc 60%,#ede0c6 100%) !important;
+  border:1.5px solid rgba(180,140,90,.45) !important;
+  border-radius:14px !important;
+  box-shadow:0 18px 55px rgba(0,0,0,.45),0 4px 14px rgba(0,0,0,.22),inset 0 0 100px rgba(180,140,80,.14) !important;
+  color:#1c1917 !important;
+  position:relative;
+  transform-origin:center center;
+  transition:transform .16s cubic-bezier(.16,1,.3,1),box-shadow .2s ease;
+}
+.pres-mode-paper .pres-page::before{display:none !important}
+.pres-mode-paper .pres-page.paper-lifted{
+  transform:perspective(1200px) rotateX(var(--paper-rx,0deg)) rotateY(var(--paper-ry,0deg)) translateZ(14px) scale(1.012) !important;
+  box-shadow:var(--paper-shadow,0 28px 75px rgba(0,0,0,.55)),inset 0 0 120px rgba(180,140,80,.2) !important;
+}
+.pres-mode-paper .pres-page::after{
+  content:'';position:absolute;bottom:0;right:0;width:52px;height:52px;
+  background:linear-gradient(135deg,transparent 50%,rgba(190,150,100,.35) 50%,rgba(255,255,255,.85) 100%);
+  box-shadow:-4px -4px 12px rgba(0,0,0,.15);border-bottom-right-radius:14px;pointer-events:none;
+}
+.pres-mode-paper .pres-section h1{
+  background:linear-gradient(135deg,#78350f,#9a3412) !important;
+  -webkit-background-clip:text !important;-webkit-text-fill-color:transparent !important;
+  text-shadow:0 1px 1px rgba(255,255,255,.9) !important;
+}
+.pres-mode-paper .pres-section h2{
+  color:#292524 !important;border-bottom:1.5px solid rgba(180,140,90,.4) !important;
+}
+.pres-mode-paper .pres-section h2::before{color:#b45309 !important}
+.pres-mode-paper .pres-section h3{color:#854d0e !important}
+.pres-mode-paper .pres-section p{
+  color:#292524 !important;font-family:'Playfair Display',Georgia,serif !important;font-size:17px !important;line-height:1.9 !important;
+}
+.pres-mode-paper .pres-section li{color:#44403c !important}
+.pres-mode-paper .pres-section li::before{color:#b45309 !important}
+.pres-mode-paper .pres-section blockquote{
+  background:rgba(245,235,215,.88) !important;border-left:4px solid #b45309 !important;color:#1c1917 !important;
+  box-shadow:0 4px 14px rgba(0,0,0,.06) !important;
+}
+.pres-mode-paper .pres-hero{border-bottom:2px solid rgba(180,140,90,.3) !important}
+.pres-mode-paper .pres-hero h1{color:#fef3c7 !important}
+.pres-mode-paper .pres-section pre{
+  background:#f8f3e6 !important;border-color:rgba(180,140,90,.4) !important;color:#292524 !important;
+}
+.pres-mode-paper .pres-section code{color:#78350f !important}
+
+/* ── 💎 Frosted Glass Holographic Cards Mode ───────────────────────────────── */
+.pres-mode-glass .pres-page{
+  background:rgba(14,14,28,.65) !important;
+  backdrop-filter:blur(28px) saturate(180%) !important;-webkit-backdrop-filter:blur(28px) saturate(180%) !important;
+  border:1.5px solid rgba(255,255,255,.15) !important;border-radius:28px !important;
+  box-shadow:0 30px 100px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.1) !important;
+}
+.pres-mode-glass .pres-section{
+  background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.08);
+}
+.pres-mode-glass .img-inner,.pres-mode-glass .video-card,.pres-mode-glass .pres-table{
+  backdrop-filter:blur(20px) !important;border:1px solid rgba(167,139,250,.35) !important;
+  box-shadow:0 16px 48px rgba(0,0,0,.6),0 0 20px rgba(167,139,250,.2) !important;
+}
+
+/* ── 🎬 Cinematic Keynote Slide Deck Mode ───────────────────────────────────── */
+.pres-mode-deck .pres-page{
+  max-width:1440px !important;min-height:760px !important;border-radius:20px !important;
+  background:#090912 !important;border:1.5px solid rgba(245,158,11,.4) !important;
+  box-shadow:0 32px 120px rgba(0,0,0,.95) !important;padding:20px 0;
+}
+.pres-mode-deck .pres-section{
+  display:grid !important;grid-template-columns:repeat(auto-fit,minmax(360px,1fr)) !important;
+  gap:32px !important;align-items:center !important;padding:48px 72px !important;
+}
+.pres-mode-deck .pres-section h1{font-size:3.2em !important;grid-column:1 / -1 !important}
+
+/* ── 📰 Living Editorial Gazette Mode ───────────────────────────────────────── */
+.pres-mode-gazette .pres-page{
+  background:#0d0d16 !important;border:2px double rgba(245,158,11,.5) !important;border-radius:8px !important;
+}
+.pres-mode-gazette .pres-section{
+  column-count:2 !important;column-gap:40px !important;column-rule:1px solid rgba(255,255,255,.12) !important;
+  padding:36px 54px !important;
+}
+.pres-mode-gazette .pres-section h1,.pres-mode-gazette .pres-section h2,.pres-mode-gazette .pres-hero{
+  column-span:all !important;
+}
+
+/* ── ✍️ Direct In-Place Text Editing Everywhere ────────────────────────────── */
+.ldoc-in-place-editable{
+  outline:none;border-radius:6px;transition:background .15s,box-shadow .15s,outline .15s;
+  cursor:text;
+}
+.ldoc-in-place-editable:hover{
+  outline:1px dashed rgba(245,158,11,.4);
+  background:rgba(245,158,11,.04);
+}
+.ldoc-in-place-editable:focus, .ldoc-in-place-editable.ldoc-editing-active{
+  outline:2px solid var(--gold) !important;
+  background:rgba(245,158,11,.08) !important;
+  box-shadow:0 0 16px rgba(245,158,11,.3) !important;
+}
+
+/* ── ✍️ Ambient Dynamic Free-Text Layer ─────────────────────────────────────── */
+.ldoc-ambient-text{
+  position:absolute;z-index:25;min-width:180px;max-width:550px;
+  cursor:move;user-select:none;
+}
+.ambient-text-hud{
+  display:flex;align-items:center;gap:6px;padding:5px 10px;
+  background:rgba(15,15,26,.94);backdrop-filter:blur(16px);
+  border:1px solid rgba(245,158,11,.4);border-radius:12px;
+  box-shadow:0 8px 30px rgba(0,0,0,.7);margin-bottom:6px;
+  opacity:0;pointer-events:none;transition:opacity .15s ease,transform .15s ease;
+  transform:translateY(4px);
+}
+.ldoc-ambient-text:hover .ambient-text-hud,
+.ldoc-ambient-text.active .ambient-text-hud{
+  opacity:1;pointer-events:auto;transform:translateY(0);
+}
+.hud-handle{cursor:grab;color:var(--gold);font-weight:900;font-size:14px;padding:0 4px}
+.hud-select{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:#f1f5f9;font-size:11px;font-weight:600;border-radius:6px;padding:3px 6px;cursor:pointer;
+}
+.hud-select option{background:#12121e;color:#fff}
+.hud-colors{display:flex;align-items:center;gap:4px}
+.hud-dot{width:14px;height:14px;border-radius:50%;cursor:pointer;transition:transform .12s;box-shadow:0 0 6px rgba(0,0,0,.5)}
+.hud-dot:hover{transform:scale(1.25)}
+.hud-btn{background:none;border:none;cursor:pointer;font-size:13px;padding:2px 5px;border-radius:4px}
+.hud-del{color:#f87171;margin-left:auto}
+.hud-del:hover{background:rgba(248,113,113,.2)}
+.ambient-text-body{
+  user-select:text;cursor:text;outline:none;padding:8px 14px;border-radius:10px;
+  font-family:'Dancing Script',cursive;font-size:28px;line-height:1.4;
+  color:#fef08a;text-shadow:0 2px 12px rgba(245,158,11,.4);
+  background:rgba(18,18,30,.4);backdrop-filter:blur(8px);
+  border:1px dashed rgba(245,158,11,.4);
+  transition:border-color .15s,box-shadow .15s;
+}
+.ambient-text-body:focus{
+  border:1px solid var(--gold);box-shadow:0 0 20px rgba(245,158,11,.45);background:rgba(18,18,30,.65);
+}
 
 /* ── Drop Zone & Loading ────────────────────────────────────────────────────── */
 #drop-zone{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--text3);padding:40px;cursor:pointer;transition:background .2s}
@@ -918,7 +1066,20 @@ body::before{
           <span class="brand-title">LDOC Living Document Presentation</span>
           <span class="live-indicator">ACTIVE</span>
         </div>
-        <div style="display:flex;align-items:center;gap:10px">
+
+        <!-- 🎭 Visual Artifact Presentation Mode Selector -->
+        <div class="pres-mode-selector" id="pres-mode-selector">
+          <button class="mode-pill-btn active" id="btn-mode-paper" onclick="setPresentationMode('paper')" title="Tactile Parchment Paper with Real-Time Human Hand Touch Physics">📜 Tactile Paper</button>
+          <button class="mode-pill-btn" id="btn-mode-glass" onclick="setPresentationMode('glass')" title="Modern Frosted Glass Holographic Cards with 3D Tilt">💎 Glass Cards</button>
+          <button class="mode-pill-btn" id="btn-mode-deck" onclick="setPresentationMode('deck')" title="16:9 Widescreen Executive Slide Deck">🎬 Keynote Deck</button>
+          <button class="mode-pill-btn" id="btn-mode-gazette" onclick="setPresentationMode('gazette')" title="Living Newspaper Editorial Gazette Layout">📰 Gazette</button>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px">
+          <!-- ✍️ In-Canvas Free Text Writing Tool -->
+          <button class="toolbar-btn" id="free-text-btn" onclick="toggleFreeTextTool()" title="Click anywhere on canvas, water waves, or particles to write dynamic styled text!" style="background:linear-gradient(135deg,rgba(56,189,248,.18),rgba(167,139,250,.2));border-color:#38bdf8;color:#7dd3fc">
+            ✍️ Add Free Text
+          </button>
           <span id="slide-meta-info" style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace"></span>
           <button class="toolbar-btn" style="padding:2px 10px;font-size:11px" onclick="toggleFxWizard()">⚜ FX Wizard</button>
         </div>
@@ -2313,9 +2474,23 @@ async function loadAllPages(){
   allContent.forEach((item,idx)=>{
     const anchor=document.createElement('div');anchor.id=`page-anchor-${item.num}`;anchor.dataset.pageNum=item.num;anchor.style.cssText='height:0;visibility:hidden';canvas.appendChild(anchor);
     if(item.error){const err=document.createElement('div');err.style.cssText='padding:40px 56px;color:#f87171;font-size:14px';err.textContent=`Page ${item.num}: ${item.error}`;canvas.appendChild(err);}
-    else{const page=document.createElement('div');page.className='pres-page'+(typeof is3DTiltActive!=='undefined'&&is3DTiltActive?' tilt-active':'');renderPresNode(item.content.root,page,true);canvas.appendChild(page);detectBgAudio(item.content.root,item.num);page.querySelectorAll('.img-card-3d').forEach(attach3DTilt);page.querySelectorAll('[data-ai-prompt]').forEach(el=>runAiBlock(el));}
+    else{
+      const page=document.createElement('div');
+      page.className='pres-page'+(typeof is3DTiltActive!=='undefined'&&is3DTiltActive?' tilt-active':'');
+      renderPresNode(item.content.root,page,true);
+      canvas.appendChild(page);
+      detectBgAudio(item.content.root,item.num);
+      page.querySelectorAll('.img-card-3d').forEach(attach3DTilt);
+      page.querySelectorAll('[data-ai-prompt]').forEach(el=>runAiBlock(el));
+      attachTactilePaperPhysics(page);
+      enableInPlaceEditing(page);
+    }
     if(idx<allContent.length-1){const div=document.createElement('div');div.className='page-divider';canvas.appendChild(div);}
   });
+  const contentArea = document.getElementById('content-area');
+  if (contentArea && !contentArea.className.includes('pres-mode-')) {
+    contentArea.classList.add(`pres-mode-${currentPresentationMode}`);
+  }
   canvas.addEventListener('scroll',onCanvasScroll,{passive:true});
   setupVideoAutoplay();
 }
@@ -3827,6 +4002,32 @@ function initBackgroundFxEngine() {
       });
     }
 
+    // Dynamic Typing / In-Canvas Interaction Fluid Water Ripples
+    if (window.activeWaterRipples && window.activeWaterRipples.length > 0) {
+      for (let i = window.activeWaterRipples.length - 1; i >= 0; i--) {
+        const rip = window.activeWaterRipples[i];
+        rip.radius += 3.8;
+        rip.alpha -= 0.016;
+        if (rip.alpha <= 0 || rip.radius >= rip.maxRadius) {
+          window.activeWaterRipples.splice(i, 1);
+          continue;
+        }
+        bgFxCtx.save();
+        bgFxCtx.beginPath();
+        bgFxCtx.arc(rip.x, rip.y, rip.radius, 0, Math.PI * 2);
+        bgFxCtx.strokeStyle = `rgba(56, 189, 248, ${rip.alpha * 0.45})`;
+        bgFxCtx.lineWidth = 2;
+        bgFxCtx.stroke();
+
+        bgFxCtx.beginPath();
+        bgFxCtx.arc(rip.x, rip.y, Math.max(0, rip.radius - 12), 0, Math.PI * 2);
+        bgFxCtx.strokeStyle = `rgba(168, 85, 247, ${rip.alpha * 0.3})`;
+        bgFxCtx.lineWidth = 1.2;
+        bgFxCtx.stroke();
+        bgFxCtx.restore();
+      }
+    }
+
     bgFxAnimId = requestAnimationFrame(renderLoop);
   }
 
@@ -3982,6 +4183,322 @@ document.addEventListener('mousemove', (e) => {
   const rotX = -dy * 1.8; // max 1.8 degree X rotation
   pages.forEach(p => {
     p.style.transform = `perspective(1400px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  });
+});
+
+// ── 🎭 Multi-Style Presentation Artifacts & Dynamic In-Canvas Free-Text Writing ──
+let currentPresentationMode = 'paper';
+let isFreeTextModeActive = false;
+window.activeWaterRipples = [];
+
+function emitWaterWaveAtPoint(x, y, strength = 1.0) {
+  if (!window.activeWaterRipples) window.activeWaterRipples = [];
+  window.activeWaterRipples.push({
+    x, y, radius: 4, maxRadius: 190, alpha: 0.85, strength
+  });
+}
+
+function emitWaterWaveAtElement(el, strength = 1.0) {
+  if (!bgFxCanvas || !el) return;
+  const r = el.getBoundingClientRect();
+  const cRect = bgFxCanvas.getBoundingClientRect();
+  const x = (r.left + r.width / 2) - cRect.left;
+  const y = (r.top + r.height / 2) - cRect.top;
+  emitWaterWaveAtPoint(x, y, strength);
+}
+
+function setPresentationMode(mode) {
+  currentPresentationMode = mode;
+  const contentArea = document.getElementById('content-area');
+  if (contentArea) {
+    contentArea.classList.remove('pres-mode-paper', 'pres-mode-glass', 'pres-mode-deck', 'pres-mode-gazette');
+    contentArea.classList.add(`pres-mode-${mode}`);
+  }
+
+  // Update mode selector pills
+  document.querySelectorAll('#pres-mode-selector .mode-pill-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.id === `btn-mode-${mode}`);
+  });
+
+  // Re-attach or refresh physics
+  document.querySelectorAll('.pres-page').forEach(p => {
+    if (mode === 'paper') {
+      attachTactilePaperPhysics(p);
+    } else {
+      p.classList.remove('paper-lifted');
+      p.style.transform = '';
+      p.style.removeProperty('--paper-rx');
+      p.style.removeProperty('--paper-ry');
+      p.style.removeProperty('--paper-shadow');
+    }
+  });
+
+  // Toast notification
+  const titles = {
+    paper: '📜 Enchanted Tactile Paper Mode Active — Hover & touch reacts like real paper!',
+    glass: '💎 Frosted Glass Holographic Mode Active — Floating 3D tilt cards!',
+    deck: '🎬 Cinematic Keynote Deck Mode Active — 16:9 executive presentation!',
+    gazette: '📰 Living Editorial Gazette Mode Active — Dual column magazine layout!'
+  };
+  showToast(titles[mode] || `View Mode: ${mode}`, 'ok');
+}
+
+// Enchanted Tactile Paper Physics (Human Hand & Real Paper Reaction)
+function attachTactilePaperPhysics(page) {
+  if (!page || page.__tactileAttached) return;
+  page.__tactileAttached = true;
+  let isDown = false;
+
+  page.addEventListener('mousemove', (e) => {
+    if (currentPresentationMode !== 'paper') return;
+    const rect = page.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const px = (x / rect.width) - 0.5;
+    const py = (y / rect.height) - 0.5;
+
+    // Realistic human hand 3D tilt & dynamic elevation shadow
+    const rx = -py * 7;
+    const ry = px * 7;
+    const shadowX = -px * 38;
+    const shadowY = Math.max(16, 26 + py * 26);
+    const shadowBlur = 48 + Math.abs(px * 28);
+
+    page.style.setProperty('--paper-rx', `${rx.toFixed(2)}deg`);
+    page.style.setProperty('--paper-ry', `${ry.toFixed(2)}deg`);
+    page.style.setProperty('--paper-shadow', `${shadowX.toFixed(0)}px ${shadowY.toFixed(0)}px ${shadowBlur.toFixed(0)}px rgba(0,0,0,0.52)`);
+    page.classList.add('paper-lifted');
+  });
+
+  page.addEventListener('mousedown', () => {
+    if (currentPresentationMode !== 'paper') return;
+    isDown = true;
+    page.style.transform = `perspective(1200px) rotateX(var(--paper-rx, 0deg)) rotateY(var(--paper-ry, 0deg)) translateZ(2px) scale(0.992)`;
+  });
+
+  page.addEventListener('mouseup', () => {
+    if (!isDown) return;
+    isDown = false;
+    page.style.transform = ``;
+  });
+
+  page.addEventListener('mouseleave', () => {
+    if (currentPresentationMode !== 'paper') return;
+    page.classList.remove('paper-lifted');
+    page.style.transform = '';
+    page.style.removeProperty('--paper-rx');
+    page.style.removeProperty('--paper-ry');
+    page.style.removeProperty('--paper-shadow');
+  });
+
+  page.addEventListener('touchmove', (e) => {
+    if (currentPresentationMode !== 'paper' || !e.touches[0]) return;
+    const t = e.touches[0];
+    const rect = page.getBoundingClientRect();
+    const px = ((t.clientX - rect.left) / rect.width) - 0.5;
+    const py = ((t.clientY - rect.top) / rect.height) - 0.5;
+    page.style.setProperty('--paper-rx', `${(-py * 6).toFixed(2)}deg`);
+    page.style.setProperty('--paper-ry', `${(px * 6).toFixed(2)}deg`);
+    page.classList.add('paper-lifted');
+  }, { passive: true });
+
+  page.addEventListener('touchend', () => {
+    page.classList.remove('paper-lifted');
+    page.style.transform = '';
+  });
+}
+
+// ✍️ Direct In-Place Text Editing Everywhere
+function enableInPlaceEditing(container) {
+  if (!container) return;
+  const textElements = container.querySelectorAll('h1, h2, h3, h4, h5, h6, p, blockquote, li, .img-caption, .video-label');
+  textElements.forEach(el => {
+    if (el.hasAttribute('contenteditable')) return;
+    el.setAttribute('contenteditable', 'true');
+    el.setAttribute('spellcheck', 'false');
+    el.classList.add('ldoc-in-place-editable');
+
+    el.addEventListener('focus', () => {
+      el.classList.add('ldoc-editing-active');
+    });
+
+    el.addEventListener('blur', () => {
+      el.classList.remove('ldoc-editing-active');
+    });
+
+    el.addEventListener('input', () => {
+      emitWaterWaveAtElement(el, 0.8);
+    });
+  });
+}
+
+// ✍️ Toggle Free Text Writing Tool
+function toggleFreeTextTool() {
+  isFreeTextModeActive = !isFreeTextModeActive;
+  const btn = document.getElementById('free-text-btn');
+  const canvas = document.getElementById('page-canvas');
+  if (btn) {
+    btn.style.background = isFreeTextModeActive ? 'linear-gradient(135deg,#38bdf8,#818cf8)' : '';
+    btn.style.color = isFreeTextModeActive ? '#090912' : '#7dd3fc';
+    btn.textContent = isFreeTextModeActive ? '✍️ Click Canvas to Place' : '✍️ Add Free Text';
+  }
+  if (canvas) {
+    canvas.style.cursor = isFreeTextModeActive ? 'crosshair' : '';
+  }
+  if (isFreeTextModeActive) {
+    showToast('Click anywhere on the presentation canvas, water ripples, or particles to place dynamic text!', 'ok');
+  }
+}
+
+// Spawn Ambient Dynamic Free-Text Layer
+function spawnAmbientText(x, y, initialText = 'Click to write dynamic text...', opts = {}) {
+  const canvas = document.getElementById('page-canvas');
+  if (!canvas) return null;
+
+  const textWrap = document.createElement('div');
+  textWrap.className = 'ldoc-ambient-text active';
+  textWrap.style.left = `${Math.max(20, x - 100)}px`;
+  textWrap.style.top = `${Math.max(20, y - 40)}px`;
+
+  const font = opts.font || "'Dancing Script', cursive";
+  const size = opts.size || "28px";
+  const color = opts.color || "#fef08a";
+
+  textWrap.innerHTML = `
+    <div class="ambient-text-hud">
+      <div class="hud-handle" title="Drag to move">⋮⋮</div>
+      <select class="hud-select" onchange="updateAmbientFont(this)">
+        <option value="'Dancing Script', cursive" ${font.includes('Dancing') ? 'selected' : ''}>✍️ Hand Script</option>
+        <option value="'Cinzel Decorative', serif" ${font.includes('Cinzel Decorative') ? 'selected' : ''}>👑 Royal Cinzel</option>
+        <option value="'Playfair Display', serif" ${font.includes('Playfair') ? 'selected' : ''}>📰 Editorial</option>
+        <option value="'Plus Jakarta Sans', sans-serif" ${font.includes('Jakarta') ? 'selected' : ''}>⚡ Modern</option>
+        <option value="'JetBrains Mono', monospace" ${font.includes('JetBrains') ? 'selected' : ''}>💻 Cyber Mono</option>
+        <option value="'Space Grotesk', sans-serif" ${font.includes('Space') ? 'selected' : ''}>🚀 Space</option>
+      </select>
+      <select class="hud-select" onchange="updateAmbientSize(this)">
+        <option value="16px" ${size === '16px' ? 'selected' : ''}>16px</option>
+        <option value="20px" ${size === '20px' ? 'selected' : ''}>20px</option>
+        <option value="28px" ${size === '28px' ? 'selected' : ''}>28px</option>
+        <option value="36px" ${size === '36px' ? 'selected' : ''}>36px</option>
+        <option value="48px" ${size === '48px' ? 'selected' : ''}>48px</option>
+        <option value="64px" ${size === '64px' ? 'selected' : ''}>64px</option>
+      </select>
+      <div class="hud-colors">
+        <span class="hud-dot" style="background:#f59e0b" onclick="updateAmbientColor(this, '#f59e0b')" title="Gold Foil"></span>
+        <span class="hud-dot" style="background:#38bdf8" onclick="updateAmbientColor(this, '#38bdf8')" title="Neon Cyan"></span>
+        <span class="hud-dot" style="background:#c084fc" onclick="updateAmbientColor(this, '#c084fc')" title="Purple Nebula"></span>
+        <span class="hud-dot" style="background:#f87171" onclick="updateAmbientColor(this, '#f87171')" title="Fire Ember"></span>
+        <span class="hud-dot" style="background:#34d399" onclick="updateAmbientColor(this, '#34d399')" title="Emerald"></span>
+        <span class="hud-dot" style="background:#1c1917;border:1px solid #78716c" onclick="updateAmbientColor(this, '#1c1917')" title="Paper Ink"></span>
+        <span class="hud-dot" style="background:#ffffff" onclick="updateAmbientColor(this, '#ffffff')" title="Pure White"></span>
+      </div>
+      <button class="hud-btn hud-del" onclick="deleteAmbientText(this)" title="Delete Text">✕</button>
+    </div>
+    <div class="ambient-text-body" contenteditable="true" spellcheck="false" style="font-family:${font};font-size:${size};color:${color}">${escapeHtml(initialText)}</div>
+  `;
+
+  // Make draggable
+  let isDragging = false, startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+  const handle = textWrap.querySelector('.hud-handle');
+  handle.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    initialLeft = textWrap.offsetLeft;
+    initialTop = textWrap.offsetTop;
+    e.stopPropagation();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    textWrap.style.left = `${initialLeft + dx}px`;
+    textWrap.style.top = `${initialTop + dy}px`;
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isDragging) isDragging = false;
+  });
+
+  // Typing triggers fluid water wave / particle bursts
+  const body = textWrap.querySelector('.ambient-text-body');
+  body.addEventListener('input', () => {
+    emitWaterWaveAtElement(textWrap, 1.0);
+  });
+
+  canvas.appendChild(textWrap);
+  setTimeout(() => {
+    body.focus();
+    const range = document.createRange();
+    range.selectNodeContents(body);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }, 50);
+
+  emitWaterWaveAtPoint(x, y, 1.2);
+  return textWrap;
+}
+
+function updateAmbientFont(sel) {
+  const wrap = sel.closest('.ldoc-ambient-text');
+  if (wrap) {
+    const body = wrap.querySelector('.ambient-text-body');
+    if (body) body.style.fontFamily = sel.value;
+  }
+}
+
+function updateAmbientSize(sel) {
+  const wrap = sel.closest('.ldoc-ambient-text');
+  if (wrap) {
+    const body = wrap.querySelector('.ambient-text-body');
+    if (body) body.style.fontSize = sel.value;
+  }
+}
+
+function updateAmbientColor(dot, colorHex) {
+  const wrap = dot.closest('.ldoc-ambient-text');
+  if (wrap) {
+    const body = wrap.querySelector('.ambient-text-body');
+    if (body) {
+      body.style.color = colorHex;
+      body.style.textShadow = `0 2px 14px ${colorHex}88`;
+    }
+  }
+}
+
+function deleteAmbientText(btn) {
+  const wrap = btn.closest('.ldoc-ambient-text');
+  if (wrap) {
+    wrap.style.transition = 'opacity .2s, transform .2s';
+    wrap.style.opacity = '0';
+    wrap.style.transform = 'scale(0.8)';
+    setTimeout(() => wrap.remove(), 200);
+  }
+}
+
+// Double click or active free-text placement on #page-canvas
+document.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('page-canvas');
+  if (!canvas) return;
+
+  canvas.addEventListener('click', (e) => {
+    if (!isFreeTextModeActive) return;
+    if (e.target.closest('.ldoc-ambient-text') || e.target.closest('.ambient-text-hud')) return;
+    const r = canvas.getBoundingClientRect();
+    const x = e.clientX - r.left + canvas.scrollLeft;
+    const y = e.clientY - r.top + canvas.scrollTop;
+    spawnAmbientText(x, y);
+    toggleFreeTextTool();
+  });
+
+  canvas.addEventListener('dblclick', (e) => {
+    if (e.target.closest('.ldoc-ambient-text') || e.target.closest('.ambient-text-hud')) return;
+    const r = canvas.getBoundingClientRect();
+    const x = e.clientX - r.left + canvas.scrollLeft;
+    const y = e.clientY - r.top + canvas.scrollTop;
+    spawnAmbientText(x, y);
   });
 });
 
@@ -4193,6 +4710,8 @@ function edUpdateLivePreview() {
 
       body.appendChild(pageDiv);
       pageDiv.querySelectorAll('.img-card-3d').forEach(attach3DTilt);
+      attachTactilePaperPhysics(pageDiv);
+      enableInPlaceEditing(pageDiv);
     } catch(err) {
       body.innerHTML = `
         <div class="ldoc-error-fallback">

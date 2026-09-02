@@ -8,6 +8,9 @@
 <link rel="shortcut icon" href="app.ico">
 <link rel="apple-touch-icon" href="ldoc_logo.png">
 <link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;800;900&family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -234,6 +237,100 @@ body::before{
   font-size:14px;font-weight:800;color:var(--accent);
   margin-bottom:10px;border-bottom:1px solid rgba(167,139,250,.25);
   padding-bottom:8px;display:flex;align-items:center;gap:8px;
+}
+
+/* ── 🎭 Presentation Modes Selector in Creator ────────────────────────────── */
+.pres-mode-selector{display:inline-flex;align-items:center;background:rgba(0,0,0,.5);padding:2px;border-radius:20px;border:1px solid rgba(255,255,255,.1);gap:2px}
+.mode-pill-btn{background:transparent;border:none;color:var(--text3);font-size:10px;font-weight:700;padding:3px 8px;border-radius:14px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.mode-pill-btn:hover{color:#fff;background:rgba(255,255,255,.08)}
+.mode-pill-btn.active{background:linear-gradient(135deg,#f59e0b,#c084fc);color:#0f0f1b;font-weight:800}
+
+/* ── 📜 Enchanted Tactile Paper Mode for Creator Preview ───────────────────── */
+.pres-mode-paper .pres-slide{
+  background:radial-gradient(ellipse at 30% 20%,#fcf9f2 0%,#f5eedc 60%,#ede0c6 100%) !important;
+  border:1.5px solid rgba(180,140,90,.45) !important;border-radius:12px !important;
+  box-shadow:0 14px 45px rgba(0,0,0,.45),0 3px 12px rgba(0,0,0,.22),inset 0 0 80px rgba(180,140,80,.12) !important;
+  color:#1c1917 !important;position:relative;
+  transition:transform .16s cubic-bezier(.16,1,.3,1),box-shadow .2s ease;
+}
+.pres-mode-paper .pres-slide.paper-lifted{
+  transform:perspective(1000px) rotateX(var(--paper-rx,0deg)) rotateY(var(--paper-ry,0deg)) translateZ(10px) scale(1.01) !important;
+  box-shadow:var(--paper-shadow,0 24px 60px rgba(0,0,0,.55)),inset 0 0 100px rgba(180,140,80,.18) !important;
+}
+.pres-mode-paper .pres-slide-title-bar{
+  color:#78350f !important;border-bottom-color:rgba(180,140,90,.35) !important;
+}
+.pres-mode-paper .pres-slide p,.pres-mode-paper .pres-slide h1,.pres-mode-paper .pres-slide h2{
+  color:#1c1917 !important;
+}
+.pres-mode-paper .pres-slide p{font-family:'Playfair Display',Georgia,serif !important;line-height:1.7}
+
+/* ── 💎 Glass Cards Mode for Creator Preview ───────────────────────────────── */
+.pres-mode-glass .pres-slide{
+  background:rgba(14,14,28,.65) !important;backdrop-filter:blur(24px) !important;
+  border:1.5px solid rgba(255,255,255,.15) !important;border-radius:22px !important;
+  box-shadow:0 24px 70px rgba(0,0,0,.8) !important;
+}
+
+/* ── 🎬 Keynote Deck Mode for Creator Preview ──────────────────────────────── */
+.pres-mode-deck .pres-slide{
+  background:#090912 !important;border:1.5px solid rgba(245,158,11,.4) !important;
+  box-shadow:0 28px 90px rgba(0,0,0,.95) !important;
+}
+
+/* ── 📰 Gazette Mode for Creator Preview ───────────────────────────────────── */
+.pres-mode-gazette .pres-slide{
+  background:#0d0d16 !important;border:2px double rgba(245,158,11,.5) !important;border-radius:6px !important;
+}
+
+/* ── ✍️ In-Place Text Editing in Creator Preview ────────────────────────────── */
+.ldoc-in-place-editable{
+  outline:none;border-radius:4px;transition:all .15s;cursor:text;
+}
+.ldoc-in-place-editable:hover{
+  outline:1px dashed rgba(245,158,11,.45);background:rgba(245,158,11,.05);
+}
+.ldoc-in-place-editable:focus{
+  outline:2px solid var(--accent) !important;background:rgba(167,139,250,.1) !important;
+}
+
+/* ── ✍️ Ambient Dynamic Free-Text Layer ─────────────────────────────────────── */
+.ldoc-ambient-text{
+  position:absolute;z-index:25;min-width:160px;max-width:400px;
+  cursor:move;user-select:none;
+}
+.ambient-text-hud{
+  display:flex;align-items:center;gap:4px;padding:4px 8px;
+  background:rgba(15,15,26,.94);backdrop-filter:blur(16px);
+  border:1px solid rgba(245,158,11,.4);border-radius:10px;
+  box-shadow:0 6px 20px rgba(0,0,0,.7);margin-bottom:4px;
+  opacity:0;pointer-events:none;transition:opacity .15s ease,transform .15s ease;
+  transform:translateY(3px);
+}
+.ldoc-ambient-text:hover .ambient-text-hud,
+.ldoc-ambient-text.active .ambient-text-hud{
+  opacity:1;pointer-events:auto;transform:translateY(0);
+}
+.hud-handle{cursor:grab;color:var(--accent);font-weight:900;font-size:12px;padding:0 3px}
+.hud-select{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:#f1f5f9;font-size:10px;font-weight:600;border-radius:5px;padding:2px 4px;cursor:pointer;
+}
+.hud-select option{background:#12121e;color:#fff}
+.hud-colors{display:flex;align-items:center;gap:3px}
+.hud-dot{width:12px;height:12px;border-radius:50%;cursor:pointer;transition:transform .12s}
+.hud-dot:hover{transform:scale(1.3)}
+.hud-btn{background:none;border:none;cursor:pointer;font-size:12px;padding:2px 4px;border-radius:3px}
+.hud-del{color:#f87171;margin-left:auto}
+.ambient-text-body{
+  user-select:text;cursor:text;outline:none;padding:6px 10px;border-radius:8px;
+  font-family:'Dancing Script',cursive;font-size:22px;line-height:1.4;
+  color:#fef08a;text-shadow:0 2px 10px rgba(245,158,11,.4);
+  background:rgba(18,18,30,.4);backdrop-filter:blur(8px);
+  border:1px dashed rgba(245,158,11,.4);transition:all .15s;
+}
+.ambient-text-body:focus{
+  border:1px solid var(--accent);box-shadow:0 0 16px rgba(167,139,250,.45);
 }
 
 /* ── ⚜ Living Document Enhancement Wizard (Side Landscape Drawer) ────────── */
@@ -496,11 +593,20 @@ body::before{
   <!-- LIVE SLIDE PRESENTATION PREVIEW PANE (SPLIT VIEW) -->
   <div id="creator-preview-pane" class="open">
     <div class="preview-header">
-      <div style="display:flex;align-items:center;gap:8px">
-        <img src="ldoc_logo.png" alt="LDOC" style="width:18px;height:18px;border-radius:4px;object-fit:contain;box-shadow:0 0 6px rgba(167,139,250,.4)">
-        <span style="letter-spacing:1px">Slide Presentation Preview</span>
-        <span id="creator-preview-badge" style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(167,139,250,.2);color:var(--accent);margin-left:4px">Slide 1</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <img src="ldoc_logo.png" alt="LDOC" style="width:16px;height:16px;border-radius:4px;object-fit:contain">
+        <span id="creator-preview-badge" style="font-size:10px;padding:2px 6px;border-radius:8px;background:rgba(167,139,250,.2);color:var(--accent)">Slide 1</span>
       </div>
+
+      <!-- Presentation Mode Selector -->
+      <div class="pres-mode-selector" id="creator-mode-selector">
+        <button class="mode-pill-btn active" id="c-mode-paper" onclick="setCreatorPresentationMode('paper')" title="Tactile Paper">📜 Paper</button>
+        <button class="mode-pill-btn" id="c-mode-glass" onclick="setCreatorPresentationMode('glass')" title="Glass Cards">💎 Glass</button>
+        <button class="mode-pill-btn" id="c-mode-deck" onclick="setCreatorPresentationMode('deck')" title="Keynote Deck">🎬 Deck</button>
+        <button class="mode-pill-btn" id="c-mode-gazette" onclick="setCreatorPresentationMode('gazette')" title="Gazette">📰 Gazette</button>
+      </div>
+
+      <button class="btn" id="creator-free-text-btn" onclick="toggleCreatorFreeTextTool()" style="padding:2px 8px;font-size:10px;margin-left:auto;background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.35)">✍️ Add Text</button>
       <button class="close-preview" onclick="toggleCreatorLivePreview()" title="Hide Slide Preview">✕</button>
     </div>
     <div class="preview-body" id="creator-preview-body">
@@ -1245,18 +1351,8 @@ function updateCreatorLivePreview() {
       });
 
       body.appendChild(slideDiv);
-
-      if (typeof is3DTiltActive !== 'undefined' && is3DTiltActive) {
-        slideDiv.addEventListener('mousemove', (e) => {
-          const rect = slideDiv.getBoundingClientRect();
-          const x = (e.clientX - rect.left) / rect.width - 0.5;
-          const y = (e.clientY - rect.top) / rect.height - 0.5;
-          slideDiv.style.transform = `perspective(1000px) rotateX(${-y * 10}deg) rotateY(${x * 12}deg)`;
-        });
-        slideDiv.addEventListener('mouseleave', () => {
-          slideDiv.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-        });
-      }
+      attachCreatorTactilePaperPhysics(slideDiv);
+      enableCreatorInPlaceEditing(slideDiv);
     } catch(err) {
       body.innerHTML = `
         <div class="ldoc-error-fallback">
@@ -1271,6 +1367,184 @@ function updateCreatorLivePreview() {
     }
   }, 50);
 }
+
+// ── 🎭 Creator Presentation Modes & Free-Text Engine ────────────────────────
+let creatorPresentationMode = 'paper';
+let isCreatorFreeTextActive = false;
+
+function setCreatorPresentationMode(mode) {
+  creatorPresentationMode = mode;
+  const pane = document.getElementById('creator-preview-pane');
+  if (pane) {
+    pane.classList.remove('pres-mode-paper', 'pres-mode-glass', 'pres-mode-deck', 'pres-mode-gazette');
+    pane.classList.add(`pres-mode-${mode}`);
+  }
+  document.querySelectorAll('#creator-mode-selector .mode-pill-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.id === `c-mode-${mode}`);
+  });
+  updateCreatorLivePreview();
+  toast(`View Mode: ${mode.toUpperCase()}`, 'ok');
+}
+
+function attachCreatorTactilePaperPhysics(slide) {
+  if (!slide || slide.__tactileAttached) return;
+  slide.__tactileAttached = true;
+  let isDown = false;
+
+  slide.addEventListener('mousemove', (e) => {
+    if (creatorPresentationMode !== 'paper') return;
+    const rect = slide.getBoundingClientRect();
+    const px = ((e.clientX - rect.left) / rect.width) - 0.5;
+    const py = ((e.clientY - rect.top) / rect.height) - 0.5;
+
+    const rx = -py * 7;
+    const ry = px * 7;
+    const shadowX = -px * 32;
+    const shadowY = Math.max(14, 22 + py * 22);
+
+    slide.style.setProperty('--paper-rx', `${rx.toFixed(2)}deg`);
+    slide.style.setProperty('--paper-ry', `${ry.toFixed(2)}deg`);
+    slide.style.setProperty('--paper-shadow', `${shadowX.toFixed(0)}px ${shadowY.toFixed(0)}px 42px rgba(0,0,0,0.5)`);
+    slide.classList.add('paper-lifted');
+  });
+
+  slide.addEventListener('mousedown', () => {
+    if (creatorPresentationMode !== 'paper') return;
+    isDown = true;
+    slide.style.transform = `perspective(1000px) rotateX(var(--paper-rx, 0deg)) rotateY(var(--paper-ry, 0deg)) translateZ(2px) scale(0.99)`;
+  });
+
+  slide.addEventListener('mouseup', () => {
+    if (!isDown) return;
+    isDown = false;
+    slide.style.transform = '';
+  });
+
+  slide.addEventListener('mouseleave', () => {
+    if (creatorPresentationMode !== 'paper') return;
+    slide.classList.remove('paper-lifted');
+    slide.style.transform = '';
+  });
+}
+
+function enableCreatorInPlaceEditing(container) {
+  if (!container) return;
+  const els = container.querySelectorAll('h1, h2, h3, h4, p, blockquote, li, .pres-slide-title-bar span');
+  els.forEach(el => {
+    if (el.hasAttribute('contenteditable')) return;
+    el.setAttribute('contenteditable', 'true');
+    el.setAttribute('spellcheck', 'false');
+    el.classList.add('ldoc-in-place-editable');
+    el.addEventListener('blur', () => {
+      const curPage = pages.find(p => p.id === currentPage);
+      if (curPage && el.closest('.pres-slide-title-bar')) {
+        curPage.title = el.textContent.trim();
+        renderPages();
+      }
+    });
+  });
+}
+
+function toggleCreatorFreeTextTool() {
+  isCreatorFreeTextActive = !isCreatorFreeTextActive;
+  const btn = document.getElementById('creator-free-text-btn');
+  const body = document.getElementById('creator-preview-body');
+  if (btn) {
+    btn.style.background = isCreatorFreeTextActive ? 'linear-gradient(135deg,#38bdf8,#818cf8)' : '';
+    btn.style.color = isCreatorFreeTextActive ? '#090912' : '#38bdf8';
+    btn.textContent = isCreatorFreeTextActive ? '✍️ Click Slide to Place' : '✍️ Add Text';
+  }
+  if (body) {
+    body.style.cursor = isCreatorFreeTextActive ? 'crosshair' : '';
+  }
+  if (isCreatorFreeTextActive) {
+    toast('Click inside the slide preview to place dynamic text!', 'ok');
+  }
+}
+
+function spawnCreatorAmbientText(x, y, text = 'Click to write dynamic text...') {
+  const body = document.getElementById('creator-preview-body');
+  if (!body) return;
+
+  const textWrap = document.createElement('div');
+  textWrap.className = 'ldoc-ambient-text active';
+  textWrap.style.left = `${Math.max(10, x - 80)}px`;
+  textWrap.style.top = `${Math.max(10, y - 30)}px`;
+
+  textWrap.innerHTML = `
+    <div class="ambient-text-hud">
+      <div class="hud-handle" title="Drag to move">⋮⋮</div>
+      <select class="hud-select" onchange="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.fontFamily = this.value">
+        <option value="'Dancing Script', cursive">✍️ Hand Script</option>
+        <option value="'Cinzel Decorative', serif">👑 Royal</option>
+        <option value="'Playfair Display', serif">📰 Editorial</option>
+        <option value="'Plus Jakarta Sans', sans-serif">⚡ Modern</option>
+        <option value="'JetBrains Mono', monospace">💻 Mono</option>
+      </select>
+      <select class="hud-select" onchange="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.fontSize = this.value">
+        <option value="16px">16px</option>
+        <option value="22px" selected>22px</option>
+        <option value="32px">32px</option>
+        <option value="44px">44px</option>
+      </select>
+      <div class="hud-colors">
+        <span class="hud-dot" style="background:#f59e0b" onclick="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.color = '#f59e0b'"></span>
+        <span class="hud-dot" style="background:#38bdf8" onclick="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.color = '#38bdf8'"></span>
+        <span class="hud-dot" style="background:#c084fc" onclick="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.color = '#c084fc'"></span>
+        <span class="hud-dot" style="background:#34d399" onclick="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.color = '#34d399'"></span>
+        <span class="hud-dot" style="background:#ffffff" onclick="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.color = '#ffffff'"></span>
+      </div>
+      <button class="hud-btn hud-del" onclick="this.closest('.ldoc-ambient-text').remove()">✕</button>
+    </div>
+    <div class="ambient-text-body" contenteditable="true" spellcheck="false">${escapeHtml(text)}</div>
+  `;
+
+  // Draggable
+  let isDragging = false, startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+  const handle = textWrap.querySelector('.hud-handle');
+  handle.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    initialLeft = textWrap.offsetLeft;
+    initialTop = textWrap.offsetTop;
+    e.stopPropagation();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    textWrap.style.left = `${initialLeft + (e.clientX - startX)}px`;
+    textWrap.style.top = `${initialTop + (e.clientY - startY)}px`;
+  });
+
+  document.addEventListener('mouseup', () => { if (isDragging) isDragging = false; });
+
+  body.appendChild(textWrap);
+  setTimeout(() => {
+    const b = textWrap.querySelector('.ambient-text-body');
+    if (b) b.focus();
+  }, 50);
+}
+
+// Click and Double-click listeners on creator-preview-body
+document.addEventListener('DOMContentLoaded', () => {
+  const body = document.getElementById('creator-preview-body');
+  if (!body) return;
+
+  body.addEventListener('click', (e) => {
+    if (!isCreatorFreeTextActive) return;
+    if (e.target.closest('.ldoc-ambient-text') || e.target.closest('.ambient-text-hud')) return;
+    const r = body.getBoundingClientRect();
+    spawnCreatorAmbientText(e.clientX - r.left + body.scrollLeft, e.clientY - r.top + body.scrollTop);
+    toggleCreatorFreeTextTool();
+  });
+
+  body.addEventListener('dblclick', (e) => {
+    if (e.target.closest('.ldoc-ambient-text') || e.target.closest('.ambient-text-hud')) return;
+    const r = body.getBoundingClientRect();
+    spawnCreatorAmbientText(e.clientX - r.left + body.scrollLeft, e.clientY - r.top + body.scrollTop);
+  });
+});
 
 function renderCreatorSlideBlock(b, container) {
   const t = b.type;
