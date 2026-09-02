@@ -4871,6 +4871,216 @@ function onPageTitleChange(v){
 
 window.__adDirectorSession = null;
 
+
+// ═════════════════════════════════════════════════════════════════════════════
+// ⚡ AGENTIC COPILOT & INTERACTIVE LIVING GUIDE ENGINE
+// ═════════════════════════════════════════════════════════════════════════════
+
+function executeStudioAction(action, param1, param2) {
+  let executed = false;
+  let desc = '';
+
+  if (action === 'insert_heading') {
+    if (typeof edAddBlock === 'function') edAddBlock('heading');
+    else if (typeof addBlock === 'function') addBlock('heading');
+    const blks = typeof edPages !== 'undefined' ? (edPages.find(p=>p.id===edCurrentPage)?.blocks||[]) : (pages.find(p=>p.id===currentPage)?.blocks||[]);
+    if (blks.length && param1) blks[blks.length - 1].text = param1;
+    executed = true;
+    desc = `Added Heading "${param1 || 'New Section'}"`;
+  } else if (action === 'insert_paragraph' || action === 'insert_text') {
+    if (typeof edAddBlock === 'function') edAddBlock('paragraph');
+    else if (typeof addBlock === 'function') addBlock('paragraph');
+    const blks = typeof edPages !== 'undefined' ? (edPages.find(p=>p.id===edCurrentPage)?.blocks||[]) : (pages.find(p=>p.id===currentPage)?.blocks||[]);
+    if (blks.length && param1) blks[blks.length - 1].text = param1;
+    executed = true;
+    desc = `Added Paragraph Text`;
+  } else if (action === 'insert_3d') {
+    if (typeof edAddBlock === 'function') edAddBlock('3d_model');
+    else if (typeof addBlock === 'function') addBlock('3d_model');
+    const blks = typeof edPages !== 'undefined' ? (edPages.find(p=>p.id===edCurrentPage)?.blocks||[]) : (pages.find(p=>p.id===currentPage)?.blocks||[]);
+    if (blks.length && param1) blks[blks.length - 1].mesh_template = param1;
+    executed = true;
+    desc = `Inserted 3D Spatial Hologram (${param1 || 'Cyber Car'})`;
+  } else if (action === 'insert_video') {
+    if (typeof edAddBlock === 'function') edAddBlock('web_video');
+    else if (typeof addBlock === 'function') addBlock('web_video');
+    const blks = typeof edPages !== 'undefined' ? (edPages.find(p=>p.id===edCurrentPage)?.blocks||[]) : (pages.find(p=>p.id===currentPage)?.blocks||[]);
+    if (blks.length && param1) blks[blks.length - 1].src = param1;
+    executed = true;
+    desc = `Embedded 4K Video Commercial`;
+  } else if (action === 'insert_audio') {
+    if (typeof edAddBlock === 'function') edAddBlock('web_audio');
+    else if (typeof addBlock === 'function') addBlock('web_audio');
+    const blks = typeof edPages !== 'undefined' ? (edPages.find(p=>p.id===edCurrentPage)?.blocks||[]) : (pages.find(p=>p.id===currentPage)?.blocks||[]);
+    if (blks.length) {
+      if (param1) blks[blks.length - 1].src = param1;
+      blks[blks.length - 1].label = param2 || 'Atmospheric Looping Soundtrack';
+    }
+    if (param1 && typeof GlobalAudio !== 'undefined' && GlobalAudio.setTrack) {
+      GlobalAudio.setTrack(param1, param2 || 'Atmospheric Soundtrack');
+    }
+    executed = true;
+    desc = `Inserted Looping Soundtrack`;
+  } else if (action === 'insert_button') {
+    if (typeof edAddBlock === 'function') edAddBlock('button');
+    else if (typeof addBlock === 'function') addBlock('button');
+    const blks = typeof edPages !== 'undefined' ? (edPages.find(p=>p.id===edCurrentPage)?.blocks||[]) : (pages.find(p=>p.id===currentPage)?.blocks||[]);
+    if (blks.length) {
+      if (param1) blks[blks.length - 1].value = param1;
+      if (param2) { blks[blks.length - 1].action = 'link'; blks[blks.length - 1].target = param2; }
+    }
+    executed = true;
+    desc = `Added Interactive Action Button`;
+  } else if (action === 'insert_telem') {
+    if (typeof edAddBlock === 'function') edAddBlock('live_feed');
+    else if (typeof addBlock === 'function') addBlock('live_feed');
+    executed = true;
+    desc = `Added Live Interactive Telemetry Beacon`;
+  } else if (action === 'insert_grid') {
+    if (typeof edAddBlock === 'function') edAddBlock('feature_grid');
+    else if (typeof addBlock === 'function') addBlock('feature_grid');
+    executed = true;
+    desc = `Added 3-Card Feature Grid`;
+  } else if (action === 'set_fx') {
+    if (typeof setPageEnvironmentalMode === 'function') {
+      setPageEnvironmentalMode(param1 || 'particles');
+      executed = true;
+      desc = `Activated ${param1} Environmental Shader`;
+    }
+  } else if (action === 'add_slide') {
+    if (typeof edAddPage === 'function') edAddPage();
+    else if (typeof addPage === 'function') addPage();
+    executed = true;
+    desc = `Created New Presentation Slide`;
+  } else if (action === 'save_doc') {
+    if (typeof buildAndSave === 'function') buildAndSave();
+    else if (typeof downloadDoc === 'function') downloadDoc();
+    executed = true;
+    desc = `Built and downloaded .ldocx package`;
+  }
+
+  // Refresh visual and presentation
+  if (typeof edRenderBlocks === 'function') edRenderBlocks();
+  if (typeof renderBlocks === 'function') renderBlocks();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+  if (typeof updateLdocStatusBar === 'function') updateLdocStatusBar();
+
+  return { executed, desc };
+}
+
+function handleAgenticStudioCommand(prompt) {
+  const p = (prompt || '').trim();
+  const low = p.toLowerCase();
+
+  // Guide / Tutorial request
+  if (/how to create|how do i create|guide me|tutorial|how.*make.*ldoc/i.test(low)) {
+    return `
+      <div style="background:rgba(20,22,36,0.95);border:1.5px solid var(--gold);border-radius:14px;padding:16px;margin:8px 0;box-shadow:0 10px 30px rgba(0,0,0,0.8)">
+        <strong style="color:#fef08a;font-family:'Cinzel',serif;font-size:14px;display:flex;align-items:center;gap:8px">
+          <span>📖</span> How to Create a Living Document (.ldocx)
+        </strong>
+        <p style="font-size:12px;color:var(--text2);margin:8px 0 12px;line-height:1.5">
+          An <strong>.ldocx</strong> file is a modern living presentation format with 3D holograms, 4K motion, looping soundtracks, and interactive telemetry. Here is the step-by-step creation flow:
+        </p>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:11.5px">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px">
+            <span><strong>1. Add Slides:</strong> Create multi-slide presentations.</span>
+            <button class="find-btn" onclick="executeStudioAction('add_slide')">+ Add Slide</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px">
+            <span><strong>2. Add 3D Hologram:</strong> Interactive rotating 3D models.</span>
+            <button class="find-btn" onclick="executeStudioAction('insert_3d')">📦 Add 3D</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px">
+            <span><strong>3. Add 4K Video:</strong> YouTube commercials & trailers.</span>
+            <button class="find-btn" onclick="executeStudioAction('insert_video')">🎬 Add Video</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px">
+            <span><strong>4. Looping Audio:</strong> Background YouTube soundtrack.</span>
+            <button class="find-btn" onclick="executeStudioAction('insert_audio')">🎵 Add Audio</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px">
+            <span><strong>5. Environmental Shaders:</strong> Cosmic particles or water waves.</span>
+            <div style="display:flex;gap:4px">
+              <button class="find-btn" onclick="executeStudioAction('set_fx', 'particles')">✨ Particles</button>
+              <button class="find-btn" onclick="executeStudioAction('set_fx', 'water')">🌊 Water</button>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px">
+            <span><strong>6. Build & Download:</strong> Zero-server client-side compiler.</span>
+            <button class="find-btn" style="background:#238636;color:#fff" onclick="executeStudioAction('save_doc')">💾 Save .ldocx</button>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#38bdf8;margin-top:12px">
+          💡 <em>Tip: You can instruct me in plain English! (e.g. "Add a 3D car model and a YouTube video")</em>
+        </div>
+      </div>
+    `;
+  }
+
+  // Direct In-Chat Agentic Commands
+  const actions = [];
+  const urls = p.match(/https?:\/\/[^\s,]+/gi) || [];
+
+  if (low.startsWith('add slide') || low.startsWith('new slide') || low.startsWith('add page') || low.startsWith('new page')) {
+    actions.push(executeStudioAction('add_slide'));
+  }
+  if (low.includes('heading') || low.includes('title')) {
+    const text = p.replace(/add|insert|heading|title|:|slide/gi, '').trim();
+    actions.push(executeStudioAction('insert_heading', text || 'New Section'));
+  }
+  if (low.includes('3d') || low.includes('model') || low.includes('hologram')) {
+    let model = 'car';
+    if (low.includes('rim') || low.includes('wheel')) model = 'wheel';
+    else if (low.includes('snitch')) model = 'snitch';
+    else if (low.includes('matrix')) model = 'polyhedron';
+    actions.push(executeStudioAction('insert_3d', model));
+  }
+  if (low.includes('video') || (urls.length && low.includes('watch'))) {
+    actions.push(executeStudioAction('insert_video', urls[0] || 'https://www.youtube.com/watch?v=QdBZY2fkU-0'));
+  }
+  if (low.includes('audio') || low.includes('soundtrack') || low.includes('music') || low.includes('song')) {
+    actions.push(executeStudioAction('insert_audio', urls[0] || 'https://www.youtube.com/watch?v=qCkPM_f3V5c', 'Atmospheric Looping Soundtrack'));
+  }
+  if (low.includes('particles') || low.includes('stardust')) {
+    actions.push(executeStudioAction('set_fx', 'particles'));
+  }
+  if (low.includes('water') || low.includes('waves') || low.includes('ripple')) {
+    actions.push(executeStudioAction('set_fx', 'water'));
+  }
+  if (low.includes('button') || low.includes('stripe') || low.includes('checkout')) {
+    const stripeUrl = urls.find(u=>u.includes('stripe')) || 'https://buy.stripe.com/demo';
+    actions.push(executeStudioAction('insert_button', 'CLAIM ACCESS & PRE-ORDER', stripeUrl));
+  }
+  if (low.includes('telemetry') || low.includes('dispatch') || low.includes('sensor')) {
+    actions.push(executeStudioAction('insert_telem'));
+  }
+  if (low.includes('save') || low.includes('download')) {
+    actions.push(executeStudioAction('save_doc'));
+  }
+
+  const executedActions = actions.filter(a => a.executed);
+  if (executedActions.length > 0) {
+    return `
+      <div style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);border-radius:10px;padding:12px;margin:6px 0">
+        <strong style="color:#34d399;font-size:13px;display:flex;align-items:center;gap:6px">
+          <span>✓</span> Agentic Studio Actions Executed!
+        </strong>
+        <ul style="margin:6px 0 8px 16px;padding:0;color:var(--text);font-size:12px">
+          ${executedActions.map(a => `<li>${a.desc}</li>`).join('')}
+        </ul>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="find-btn" onclick="switchTab('editor')">✏️ View in Editor</button>
+          <button class="find-btn" style="background:rgba(245,158,11,0.25);color:#fef08a" onclick="buildAndView()">▶ Live Preview</button>
+        </div>
+      </div>
+    `;
+  }
+
+  return null;
+}
+
 function startAdDirectorSession() {
   window.__adDirectorSession = {
     step: 1,
