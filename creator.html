@@ -333,42 +333,263 @@ body::before{
 .btn:disabled{opacity:.4;cursor:default}
 
 /* layout */
-#main{position:relative;z-index:1;display:flex;flex:1;overflow:hidden}
+#main {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 84px);
+  overflow: hidden;
+  display: block;
+}
 
-/* left panel - doc meta + pages */
-#left{width:260px;background:rgba(14,14,26,.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-right:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
-.panel-hdr{padding:12px 14px 8px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.panel-hdr .btn{padding:2px 8px;font-size:11px}
+/* ── Primary Full Presentation Stage (100% Width & Height) ─────────────────── */
+#creator-preview-pane {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 10 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--bg) !important;
+  overflow: hidden !important;
+  border: none !important;
+}
+#creator-preview-pane .preview-header {
+  padding: 8px 16px;
+  background: rgba(12, 14, 24, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 20;
+}
+#creator-preview-pane .preview-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  background: radial-gradient(circle at 50% 20%, rgba(124, 58, 237, 0.08) 0%, rgba(6, 6, 14, 0.95) 100%);
+}
+#creator-preview-pane .preview-body::-webkit-scrollbar { width: 6px; }
+#creator-preview-pane .preview-body::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 3px; }
 
-/* doc meta */
-#doc-meta{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
-.meta-row{display:flex;flex-direction:column;gap:3px}
-.meta-row label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)}
-.meta-row input,.meta-row select{background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 9px;font-size:13px;width:100%}
-.meta-row input:focus,.meta-row select:focus{outline:none;border-color:var(--accent)}
+/* ── Backdrop Overlay ───────────────────────────────────────────────────────── */
+#drawer-backdrop {
+  position: fixed;
+  top: 84px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(4, 4, 10, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 900;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+#drawer-backdrop.active {
+  display: block;
+  opacity: 1;
+}
 
-/* page list */
-#page-list{flex:1;overflow-y:auto;padding:4px 0}
-#page-list::-webkit-scrollbar{width:3px}
-#page-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-.pg-item{padding:8px 14px;cursor:pointer;font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px;border-left:3px solid transparent;transition:all .12s}
-.pg-item:hover{background:var(--s2)}
-.pg-item.active{background:rgba(167,139,250,.08);border-left-color:var(--accent);color:var(--accent)}
-.pg-num{font-size:10px;color:var(--text3);min-width:16px;font-weight:700}
-.pg-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;margin-left:auto;padding:0 2px}
-.pg-del:hover{color:var(--red)}
+/* ── Dynamic Pop-up Drawer 1: #left (Pages & Meta) ──────────────────────────── */
+#left {
+  position: fixed !important;
+  top: 84px !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 340px !important;
+  max-width: 90vw !important;
+  background: rgba(12, 14, 24, 0.97) !important;
+  backdrop-filter: blur(32px) !important;
+  -webkit-backdrop-filter: blur(32px) !important;
+  border-right: 1.5px solid rgba(167, 139, 250, 0.35) !important;
+  box-shadow: 16px 0 60px rgba(0, 0, 0, 0.92) !important;
+  z-index: 1000 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  transform: translateX(-105%) !important;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+#left.open {
+  transform: translateX(0) !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+.panel-hdr {
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--accent);
+  background: rgba(18, 18, 34, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.drawer-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.drawer-close-btn:hover {
+  background: rgba(248, 113, 113, 0.25);
+  color: #f87171;
+  border-color: #f87171;
+}
 
-/* center - block editor */
-#center{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
-#page-title-bar{background:var(--s1);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-#page-title-bar label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);white-space:nowrap}
-#pg-title-inp{background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;font-size:14px;font-weight:600;flex:1}
-#pg-title-inp:focus{outline:none;border-color:var(--accent)}
-#blocks-area{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
-#blocks-area::-webkit-scrollbar{width:4px}
-#blocks-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-#no-page{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:14px;flex-direction:column;gap:8px}
-#no-page .big{font-size:48px}
+#doc-meta {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 50vh;
+}
+#doc-meta::-webkit-scrollbar { width: 4px; }
+#doc-meta::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.meta-row { display: flex; flex-direction: column; gap: 4px; }
+.meta-row label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); }
+.meta-row input, .meta-row select { background: var(--s2); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 10px; font-size: 13px; width: 100%; }
+.meta-row input:focus, .meta-row select:focus { outline: none; border-color: var(--accent); }
+
+#page-list { flex: 1; overflow-y: auto; padding: 6px 0; }
+#page-list::-webkit-scrollbar { width: 4px; }
+#page-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.pg-item { padding: 9px 16px; cursor: pointer; font-size: 13px; color: var(--text2); display: flex; align-items: center; gap: 10px; border-left: 3px solid transparent; transition: all 0.12s; }
+.pg-item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+.pg-item.active { background: rgba(167, 139, 250, 0.12); border-left-color: var(--accent); color: var(--accent); font-weight: 700; }
+.pg-num { font-size: 11px; color: var(--text3); min-width: 18px; font-weight: 800; }
+.pg-del { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 13px; margin-left: auto; padding: 2px 6px; border-radius: 4px; }
+.pg-del:hover { background: rgba(248, 113, 113, 0.2); color: var(--red); }
+
+/* ── Dynamic Pop-up Drawer 2: #center (Block Editor & Inspector) ────────────── */
+#center {
+  position: fixed !important;
+  top: 96px !important;
+  left: 30px !important;
+  bottom: 24px !important;
+  width: 520px !important;
+  max-width: calc(100vw - 60px) !important;
+  background: rgba(14, 16, 28, 0.98) !important;
+  backdrop-filter: blur(32px) !important;
+  -webkit-backdrop-filter: blur(32px) !important;
+  border: 1.5px solid rgba(167, 139, 250, 0.35) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.92), 0 0 30px rgba(124, 58, 237, 0.25) !important;
+  z-index: 1020 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  transform: translateY(24px) scale(0.96) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+#center.open {
+  transform: translateY(0) scale(1) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+}
+#center-panel-header {
+  padding: 12px 18px;
+  background: rgba(20, 20, 38, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+#page-title-bar {
+  background: rgba(16, 18, 30, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+#page-title-bar label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); white-space: nowrap; }
+#pg-title-inp { background: var(--s2); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: 600; flex: 1; }
+#pg-title-inp:focus { outline: none; border-color: var(--accent); }
+#blocks-area { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+#blocks-area::-webkit-scrollbar { width: 4px; }
+#blocks-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+#no-page { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text3); font-size: 14px; flex-direction: column; gap: 10px; padding: 40px 20px; }
+#no-page .big { font-size: 48px; }
+
+/* ── Dynamic Pop-up Drawer 3: #right (Actions, Templates & Stats) ───────────── */
+#right {
+  position: fixed !important;
+  top: 84px !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 320px !important;
+  max-width: 90vw !important;
+  background: rgba(12, 14, 24, 0.97) !important;
+  backdrop-filter: blur(32px) !important;
+  -webkit-backdrop-filter: blur(32px) !important;
+  border-left: 1.5px solid rgba(245, 158, 11, 0.35) !important;
+  box-shadow: -16px 0 60px rgba(0, 0, 0, 0.92) !important;
+  z-index: 1000 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+  transform: translateX(105%) !important;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+#right.open {
+  transform: translateX(0) !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+#right::-webkit-scrollbar { width: 4px; }
+#right::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+#actions { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--border); }
+#actions .btn { justify-content: center; }
+#doc-stats { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid var(--border); }
+.stat-row { display: flex; justify-content: space-between; font-size: 12px; }
+.stat-label { color: var(--text3); }
+.stat-val { font-weight: 700; color: var(--accent); }
+#template-list { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.tmpl-card { background: var(--s2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; cursor: pointer; transition: all 0.15s; }
+.tmpl-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.tmpl-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.tmpl-desc { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.tmpl-badge { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(167, 139, 250, 0.15); color: var(--accent); margin-top: 5px; }
 
 /* block card */
 .blk{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;position:relative;transition:border-color .15s}
@@ -805,25 +1026,24 @@ body::before{
   <a href="./" class="nav-link">Studio</a>
   <a href="./creator.html" class="nav-link active">Creator</a>
   <a href="./?tab=converter" class="nav-link">⚡ Converter</a>
+
+  <!-- Floating Dynamic Popup Drawer Toggles -->
+  <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);padding:3px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.12);margin-left:6px">
+    <button class="btn" id="toggle-pages-btn" onclick="togglePagesDrawer()" style="padding:5px 12px;font-size:12px;gap:6px">📑 Pages &amp; Meta</button>
+    <button class="btn" id="toggle-blocks-btn" onclick="toggleBlocksDrawer()" style="padding:5px 12px;font-size:12px;gap:6px">🧩 Edit Blocks</button>
+    <button class="btn" id="toggle-elements-btn" onclick="toggleElementsPopup()" style="padding:5px 12px;font-size:12px;gap:6px;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(245,158,11,.25));border-color:var(--gold);color:#fef08a">➕ Add Element</button>
+    <button class="btn" id="toggle-right-btn" onclick="toggleRightDrawer()" style="padding:5px 12px;font-size:12px;gap:6px">⚡ Actions &amp; Templates</button>
+    <button class="btn" id="fx-wizard-btn" onclick="toggleFxWizard()" style="padding:5px 12px;font-size:12px;gap:6px;background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.35)">⚜ FX Wizard</button>
+  </div>
+
   <span class="spacer"></span>
-    <!-- Drawer & Popup Toggle Controls -->
-  <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);padding:3px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.1)">
-    <button class="btn" id="toggle-pages-btn" onclick="togglePagesDrawer()" style="padding:4px 10px;font-size:12px">📑 Pages &amp; Meta</button>
-    <button class="btn" id="toggle-blocks-btn" onclick="toggleBlocksDrawer()" style="padding:4px 10px;font-size:12px">🧩 Edit Blocks</button>
-    <button class="btn" id="toggle-elements-btn" onclick="toggleElementsPopup()" style="padding:4px 10px;font-size:12px;background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(245,158,11,.2));border-color:var(--gold);color:#fef08a">➕ Add Element</button>
-  </div>
-
-  <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(0,0,0,.4);padding:3px;border-radius:8px;border:1px solid rgba(255,255,255,.1)">
-    <button class="btn active" id="layout-pres-btn" onclick="setCreatorLayoutMode('presentation')" style="padding:4px 9px;font-size:11px" title="Maximum Presentation View (100% Canvas)">🖥️ Presentation View</button>
-    <button class="btn" id="layout-split-btn" onclick="setCreatorLayoutMode('split')" style="padding:4px 9px;font-size:11px" title="Side-by-Side Editor">🛠️ Split Editor</button>
-  </div>
-
-  <button class="btn ed-preview-toggle active" id="creator-preview-btn" onclick="toggleCreatorLivePreview()">👁️ Live Slide Preview: ON</button>
-  <button class="btn" id="fx-wizard-btn" onclick="toggleFxWizard()" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.35)">⚜ FX Wizard</button>
-  <button class="btn" onclick="clearAll()">🗑 Clear</button>
-  <button class="btn green" id="build-btn" onclick="buildDoc()">▶ Build &amp; Open in Studio</button>
-  <button class="btn primary" id="dl-btn" onclick="downloadDoc()">⬇ Download .ldocx</button>
+  <button class="btn" onclick="clearAll()" style="padding:5px 12px;font-size:12px">🗑 Clear</button>
+  <button class="btn green" id="build-btn" onclick="buildDoc()" style="padding:5px 14px;font-size:12px">▶ Build &amp; Open</button>
+  <button class="btn primary" id="dl-btn" onclick="downloadDoc()" style="padding:5px 14px;font-size:12px">⬇ Download .ldocx</button>
 </div>
+
+<!-- Backdrop for all popups and drawers -->
+<div id="drawer-backdrop" onclick="closeAllDrawers()"></div>
 
 <div id="main">
   <!-- LEFT: doc meta + pages -->
@@ -926,6 +1146,7 @@ body::before{
 
   <!-- CENTER: block editor -->
   <div id="center">
+    <div id="center-panel-header"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">🧩</span><strong style="font-family:'Cinzel',serif;font-size:13px;color:#fef08a">Block Editor &amp; Inspector</strong></div><button class="drawer-close-btn" onclick="toggleBlocksDrawer()">✕ Close</button></div>
     <div id="page-title-bar" style="display:none;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px;flex:1"><label>Page Title</label><input id="pg-title-inp" placeholder="Page title" oninput="onPageTitleChange(this.value)"></div><button class="drawer-close-btn" onclick="toggleBlocksDrawer()" style="margin-left:10px">✕ Close</button></div><div style="display:none">
       <label>Page Title</label>
       <input id="pg-title-inp" placeholder="Page title" oninput="onPageTitleChange(this.value)">
@@ -964,21 +1185,25 @@ body::before{
   <!-- LIVE SLIDE PRESENTATION PREVIEW PANE (SPLIT VIEW) -->
   <div id="creator-preview-pane" class="open">
     <div class="preview-header">
-      <div style="display:flex;align-items:center;gap:6px">
-        <img src="ldoc_logo.png" alt="LDOC" style="width:16px;height:16px;border-radius:4px;object-fit:contain">
-        <span id="creator-preview-badge" style="font-size:10px;padding:2px 6px;border-radius:8px;background:rgba(167,139,250,.2);color:var(--accent)">Slide 1</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <img src="ldoc_logo.png" alt="LDOC" style="width:20px;height:20px;border-radius:5px;object-fit:contain">
+        <span id="creator-preview-badge" style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px;background:rgba(167,139,250,.2);color:var(--accent)">Slide 1</span>
+        <span style="font-size:11px;color:var(--text3);font-weight:600">Living Canvas</span>
       </div>
 
       <!-- Presentation Mode Selector -->
       <div class="pres-mode-selector" id="creator-mode-selector">
-        <button class="mode-pill-btn active" id="c-mode-paper" onclick="setCreatorPresentationMode('paper')" title="Tactile Paper">📜 Paper</button>
-        <button class="mode-pill-btn" id="c-mode-glass" onclick="setCreatorPresentationMode('glass')" title="Glass Cards">💎 Glass</button>
-        <button class="mode-pill-btn" id="c-mode-deck" onclick="setCreatorPresentationMode('deck')" title="Keynote Deck">🎬 Deck</button>
-        <button class="mode-pill-btn" id="c-mode-gazette" onclick="setCreatorPresentationMode('gazette')" title="Gazette">📰 Gazette</button>
+        <button class="mode-pill-btn active" id="c-mode-paper" onclick="setCreatorPresentationMode('paper')" title="Enchanted Tactile Paper with 3D Hand Reaction">📜 Tactile Paper</button>
+        <button class="mode-pill-btn" id="c-mode-glass" onclick="setCreatorPresentationMode('glass')" title="Frosted Glass Holographic Cards">💎 Glass Cards</button>
+        <button class="mode-pill-btn" id="c-mode-deck" onclick="setCreatorPresentationMode('deck')" title="Cinematic Keynote Deck">🎬 Keynote Deck</button>
+        <button class="mode-pill-btn" id="c-mode-gazette" onclick="setCreatorPresentationMode('gazette')" title="Living Editorial Gazette">📰 Gazette</button>
       </div>
 
-      <button class="btn" id="creator-free-text-btn" onclick="toggleCreatorFreeTextTool()" style="padding:2px 8px;font-size:10px;margin-left:auto;background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.35)">✍️ Add Text</button>
-      <button class="close-preview" onclick="toggleCreatorLivePreview()" title="Hide Slide Preview">✕</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn" id="creator-free-text-btn" onclick="toggleCreatorFreeTextTool()" style="padding:4px 10px;font-size:11px;background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.35)">✍️ Add Free Text</button>
+        <button class="btn" onclick="togglePagesDrawer()" style="padding:4px 8px;font-size:11px" title="Open Pages Navigator">📑 Pages</button>
+        <button class="btn" onclick="toggleBlocksDrawer()" style="padding:4px 8px;font-size:11px" title="Open Blocks Editor">🧩 Blocks</button>
+      </div>
     </div>
     <div class="preview-body" id="creator-preview-body">
       <!-- Populated dynamically by updateCreatorLivePreview() -->
@@ -987,6 +1212,7 @@ body::before{
 
   <!-- RIGHT: actions + stats + templates -->
   <div id="right">
+    <div id="right-panel-header" class="panel-hdr"><span>⚡ Actions &amp; Templates</span><button class="drawer-close-btn" onclick="toggleRightDrawer()">✕ Close</button></div>
     <div class="panel-hdr">Actions</div>
     <div id="actions">
       <button class="btn green" onclick="buildDoc()">▶ Build &amp; Open in Studio</button>
