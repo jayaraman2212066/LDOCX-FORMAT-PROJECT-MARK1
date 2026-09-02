@@ -1,0 +1,58 @@
+[package]
+name = "ldoc-runtime"
+version = "2.0.0"
+edition = "2021"
+description = "LDOC Runtime Foundation — Phase 2 specification implementation"
+license = "MIT"
+
+[lib]
+name = "ldoc_runtime"
+path = "src/lib.rs"
+
+[[bin]]
+name = "ldoc-view"
+path = "src/main.rs"
+
+[features]
+default = ["platform-native"]
+platform-native = []
+platform-wasm = []
+developer = []
+
+[dependencies]
+# Core dependencies
+ldoc-core = { path = "../ldoc-core", version = "1.0.0" }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# UUID and time
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+# Error handling
+thiserror = "1"
+
+# Hashing
+sha2 = "0.10"
+hex = "0.4"
+base64 = "0.22"
+
+# Logging and tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Concurrency
+parking_lot = "0.12"
+crossbeam = "0.8"
+
+# Collections
+dashmap = "5"
+
+[[test]]
+name = "performance_tests"
+path = "tests/performance_tests.rs"
+
+[dev-dependencies]
+tempfile = "3"

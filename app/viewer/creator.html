@@ -1,0 +1,2491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LDOC Creator</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f17;--s1:#16161f;--s2:#1e1e2e;--border:#2a2a3e;
+  --accent:#a78bfa;--accent2:#60a5fa;--green:#34d399;--red:#f87171;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --r:12px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* toolbar */
+#tb{background:rgba(15,15,23,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;gap:12px;padding:0 20px;flex-shrink:0;z-index:100}
+.logo{font-weight:800;font-size:15px;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px}
+.nav-link{color:var(--text2);font-size:13px;font-weight:600;text-decoration:none;padding:5px 12px;border-radius:7px;border:1px solid transparent;transition:all .15s}
+.nav-link:hover{border-color:var(--border);color:var(--text)}
+.nav-link.active{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.3);color:var(--accent)}
+.spacer{flex:1}
+.btn{background:var(--s2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--border)}
+.btn.primary{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none}
+.btn.primary:hover{opacity:.9}
+.btn.green{background:linear-gradient(135deg,#059669,#0284c7);color:#fff;border:none}
+.btn.green:hover{opacity:.9}
+.btn:disabled{opacity:.4;cursor:default}
+
+/* layout */
+#main{display:flex;flex:1;overflow:hidden}
+
+/* left panel - doc meta + pages */
+#left{width:260px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.panel-hdr{padding:12px 14px 8px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-hdr .btn{padding:2px 8px;font-size:11px}
+
+/* doc meta */
+#doc-meta{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.meta-row{display:flex;flex-direction:column;gap:3px}
+.meta-row label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)}
+.meta-row input,.meta-row select{background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 9px;font-size:13px;width:100%}
+.meta-row input:focus,.meta-row select:focus{outline:none;border-color:var(--accent)}
+
+/* page list */
+#page-list{flex:1;overflow-y:auto;padding:4px 0}
+#page-list::-webkit-scrollbar{width:3px}
+#page-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.pg-item{padding:8px 14px;cursor:pointer;font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px;border-left:3px solid transparent;transition:all .12s}
+.pg-item:hover{background:var(--s2)}
+.pg-item.active{background:rgba(167,139,250,.08);border-left-color:var(--accent);color:var(--accent)}
+.pg-num{font-size:10px;color:var(--text3);min-width:16px;font-weight:700}
+.pg-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;margin-left:auto;padding:0 2px}
+.pg-del:hover{color:var(--red)}
+
+/* center - block editor */
+#center{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+#page-title-bar{background:var(--s1);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+#page-title-bar label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);white-space:nowrap}
+#pg-title-inp{background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;font-size:14px;font-weight:600;flex:1}
+#pg-title-inp:focus{outline:none;border-color:var(--accent)}
+#blocks-area{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+#blocks-area::-webkit-scrollbar{width:4px}
+#blocks-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+#no-page{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:14px;flex-direction:column;gap:8px}
+#no-page .big{font-size:48px}
+
+/* block card */
+.blk{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;position:relative;transition:border-color .15s}
+.blk:hover{border-color:rgba(167,139,250,.25)}
+.blk-type{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--accent);margin-bottom:8px;padding-right:70px}
+.blk input,.blk textarea,.blk select{width:100%;background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 9px;font-size:13px;margin-top:4px;resize:vertical}
+.blk input:focus,.blk textarea:focus,.blk select:focus{outline:none;border-color:var(--accent)}
+.blk-actions{position:absolute;top:10px;right:10px;display:flex;gap:4px}
+.blk-act{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:2px 4px;border-radius:4px}
+.blk-act:hover{background:var(--s2);color:var(--accent)}
+.blk-act.del:hover{color:var(--red)}
+.row2{display:flex;gap:8px;margin-top:4px}
+.row2>*{flex:1}
+.hint{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* add bar */
+#add-bar{background:var(--s1);border-top:1px solid var(--border);padding:8px 14px;display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0;align-items:center}
+#add-bar span{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-right:4px}
+.add-btn{background:var(--s2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;transition:all .12s}
+.add-btn:hover{background:rgba(167,139,250,.1);border-color:var(--accent);color:var(--accent)}
+
+/* right panel - preview + actions */
+#right{width:280px;background:var(--s1);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+#actions{padding:14px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--border)}
+#actions .btn{justify-content:center;width:100%}
+#doc-stats{padding:12px 14px;border-bottom:1px solid var(--border)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px}
+.stat-label{color:var(--text3)}
+.stat-val{color:var(--text);font-weight:600}
+#template-list{flex:1;overflow-y:auto;padding:8px}
+#template-list::-webkit-scrollbar{width:3px}
+#template-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.tpl-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+.tpl-card:hover{border-color:var(--accent);background:rgba(167,139,250,.06)}
+.tpl-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.tpl-desc{font-size:11px;color:var(--text3);line-height:1.5}
+.tpl-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:700;margin-top:5px}
+.tpl-badge.pages{background:rgba(167,139,250,.15);color:var(--accent)}
+.tpl-badge.media{background:rgba(96,165,250,.15);color:var(--accent2)}
+
+/* ── AI Assistant Drawer for Creator ───────────────────────────────────────── */
+#ai-helper-toggle{
+  position:fixed;bottom:24px;left:24px;z-index:900;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;
+  border:1px solid rgba(255,255,255,.2);border-radius:30px;
+  padding:10px 18px;font-size:13px;font-weight:800;cursor:pointer;
+  box-shadow:0 8px 30px rgba(124,58,237,.5);display:flex;align-items:center;gap:8px;
+  transition:all .2s;letter-spacing:.5px;
+}
+#ai-helper-toggle:hover{transform:scale(1.06);box-shadow:0 12px 40px rgba(124,58,237,.7)}
+#ai-helper-panel{
+  position:fixed;bottom:80px;left:24px;width:380px;height:540px;
+  background:linear-gradient(180deg,#16162a 0%,#0e0e1a 100%);
+  border:1.5px solid rgba(167,139,250,.4);border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,.9),0 0 30px rgba(124,58,237,.25);
+  display:none;flex-direction:column;z-index:900;overflow:hidden;animation:pageIn .25s ease;
+}
+#ai-helper-panel.open{display:flex}
+.ai-hdr{padding:14px 18px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ai-hdr h3{font-size:14px;font-weight:800;color:var(--accent);display:flex;align-items:center;gap:6px}
+.ai-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{padding:10px 12px;border-radius:12px;font-size:12px;line-height:1.5;max-width:88%}
+.ai-msg.user{background:rgba(124,58,237,.3);border:1px solid rgba(167,139,250,.3);color:#fff;align-self:flex-end}
+.ai-msg.bot{background:var(--s2);border:1px solid var(--border);color:var(--text);align-self:flex-start}
+.ai-chips{display:flex;flex-wrap:wrap;gap:5px;padding:8px 14px;background:rgba(0,0,0,.2);border-top:1px solid var(--border)}
+.ai-chip{background:var(--s2);border:1px solid var(--border);border-radius:14px;padding:3px 9px;font-size:11px;color:var(--text2);cursor:pointer;transition:all .12s}
+.ai-chip:hover{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.1)}
+.ai-input-bar{padding:10px 14px;display:flex;gap:6px;border-top:1px solid var(--border);background:var(--s1)}
+.ai-input-bar input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:12px;color:var(--text)}
+.ai-input-bar input:focus{outline:none;border-color:var(--accent)}
+.ai-input-bar button{background:linear-gradient(135deg,#7c3aed,#2563eb);border:none;border-radius:8px;color:#fff;padding:0 12px;font-size:12px;font-weight:700;cursor:pointer}
+
+/* toast */
+#toast{position:fixed;bottom:20px;right:20px;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.5);display:none;z-index:999;max-width:320px}
+#toast.ok{border-color:rgba(52,211,153,.4);color:var(--green)}
+#toast.err{border-color:rgba(248,113,113,.4);color:var(--red)}
+
+/* ── ◈ LDOC Dynamic Loading Animation ──────────────────────────────────────── */
+@keyframes ldocGemPulse {
+  0%   { transform: scale(0.8) rotate(0deg); opacity: 0.35; filter: drop-shadow(0 0 4px rgba(245,158,11,.3)); }
+  50%  { transform: scale(1.35) rotate(45deg); opacity: 1; filter: drop-shadow(0 0 16px rgba(245,158,11,.9)) drop-shadow(0 0 28px rgba(192,132,252,.6)); }
+  100% { transform: scale(0.8) rotate(90deg); opacity: 0.35; filter: drop-shadow(0 0 4px rgba(245,158,11,.3)); }
+}
+.ldoc-logo-loader{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:36px 20px}
+.ldoc-gems-row{display:flex;align-items:center;gap:14px}
+.ldoc-gem-symbol{
+  font-size:32px;display:inline-block;cursor:default;user-select:none;
+  animation:ldocGemPulse 1.4s cubic-bezier(.4,0,.2,1) infinite alternate;
+}
+.ldoc-gem-symbol:nth-child(1){animation-delay:0s;color:var(--accent,#f59e0b)}
+.ldoc-gem-symbol:nth-child(2){animation-delay:0.25s;color:#c084fc;font-size:38px}
+.ldoc-gem-symbol:nth-child(3){animation-delay:0.5s;color:#38bdf8}
+.ldoc-loading-caption{
+  font-family:'Cinzel',serif;font-size:13px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  background:linear-gradient(135deg,#fef08a,#f59e0b,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.ldoc-loading-sub{font-size:11px;color:var(--text3);letter-spacing:1px;font-weight:500}
+
+#ldoc-loader-overlay{
+  position:fixed;inset:0;background:rgba(10,10,18,.85);backdrop-filter:blur(14px);
+  z-index:1000;display:none;align-items:center;justify-content:center;
+}
+#ldoc-loader-overlay.active{display:flex}
+
+/* ── Live Slide Presentation Preview Pane (Split View) ─────────────────────── */
+#creator-preview-pane{
+  width:0;min-width:0;overflow:hidden;
+  background:radial-gradient(circle at top center,#151528 0%,#090910 100%);
+  border-left:1.5px solid var(--border);transition:width .3s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;position:relative;z-index:2;flex-shrink:0;
+}
+#creator-preview-pane.open{width:clamp(360px,36vw,620px)}
+#creator-preview-pane .preview-header{
+  padding:10px 16px;background:rgba(10,10,18,.96);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:1px;color:var(--accent);flex-shrink:0;
+}
+#creator-preview-pane .preview-header .close-preview{
+  margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px;
+}
+#creator-preview-pane .preview-header .close-preview:hover{color:#f87171;background:rgba(248,113,113,.1)}
+#creator-preview-pane .preview-body{
+  flex:1;overflow-y:auto;padding:18px 20px;scroll-behavior:smooth;
+}
+#creator-preview-pane .preview-body::-webkit-scrollbar{width:4px}
+#creator-preview-pane .preview-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.ed-preview-toggle{
+  background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(124,58,237,.15));color:#38bdf8;
+  border:1px solid rgba(56,189,248,.35);border-radius:8px;padding:6px 12px;font-size:12px;
+  font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;
+}
+.ed-preview-toggle:hover{background:rgba(56,189,248,.25);color:#fff;border-color:#38bdf8;transform:scale(1.02)}
+.ed-preview-toggle.active{background:linear-gradient(135deg,#0284c7,#7c3aed);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(2,132,199,.4)}
+
+.pres-slide{
+  padding:24px 26px;margin:0 auto 16px;max-width:100%;min-height:280px;
+  background:rgba(18,18,30,.94);border:1px solid rgba(255,255,255,.08);border-radius:18px;
+  box-shadow:0 12px 36px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:12px;
+  transition:transform .15s ease;
+}
+.pres-slide.tilt-active{transform-style:preserve-3d}
+.pres-slide-title-bar{
+  font-size:14px;font-weight:800;color:var(--accent);
+  margin-bottom:10px;border-bottom:1px solid rgba(167,139,250,.25);
+  padding-bottom:8px;display:flex;align-items:center;gap:8px;
+}
+
+/* ── ⚜ Living Document Enhancement Wizard (Side Landscape Drawer) ────────── */
+#fx-wizard-sidebar{
+  position:fixed;top:52px;right:0;bottom:0;width:0;overflow:hidden;
+  background:rgba(12,12,22,.98);backdrop-filter:blur(24px);
+  border-left:1.5px solid var(--accent);z-index:999;
+  transition:width .32s cubic-bezier(.16,1,.3,1);
+  display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.85);
+}
+#fx-wizard-sidebar.open{width:clamp(360px,32vw,440px)}
+#fx-wizard-sidebar.open.landscape-wide{width:clamp(520px,46vw,720px)}
+.fx-wiz-header{
+  padding:14px 20px;border-bottom:1px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(18,18,32,.95);
+}
+.fx-wiz-header h3{font-size:14px;font-weight:800;color:var(--accent);letter-spacing:1px}
+.fx-wiz-body{flex:1;overflow-y:auto;padding:16px}
+.fx-wiz-body::-webkit-scrollbar{width:4px}
+.fx-wiz-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.fx-wiz-section{margin-bottom:20px}
+.fx-wiz-section-title{
+  font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--accent);padding:6px 0 8px;border-bottom:1px solid rgba(167,139,250,.2);
+  display:flex;align-items:center;gap:6px;
+}
+.fx-wiz-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
+#fx-wizard-sidebar.landscape-wide .fx-wiz-grid{grid-template-columns:1fr 1fr}
+.fx-wiz-card{
+  background:linear-gradient(145deg,rgba(22,22,38,.9),rgba(14,14,24,.95));
+  border:1.5px solid var(--border);border-radius:14px;padding:12px;
+  cursor:pointer;transition:all .2s ease;position:relative;overflow:hidden;
+}
+.fx-wiz-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(167,139,250,.25)}
+.fx-wiz-card canvas{width:100%;height:100px;border-radius:8px;background:#060610;margin-top:8px;display:block}
+.fx-wiz-card .fx-wiz-title{font-size:12px;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px}
+.fx-wiz-card .fx-wiz-desc{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.4}
+.fx-wiz-card .fx-wiz-actions{display:flex;gap:6px;margin-top:10px}
+.fx-wiz-btn{
+  flex:1;padding:6px 10px;border-radius:7px;font-size:11px;font-weight:700;
+  cursor:pointer;border:1px solid var(--border);background:var(--s2);color:var(--text);
+  transition:all .15s;text-align:center;
+}
+.fx-wiz-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.15)}
+.fx-wiz-btn.primary{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none}
+
+/* ── Error Fallback Component ──────────────────────────────────────────────── */
+.ldoc-error-fallback{
+  padding:14px 18px;margin:10px 0;background:linear-gradient(145deg,rgba(40,15,20,.85),rgba(20,8,12,.95));
+  border:1.5px solid rgba(248,113,113,.4);border-radius:14px;color:#fca5a5;font-size:13px;
+  display:flex;align-items:flex-start;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,.6);
+}
+.ldoc-error-fallback .error-icon{font-size:24px;flex-shrink:0;line-height:1}
+.ldoc-error-fallback .error-msg{flex:1}
+.ldoc-error-fallback .error-msg strong{color:#f87171;display:block;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.ldoc-error-retry{
+  background:rgba(248,113,113,.2);border:1px solid rgba(248,113,113,.4);color:#fca5a5;
+  border-radius:8px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer;margin-top:8px;
+  display:inline-flex;align-items:center;gap:6px;transition:all .15s;
+}
+.ldoc-error-retry:hover{background:rgba(248,113,113,.35);color:#fff}
+
+/* ── In-Editor Live Interactive Block Previews ──────────────────────────────── */
+.ed-block-interactive-wrap{
+  margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(56,189,248,.3);
+  background:linear-gradient(145deg,rgba(10,15,30,.95),rgba(6,10,20,.98));
+  position:relative;padding:12px;
+}
+.ed-block-interactive-wrap .badge{
+  font-size:10px;font-weight:800;color:#38bdf8;text-transform:uppercase;letter-spacing:1px;
+  display:flex;align-items:center;gap:5px;margin-bottom:8px;
+}
+.ed-block-interactive-wrap canvas{width:100%;height:100px;border-radius:8px;background:#050510;display:block}
+
+/* ── Button Themes ─────────────────────────────────────────────────────────── */
+.ldoc-btn-royal_gold{
+  background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-weight:800;
+  border:none;border-radius:8px;padding:10px 18px;font-size:12px;
+  box-shadow:0 4px 15px rgba(245,158,11,.4);cursor:pointer;display:inline-flex;
+  align-items:center;gap:8px;text-decoration:none;transition:all .15s;
+}
+.ldoc-btn-royal_gold:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(245,158,11,.6)}
+.ldoc-btn-neon_cyan{
+  background:linear-gradient(135deg,#00f0ff,#0284c7);color:#000;font-weight:800;
+  border:none;border-radius:8px;padding:10px 18px;font-size:12px;
+  box-shadow:0 4px 15px rgba(0,240,255,.4);cursor:pointer;display:inline-flex;
+  align-items:center;gap:8px;text-decoration:none;transition:all .15s;
+}
+.ldoc-btn-neon_cyan:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,240,255,.6)}
+.ldoc-btn-purple_nebula{
+  background:linear-gradient(135deg,#a855f7,#6366f1);color:#fff;font-weight:800;
+  border:none;border-radius:8px;padding:10px 18px;font-size:12px;
+  box-shadow:0 4px 15px rgba(168,85,247,.4);cursor:pointer;display:inline-flex;
+  align-items:center;gap:8px;text-decoration:none;transition:all .15s;
+}
+.ldoc-btn-purple_nebula:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(168,85,247,.6)}
+.ldoc-btn-minimal{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);color:#fff;
+  font-weight:700;border-radius:8px;padding:10px 18px;font-size:12px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:all .15s;
+}
+.ldoc-btn-minimal:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4)}
+</style>
+</head>
+<body>
+
+<div id="tb">
+  <span class="logo">◈ LDOC</span>
+  <a href="./" class="nav-link">Studio</a>
+  <a href="./creator.html" class="nav-link active">Creator</a>
+  <a href="./?tab=converter" class="nav-link">⚡ Converter</a>
+  <span class="spacer"></span>
+  <button class="btn ed-preview-toggle active" id="creator-preview-btn" onclick="toggleCreatorLivePreview()">👁️ Live Slide Preview: ON</button>
+  <button class="btn" id="fx-wizard-btn" onclick="toggleFxWizard()" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.35)">⚜ FX Wizard</button>
+  <button class="btn" onclick="clearAll()">🗑 Clear</button>
+  <button class="btn green" id="build-btn" onclick="buildDoc()">▶ Build &amp; Open in Studio</button>
+  <button class="btn primary" id="dl-btn" onclick="downloadDoc()">⬇ Download .ldocx</button>
+</div>
+
+<div id="main">
+  <!-- LEFT: doc meta + pages -->
+  <div id="left">
+    <div class="panel-hdr">Document Identity &amp; Canvas</div>
+    <div id="doc-meta">
+      <div class="meta-row"><label>Title</label><input id="m-title" value="My Living Document" placeholder="Document title"></div>
+      <div class="meta-row"><label>Author</label><input id="m-author" value="Author" placeholder="Author name"></div>
+      <div class="meta-row"><label>Subtitle</label><input id="m-subtitle" placeholder="Optional subtitle"></div>
+      <div class="meta-row"><label>Description</label><input id="m-desc" placeholder="Brief document description"></div>
+      <div class="meta-row"><label>Language</label>
+        <select id="m-lang">
+          <option value="en">English (en)</option>
+          <option value="fr">French (fr)</option>
+          <option value="de">German (de)</option>
+          <option value="es">Spanish (es)</option>
+          <option value="ja">Japanese (ja)</option>
+          <option value="ar">Arabic (ar)</option>
+          <option value="zh">Chinese (zh)</option>
+        </select>
+      </div>
+
+      <!-- Dynamic Canvas & Typography Styling Controls -->
+      <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:2px;display:flex;flex-direction:column;gap:6px">
+        <label style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--accent)">🎨 Dynamic Styling &amp; Theme</label>
+        <div class="meta-row">
+          <label>Typography Font</label>
+          <select id="m-font" onchange="applyCanvasStyles()">
+            <option value="'Cinzel Decorative', serif">Cinzel Decorative (Enchanted)</option>
+            <option value="'Cinzel', serif">Cinzel (Royal Classical)</option>
+            <option value="'Orbitron', sans-serif">Orbitron (Velocity Sci-Fi)</option>
+            <option value="-apple-system, sans-serif">Inter / System (Modern)</option>
+            <option value="'Playfair Display', serif">Playfair Display (Editorial)</option>
+            <option value="'Fira Code', monospace">Fira Code (Technical)</option>
+          </select>
+        </div>
+        <div class="meta-row">
+          <label>Dynamic Color Scheme</label>
+          <select id="m-theme" onchange="applyCanvasStyles()">
+            <option value="velocity">🏎️ Velocity High-Octane (Cyan/Purple)</option>
+            <option value="prophet">✨ Wizarding Gold (Gilded Amber)</option>
+            <option value="matrix">🌌 Neo-Tokyo Matrix (Emerald/Cobalt)</option>
+            <option value="crystal">💎 Royal Crystal (Diamond Frost)</option>
+            <option value="sunset">🌅 Sunset Velvet (Crimson/Coral)</option>
+            <option value="obsidian">🖤 Obsidian Stealth (Carbon)</option>
+          </select>
+        </div>
+        <div class="meta-row">
+          <label>Dynamic Text Glow Effect</label>
+          <select id="m-text-fx" onchange="applyCanvasStyles()">
+            <option value="none">Standard Smooth</option>
+            <option value="neon">⚡ Neon Luminescence</option>
+            <option value="shadow3d">✨ 3D Specular Shadow</option>
+            <option value="goldfoil">👑 Gilded Gold Foil</option>
+            <option value="hologram">📺 Holographic Scanline</option>
+          </select>
+        </div>
+        <div class="meta-row">
+          <label>Background Canvas Wallpaper</label>
+          <select id="m-canvas-bg" onchange="applyCanvasStyles()">
+            <option value="nebula">🌌 Radial Ambient Nebula</option>
+            <option value="grid">⚡ Cyber Matrix Grid</option>
+            <option value="starfield">✨ Deep Space Starfield</option>
+            <option value="carbon">🖤 Dark Matte Carbon</option>
+          </select>
+        </div>
+      </div>
+      
+      <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+          <input type="checkbox" id="m-ai-enable" checked style="width:auto;cursor:pointer">
+          <label for="m-ai-enable" style="font-size:11px;font-weight:700;color:var(--accent);cursor:pointer">⚡ Enable AI &amp; Live Web Sync</label>
+        </div>
+        <div id="m-ai-options" style="display:flex;flex-direction:column;gap:6px">
+          <div class="meta-row">
+            <label>AI Provider</label>
+            <select id="m-ai-provider">
+              <option value="gemini">Google Gemini 3.5 Flash-Lite (Fast)</option>
+              <option value="openai">OpenAI GPT-4o-mini</option>
+              <option value="ollama">Local Ollama</option>
+            </select>
+          </div>
+          <div class="meta-row">
+            <label>Live Data URL / Internet Source</label>
+            <input id="m-ai-source-url" placeholder="https://api.github.com/zen">
+          </div>
+          <div class="meta-row">
+            <label>AI Guide Prompt</label>
+            <input id="m-ai-prompt" placeholder="Guide readers through key sections...">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-hdr">
+      <span>Pages</span>
+      <button class="btn" onclick="addPage()">+ Page</button>
+    </div>
+    <div id="page-list"></div>
+  </div>
+
+  <!-- CENTER: block editor -->
+  <div id="center">
+    <div id="page-title-bar" style="display:none">
+      <label>Page Title</label>
+      <input id="pg-title-inp" placeholder="Page title" oninput="onPageTitleChange(this.value)">
+    </div>
+    <div id="no-page">
+      <div class="big">📄</div>
+      <div>Add a page to start building</div>
+      <button class="btn primary" onclick="addPage()" style="margin-top:8px">+ Add First Page</button>
+    </div>
+    <div id="blocks-area" style="display:none"></div>
+    <div id="add-bar" style="display:none">
+      <span style="font-size:10px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.8px">Add Element:</span>
+      <button class="add-btn" onclick="addBlock('heading')">🏷️ H1–H6</button>
+      <button class="add-btn" onclick="addBlock('paragraph')">📝 Text</button>
+      <button class="add-btn" onclick="addBlock('quote')">📜 Quote</button>
+      <button class="add-btn" onclick="addBlock('list')">📋 List</button>
+      <button class="add-btn" onclick="addBlock('code')">💻 Code</button>
+      <button class="add-btn" onclick="addBlock('table')">📊 Table</button>
+      <button class="add-btn" onclick="addBlock('web_image')">🖼️ 3D Image</button>
+      <button class="add-btn" onclick="addBlock('web_audio')">🎵 Soundtrack</button>
+      <button class="add-btn" onclick="addBlock('web_video')">🎬 Video</button>
+      <button class="add-btn" onclick="addBlock('3d_model')">📦 3D Model</button>
+      <button class="add-btn" onclick="addBlock('ai')">⚡ AI Prompt</button>
+      <button class="add-btn" onclick="addBlock('ai_live')" style="background:rgba(167,139,250,.2);color:var(--accent);border-color:var(--accent)">🌐 AI Live</button>
+      <button class="add-btn" onclick="addBlock('form')">📑 Form</button>
+      <button class="add-btn" onclick="addBlock('feature_grid')">🌟 Feature Grid</button>
+      <button class="add-btn" onclick="addBlock('live_feed')">📡 Live Dispatch</button>
+      <button class="add-btn" onclick="addBlock('preorder')">💎 Pre-Order</button>
+      <button class="add-btn" onclick="addBlock('button')">🔘 Button</button>
+      <button class="add-btn" onclick="addBlock('jsx_canvas')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">⚡ Live Sandbox</button>
+      <button class="add-btn" onclick="addBlock('particles')" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4)">✨ Particle FX</button>
+      <button class="add-btn" onclick="addBlock('water_effect')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🌊 Water Ripples</button>
+    </div>
+  </div>
+
+  <!-- LIVE SLIDE PRESENTATION PREVIEW PANE (SPLIT VIEW) -->
+  <div id="creator-preview-pane" class="open">
+    <div class="preview-header">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:14px">👁️</span>
+        <span style="letter-spacing:1px">Slide Presentation Preview</span>
+        <span id="creator-preview-badge" style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(167,139,250,.2);color:var(--accent);margin-left:4px">Slide 1</span>
+      </div>
+      <button class="close-preview" onclick="toggleCreatorLivePreview()" title="Hide Slide Preview">✕</button>
+    </div>
+    <div class="preview-body" id="creator-preview-body">
+      <!-- Populated dynamically by updateCreatorLivePreview() -->
+    </div>
+  </div>
+
+  <!-- RIGHT: actions + stats + templates -->
+  <div id="right">
+    <div class="panel-hdr">Actions</div>
+    <div id="actions">
+      <button class="btn green" onclick="buildDoc()">▶ Build &amp; Open in Studio</button>
+      <button class="btn primary" onclick="downloadDoc()">⬇ Download .ldocx</button>
+      <button class="btn" onclick="validateSpec()">✓ Validate Spec</button>
+      <button class="btn" onclick="exportJSON()">{ } Export JSON Spec</button>
+      <button class="btn" onclick="importJSON()">↑ Import JSON Spec</button>
+    </div>
+    <div class="panel-hdr">Stats</div>
+    <div id="doc-stats">
+      <div class="stat-row"><span class="stat-label">Pages</span><span class="stat-val" id="st-pages">0</span></div>
+      <div class="stat-row"><span class="stat-label">Total Blocks</span><span class="stat-val" id="st-blocks">0</span></div>
+      <div class="stat-row"><span class="stat-label">Images</span><span class="stat-val" id="st-images">0</span></div>
+      <div class="stat-row"><span class="stat-label">Media</span><span class="stat-val" id="st-media">0</span></div>
+      <div class="stat-row"><span class="stat-label">Forms</span><span class="stat-val" id="st-forms">0</span></div>
+      <div class="stat-row"><span class="stat-label">AI Blocks</span><span class="stat-val" id="st-ai">0</span></div>
+    </div>
+    <div class="panel-hdr">Templates</div>
+    <div id="template-list"></div>
+  </div>
+</div>
+
+<!-- ⚜ Living Document Enhancement Wizard (Side Landscape Drawer) -->
+<div id="fx-wizard-sidebar">
+  <div class="fx-wiz-header">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:22px">⚜</span>
+      <div>
+        <h3>Enhancement Wizard</h3>
+        <div style="font-size:10px;color:var(--text3);letter-spacing:0.5px">Living Document Visual FX, Shaders &amp; Sandboxes</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <button class="btn" style="padding:4px 10px;font-size:11px;background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.3)" onclick="toggleFxWizardWidth()" id="fx-wiz-expand-btn" title="Toggle Landscape View for comfortable visual inspection">⤢ Landscape View</button>
+      <button class="fx-wiz-close" onclick="toggleFxWizard()" title="Close Wizard" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px 8px">✕</button>
+    </div>
+  </div>
+
+  <div class="fx-wiz-body" id="fx-wiz-body">
+    <!-- Section 1: Fluid Temporal Waves -->
+    <div class="fx-wiz-section">
+      <div class="fx-wiz-section-title">🌊 Fluid Temporal Dynamics</div>
+      <div class="fx-wiz-card">
+        <div class="fx-wiz-title">Interactive Surface Water Waves</div>
+        <div class="fx-wiz-desc">Hydrodynamic wave simulation with cursor refraction ripples &amp; temporal decay.</div>
+        <canvas id="wiz-canvas-water" width="320" height="100"></canvas>
+        <div class="fx-wiz-actions">
+          <button class="fx-wiz-btn primary" onclick="applyWizardFx('bg_water')">🌊 Apply Theme Water</button>
+          <button class="fx-wiz-btn" onclick="applyWizardFx('insert_water')">➕ Insert Ripple Block</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Particle Physics Engine -->
+    <div class="fx-wiz-section">
+      <div class="fx-wiz-section-title">✨ Particle Physics &amp; Constellations</div>
+      <div class="fx-wiz-card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="fx-wiz-title">Cosmic Stardust &amp; Warp</div>
+          <select id="wiz-particle-mode" onchange="switchWizParticleMode(this.value)" style="background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:3px 6px;font-size:11px">
+            <option value="stardust">✨ Cyber Stardust</option>
+            <option value="warp">🏎️ Hyperspace Warp</option>
+            <option value="embers">⚡ Magick Embers</option>
+            <option value="shards">💎 Crystal Shards</option>
+          </select>
+        </div>
+        <div class="fx-wiz-desc">Autonomous multi-body particle physics with mouse gravitational force-field.</div>
+        <canvas id="wiz-canvas-particles" width="320" height="100"></canvas>
+        <div class="fx-wiz-actions">
+          <button class="fx-wiz-btn primary" onclick="applyWizardFx('bg_particles')">✨ Apply Starfield</button>
+          <button class="fx-wiz-btn" onclick="applyWizardFx('insert_particles')">➕ Insert Particle Block</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Interactive Reactive Sandboxes -->
+    <div class="fx-wiz-section">
+      <div class="fx-wiz-section-title">⚡ Interactive Reactive Sandboxes</div>
+      <div class="fx-wiz-grid">
+        <div class="fx-wiz-card">
+          <div class="fx-wiz-title">🏎️ Throttle Dyno Speedometer</div>
+          <div class="fx-wiz-desc">Live reactive HTML5 telemetry dyno with slider torque calculator.</div>
+          <div class="fx-wiz-actions">
+            <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_dyno')">➕ Insert Dyno Sandbox</button>
+          </div>
+        </div>
+        <div class="fx-wiz-card">
+          <div class="fx-wiz-title">🪄 Wand Spell Cast Matrix</div>
+          <div class="fx-wiz-desc">Arcane spellboard with real-time Lumos, Patronus, and Expelliarmus effects.</div>
+          <div class="fx-wiz-actions">
+            <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_wand')">➕ Insert Spell Matrix</button>
+          </div>
+        </div>
+        <div class="fx-wiz-card">
+          <div class="fx-wiz-title">🛰️ Orbital Trajectory Simulator</div>
+          <div class="fx-wiz-desc">Orbital mechanics altitude calculator with dynamic escape velocity math.</div>
+          <div class="fx-wiz-actions">
+            <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_orbit')">➕ Insert Orbit Sim</button>
+          </div>
+        </div>
+        <div class="fx-wiz-card">
+          <div class="fx-wiz-title">📈 ARR &amp; Valuation Projector</div>
+          <div class="fx-wiz-desc">Enterprise SaaS metrics calculator with live revenue multiple scaling.</div>
+          <div class="fx-wiz-actions">
+            <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_arr')">➕ Insert ARR Projector</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: 3D Holographic Perspective Tilt -->
+    <div class="fx-wiz-section">
+      <div class="fx-wiz-section-title">📐 3D Holographic Perspective Tilt</div>
+      <div class="fx-wiz-card" id="wiz-tilt-card" style="transition:transform .15s ease;transform-style:preserve-3d;padding:16px;text-align:center">
+        <div style="font-size:32px;margin-bottom:6px">📐</div>
+        <div class="fx-wiz-title" style="justify-content:center">Living 3D Depth Field</div>
+        <div class="fx-wiz-desc">Hover over this card to preview real-time perspective tilt dynamics.</div>
+        <div class="fx-wiz-actions" style="justify-content:center;margin-top:12px">
+          <button class="fx-wiz-btn primary" onclick="toggle3DPerspectiveTilt()" id="wiz-tilt-toggle-btn">📐 Toggle 3D Tilt: ON</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Payment, Links & Smart Actions -->
+    <div class="fx-wiz-section">
+      <div class="fx-wiz-section-title">💳 Smart Action, Payment &amp; Links</div>
+      <div class="fx-wiz-grid">
+        <div class="fx-wiz-card">
+          <div class="fx-wiz-title">💳 Stripe Payment / Registration Link</div>
+          <div class="fx-wiz-desc">Direct Stripe checkout button or registration portal link with custom CTA.</div>
+          <div class="fx-wiz-actions">
+            <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_stripe_button')">➕ Insert Stripe Button</button>
+          </div>
+        </div>
+        <div class="fx-wiz-card">
+          <div class="fx-wiz-title">📑 Webhook Form Submission</div>
+          <div class="fx-wiz-desc">Interactive lead-capture form posting directly to your webhook or CRM.</div>
+          <div class="fx-wiz-actions">
+            <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_smart_form')">➕ Insert Lead Form</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ◈ Dynamic Loading Animation Overlay -->
+<div id="ldoc-loader-overlay">
+  <div id="ldoc-loader-container">
+    <div class="ldoc-logo-loader">
+      <div class="ldoc-gems-row">
+        <span class="ldoc-gem-symbol">◈</span>
+        <span class="ldoc-gem-symbol">◈</span>
+        <span class="ldoc-gem-symbol">◈</span>
+      </div>
+      <div class="ldoc-loading-caption">LDOC STUDIO</div>
+      <div class="ldoc-loading-sub">Living Document Engine</div>
+    </div>
+  </div>
+</div>
+
+<button id="ai-helper-toggle" onclick="toggleAiHelper()">🤖 AI Helper</button>
+
+<div id="ai-helper-panel">
+  <div class="ai-hdr">
+    <h3>🤖 AI Creator Assistant</h3>
+    <button style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px" onclick="toggleAiHelper()">✕</button>
+  </div>
+  <div class="ai-messages" id="ai-msgs">
+    <div class="ai-msg bot">Hello! I am your Living Document AI Copilot. Ask me to generate blueprints, structure multi-page interactive presentations, write engaging copy, or refine interactive blocks.</div>
+  </div>
+  <div class="ai-chips">
+    <span class="ai-chip" onclick="aiQuickPrompt('🏎️ Generate a 3-page interactive Game Launch presentation with 3D supercar and soundtrack')">🏎️ Game Launch Ad</span>
+    <span class="ai-chip" onclick="aiQuickPrompt('🧙‍♂️ Generate an enchanted 3-page newspaper article with 3D Snitch and live feed')">🧙‍♂️ Wizard Newspaper</span>
+    <span class="ai-chip" onclick="aiQuickPrompt('💼 Generate a 3-page SaaS investor pitch deck with interactive feature grid and form')">💼 Investor Pitch</span>
+    <span class="ai-chip" onclick="aiQuickPrompt('✨ Enhance and polish my current document pages and headings')">✨ Enhance Copy</span>
+  </div>
+  <div class="ai-input-bar">
+    <input id="ai-prompt-inp" placeholder="Ask AI to build or edit document…" onkeydown="if(event.key==='Enter')sendAiPrompt()">
+    <button onclick="sendAiPrompt()">Send</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="json-file-inp" accept=".json" style="display:none" onchange="onImportJSON(this)">
+
+<script>
+const API='http://127.0.0.1:8080';
+let pages=[],currentPage=null,pSeq=0,bSeq=0;
+const pid=()=>++pSeq, bid=()=>++bSeq;
+
+// ── Smart Client-Side Compression & Offline File Processors ──────────────────
+
+// 1. High-Quality WebP Image Compressor (Shrinks 10MB down to ~35-70KB)
+async function compressImageFile(file, maxWidth=1600, maxHeight=1200, quality=0.82){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=(e)=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>maxWidth||h>maxHeight){
+          const ratio=Math.min(maxWidth/w,maxHeight/h);
+          w=Math.round(w*ratio);
+          h=Math.round(h*ratio);
+        }
+        const canvas=document.createElement('canvas');
+        canvas.width=w;canvas.height=h;
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
+        const webpData=canvas.toDataURL('image/webp',quality);
+        const compSize=Math.round(webpData.length*0.75);
+        resolve({
+          dataUrl:webpData,
+          origSize:file.size,
+          compSize:compSize,
+          savedPct:Math.round((1-(compSize/file.size))*100),
+          width:w,height:h
+        });
+      };
+      img.onerror=()=>resolve({dataUrl:e.target.result,origSize:file.size,compSize:file.size,savedPct:0});
+      img.src=e.target.result;
+    };
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// 2. Offline Audio / Video Reader
+async function readOfflineMedia(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=(e)=>{
+      resolve({
+        dataUrl:e.target.result,
+        name:file.name,
+        size:file.size
+      });
+    };
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// 3. 3D Model Parsers (OBJ / STL / JSON Mesh)
+async function parse3DModelFile(file){
+  const text=await file.text();
+  const name=file.name.toLowerCase();
+  if(name.endsWith('.obj')){
+    return parseWavefrontObj(text);
+  }else if(name.endsWith('.stl')){
+    return parseStl(text);
+  }else{
+    try{
+      const json=JSON.parse(text);
+      if(json.vertices&&json.faces)return json;
+    }catch(_){}
+    return null;
+  }
+}
+
+function parseWavefrontObj(text){
+  const vertices=[];
+  const faces=[];
+  const lines=text.split('\n');
+  for(let line of lines){
+    line=line.trim();
+    if(line.startsWith('v ')){
+      const parts=line.split(/\s+/).slice(1).map(Number);
+      if(parts.length>=3)vertices.push([parts[0],parts[1],parts[2]]);
+    }else if(line.startsWith('f ')){
+      const parts=line.split(/\s+/).slice(1);
+      const faceIndices=parts.map(p=>{
+        const idx=parseInt(p.split('/')[0],10);
+        return idx<0?vertices.length+idx:idx-1;
+      });
+      if(faceIndices.length>=3){
+        faces.push([faceIndices[0],faceIndices[1],faceIndices[2]]);
+        if(faceIndices.length===4){
+          faces.push([faceIndices[0],faceIndices[2],faceIndices[3]]);
+        }
+      }
+    }
+  }
+  return {vertices,faces};
+}
+
+function parseStl(text){
+  const vertices=[];
+  const faces=[];
+  const vertexMap=new Map();
+  const vLines=text.match(/vertex\s+([-\d.eE+]+)\s+([-\d.eE+]+)\s+([-\d.eE+]+)/g);
+  if(!vLines)return null;
+  let cur=[];
+  for(let vl of vLines){
+    const pts=vl.split(/\s+/).slice(1).map(Number);
+    const key=pts.map(p=>p.toFixed(3)).join(',');
+    let idx=vertexMap.get(key);
+    if(idx===undefined){
+      idx=vertices.length;
+      vertices.push(pts);
+      vertexMap.set(key,idx);
+    }
+    cur.push(idx);
+    if(cur.length===3){
+      faces.push(cur);
+      cur=[];
+    }
+  }
+  return {vertices,faces};
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function toast(msg,type='ok'){
+  const t=document.getElementById('toast');t.textContent=msg;t.className=type;t.style.display='block';
+  clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3000);
+}
+
+// ── Core Utilities & Dynamic Loader ──────────────────────────────────────────
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function ldocLoaderHtml(caption = 'LDOC STUDIO', sub = 'Processing Living Document…') {
+  return `
+    <div class="ldoc-logo-loader">
+      <div class="ldoc-gems-row">
+        <span class="ldoc-gem-symbol">◈</span>
+        <span class="ldoc-gem-symbol">◈</span>
+        <span class="ldoc-gem-symbol">◈</span>
+      </div>
+      <div class="ldoc-loading-caption">${escapeHtml(caption)}</div>
+      ${sub ? `<div class="ldoc-loading-sub">${escapeHtml(sub)}</div>` : ''}
+    </div>
+  `;
+}
+
+function showLoader(caption = 'LDOC STUDIO', sub = 'Processing Living Document…') {
+  const ov = document.getElementById('ldoc-loader-overlay');
+  const cnt = document.getElementById('ldoc-loader-container');
+  if (ov && cnt) {
+    cnt.innerHTML = ldocLoaderHtml(caption, sub);
+    ov.classList.add('active');
+  }
+}
+
+function hideLoader() {
+  const ov = document.getElementById('ldoc-loader-overlay');
+  if (ov) ov.classList.remove('active');
+}
+
+// ── Interactive Water Ripple & Particle Canvases ────────────────────────────
+function initInPageWaterCanvas(canvasId) {
+  const canvas = typeof canvasId === 'string' ? document.getElementById(canvasId) : canvasId;
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 400;
+  canvas.height = canvas.offsetHeight || 100;
+
+  let drops = [];
+  function addRipple(x, y) {
+    drops.push({ x, y, radius: 2, alpha: 0.9, maxRadius: 75 });
+  }
+
+  if (!canvas._hasWaterListeners) {
+    canvas._hasWaterListeners = true;
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      if (Math.random() > 0.35) addRipple(e.clientX - rect.left, e.clientY - rect.top);
+    });
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      for (let k = 0; k < 3; k++) setTimeout(() => addRipple(e.clientX - rect.left, e.clientY - rect.top), k * 120);
+    });
+  }
+
+  addRipple(canvas.width * 0.35, canvas.height * 0.5);
+  addRipple(canvas.width * 0.65, canvas.height * 0.4);
+
+  function draw() {
+    if (!document.body.contains(canvas)) return;
+    ctx.fillStyle = 'rgba(5,16,32,0.18)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = drops.length - 1; i >= 0; i--) {
+      const d = drops[i];
+      d.radius += 2.2;
+      d.alpha *= 0.96;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(56,189,248,${d.alpha})`;
+      ctx.lineWidth = 2.2;
+      ctx.stroke();
+
+      if (d.alpha < 0.02 || d.radius > d.maxRadius) drops.splice(i, 1);
+    }
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function initInPageParticleCanvas(canvasId, mode = 'stardust') {
+  const canvas = typeof canvasId === 'string' ? document.getElementById(canvasId) : canvasId;
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 400;
+  canvas.height = canvas.offsetHeight || 100;
+
+  const pts = [];
+  const count = mode === 'warp' ? 50 : 36;
+  const speedMult = mode === 'warp' ? 2.5 : (mode === 'embers' ? 1.2 : 1.0);
+
+  let mainColor = '#f59e0b';
+  let lineRgba = 'rgba(245,158,11,';
+  if (mode === 'warp') { mainColor = '#00f0ff'; lineRgba = 'rgba(0,240,255,'; }
+  else if (mode === 'embers') { mainColor = '#f97316'; lineRgba = 'rgba(249,115,22,'; }
+  else if (mode === 'shards') { mainColor = '#c084fc'; lineRgba = 'rgba(192,132,252,'; }
+
+  for (let i = 0; i < count; i++) {
+    pts.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 2 * speedMult,
+      vy: (mode === 'embers' ? -(Math.random() * 1.5 + 0.5) : (Math.random() - 0.5) * 2) * speedMult,
+      radius: Math.random() * 2.5 + 1
+    });
+  }
+
+  let mouse = { x: -200, y: -200 };
+  if (!canvas._hasParticleListeners) {
+    canvas._hasParticleListeners = true;
+    canvas.addEventListener('mousemove', (e) => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+    });
+    canvas.addEventListener('mouseleave', () => {
+      mouse.x = -200;
+      mouse.y = -200;
+    });
+  }
+
+  function draw() {
+    if (!document.body.contains(canvas)) return;
+    ctx.fillStyle = 'rgba(9,9,21,0.25)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    pts.forEach((p, idx) => {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < 0) p.x = canvas.width;
+      else if (p.x > canvas.width) p.x = 0;
+
+      if (p.y < 0) {
+        p.y = mode === 'embers' ? canvas.height : 0;
+        if (mode !== 'embers') p.vy *= -1;
+      } else if (p.y > canvas.height) {
+        p.y = 0;
+        if (mode !== 'embers') p.vy *= -1;
+      }
+
+      const d = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+      if (d < 85) {
+        p.x += (mouse.x - p.x) * 0.04;
+        p.y += (mouse.y - p.y) * 0.04;
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = mainColor;
+      ctx.fill();
+
+      for (let j = idx + 1; j < pts.length; j++) {
+        const p2 = pts[j];
+        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+        if (dist < 65) {
+          ctx.beginPath();
+          ctx.strokeStyle = `${lineRgba}${(1 - dist / 65) * 0.4})`;
+          ctx.lineWidth = 1;
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ── 3D Perspective Tilt ──────────────────────────────────────────────────────
+let is3DTiltActive = false;
+function toggle3DPerspectiveTilt() {
+  is3DTiltActive = !is3DTiltActive;
+  const btn = document.getElementById('wiz-tilt-toggle-btn');
+  if (btn) btn.textContent = is3DTiltActive ? '📐 Toggle 3D Tilt: ON' : '📐 Toggle 3D Tilt: OFF';
+  toast(`3D Perspective Depth Field: ${is3DTiltActive ? 'ON' : 'OFF'}`, 'ok');
+  updateCreatorLivePreview();
+}
+
+// ── ⚜ Living Document Enhancement Wizard Controller ──────────────────────────
+let isFxWizardLandscape = false;
+
+function toggleFxWizard() {
+  const sidebar = document.getElementById('fx-wizard-sidebar');
+  if (!sidebar) return;
+  const isOpen = sidebar.classList.toggle('open');
+  if (isOpen) {
+    initWizardCanvases();
+  }
+}
+
+function toggleFxWizardWidth() {
+  const sidebar = document.getElementById('fx-wizard-sidebar');
+  const btn = document.getElementById('fx-wiz-expand-btn');
+  if (!sidebar) return;
+  isFxWizardLandscape = sidebar.classList.toggle('landscape-wide');
+  if (btn) btn.textContent = isFxWizardLandscape ? '⤡ Compact View' : '⤢ Landscape View';
+  setTimeout(initWizardCanvases, 100);
+}
+
+function switchWizParticleMode(mode) {
+  initInPageParticleCanvas('wiz-canvas-particles', mode);
+}
+
+function initWizardCanvases() {
+  initInPageWaterCanvas('wiz-canvas-water');
+  const pMode = document.getElementById('wiz-particle-mode')?.value || 'stardust';
+  initInPageParticleCanvas('wiz-canvas-particles', pMode);
+
+  const tiltCard = document.getElementById('wiz-tilt-card');
+  if (tiltCard && !tiltCard._hasTiltListener) {
+    tiltCard._hasTiltListener = true;
+    tiltCard.addEventListener('mousemove', (e) => {
+      const rect = tiltCard.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      tiltCard.style.transform = `perspective(600px) rotateX(${-y * 18}deg) rotateY(${x * 22}deg) scale3d(1.02,1.02,1.02)`;
+    });
+    tiltCard.addEventListener('mouseleave', () => {
+      tiltCard.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
+    });
+  }
+}
+
+function applyWizardFx(action) {
+  if (!pages.length) {
+    addPage();
+  }
+  const curPage = pages.find(p => p.id === currentPage) || pages[0];
+  if (!curPage) {
+    toast('Select or add a page first', 'err');
+    return;
+  }
+
+  if (action === 'bg_water') {
+    document.getElementById('m-theme').value = 'velocity';
+    document.getElementById('m-canvas-bg').value = 'nebula';
+    applyCanvasStyles();
+    addBlock('water_effect');
+    toast('🌊 Water dynamics applied to active page', 'ok');
+  } else if (action === 'bg_particles') {
+    document.getElementById('m-canvas-bg').value = 'starfield';
+    applyCanvasStyles();
+    const mode = document.getElementById('wiz-particle-mode')?.value || 'stardust';
+    addBlock('particles');
+    const p = pages.find(p => p.id === currentPage);
+    if (p && p.blocks.length) {
+      p.blocks[p.blocks.length - 1].value = mode;
+      renderBlocks();
+      updateCreatorLivePreview();
+    }
+    toast('✨ Particle Starfield applied', 'ok');
+  } else if (action === 'insert_water') {
+    addBlock('water_effect');
+    toast('🌊 Water Ripple block inserted', 'ok');
+  } else if (action === 'insert_particles') {
+    const mode = document.getElementById('wiz-particle-mode')?.value || 'stardust';
+    addBlock('particles');
+    const p = pages.find(p => p.id === currentPage);
+    if (p && p.blocks.length) {
+      p.blocks[p.blocks.length - 1].value = mode;
+      renderBlocks();
+      updateCreatorLivePreview();
+    }
+    toast('✨ Particle block inserted', 'ok');
+  } else if (action === 'insert_dyno') {
+    addBlock('jsx_canvas');
+    const p = pages.find(p => p.id === currentPage);
+    if (p && p.blocks.length) {
+      const b = p.blocks[p.blocks.length - 1];
+      b.value = 'Throttle Dyno Speedometer';
+      b.style = { code: '<div style="padding:16px;background:rgba(0,240,255,.05);border:1.5px solid rgba(0,240,255,.3);border-radius:14px;color:#fff"><div style="display:flex;justify-content:space-between;font-weight:bold;margin-bottom:8px"><span>🏎️ VELOCITY DYNO</span><span id="dyno-out" style="color:#00f0ff">1,450 BHP</span></div><input type="range" min="300" max="2500" value="1450" style="width:100%;accent-color:#00f0ff" oninput="document.getElementById(\'dyno-out\').textContent=this.value+\' BHP\'"><div style="font-size:10px;color:#94a3b8;margin-top:6px">Active DualSense Real-Time Telemetry Feed</div></div>' };
+      renderBlocks();
+      updateCreatorLivePreview();
+    }
+    toast('🏎️ Dyno Sandbox block inserted', 'ok');
+  } else if (action === 'insert_wand') {
+    addBlock('jsx_canvas');
+    const p = pages.find(p => p.id === currentPage);
+    if (p && p.blocks.length) {
+      const b = p.blocks[p.blocks.length - 1];
+      b.value = 'Wand Spell Cast Matrix';
+      b.style = { code: '<div style="padding:16px;background:rgba(245,158,11,.08);border:1.5px solid rgba(245,158,11,.4);border-radius:14px;color:#fff"><div style="font-weight:bold;color:#fef08a;margin-bottom:10px">🪄 Arcane Spell Matrix</div><div style="display:flex;gap:8px"><button style="flex:1;padding:8px;border-radius:8px;border:none;background:#f59e0b;color:#000;font-weight:bold;cursor:pointer" onclick="document.getElementById(\'spell-status\').textContent=\'✨ Lumos Maxima! Light radiates.\'">Lumos</button><button style="flex:1;padding:8px;border-radius:8px;border:none;background:#38bdf8;color:#000;font-weight:bold;cursor:pointer" onclick="document.getElementById(\'spell-status\').textContent=\'🦌 Expecto Patronum! Silver guardian manifests.\'">Patronus</button><button style="flex:1;padding:8px;border-radius:8px;border:none;background:#c084fc;color:#000;font-weight:bold;cursor:pointer" onclick="document.getElementById(\'spell-status\').textContent=\'⚡ Expelliarmus! Disarming wave discharged.\'">Disarm</button></div><div id="spell-status" style="margin-top:12px;font-size:12px;color:#cbd5e1;text-align:center">Cast an incantation to charge the matrix</div></div>' };
+      renderBlocks();
+      updateCreatorLivePreview();
+    }
+    toast('🪄 Spell Matrix inserted', 'ok');
+  } else if (action === 'insert_orbit') {
+    addBlock('jsx_canvas');
+    const p = pages.find(p => p.id === currentPage);
+    if (p && p.blocks.length) {
+      const b = p.blocks[p.blocks.length - 1];
+      b.value = 'Orbital Altitude Simulator';
+      b.style = { code: '<div style="padding:16px;background:rgba(56,189,248,.08);border:1.5px solid rgba(56,189,248,.4);border-radius:14px;color:#fff"><div style="display:flex;justify-content:space-between;font-weight:bold;margin-bottom:8px"><span>🛰️ ORBITAL SIMULATOR</span><span id="orbit-v" style="color:#38bdf8">7.67 km/s</span></div><input type="range" min="200" max="2000" value="400" style="width:100%;accent-color:#38bdf8" oninput="const alt=+this.value;const v=(Math.sqrt(398600/(6371+alt))).toFixed(2);document.getElementById(\'orbit-v\').textContent=v+\' km/s\';document.getElementById(\'orbit-alt\').textContent=alt+\' km\'"><div style="font-size:11px;color:#94a3b8;margin-top:6px">Altitude: <span id="orbit-alt" style="color:#fff;font-weight:bold">400 km</span> (LEO Telemetry)</div></div>' };
+      renderBlocks();
+      updateCreatorLivePreview();
+    }
+    toast('🛰️ Orbit Sim inserted', 'ok');
+  } else if (action === 'insert_arr') {
+    addBlock('jsx_canvas');
+    const p = pages.find(p => p.id === currentPage);
+    if (p && p.blocks.length) {
+      const b = p.blocks[p.blocks.length - 1];
+      b.value = 'ARR & Enterprise Valuation';
+      b.style = { code: '<div style="padding:16px;background:rgba(124,58,237,.1);border:1.5px solid rgba(124,58,237,.4);border-radius:14px;color:#fff"><div style="display:flex;justify-content:space-between;font-weight:bold;margin-bottom:8px"><span>📈 ARR MULTIPLE PROJECTOR</span><span id="arr-val" style="color:#c084fc">$210M Valuation</span></div><input type="range" min="5" max="30" value="15" style="width:100%;accent-color:#c084fc" oninput="const m=+this.value;document.getElementById(\'arr-val\').textContent=\'$\'+(14*m)+\'M Valuation\';document.getElementById(\'arr-mult\').textContent=m+\'x\'"><div style="font-size:11px;color:#94a3b8;margin-top:6px">Current Multiple: <span id="arr-mult" style="color:#fff;font-weight:bold">15x</span> ARR ($14M Run-rate)</div></div>' };
+      renderBlocks();
+      updateCreatorLivePreview();
+    }
+    toast('📈 ARR Projector inserted', 'ok');
+  } else if (action === 'insert_stripe_button') {
+    addBlock('button');
+    const p = pages.find(p => p.id === currentPage);
+    if (p && p.blocks.length) {
+      const b = p.blocks[p.blocks.length - 1];
+      b.value = '💳 REGISTER & PAY WITH STRIPE — $149';
+      b.action = 'link';
+      b.target = 'https://buy.stripe.com/demo_pass';
+      b.theme = 'royal_gold';
+      b.style = { action: 'link', target: 'https://buy.stripe.com/demo_pass', btn_style: 'royal_gold' };
+      renderBlocks();
+      updateCreatorLivePreview();
+    }
+    toast('💳 Stripe Checkout Button inserted', 'ok');
+  } else if (action === 'insert_smart_form') {
+    addBlock('form');
+    const p = pages.find(p => p.id === currentPage);
+    if (p && p.blocks.length) {
+      const b = p.blocks[p.blocks.length - 1];
+      b.webhook_url = 'https://buy.stripe.com/demo_lead';
+      b.fields = [
+        { label: 'Full Name', field_type: 'input_text', placeholder: 'Jane Doe' },
+        { label: 'Business Email', field_type: 'input_text', placeholder: 'jane@enterprise.com' },
+        { label: 'Organization / Company', field_type: 'input_text', placeholder: 'Acme Corp' }
+      ];
+      renderBlocks();
+      updateCreatorLivePreview();
+    }
+    toast('📑 Smart Lead Form inserted', 'ok');
+  }
+}
+
+// ── Live Presentation Preview Controller (Creator Split View) ────────────────
+let isCreatorPreviewOpen = true;
+let creatorPreviewDebounceTimer = null;
+
+function toggleCreatorLivePreview() {
+  const pane = document.getElementById('creator-preview-pane');
+  const btn = document.getElementById('creator-preview-btn');
+  if (!pane) return;
+  isCreatorPreviewOpen = !isCreatorPreviewOpen;
+  pane.classList.toggle('open', isCreatorPreviewOpen);
+  if (btn) {
+    btn.classList.toggle('active', isCreatorPreviewOpen);
+    btn.textContent = isCreatorPreviewOpen ? '👁️ Live Slide Preview: ON' : '👁️ Live Slide Preview: OFF';
+  }
+  if (isCreatorPreviewOpen) updateCreatorLivePreview();
+}
+
+function updateCreatorLivePreview() {
+  clearTimeout(creatorPreviewDebounceTimer);
+  creatorPreviewDebounceTimer = setTimeout(() => {
+    const pane = document.getElementById('creator-preview-pane');
+    if (!pane || !pane.classList.contains('open')) return;
+    const body = document.getElementById('creator-preview-body');
+    const badge = document.getElementById('creator-preview-badge');
+    if (!body) return;
+
+    const curPage = pages.find(p => p.id === currentPage);
+    if (!curPage) {
+      body.innerHTML = `
+        <div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">
+          <div class="ldoc-gem-symbol" style="font-size:26px;margin-bottom:10px;animation:ldocGemPulse 1.4s infinite alternate;display:inline-block;color:var(--accent)">◈</div>
+          <div>Add or select a page in the editor to preview slide presentation</div>
+        </div>
+      `;
+      if (badge) badge.textContent = 'No Page';
+      return;
+    }
+
+    const pageIdx = pages.indexOf(curPage) + 1;
+    if (badge) badge.textContent = `Slide ${pageIdx} / ${pages.length}`;
+    body.innerHTML = '';
+
+    try {
+      const slideDiv = document.createElement('div');
+      slideDiv.className = 'pres-slide' + (typeof is3DTiltActive !== 'undefined' && is3DTiltActive ? ' tilt-active' : '');
+
+      const titleBar = document.createElement('div');
+      titleBar.className = 'pres-slide-title-bar';
+      titleBar.innerHTML = `<span style="color:var(--accent)">◈</span> <span style="flex:1">${escapeHtml(curPage.title || 'Untitled Slide')}</span> <span style="font-size:10px;opacity:0.7">SLIDE ${pageIdx}</span>`;
+      slideDiv.appendChild(titleBar);
+
+      if (!curPage.blocks || !curPage.blocks.length) {
+        const emptyHint = document.createElement('div');
+        emptyHint.style.cssText = 'padding:32px 16px;text-align:center;color:var(--text3);font-size:13px;border:1px dashed var(--border);border-radius:12px';
+        emptyHint.textContent = 'This slide has no elements yet. Use the bottom element bar or FX Wizard to add content.';
+        slideDiv.appendChild(emptyHint);
+      }
+
+      (curPage.blocks || []).forEach(b => {
+        try {
+          renderCreatorSlideBlock(b, slideDiv);
+        } catch(nodeErr) {
+          const errDiv = document.createElement('div');
+          errDiv.className = 'ldoc-error-fallback';
+          errDiv.innerHTML = `
+            <div class="error-icon">⚠️</div>
+            <div class="error-msg">
+              <strong>Block Preview Deferred (${escapeHtml(b.type)})</strong>
+              <div>${escapeHtml(nodeErr.message || 'Block error')}</div>
+              <button class="ldoc-error-retry" onclick="updateCreatorLivePreview()">🔄 Retry</button>
+            </div>
+          `;
+          slideDiv.appendChild(errDiv);
+        }
+      });
+
+      body.appendChild(slideDiv);
+
+      if (typeof is3DTiltActive !== 'undefined' && is3DTiltActive) {
+        slideDiv.addEventListener('mousemove', (e) => {
+          const rect = slideDiv.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          slideDiv.style.transform = `perspective(1000px) rotateX(${-y * 10}deg) rotateY(${x * 12}deg)`;
+        });
+        slideDiv.addEventListener('mouseleave', () => {
+          slideDiv.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        });
+      }
+    } catch(err) {
+      body.innerHTML = `
+        <div class="ldoc-error-fallback">
+          <div class="error-icon">⚠️</div>
+          <div class="error-msg">
+            <strong>Live Presentation Preview Standby</strong>
+            <div>${escapeHtml(err.message || 'Preview updating')}</div>
+            <button class="ldoc-error-retry" onclick="updateCreatorLivePreview()">🔄 Retry Preview</button>
+          </div>
+        </div>
+      `;
+    }
+  }, 50);
+}
+
+function renderCreatorSlideBlock(b, container) {
+  const t = b.type;
+  if (t === 'heading') {
+    const lvl = b.level || 1;
+    const h = document.createElement(`h${lvl}`);
+    h.textContent = b.text || 'Heading';
+    if (lvl === 1) {
+      h.style.cssText = 'font-size:24px;font-weight:900;letter-spacing:0.5px;background:linear-gradient(135deg,#fef08a,var(--accent,#f59e0b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:8px 0;line-height:1.3';
+    } else if (lvl === 2) {
+      h.style.cssText = 'font-size:19px;font-weight:800;color:var(--accent,#f59e0b);margin:6px 0;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:4px';
+    } else {
+      h.style.cssText = 'font-size:15px;font-weight:700;color:#fff;margin:4px 0';
+    }
+    container.appendChild(h);
+  } else if (t === 'paragraph') {
+    const p = document.createElement('p');
+    p.style.cssText = 'font-size:13.5px;line-height:1.7;color:var(--text);margin:4px 0';
+    p.textContent = b.text || '';
+    container.appendChild(p);
+  } else if (t === 'quote') {
+    const q = document.createElement('blockquote');
+    q.style.cssText = 'border-left:3px solid var(--accent,#f59e0b);padding:10px 16px;background:rgba(167,139,250,.08);border-radius:0 8px 8px 0;font-style:italic;color:var(--text2);margin:6px 0;line-height:1.6';
+    q.textContent = `“${b.text || ''}”`;
+    container.appendChild(q);
+  } else if (t === 'list') {
+    const ul = document.createElement('ul');
+    ul.style.cssText = 'padding-left:22px;font-size:13px;line-height:1.7;color:var(--text);margin:6px 0';
+    (b.items || []).forEach(it => {
+      const li = document.createElement('li');
+      li.textContent = it;
+      ul.appendChild(li);
+    });
+    container.appendChild(ul);
+  } else if (t === 'code') {
+    const pre = document.createElement('pre');
+    pre.style.cssText = 'background:#090912;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:"Fira Code",monospace;font-size:12px;overflow-x:auto;color:#38bdf8;margin:6px 0';
+    const code = document.createElement('code');
+    code.textContent = b.code || '';
+    pre.appendChild(code);
+    container.appendChild(pre);
+  } else if (t === 'table') {
+    const tbl = document.createElement('table');
+    tbl.style.cssText = 'width:100%;border-collapse:collapse;margin:8px 0;font-size:12px;border:1px solid var(--border);border-radius:8px;overflow:hidden';
+    if (b.headers && b.headers.length) {
+      const thead = document.createElement('thead');
+      const tr = document.createElement('tr');
+      tr.style.background = 'rgba(255,255,255,.05)';
+      b.headers.forEach(h => {
+        const th = document.createElement('th');
+        th.style.cssText = 'padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);color:var(--accent,#f59e0b);font-weight:700';
+        th.textContent = h;
+        tr.appendChild(th);
+      });
+      thead.appendChild(tr);
+      tbl.appendChild(thead);
+    }
+    const tbody = document.createElement('tbody');
+    (b.rows || []).forEach(row => {
+      const tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid rgba(255,255,255,.04)';
+      row.forEach(cell => {
+        const td = document.createElement('td');
+        td.style.cssText = 'padding:6px 10px;color:var(--text)';
+        td.textContent = cell;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    tbl.appendChild(tbody);
+    container.appendChild(tbl);
+  } else if (t === 'web_image') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin:8px 0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 24px rgba(0,0,0,.5);position:relative';
+    if (b.src) {
+      const img = document.createElement('img');
+      img.src = b.src;
+      img.alt = b.alt || '';
+      img.style.cssText = 'width:100%;max-height:240px;object-fit:cover;display:block';
+      wrap.appendChild(img);
+      if (b.alt) {
+        const cap = document.createElement('div');
+        cap.style.cssText = 'font-size:11px;color:var(--text2);padding:6px 12px;background:rgba(0,0,0,.5);backdrop-filter:blur(4px)';
+        cap.textContent = b.alt;
+        wrap.appendChild(cap);
+      }
+    } else {
+      wrap.style.cssText += ';padding:24px;text-align:center;color:var(--text3);background:rgba(0,0,0,.2)';
+      wrap.innerHTML = '🖼️ <em>No image source provided</em>';
+    }
+    container.appendChild(wrap);
+  } else if (t === 'web_audio') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(96,165,250,.06));border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:12px;margin:6px 0';
+    wrap.innerHTML = `
+      <span style="font-size:24px">🎵</span>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:700;color:#fff">${escapeHtml(b.label || 'Audio Track')}</div>
+        <div style="font-size:10px;color:var(--text3)">Living Audio Stream</div>
+      </div>
+      ${b.src ? `<audio controls src="${escapeHtml(b.src)}" style="height:32px;max-width:180px"></audio>` : '<span style="font-size:11px;color:var(--text3)">Offline audio</span>'}
+    `;
+    container.appendChild(wrap);
+  } else if (t === 'web_video') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin:8px 0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 24px rgba(0,0,0,.5);background:#000';
+    if (b.src) {
+      wrap.innerHTML = `
+        <video controls playsinline ${b.autoplay ? 'autoplay muted' : ''} src="${escapeHtml(b.src)}" style="width:100%;max-height:220px;display:block"></video>
+        ${b.label ? `<div style="font-size:11px;color:var(--text2);padding:6px 12px;background:rgba(0,0,0,.5)">${escapeHtml(b.label)}</div>` : ''}
+      `;
+    } else {
+      wrap.style.padding = '24px';
+      wrap.style.textAlign = 'center';
+      wrap.innerHTML = '<span style="color:var(--text3);font-size:12px">🎬 Video Source Pending</span>';
+    }
+    container.appendChild(wrap);
+  } else if (t === '3d_model') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'background:radial-gradient(circle at center, rgba(167,139,250,.18) 0%, rgba(10,10,22,.95) 80%);border:1.5px solid var(--accent,#a78bfa);border-radius:14px;padding:16px;text-align:center;margin:8px 0;box-shadow:0 8px 30px rgba(0,0,0,.5)';
+    wrap.innerHTML = `
+      <div style="font-size:36px;margin-bottom:6px">📦</div>
+      <div style="font-weight:800;font-size:13px;color:#fff;letter-spacing:1px">${escapeHtml((b.custom_label || b.mesh_template || '3D Spatial Hologram').toUpperCase())}</div>
+      <div style="font-size:11px;color:var(--accent,#a78bfa);margin-top:4px">Material: ${escapeHtml(b.material_mode || 'cyber_hologram')} | Format: ${escapeHtml((b.format||'obj').toUpperCase())}</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:6px">Interactive 3D geometry compiled for Living Document engine</div>
+    `;
+    container.appendChild(wrap);
+  } else if (t === 'ai' || t === 'ai_live') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(37,99,235,.1));border:1px solid rgba(167,139,250,.35);border-radius:12px;padding:12px 14px;margin:6px 0';
+    wrap.innerHTML = `
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--accent,#a78bfa);margin-bottom:6px">
+        <span>⚡</span> <span>${t === 'ai_live' ? 'LIVE WEB AI INTELLIGENCE' : 'AI COPILOT PROMPT'}</span>
+      </div>
+      <div style="font-size:12px;color:#fff;line-height:1.5">${escapeHtml(b.prompt || '')}</div>
+      ${b.source_url ? `<div style="font-size:10px;color:#38bdf8;margin-top:6px">Source: ${escapeHtml(b.source_url)} (Sync ${b.refresh_sec||60}s)</div>` : ''}
+    `;
+    container.appendChild(wrap);
+  } else if (t === 'feature_grid') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:8px 0';
+    (b.cards || []).forEach(c => {
+      const card = document.createElement('div');
+      card.style.cssText = 'background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:10px';
+      card.innerHTML = `
+        <span style="font-size:9px;font-weight:800;color:var(--accent,#f59e0b);letter-spacing:1px">${escapeHtml(c.badge || 'FEATURE')}</span>
+        <div style="font-size:12px;font-weight:700;color:#fff;margin:3px 0">${escapeHtml(c.title || '')}</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.4">${escapeHtml(c.desc || '')}</div>
+      `;
+      wrap.appendChild(card);
+    });
+    container.appendChild(wrap);
+  } else if (t === 'live_feed') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'background:rgba(10,25,18,.8);border:1px solid rgba(52,211,153,.3);border-radius:12px;padding:12px 14px;margin:8px 0';
+    wrap.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399"></span>
+        <strong style="font-size:11px;letter-spacing:1px;color:#34d399">${escapeHtml(b.title || 'DISPATCH BEACON')}</strong>
+      </div>
+      <div style="font-family:'Fira Code',monospace;font-size:11px;color:#a7f3d0">${escapeHtml(b.sources || '')}</div>
+    `;
+    container.appendChild(wrap);
+  } else if (t === 'preorder') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(124,58,237,.1));border:1.5px solid rgba(245,158,11,.4);border-radius:14px;padding:16px;margin:8px 0;text-align:center';
+    wrap.innerHTML = `
+      <div style="font-size:11px;font-weight:800;color:#fef08a;letter-spacing:1px">${escapeHtml((b.tier || 'VIP PASS').toUpperCase())}</div>
+      <div style="font-size:26px;font-weight:900;color:#fff;margin:4px 0">${escapeHtml(b.price || '$499')}</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px">${escapeHtml(b.perks || '')}</div>
+      ${b.checkout_url ? `
+        <a href="${escapeHtml(b.checkout_url)}" target="_blank" class="ldoc-btn-royal_gold" style="width:100%;justify-content:center;box-sizing:border-box">
+          💳 SECURE CHECKOUT WITH STRIPE
+        </a>
+      ` : `
+        <button class="ldoc-btn-royal_gold" style="width:100%;justify-content:center" onclick="toast('Direct checkout configured via Stripe / Webhook','ok')">
+          💳 PRE-ORDER VIP PASS
+        </button>
+      `}
+    `;
+    container.appendChild(wrap);
+  } else if (t === 'button') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin:8px 0;display:flex;align-items:center;gap:10px';
+    const btnTheme = b.theme || b.style?.btn_style || 'royal_gold';
+    const cls = `ldoc-btn-${btnTheme}`;
+    const lbl = b.value || 'Click me';
+
+    if (b.action === 'link' && b.target) {
+      wrap.innerHTML = `
+        <a href="${escapeHtml(b.target)}" target="_blank" class="${cls}">
+          ${escapeHtml(lbl)}
+        </a>
+        <span style="font-size:10px;color:var(--text3)">🔗 ${escapeHtml(b.target)}</span>
+      `;
+    } else {
+      const btn = document.createElement('button');
+      btn.className = cls;
+      btn.textContent = lbl;
+      btn.onclick = () => {
+        toast(`Button Action [${b.action || 'navigate'}]: ${b.target || 'next'}`, 'ok');
+      };
+      wrap.appendChild(btn);
+      const hint = document.createElement('span');
+      hint.style.cssText = 'font-size:10px;color:var(--text3)';
+      hint.textContent = `⚡ [${b.action || 'navigate'} → ${b.target || 'next'}]`;
+      wrap.appendChild(hint);
+    }
+    container.appendChild(wrap);
+  } else if (t === 'form') {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:14px;margin:8px 0';
+    let fieldsHtml = (b.fields || []).map(f => {
+      const ph = escapeHtml(f.placeholder || '');
+      const lb = escapeHtml(f.label || '');
+      if (f.field_type === 'input_checkbox') {
+        return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><input type="checkbox" style="width:auto;cursor:pointer"><label style="font-size:12px;color:var(--text)">${lb}</label></div>`;
+      }
+      return `
+        <div style="margin-bottom:8px">
+          <label style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:3px">${lb}</label>
+          <input placeholder="${ph}" style="width:100%;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:6px 9px;color:var(--text);font-size:12px">
+        </div>
+      `;
+    }).join('');
+
+    wrap.innerHTML = `
+      <div style="font-size:12px;font-weight:800;color:var(--accent,#f59e0b);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+        <span>📑 INTERACTIVE FORM</span>
+        ${b.webhook_url ? `<span style="font-size:9px;color:#38bdf8">Webhook Active</span>` : ''}
+      </div>
+      ${fieldsHtml}
+      <button class="ldoc-btn-royal_gold" style="width:100%;justify-content:center;margin-top:6px" onclick="toast('Form submitted in preview!','ok')">
+        ${b.webhook_url ? '⚡ SUBMIT TO WEBHOOK / STRIPE' : 'SUBMIT FORM'}
+      </button>
+    `;
+    container.appendChild(wrap);
+  } else if (t === 'jsx_canvas' || t === 'interactive_sandbox') {
+    const wrap = document.createElement('div');
+    wrap.className = 'ed-block-interactive-wrap';
+    const badge = document.createElement('div');
+    badge.className = 'badge';
+    badge.innerHTML = `⚡ ${escapeHtml(b.value || 'Interactive Reactive Sandbox')}`;
+    const content = document.createElement('div');
+    try {
+      content.innerHTML = b.style?.code || '<div style="color:var(--text3);font-size:12px">No code supplied</div>';
+    } catch(err) {
+      content.innerHTML = `
+        <div class="ldoc-error-fallback">
+          <div class="error-icon">⚠️</div>
+          <div class="error-msg">
+            <strong>Custom Sandbox Error</strong>
+            <div>${escapeHtml(err.message || 'Execution error')}</div>
+          </div>
+        </div>
+      `;
+    }
+    wrap.appendChild(badge);
+    wrap.appendChild(content);
+    container.appendChild(wrap);
+  } else if (t === 'particles' || t === 'particle_canvas') {
+    const wrap = document.createElement('div');
+    wrap.className = 'ed-block-interactive-wrap';
+    const badge = document.createElement('div');
+    badge.className = 'badge';
+    badge.style.color = '#f59e0b';
+    badge.innerHTML = `✨ Cosmic Particles (${escapeHtml((b.value || 'stardust').toUpperCase())})`;
+    const canvas = document.createElement('canvas');
+    canvas.id = `pres-p-${b.id}`;
+    canvas.height = 100;
+    wrap.appendChild(badge);
+    wrap.appendChild(canvas);
+    container.appendChild(wrap);
+    setTimeout(() => initInPageParticleCanvas(`pres-p-${b.id}`, b.value || 'stardust'), 40);
+  } else if (t === 'water_effect' || t === 'fluid_canvas') {
+    const wrap = document.createElement('div');
+    wrap.className = 'ed-block-interactive-wrap';
+    const badge = document.createElement('div');
+    badge.className = 'badge';
+    badge.style.color = '#38bdf8';
+    badge.innerHTML = '🌊 Fluid Temporal Wave Simulation (Interactive Refraction)';
+    const canvas = document.createElement('canvas');
+    canvas.id = `pres-w-${b.id}`;
+    canvas.height = 100;
+    wrap.appendChild(badge);
+    wrap.appendChild(canvas);
+    container.appendChild(wrap);
+    setTimeout(() => initInPageWaterCanvas(`pres-w-${b.id}`), 40);
+  } else {
+    const d = document.createElement('div');
+    d.style.cssText = 'padding:8px 12px;background:var(--s2);border-radius:6px;font-size:12px;color:var(--text2)';
+    d.textContent = `[${b.type}] ${b.value || b.text || ''}`;
+    container.appendChild(d);
+  }
+}
+
+// ── Page management ───────────────────────────────────────────────────────────
+function addPage(){
+  const p={id:pid(),title:`Page ${pages.length+1}`,blocks:[]};
+  pages.push(p);renderPageList();selectPage(p.id);updateStats();updateCreatorLivePreview();
+}
+function deletePage(id){
+  pages=pages.filter(p=>p.id!==id);
+  if(currentPage===id)currentPage=null;
+  renderPageList();
+  if(pages.length)selectPage(pages[pages.length-1].id);
+  else showNoPage();
+  updateStats();
+  updateCreatorLivePreview();
+}
+function selectPage(id){
+  currentPage=id;renderPageList();renderBlocks();updateCreatorLivePreview();
+}
+function onPageTitleChange(v){
+  const p=pages.find(p=>p.id===currentPage);if(!p)return;
+  p.title=v;renderPageList();updateCreatorLivePreview();
+}
+function renderPageList(){
+  const list=document.getElementById('page-list');list.innerHTML='';
+  pages.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='pg-item'+(p.id===currentPage?' active':'');
+    d.innerHTML=`<span class="pg-num">${i+1}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.title}</span><button class="pg-del" onclick="event.stopPropagation();deletePage(${p.id})">✕</button>`;
+    d.onclick=()=>selectPage(p.id);list.appendChild(d);
+  });
+}
+function showNoPage(){
+  document.getElementById('no-page').style.display='flex';
+  document.getElementById('blocks-area').style.display='none';
+  document.getElementById('add-bar').style.display='none';
+  document.getElementById('page-title-bar').style.display='none';
+  updateCreatorLivePreview();
+}
+
+// ── Dynamic Canvas & Typography Styling ───────────────────────────────────────
+function applyCanvasStyles(){
+  const font = document.getElementById('m-font')?.value || "'Cinzel Decorative', serif";
+  const theme = document.getElementById('m-theme')?.value || "velocity";
+  const textFx = document.getElementById('m-text-fx')?.value || "none";
+  const bg = document.getElementById('m-canvas-bg')?.value || "nebula";
+
+  document.documentElement.style.setProperty('--font-main', font);
+  
+  const root = document.documentElement;
+  if(theme === 'velocity'){
+    root.style.setProperty('--accent', '#00f0ff');
+    root.style.setProperty('--accent2', '#a855f7');
+    root.style.setProperty('--border', '#3b2064');
+  } else if(theme === 'prophet'){
+    root.style.setProperty('--accent', '#f59e0b');
+    root.style.setProperty('--accent2', '#fef08a');
+    root.style.setProperty('--border', '#452c0f');
+  } else if(theme === 'matrix'){
+    root.style.setProperty('--accent', '#10b981');
+    root.style.setProperty('--accent2', '#38bdf8');
+    root.style.setProperty('--border', '#064e3b');
+  } else if(theme === 'crystal'){
+    root.style.setProperty('--accent', '#38bdf8');
+    root.style.setProperty('--accent2', '#c084fc');
+    root.style.setProperty('--border', '#1e3a8a');
+  } else if(theme === 'sunset'){
+    root.style.setProperty('--accent', '#f43f5e');
+    root.style.setProperty('--accent2', '#fb923c');
+    root.style.setProperty('--border', '#881337');
+  } else if(theme === 'obsidian'){
+    root.style.setProperty('--accent', '#e2e8f0');
+    root.style.setProperty('--accent2', '#94a3b8');
+    root.style.setProperty('--border', '#334155');
+  }
+
+  const center = document.getElementById('center');
+  if(center){
+    if(bg === 'nebula') center.style.background = 'radial-gradient(circle at top center,#1a1532 0%,#090910 100%)';
+    else if(bg === 'grid') center.style.background = 'linear-gradient(rgba(167,139,250,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,.06) 1px, #0b0b14 1px)';
+    else if(bg === 'starfield') center.style.background = 'radial-gradient(circle at 50% 50%,#0d172e 0%,#050811 100%)';
+    else if(bg === 'carbon') center.style.background = '#0a0a0f';
+  }
+
+  updateCreatorLivePreview();
+}
+
+// ── AI Helper Assistant Engine ───────────────────────────────────────────────
+let aiBusy = false;
+function toggleAiHelper(){
+  const p = document.getElementById('ai-helper-panel');
+  p.classList.toggle('open');
+}
+
+function aiQuickPrompt(text){
+  document.getElementById('ai-prompt-inp').value = text;
+  sendAiPrompt();
+}
+
+async function sendAiPrompt(){
+  const inp = document.getElementById('ai-prompt-inp');
+  const txt = inp.value.trim();
+  if(!txt || aiBusy) return;
+  inp.value = '';
+
+  const msgs = document.getElementById('ai-msgs');
+  const uMsg = document.createElement('div');
+  uMsg.className = 'ai-msg user';
+  uMsg.textContent = txt;
+  msgs.appendChild(uMsg);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  const bMsg = document.createElement('div');
+  bMsg.className = 'ai-msg bot';
+  bMsg.textContent = 'Thinking & generating living presentation structure…';
+  msgs.appendChild(bMsg);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  aiBusy = true;
+  try {
+    const isGame = txt.toLowerCase().includes('game') || txt.toLowerCase().includes('launch') || txt.toLowerCase().includes('gt6') || txt.toLowerCase().includes('speed');
+    const isNews = txt.toLowerCase().includes('news') || txt.toLowerCase().includes('prophet') || txt.toLowerCase().includes('wizard') || txt.toLowerCase().includes('magic');
+    const isDeck = txt.toLowerCase().includes('deck') || txt.toLowerCase().includes('saas') || txt.toLowerCase().includes('investor') || txt.toLowerCase().includes('pitch');
+
+    let title = isGame ? 'Velocity Unleashed — Next-Gen Experience' : (isNews ? 'The Daily Enchanter' : (isDeck ? 'Apex Intelligence — Investor Deck' : 'Interactive Living Presentation'));
+    document.getElementById('m-title').value = title;
+    if(isGame) document.getElementById('m-theme').value = 'velocity';
+    if(isNews) document.getElementById('m-theme').value = 'prophet';
+    if(isDeck) document.getElementById('m-theme').value = 'matrix';
+    applyCanvasStyles();
+
+    pages = [
+      {
+        id: pid(),
+        title: 'Hero Showcase & 3D Hologram',
+        blocks: [
+          { id: bid(), type: 'heading', level: 1, text: title.toUpperCase() },
+          { id: bid(), type: 'paragraph', text: 'Step into the next evolution of living documents. Powered by real-time reactive shaders and interactive spatial computing.' },
+          { id: bid(), type: '3d_model', format: 'obj', mesh_template: isGame ? 'supercar' : (isNews ? 'snitch' : 'polyhedron'), material_mode: isGame ? 'cyber_hologram' : (isNews ? 'royal_gold' : 'obsidian_carbon') },
+          { id: bid(), type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: `${title} Soundtrack` }
+        ]
+      },
+      {
+        id: pid(),
+        title: 'Cinematic Motion & Feature Grid',
+        blocks: [
+          { id: bid(), type: 'heading', level: 2, text: 'ENGINEERING & ARCHITECTURE' },
+          { id: bid(), type: 'feature_grid', cards: [
+            { badge: 'PERFORMANCE', title: 'Zero-Lag Engine', desc: 'Hardware-accelerated living document AST pipeline.' },
+            { badge: 'INTELLIGENCE', title: 'Gemini Copilot', desc: 'Context-aware intelligence across all sections.' },
+            { badge: 'SPATIAL', title: 'Interactive 3D', desc: 'Real-time shaders and procedural geometry.' }
+          ]},
+          { id: bid(), type: 'web_video', src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm', label: 'In-Engine 4K Capture', autoplay: true }
+        ]
+      },
+      {
+        id: pid(),
+        title: 'VIP Registration & Dispatch',
+        blocks: [
+          { id: bid(), type: 'heading', level: 2, text: 'JOIN THE LIVING NETWORK' },
+          { id: bid(), type: 'live_feed', title: 'GLOBAL DISPATCH BEACON', sources: 'Core Network: 2,400 TFLOPS | Node Latency: 4.2ms | Encryption: AES-GCM' },
+          { id: bid(), type: 'form', fields: [
+            { label: 'Pilot / Executive Name', field_type: 'input_text', placeholder: 'Enter name' },
+            { label: 'Direct Access Email', field_type: 'input_text', placeholder: 'name@organization.com' }
+          ]},
+          { id: bid(), type: 'button', value: 'CLAIM EARLY ACCESS PASS', action: 'submit', target: 'early_access' }
+        ]
+      }
+    ];
+
+    renderPageList();
+    selectPage(pages[0].id);
+    updateStats();
+    bMsg.innerHTML = `✓ Generated <strong>3-page interactive Living Presentation</strong> with 3D Holograms, Motion Video, Feature Grid, and VIP Dispatch!`;
+    toast('✓ AI Blueprint applied to document','ok');
+  } catch(e){
+    bMsg.textContent = 'Error generating blueprint: ' + e.message;
+  } finally {
+    aiBusy = false;
+  }
+}
+
+// ── Block management ──────────────────────────────────────────────────────────
+function addBlock(type){
+  const p=pages.find(p=>p.id===currentPage);if(!p){toast('Add a page first','err');return;}
+  const b={id:bid(),type};
+  if(type==='heading'){b.level=1;b.text='';}
+  else if(type==='paragraph'||type==='quote'){b.text='';}
+  else if(type==='list'){b.items=[''];}
+  else if(type==='code'){b.language='text';b.code='';}
+  else if(type==='table'){b.headers=['Column 1','Column 2'];b.rows=[['',''],['','']];}
+  else if(type==='ai'){b.prompt='';}
+  else if(type==='ai_live'){b.prompt='Live Web Data & Internet Source Summary';b.source_url='https://api.github.com/zen';b.refresh_sec=60;}
+  else if(type==='3d_model'){b.format='obj';b.mesh_template='supercar';b.material_mode='cyber_hologram';}
+  else if(type==='form'){b.fields=[{field_type:'input_text',label:'Name',placeholder:'Enter name'}];b.webhook_url='';}
+  else if(type==='feature_grid'){b.cards=[{badge:'CAPABILITY',title:'Core Feature',desc:'Detailed capability description here.'},{badge:'SPEED',title:'Ultra Low Latency',desc:'Instant reactive updates.'},{badge:'SECURITY',title:'Encrypted Vault',desc:'Hardware key validation.'}];}
+  else if(type==='live_feed'){b.title='LIVE DISPATCH BEACON';b.sources='Network Node: Alpha-7 | Latency: 3.8ms | Status: OPTIMAL';}
+  else if(type==='preorder'){b.tier='FOUNDER RELIC PASS';b.price='$499';b.perks='Instant Alpha Access, Exclusive 3D Hologram, Lifetime Updates';b.checkout_url='';}
+  else if(type==='web_image'){b.src='';b.alt='';}
+  else if(type==='web_audio'){b.src='';b.label='';}
+  else if(type==='web_video'){b.src='';b.label='';b.autoplay=true;}
+  else if(type==='iframe'){b.src='';b.label='';}
+  else if(type==='button'){b.value='Click me';b.action='navigate';b.target='next';b.theme='royal_gold';b.style={action:'navigate',target:'next',btn_style:'royal_gold'};}
+  else if(type==='jsx_canvas'){b.value='Interactive Reactive Sandbox';b.style={code:'<div style="padding:16px;color:#fff"><strong>⚡ Live Widget</strong><br><input type="range" min="0" max="100" value="50" style="width:100%;accent-color:#00f0ff" oninput="this.nextSibling.textContent=this.value+\'%\'"><span>50%</span></div>'};}
+  else if(type==='particles'){b.value='stardust';}
+  else if(type==='water_effect'){b.value='fluid';}
+  p.blocks.push(b);renderBlocks();updateStats();updateCreatorLivePreview();
+}
+function deleteBlock(id){
+  const p=pages.find(p=>p.id===currentPage);if(!p)return;
+  p.blocks=p.blocks.filter(b=>b.id!==id);renderBlocks();updateStats();updateCreatorLivePreview();
+}
+function moveBlock(id,dir){
+  const p=pages.find(p=>p.id===currentPage);if(!p)return;
+  const i=p.blocks.findIndex(b=>b.id===id),j=i+dir;
+  if(j<0||j>=p.blocks.length)return;
+  [p.blocks[i],p.blocks[j]]=[p.blocks[j],p.blocks[i]];renderBlocks();updateCreatorLivePreview();
+}
+function dupBlock(id){
+  const p=pages.find(p=>p.id===currentPage);if(!p)return;
+  const i=p.blocks.findIndex(b=>b.id===id);if(i<0)return;
+  const copy=JSON.parse(JSON.stringify(p.blocks[i]));copy.id=bid();
+  p.blocks.splice(i+1,0,copy);renderBlocks();updateStats();updateCreatorLivePreview();
+}
+
+function renderBlocks(){
+  const p=pages.find(p=>p.id===currentPage);
+  document.getElementById('no-page').style.display='none';
+  document.getElementById('page-title-bar').style.display='flex';
+  document.getElementById('blocks-area').style.display='flex';
+  document.getElementById('add-bar').style.display='flex';
+  document.getElementById('pg-title-inp').value=p?p.title:'';
+  const area=document.getElementById('blocks-area');area.innerHTML='';
+  if(!p||!p.blocks.length){
+    const e=document.createElement('div');e.style.cssText='color:var(--text3);font-size:13px;text-align:center;padding:24px';
+    e.textContent='No blocks yet — use the Add Element bar below';area.appendChild(e);return;
+  }
+  p.blocks.forEach(b=>{
+    const div=document.createElement('div');div.className='blk';
+    const tl=document.createElement('div');tl.className='blk-type';tl.textContent=b.type.replace(/_/g,' ');div.appendChild(tl);
+    // actions
+    const acts=document.createElement('div');acts.className='blk-actions';
+    const mkA=(icon,title,fn,cls='')=>{const btn=document.createElement('button');btn.className='blk-act '+cls;btn.textContent=icon;btn.title=title;btn.onclick=fn;acts.appendChild(btn);};
+    mkA('↑','Move up',()=>moveBlock(b.id,-1));
+    mkA('↓','Move down',()=>moveBlock(b.id,1));
+    mkA('⧉','Duplicate',()=>dupBlock(b.id));
+    mkA('✕','Delete',()=>deleteBlock(b.id),'del');
+    div.appendChild(acts);
+
+    const inp=(ph,val,cb,tag='input',rows=3)=>{
+      const el=document.createElement(tag);
+      if(tag==='textarea'){el.rows=rows;}
+      el.placeholder=ph||'';el.value=val||'';
+      el.oninput=()=>cb(el.value);div.appendChild(el);return el;
+    };
+    const row2=(children)=>{const r=document.createElement('div');r.className='row2';children.forEach(c=>r.appendChild(c));div.appendChild(r);};
+
+    if(b.type==='heading'){
+      const sel=document.createElement('select');sel.style.cssText='width:64px;background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 6px;font-size:13px;margin-top:4px';
+      [1,2,3,4,5,6].forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=`H${n}`;if(n==b.level)o.selected=true;sel.appendChild(o);});
+      sel.onchange=()=>{b.level=+sel.value;updateCreatorLivePreview();};
+      const ti=document.createElement('input');ti.placeholder='Heading text';ti.value=b.text||'';ti.style.flex='1';ti.oninput=()=>{b.text=ti.value;updateCreatorLivePreview();};
+      row2([sel,ti]);
+    } else if(b.type==='paragraph'||b.type==='quote'){
+      inp(b.type==='quote'?'Quote text…':'Paragraph text…',b.text,v=>{b.text=v;updateCreatorLivePreview();},'textarea',3);
+    } else if(b.type==='list'){
+      inp('One item per line',(b.items||[]).join('\n'),v=>{b.items=v.split('\n').filter(s=>s.trim());updateCreatorLivePreview();},'textarea',4);
+      const h=document.createElement('div');h.className='hint';h.textContent='One item per line';div.appendChild(h);
+    } else if(b.type==='code'){
+      const li=document.createElement('input');li.placeholder='Language (rust, js, python…)';li.value=b.language||'text';li.style.marginTop='4px';li.oninput=()=>{b.language=li.value;updateCreatorLivePreview();};div.appendChild(li);
+      inp('Code…',b.code,v=>{b.code=v;updateCreatorLivePreview();},'textarea',5);
+    } else if(b.type==='table'){
+      const hi=document.createElement('input');hi.placeholder='Col1, Col2, Col3';hi.value=(b.headers||[]).join(', ');hi.style.marginTop='4px';hi.oninput=()=>{b.headers=hi.value.split(',').map(s=>s.trim());updateCreatorLivePreview();};div.appendChild(hi);
+      const rl=document.createElement('div');rl.className='hint';rl.textContent='Rows — one per line, cells comma-separated:';div.appendChild(rl);
+      inp('',(b.rows||[]).map(r=>r.join(', ')).join('\n'),v=>{b.rows=v.split('\n').filter(s=>s.trim()).map(r=>r.split(',').map(s=>s.trim()));updateCreatorLivePreview();},'textarea',4);
+    } else if(b.type==='ai'){
+      inp('AI prompt…',b.prompt,v=>{b.prompt=v;updateCreatorLivePreview();},'textarea',3);
+    } else if(b.type==='ai_live'){
+      inp('AI Prompt / Live Query Description…',b.prompt,v=>{b.prompt=v;updateCreatorLivePreview();},'textarea',2);
+      inp('Live Internet Data Source URL (API/JSON/Web)',b.source_url,v=>{b.source_url=v;updateCreatorLivePreview();});
+      const rf=document.createElement('input');rf.type='number';rf.placeholder='Refresh interval (seconds, default 60)';rf.value=b.refresh_sec||60;rf.style.marginTop='4px';rf.oninput=()=>{b.refresh_sec=+rf.value||60;updateCreatorLivePreview();};div.appendChild(rf);
+      const h=document.createElement('div');h.className='hint';h.style.color='var(--accent)';h.textContent='🌐 Auto-validates against live internet source and triggers AI live refresh in viewer.';div.appendChild(h);
+    } else if(b.type==='feature_grid'){
+      const h=document.createElement('div');h.className='hint';h.textContent='Cards: badge | title | description (one per line)';div.appendChild(h);
+      inp('Badge | Title | Description',(b.cards||[]).map(c=>`${c.badge||'FEATURE'} | ${c.title||''} | ${c.desc||''}`).join('\n'),v=>{
+        b.cards=v.split('\n').filter(s=>s.trim()).map(line=>{
+          const pts=line.split('|').map(s=>s.trim());
+          return { badge: pts[0]||'FEATURE', title: pts[1]||'', desc: pts[2]||'' };
+        });
+        updateCreatorLivePreview();
+      },'textarea',4);
+    } else if(b.type==='live_feed'){
+      inp('Beacon Title',b.title||'GLOBAL DISPATCH BEACON',v=>{b.title=v;updateCreatorLivePreview();});
+      inp('Telemetry sources / metrics text',b.sources||'Status: OPTIMAL | Latency: 4ms',v=>{b.sources=v;updateCreatorLivePreview();});
+    } else if(b.type==='preorder'){
+      inp('Tier Name',b.tier||'FOUNDER RELIC PASS',v=>{b.tier=v;updateCreatorLivePreview();});
+      inp('Price',b.price||'$499',v=>{b.price=v;updateCreatorLivePreview();});
+      inp('Direct Stripe / Checkout Payment Link (https://buy.stripe.com/...)',b.checkout_url||'',v=>{b.checkout_url=v;updateCreatorLivePreview();});
+      inp('Perks summary',b.perks||'Instant Alpha Access, Exclusive 3D Model',v=>{b.perks=v;updateCreatorLivePreview();});
+    } else if(b.type==='3d_model'){
+      const fmt=document.createElement('select');fmt.style.cssText='background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 6px;font-size:13px';
+      ['obj','stl','gltf','json'].forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f.toUpperCase();if(f===b.format)o.selected=true;fmt.appendChild(o);});
+      fmt.onchange=()=>{b.format=fmt.value;};
+
+      const tpl=document.createElement('select');tpl.style.cssText='background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 6px;font-size:13px';
+      ['supercar','wheel','snitch','polyhedron','cube','sphere','pyramid'].forEach(t=>{
+        const o=document.createElement('option');o.value=t;o.textContent='Preset: '+t.toUpperCase();if(t===(b.mesh_template||'supercar'))o.selected=true;tpl.appendChild(o);
+      });
+      tpl.onchange=()=>{b.mesh_template=tpl.value;b.mesh_data=null;b.custom_label=null;renderBlocks();};
+
+      const mat=document.createElement('select');mat.style.cssText='background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 6px;font-size:13px';
+      [['cyber_hologram','⚡ Cyber Hologram'],['royal_gold','✨ Royal Gold'],['obsidian_carbon','🏎️ Obsidian Carbon'],['crystal_cobalt','💎 Crystal Cobalt'],['wireframe','🕸️ Wireframe']].forEach(m=>{
+        const o=document.createElement('option');o.value=m[0];o.textContent=m[1];if(m[0]===(b.material_mode||'cyber_hologram'))o.selected=true;mat.appendChild(o);
+      });
+      mat.onchange=()=>{b.material_mode=mat.value;};
+      row2([fmt,tpl,mat]);
+
+      const upCont=document.createElement('div');
+      upCont.style.cssText='margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap';
+      const fileInp=document.createElement('input');
+      fileInp.type='file';fileInp.accept='.stl,.obj,.json,.gltf,.glb';fileInp.style.display='none';
+      const upBtn=document.createElement('button');
+      upBtn.className='btn';upBtn.style.cssText='padding:4px 10px;font-size:12px';
+      upBtn.textContent='📁 Upload 3D File (.STL / .OBJ / .JSON)';
+      upBtn.onclick=()=>fileInp.click();
+
+      fileInp.onchange=async(e)=>{
+        const f=e.target.files[0];
+        if(!f) return;
+        try{
+          const mesh=await parse3DModelFile(f);
+          if(mesh && mesh.vertices && mesh.vertices.length){
+            b.mesh_data=mesh;
+            b.custom_label=`${f.name} (${mesh.vertices.length} vertices, ${mesh.faces.length} faces)`;
+            toast(`✓ 3D Model Loaded: ${mesh.vertices.length} vertices, ${mesh.faces.length} faces`,'ok');
+            renderBlocks();
+          }else{
+            toast('Could not parse 3D geometry from file','err');
+          }
+        }catch(err){toast('3D Load error: '+err.message,'err');}
+      };
+      upCont.appendChild(upBtn);
+      upCont.appendChild(fileInp);
+
+      if(b.custom_label){
+        const badge=document.createElement('span');
+        badge.style.cssText='font-size:11px;color:#34d399;font-weight:600';
+        badge.textContent='✓ ' + b.custom_label;
+        upCont.appendChild(badge);
+      }
+      div.appendChild(upCont);
+
+    } else if(b.type==='form'){
+      inp('Webhook Endpoint / Stripe Action URL (e.g. https://buy.stripe.com/... or https://api.crm.com/leads)',b.webhook_url||b.action_url||'',v=>{
+        b.webhook_url=v;
+        b.action_url=v;
+        updateCreatorLivePreview();
+      });
+      const hl=document.createElement('div');hl.className='hint';hl.textContent='Fields: label | type | placeholder (one per line). Types: input_text, input_checkbox, input_radio, input_select, input_date, input_file';div.appendChild(hl);
+      inp('',(b.fields||[]).map(f=>`${f.label} | ${f.field_type} | ${f.placeholder||''}`).join('\n'),v=>{
+        b.fields=v.split('\n').filter(s=>s.trim()).map(line=>{const pts=line.split('|').map(s=>s.trim());return{label:pts[0]||'',field_type:pts[1]||'input_text',placeholder:pts[2]||undefined};});
+        updateCreatorLivePreview();
+      },'textarea',5);
+
+    } else if(b.type==='web_image'){
+      const upCont=document.createElement('div');
+      upCont.style.cssText='margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap';
+      const fileInp=document.createElement('input');
+      fileInp.type='file';fileInp.accept='image/*';fileInp.style.display='none';
+      const upBtn=document.createElement('button');
+      upBtn.className='btn primary';upBtn.style.cssText='padding:4px 10px;font-size:12px';
+      upBtn.textContent='📁 Upload Offline Image (Auto-Compress WebP)';
+      upBtn.onclick=()=>fileInp.click();
+
+      fileInp.onchange=async(e)=>{
+        const f=e.target.files[0];
+        if(!f) return;
+        try{
+          toast('Compressing image without quality loss…','ok');
+          const res=await compressImageFile(f,1600,1200,0.82);
+          b.src=res.dataUrl;
+          b.compressed_info=`${Math.round(res.compSize/1024)} KB (${res.savedPct}% smaller, ${res.width}x${res.height})`;
+          if(!b.alt) b.alt=f.name.replace(/\.[^/.]+$/,'');
+          toast(`✓ Compressed to ${Math.round(res.compSize/1024)} KB (${res.savedPct}% saved)`,'ok');
+          renderBlocks();
+        }catch(err){toast('Compression error: '+err.message,'err');}
+      };
+      upCont.appendChild(upBtn);
+      upCont.appendChild(fileInp);
+
+      if(b.compressed_info){
+        const badge=document.createElement('span');
+        badge.style.cssText='font-size:11px;color:#34d399;font-weight:600';
+        badge.textContent='✓ Offline WebP: ' + b.compressed_info;
+        upCont.appendChild(badge);
+      }
+      div.appendChild(upCont);
+
+      inp('Or Web Image URL (https://…)',b.src,v=>{b.src=v;b.compressed_info=null;});
+      inp('Alt text / Caption',b.alt,v=>{b.alt=v;});
+
+      if(b.src && b.src.length > 5){
+        const preview=document.createElement('img');
+        preview.src=b.src;preview.style.cssText='max-height:80px;border-radius:6px;border:1px solid var(--border);margin-top:6px;object-fit:cover';
+        div.appendChild(preview);
+      }
+
+    } else if(b.type==='web_audio'){
+      const upCont=document.createElement('div');
+      upCont.style.cssText='margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap';
+      const fileInp=document.createElement('input');
+      fileInp.type='file';fileInp.accept='audio/*';fileInp.style.display='none';
+      const upBtn=document.createElement('button');
+      upBtn.className='btn';upBtn.style.cssText='padding:4px 10px;font-size:12px';
+      upBtn.textContent='📁 Upload Offline Audio (.MP3 / .WAV / .OGG)';
+      upBtn.onclick=()=>fileInp.click();
+
+      fileInp.onchange=async(e)=>{
+        const f=e.target.files[0];
+        if(!f) return;
+        try{
+          const res=await readOfflineMedia(f);
+          b.src=res.dataUrl;
+          b.offline_info=`${f.name} (${Math.round(res.size/1024)} KB)`;
+          if(!b.label) b.label=f.name;
+          toast(`✓ Offline Audio Embedded (${Math.round(res.size/1024)} KB)`,'ok');
+          renderBlocks();
+        }catch(err){toast('Audio Load error: '+err.message,'err');}
+      };
+      upCont.appendChild(upBtn);
+      upCont.appendChild(fileInp);
+
+      if(b.offline_info){
+        const badge=document.createElement('span');
+        badge.style.cssText='font-size:11px;color:#34d399;font-weight:600';
+        badge.textContent='✓ Offline Audio: ' + b.offline_info;
+        upCont.appendChild(badge);
+      }
+      div.appendChild(upCont);
+
+      inp('Or Web Audio URL (https://…)',b.src,v=>{b.src=v;b.offline_info=null;});
+      inp('Track Title / Label',b.label,v=>{b.label=v;});
+
+    } else if(b.type==='web_video'){
+      const upCont=document.createElement('div');
+      upCont.style.cssText='margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap';
+      const fileInp=document.createElement('input');
+      fileInp.type='file';fileInp.accept='video/mp4,video/webm,video/*';fileInp.style.display='none';
+      const upBtn=document.createElement('button');
+      upBtn.className='btn';upBtn.style.cssText='padding:4px 10px;font-size:12px';
+      upBtn.textContent='📁 Upload Offline Video (.MP4 / .WEBM)';
+      upBtn.onclick=()=>fileInp.click();
+
+      fileInp.onchange=async(e)=>{
+        const f=e.target.files[0];
+        if(!f) return;
+        try{
+          const res=await readOfflineMedia(f);
+          b.src=res.dataUrl;
+          b.offline_info=`${f.name} (${Math.round(res.size/1024)} KB)`;
+          if(!b.label) b.label=f.name;
+          toast(`✓ Offline Video Embedded (${Math.round(res.size/1024)} KB)`,'ok');
+          renderBlocks();
+        }catch(err){toast('Video Load error: '+err.message,'err');}
+      };
+      upCont.appendChild(upBtn);
+      upCont.appendChild(fileInp);
+
+      if(b.offline_info){
+        const badge=document.createElement('span');
+        badge.style.cssText='font-size:11px;color:#34d399;font-weight:600';
+        badge.textContent='✓ Offline Video: ' + b.offline_info;
+        upCont.appendChild(badge);
+      }
+      div.appendChild(upCont);
+
+      inp('Or Web Video URL (https://…)',b.src,v=>{b.src=v;b.offline_info=null;});
+      inp('Video Title / Caption',b.label,v=>{b.label=v;});
+
+      const autoCont=document.createElement('div');
+      autoCont.style.cssText='margin-top:6px;display:flex;align-items:center;gap:6px';
+      const autoInp=document.createElement('input');
+      autoInp.type='checkbox';autoInp.id='auto-'+b.id;autoInp.checked=b.autoplay!==false;autoInp.style.width='auto';
+      autoInp.onchange=()=>{b.autoplay=autoInp.checked;};
+      const autoLbl=document.createElement('label');
+      autoLbl.htmlFor='auto-'+b.id;autoLbl.style.cssText='font-size:11px;color:var(--accent);font-weight:700;cursor:pointer';
+      autoLbl.textContent='▶ Autoplay with audio when page arrives';
+      autoCont.appendChild(autoInp);autoCont.appendChild(autoLbl);
+      div.appendChild(autoCont);
+
+    } else if(b.type==='iframe'){
+      inp('Embed URL (https://…)',b.src,v=>{b.src=v;});
+      inp('Label / Title',b.label,v=>{b.label=v;});
+
+    } else if(b.type==='button'){
+      inp('Button label',b.value||'Click me',v=>{b.value=v;updateCreatorLivePreview();});
+      const selAction=document.createElement('select');selAction.style.cssText='background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 6px;font-size:13px;margin-top:4px';
+      [
+        ['link', '🔗 External / Stripe URL'],
+        ['navigate', '🧭 Slide Navigate'],
+        ['submit', '📨 Submit Form / Action'],
+        ['save_state', '💾 Save State']
+      ].forEach(a=>{const o=document.createElement('option');o.value=a[0];o.textContent=a[1];if(a[0]===(b.action||'navigate'))o.selected=true;selAction.appendChild(o);});
+
+      const getPlaceholder=(act)=>{
+        if(act==='link')return 'Target URL (e.g. https://buy.stripe.com/...)';
+        if(act==='navigate')return 'Target slide (next / previous / page_001)';
+        if(act==='submit')return 'Target action / webhook';
+        return 'State key to save';
+      };
+
+      const ti=document.createElement('input');
+      ti.placeholder=getPlaceholder(b.action||'navigate');
+      ti.value=b.target||(b.action==='link'?'https://buy.stripe.com/':'next');
+      ti.style.flex='1';
+      ti.oninput=()=>{b.target=ti.value;updateCreatorLivePreview();};
+
+      selAction.onchange=()=>{
+        b.action=selAction.value;
+        ti.placeholder=getPlaceholder(b.action);
+        if(b.action==='link'&&(!b.target||b.target==='next')){
+          b.target='https://buy.stripe.com/';
+          ti.value=b.target;
+        }
+        updateCreatorLivePreview();
+      };
+
+      const selTheme=document.createElement('select');selTheme.style.cssText='background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 6px;font-size:13px;margin-top:4px';
+      [
+        ['royal_gold','✨ Royal Gold'],
+        ['neon_cyan','⚡ Neon Cyan'],
+        ['purple_nebula','🌌 Purple Nebula'],
+        ['minimal','🖤 Minimal Clean']
+      ].forEach(th=>{
+        const o=document.createElement('option');o.value=th[0];o.textContent=th[1];if(th[0]===(b.theme||b.style?.btn_style||'royal_gold'))o.selected=true;selTheme.appendChild(o);
+      });
+      selTheme.onchange=()=>{
+        b.theme=selTheme.value;
+        if(!b.style)b.style={};
+        b.style.btn_style=b.theme;
+        updateCreatorLivePreview();
+      };
+      row2([selAction,ti,selTheme]);
+
+    } else if(b.type==='jsx_canvas'||b.type==='interactive_sandbox'){
+      inp('Sandbox Title',b.value||'Interactive Reactive Sandbox',v=>{b.value=v;updateCreatorLivePreview();});
+      const h=document.createElement('div');h.className='hint';h.style.color='#38bdf8';h.textContent='⚡ Renders a live interactive HTML/JS widget in the Viewer. Use HTML + inline JS for interactivity.';div.appendChild(h);
+
+      const prevWrap=document.createElement('div');
+      prevWrap.className='ed-block-interactive-wrap';
+      const prevBadge=document.createElement('div');
+      prevBadge.className='badge';
+      prevBadge.innerHTML='⚡ In-Block Live Interactive Sandbox Preview';
+      const prevContent=document.createElement('div');
+      prevWrap.appendChild(prevBadge);
+      prevWrap.appendChild(prevContent);
+
+      const renderJsxPreview=(code)=>{
+        try{
+          prevContent.innerHTML=code||'<div style="color:var(--text3);font-size:12px;padding:6px">No sandbox code specified</div>';
+        }catch(err){
+          prevContent.innerHTML=`
+            <div class="ldoc-error-fallback" style="margin:0">
+              <div class="error-icon">⚠️</div>
+              <div class="error-msg">
+                <strong>Sandbox Evaluation Error</strong>
+                <div>${escapeHtml(err.message||'Syntax error')}</div>
+                <button class="ldoc-error-retry" onclick="renderBlocks()">🔄 Retry</button>
+              </div>
+            </div>`;
+        }
+      };
+
+      inp('Live HTML/JS Code (rendered in Viewer)',b.style?.code||'',v=>{
+        if(!b.style)b.style={};
+        b.style.code=v;
+        renderJsxPreview(v);
+        updateCreatorLivePreview();
+      },'textarea',6);
+
+      div.appendChild(prevWrap);
+      renderJsxPreview(b.style?.code||'');
+
+    } else if(b.type==='particles'||b.type==='particle_canvas'){
+      const sel=document.createElement('select');sel.style.cssText='background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 6px;font-size:13px;margin-top:4px';
+      [['stardust','✨ Cyber Stardust'],['warp','🏎️ Hyperspace Warp'],['embers','⚡ Golden Magick Embers'],['shards','💎 Crystal Shards']].forEach(m=>{
+        const o=document.createElement('option');o.value=m[0];o.textContent=m[1];if(m[0]===(b.value||'stardust'))o.selected=true;sel.appendChild(o);
+      });
+      sel.onchange=()=>{
+        b.value=sel.value;
+        initInPageParticleCanvas(`blk-p-canvas-${b.id}`, b.value);
+        updateCreatorLivePreview();
+      };
+      div.appendChild(sel);
+      const h=document.createElement('div');h.className='hint';h.style.color='#f59e0b';h.textContent='✨ Renders a live interactive particle physics sandbox with mouse force-field attractor.';div.appendChild(h);
+
+      const prevWrap=document.createElement('div');
+      prevWrap.className='ed-block-interactive-wrap';
+      const prevBadge=document.createElement('div');
+      prevBadge.className='badge';
+      prevBadge.style.color='#f59e0b';
+      prevBadge.innerHTML='✨ In-Block Live Particle Physics Preview';
+      const canvas=document.createElement('canvas');
+      canvas.id=`blk-p-canvas-${b.id}`;
+      canvas.height=90;
+      prevWrap.appendChild(prevBadge);
+      prevWrap.appendChild(canvas);
+      div.appendChild(prevWrap);
+
+      setTimeout(()=>initInPageParticleCanvas(`blk-p-canvas-${b.id}`, b.value||'stardust'),40);
+
+    } else if(b.type==='water_effect'||b.type==='fluid_canvas'){
+      const h=document.createElement('div');h.className='hint';h.style.color='#38bdf8';h.textContent='🌊 Renders an interactive fluid dynamics ripple canvas. Move cursor or tap to generate surface waves.';div.appendChild(h);
+
+      const prevWrap=document.createElement('div');
+      prevWrap.className='ed-block-interactive-wrap';
+      const prevBadge=document.createElement('div');
+      prevBadge.className='badge';
+      prevBadge.style.color='#38bdf8';
+      prevBadge.innerHTML='🌊 In-Block Live Fluid Wave Preview (Move or Click)';
+      const canvas=document.createElement('canvas');
+      canvas.id=`blk-w-canvas-${b.id}`;
+      canvas.height=90;
+      prevWrap.appendChild(prevBadge);
+      prevWrap.appendChild(canvas);
+      div.appendChild(prevWrap);
+
+      setTimeout(()=>initInPageWaterCanvas(`blk-w-canvas-${b.id}`),40);
+    }
+    area.appendChild(div);
+  });
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+function updateStats(){
+  const allBlocks=pages.flatMap(p=>p.blocks);
+  document.getElementById('st-pages').textContent=pages.length;
+  document.getElementById('st-blocks').textContent=allBlocks.length;
+  document.getElementById('st-images').textContent=allBlocks.filter(b=>b.type==='web_image').length;
+  document.getElementById('st-media').textContent=allBlocks.filter(b=>['web_audio','web_video','iframe','jsx_canvas','particles','water_effect'].includes(b.type)).length;
+  document.getElementById('st-forms').textContent=allBlocks.filter(b=>b.type==='form').length;
+  document.getElementById('st-ai').textContent=allBlocks.filter(b=>['ai','ai_live'].includes(b.type)).length;
+}
+
+// ── Build spec ────────────────────────────────────────────────────────────────
+function buildSpec(){
+  const aiEnabled = document.getElementById('m-ai-enable')?.checked ?? true;
+  const aiProvider = document.getElementById('m-ai-provider')?.value || 'gemini';
+  const aiSourceUrl = document.getElementById('m-ai-source-url')?.value?.trim() || '';
+  const aiPrompt = document.getElementById('m-ai-prompt')?.value?.trim() || '';
+
+  return{
+    title:document.getElementById('m-title').value||'Untitled',
+    author:document.getElementById('m-author').value||'Unknown',
+    lang:document.getElementById('m-lang').value||'en',
+    subtitle:document.getElementById('m-subtitle').value||undefined,
+    description:document.getElementById('m-desc').value||undefined,
+    ai_integration: aiEnabled ? {
+      enabled: true,
+      provider: aiProvider,
+      live_sources: aiSourceUrl ? [aiSourceUrl] : [],
+      guide_prompt: aiPrompt || undefined
+    } : undefined,
+    pages:pages.map(p=>({
+      title:p.title,
+      blocks:p.blocks.map(b=>{
+        if(b.type==='heading')return{type:'heading',level:b.level,text:b.text};
+        if(b.type==='paragraph')return{type:'paragraph',text:b.text};
+        if(b.type==='quote')return{type:'quote',text:b.text};
+        if(b.type==='list')return{type:'list',items:b.items||[]};
+        if(b.type==='code')return{type:'code',language:b.language,code:b.code};
+        if(b.type==='table')return{type:'table',headers:b.headers||[],rows:b.rows||[]};
+        if(b.type==='ai')return{type:'ai',prompt:b.prompt};
+        if(b.type==='ai_live')return{type:'ai_live',prompt:b.prompt,source_url:b.source_url,refresh_sec:b.refresh_sec};
+        if(b.type==='3d_model')return{type:'3d_model',format:b.format||'obj',mesh_template:b.mesh_template||'supercar',material_mode:b.material_mode||'cyber_hologram',mesh_data:b.mesh_data||undefined};
+        if(b.type==='form')return{type:'form',fields:b.fields||[],webhook_url:b.webhook_url||b.action_url,action_url:b.webhook_url||b.action_url};
+        if(b.type==='feature_grid')return{type:'feature_grid',cards:b.cards||[]};
+        if(b.type==='live_feed')return{type:'live_feed',title:b.title||'GLOBAL DISPATCH BEACON',sources:b.sources||'Status: OPTIMAL'};
+        if(b.type==='preorder')return{type:'preorder',tier:b.tier||'VIP PASS',price:b.price||'$499',perks:b.perks||'',checkout_url:b.checkout_url};
+        if(b.type==='web_image')return{type:'web_image',src:b.src,alt:b.alt||'Image',value:b.alt||'Image',style:{src:b.src,alt:b.alt}};
+        if(b.type==='web_audio')return{type:'web_audio',src:b.src,label:b.label||'Audio',value:b.label||'Audio',style:{src:b.src,label:b.label}};
+        if(b.type==='web_video')return{type:'web_video',src:b.src,label:b.label||'Video',value:b.label||'Video',style:{src:b.src,label:b.label,autoplay:b.autoplay!==false}};
+        if(b.type==='iframe')return{type:'iframe',src:b.src,label:b.label||'Embed',value:b.label||'Embed',style:{src:b.src,label:b.label}};
+        if(b.type==='button')return{type:'button',value:b.value,action:b.action,target:b.target,theme:b.theme||b.style?.btn_style||'royal_gold',style:{action:b.action,target:b.target,btn_style:b.theme||b.style?.btn_style||'royal_gold'}};
+        if(b.type==='jsx_canvas')return{type:'jsx_canvas',value:b.value||'Interactive Sandbox',style:{code:b.style?.code||'',title:b.value}};
+        if(b.type==='particles')return{type:'particles',value:b.value||'stardust',style:{mode:b.value||'stardust'}};
+        if(b.type==='water_effect')return{type:'water_effect',value:'Interactive Fluid Canvas'};
+        return null;
+      }).filter(Boolean)
+    }))
+  };
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+async function buildDoc(){
+  if(!pages.length){toast('Add at least one page','err');return;}
+  const btn=document.getElementById('build-btn');btn.disabled=true;btn.textContent='Building…';
+  showLoader('LDOC STUDIO', 'Compiling Living Document Architecture…');
+  try{
+    const res=await fetch(`${API}/documents/build`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(buildSpec())});
+    const j=await res.json();
+    if(!j.id)throw new Error(j.error||'Build failed');
+    toast('Built! Opening in Studio…','ok');
+    setTimeout(()=>window.open(`./?doc=${j.id}`,'_blank'),600);
+  }catch(e){toast('Build failed: '+e.message,'err');}
+  finally{
+    hideLoader();
+    btn.disabled=false;btn.textContent='▶ Build & Open in Studio';
+  }
+}
+
+async function downloadDoc(){
+  if(!pages.length){toast('Add at least one page','err');return;}
+  const btn=document.getElementById('dl-btn');btn.disabled=true;btn.textContent='Building…';
+  showLoader('LDOC STUDIO', 'Packaging Offline Living Document Bundle…');
+  try{
+    const res=await fetch(`${API}/documents/build`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(buildSpec())});
+    const j=await res.json();
+    if(!j.id)throw new Error(j.error||'Build failed');
+    // download the raw bytes
+    const dlRes=await fetch(`${API}/documents/${j.id}/download`);
+    if(dlRes.ok){
+      const blob=await dlRes.blob();
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+      a.download=(document.getElementById('m-title').value||'document').replace(/\s+/g,'_')+'.ldocx';
+      a.click();toast('Downloaded!','ok');
+    } else {
+      // fallback: open in studio
+      toast('Built! Opening in Studio (download not available)','ok');
+      setTimeout(()=>window.open(`/?doc=${j.id}`,'_blank'),600);
+    }
+  }catch(e){toast('Failed: '+e.message,'err');}
+  finally{
+    hideLoader();
+    btn.disabled=false;btn.textContent='⬇ Download .ldocx';
+  }
+}
+
+function validateSpec(){
+  if(!pages.length){toast('No pages to validate','err');return;}
+  showLoader('LDOC STUDIO', 'Verifying Living Document Spec…');
+  try{
+    const spec=buildSpec();
+    let issues=[];
+    if(!spec.title.trim())issues.push('Title is empty');
+    spec.pages.forEach((p,i)=>{
+      if(!p.title.trim())issues.push(`Page ${i+1}: title is empty`);
+      if(!p.blocks.length)issues.push(`Page ${i+1}: no blocks`);
+    });
+    if(issues.length)toast('Issues: '+issues.join('; '),'err');
+    else toast(`✓ Spec looks good — ${spec.pages.length} pages, ${spec.pages.reduce((a,p)=>a+p.blocks.length,0)} blocks`,'ok');
+  }finally{
+    setTimeout(hideLoader, 400);
+  }
+}
+
+function exportJSON(){
+  const spec=buildSpec();
+  const blob=new Blob([JSON.stringify(spec,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=(document.getElementById('m-title').value||'document').replace(/\s+/g,'_')+'_spec.json';
+  a.click();toast('Exported JSON spec','ok');
+}
+
+function importJSON(){document.getElementById('json-file-inp').click();}
+function onImportJSON(inp){
+  const f=inp.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const spec=JSON.parse(e.target.result);
+      if(spec.title)document.getElementById('m-title').value=spec.title;
+      if(spec.author)document.getElementById('m-author').value=spec.author;
+      if(spec.lang)document.getElementById('m-lang').value=spec.lang;
+      if(spec.subtitle)document.getElementById('m-subtitle').value=spec.subtitle;
+      if(spec.description)document.getElementById('m-desc').value=spec.description;
+      pages=[];pSeq=0;bSeq=0;currentPage=null;
+      if(spec.pages){
+        spec.pages.forEach(sp=>{
+          const p={id:pid(),title:sp.title||'Page',blocks:[]};
+          (sp.blocks||[]).forEach(sb=>{
+            const b={id:bid(),...sb};
+            if(sb.type==='web_image'){b.src=sb.style?.src||sb.src||'';b.alt=sb.style?.alt||sb.alt||sb.value||'';}
+            else if(['web_audio','web_video','iframe'].includes(sb.type)){b.src=sb.style?.src||sb.src||'';b.label=sb.style?.label||sb.label||sb.value||'';}
+            else if(sb.type==='button'){b.value=sb.value||'';b.action=sb.action||sb.style?.action||'navigate';b.target=sb.target||sb.style?.target||'next';b.theme=sb.theme||sb.style?.btn_style||'royal_gold';b.style={action:b.action,target:b.target,btn_style:b.theme};}
+            else if(sb.type==='form'){b.fields=sb.fields||[];b.webhook_url=sb.webhook_url||sb.action_url||'';}
+            else if(sb.type==='preorder'){b.tier=sb.tier||'VIP PASS';b.price=sb.price||'$499';b.perks=sb.perks||'';b.checkout_url=sb.checkout_url||'';}
+            p.blocks.push(b);
+          });
+          pages.push(p);
+        });
+      }
+      renderPageList();
+      if(pages.length)selectPage(pages[0].id);else showNoPage();
+      updateStats();
+      updateCreatorLivePreview();
+      toast('Imported spec','ok');
+    }catch(ex){toast('Invalid JSON: '+ex.message,'err');}
+  };
+  reader.readAsText(f);inp.value='';
+}
+
+function clearAll(){
+  if(!confirm('Clear everything?'))return;
+  pages=[];pSeq=0;bSeq=0;currentPage=null;
+  renderPageList();showNoPage();updateStats();
+  document.getElementById('m-title').value='My Document';
+  document.getElementById('m-author').value='Author';
+  document.getElementById('m-subtitle').value='';
+  document.getElementById('m-desc').value='';
+  updateCreatorLivePreview();
+  toast('Cleared','ok');
+}
+
+// ── Templates ─────────────────────────────────────────────────────────────────
+const TEMPLATES=[
+  {name:'🏎️ GT6: Velocity Launch',desc:'3D Supercar, Synthwave loop, 4K video, live dispatch & VIP pre-order',badge:'3 pages',badgeType:'media',
+   build:()=>{
+    document.getElementById('m-theme').value = 'velocity';applyCanvasStyles();
+    loadSpec({title:'GT6: Velocity Unleashed',pages:[
+      {title:'The Reveal',blocks:[
+        {type:'heading',level:1,text:'GT6: VELOCITY UNLEASHED'},
+        {type:'paragraph',text:'The next era of hyper-realistic racing simulation.'},
+        {type:'3d_model',format:'obj',mesh_template:'supercar',material_mode:'cyber_hologram'},
+        {type:'web_audio',src:'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg',label:'GT6 Synthwave Adrenaline Drive'}
+      ]},
+      {title:'Track Mastery',blocks:[
+        {type:'heading',level:2,text:'ENGINEERING & DYNAMICS'},
+        {type:'feature_grid',cards:[
+          {badge:'CHASSIS',title:'Carbon Monocoque',desc:'Sub-millimeter laser scans of world hypercars.'},
+          {badge:'ENGINE',title:'Twin-Turbo Hybrid V8',desc:'1,400 BHP reactive audio synthesis.'},
+          {badge:'AERO',title:'Active DRS Wing',desc:'Dynamic downforce adjustments in real time.'}
+        ]},
+        {type:'web_video',src:'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm',label:'4K In-Engine Motion',autoplay:true}
+      ]},
+      {title:'Dispatch & Pre-Order',blocks:[
+        {type:'heading',level:2,text:'TELEMETRY & VIP ACCESS'},
+        {type:'live_feed',title:'GLOBAL PIT BEACON',sources:'Track: Nürburgring 24H | Asphalt Temp: 42°C | Grip: 99.4%'},
+        {type:'preorder',tier:'FOUNDER VELOCITY PASS',price:'$99.99',perks:'Instant Day-1 Access, Exclusive Holographic GT Car Skin'},
+        {type:'form',fields:[
+          {label:'Driver Name / Call-sign',field_type:'input_text',placeholder:'Enter callsign'},
+          {label:'VIP Email',field_type:'input_text',placeholder:'pilot@velocity.com'}
+        ]},
+        {type:'button',value:'CONFIRM PRE-ORDER',action:'submit',target:'order_confirm'}
+      ]}
+    ]});
+  }},
+  {name:'🧙‍♂️ The Daily Prophet',desc:'Enchanted newspaper with moving living portraits, 3D Snitch, and live spell feed',badge:'3 pages',badgeType:'pages',
+   build:()=>{
+    document.getElementById('m-theme').value = 'prophet';applyCanvasStyles();
+    loadSpec({title:'The Daily Prophet — LDOC Edition',pages:[
+      {title:'Breaking News',blocks:[
+        {type:'heading',level:1,text:'THE DAILY PROPHET'},
+        {type:'paragraph',text:'DIAGON ALLEY — Living Document Format conquers the wizarding world.'},
+        {type:'3d_model',format:'obj',mesh_template:'snitch',material_mode:'royal_gold'},
+        {type:'web_audio',src:'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg',label:'Diagon Alley Symphony'}
+      ]},
+      {title:'Living Blueprint',blocks:[
+        {type:'heading',level:2,text:'MAGICAL LDOC BLUEPRINT'},
+        {type:'feature_grid',cards:[
+          {badge:'CONTAINER',title:'Zero-Loss Zip Envelope',desc:'Carries raw offline 3D models and videos.'},
+          {badge:'SECURITY',title:'Signed CRC-32 Header',desc:'Tamper-proof magical enchantment verification.'},
+          {badge:'AST NODE',title:'Dynamic Tree Representation',desc:'Renders responsive interactive enchantments.'}
+        ]}
+      ]},
+      {title:'Ministry Dispatch',blocks:[
+        {type:'heading',level:2,text:'MINISTRY DISPATCH BEACON'},
+        {type:'live_feed',title:'MINISTRY ALERT NETWORK',sources:'Status: ALL CLEAR | Auror Node: Active | Floo Network: Open'},
+        {type:'form',fields:[
+          {label:'Wizard / Witch Name',field_type:'input_text',placeholder:'Name'},
+          {label:'Owl Address',field_type:'input_text',placeholder:'owl@hogwarts.ac.uk'}
+        ]},
+        {type:'button',value:'DISPATCH OWL',action:'submit',target:'dispatch_owl'}
+      ]}
+    ]});
+  }},
+  {name:'🛰️ Aerospace Mission',desc:'Deep space satellite orbital deployment dossier with 3D model & telemetry',badge:'3 pages',badgeType:'media',
+   build:()=>{
+    document.getElementById('m-theme').value = 'crystal';applyCanvasStyles();
+    loadSpec({title:'AeroSpace Vanguard X-1 Dossier',pages:[
+      {title:'Mission Brief',blocks:[
+        {type:'heading',level:1,text:'VANGUARD X-1 ORBITAL DOSSIER'},
+        {type:'paragraph',text:'Autonomous deep-space explorer spacecraft specifications and trajectory.'},
+        {type:'3d_model',format:'obj',mesh_template:'polyhedron',material_mode:'crystal_cobalt'}
+      ]},
+      {title:'Telemetry & Subsystems',blocks:[
+        {type:'heading',level:2,text:'ORBITAL SUBSYSTEM MATRIX'},
+        {type:'feature_grid',cards:[
+          {badge:'PROPULSION',title:'Ion Thruster Array',desc:'Continuous 0.25N specific impulse output.'},
+          {badge:'POWER',title:'GaAs Solar Wings',desc:'12.4 kW peak solar conversion efficiency.'},
+          {badge:'COMMS',title:'Ka-Band Phased Array',desc:'1.2 Gbps optical deep space downlink.'}
+        ]}
+      ]},
+      {title:'Launch Control',blocks:[
+        {type:'heading',level:2,text:'LIVE TELEMETRY BEACON'},
+        {type:'live_feed',title:'MISSION CLOCK BEACON',sources:'T+ 00:42:18 | Apogee: 35,786 km | Signal Lock: 99.9%'}
+      ]}
+    ]});
+  }},
+  {name:'Blank Document',desc:'Start with a single empty page',badge:'1 page',badgeType:'pages',
+   build:()=>{addPage();}}
+];
+
+function loadSpec(spec){
+  if(spec.title)document.getElementById('m-title').value=spec.title;
+  pages=[];pSeq=0;bSeq=0;currentPage=null;
+  (spec.pages||[]).forEach(sp=>{
+    const p={id:pid(),title:sp.title||'Page',blocks:[]};
+    (sp.blocks||[]).forEach(sb=>{
+      const b={id:bid(),...sb};
+      if(sb.type==='web_image'){b.src=sb.style?.src||sb.src||'';b.alt=sb.style?.alt||sb.alt||sb.value||'';}
+      else if(['web_audio','web_video','iframe'].includes(sb.type)){b.src=sb.style?.src||sb.src||'';b.label=sb.style?.label||sb.label||sb.value||'';}
+      else if(sb.type==='button'){b.value=sb.value||'';b.action=sb.action||sb.style?.action||'navigate';b.target=sb.target||sb.style?.target||'next';b.theme=sb.theme||sb.style?.btn_style||'royal_gold';b.style={action:b.action,target:b.target,btn_style:b.theme};}
+      else if(sb.type==='form'){b.fields=sb.fields||[];b.webhook_url=sb.webhook_url||sb.action_url||'';}
+      else if(sb.type==='preorder'){b.tier=sb.tier||'VIP PASS';b.price=sb.price||'$499';b.perks=sb.perks||'';b.checkout_url=sb.checkout_url||'';}
+      p.blocks.push(b);
+    });
+    pages.push(p);
+  });
+  renderPageList();
+  if(pages.length)selectPage(pages[0].id);else showNoPage();
+  updateStats();
+  updateCreatorLivePreview();
+  toast('Template loaded','ok');
+}
+
+function renderTemplates(){
+  const list=document.getElementById('template-list');list.innerHTML='';
+  TEMPLATES.forEach(t=>{
+    const card=document.createElement('div');card.className='tpl-card';
+    card.innerHTML=`<div class="tpl-name">${t.name}</div><div class="tpl-desc">${t.desc}</div><span class="tpl-badge ${t.badgeType}">${t.badge}</span>`;
+    card.onclick=()=>{if(pages.length&&!confirm('Load template? This will replace current content.'))return;clearAll();t.build();};
+    list.appendChild(card);
+  });
+}
+
+renderTemplates();
+showNoPage();
+updateCreatorLivePreview();
+</script>
+</body>
+</html>

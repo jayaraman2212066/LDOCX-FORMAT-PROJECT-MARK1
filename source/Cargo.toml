@@ -1,0 +1,3 @@
+[workspace]
+members = ["ldoc-core", "ldoc-runtime", "ldoc-sdk"]
+resolver = "2"
