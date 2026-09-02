@@ -5,8 +5,11 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -15,23 +18,51 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build-and-deploy:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - name: Assemble Web Distribution
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp creator.html _site/
+          cp ai-brain.png _site/ || true
+          cp app.ico _site/ || true
+          cp gt6-velocity-unleashed.ldocx _site/ || true
+          cp daily-prophet.ldocx _site/ || true
+          if [ -d "samples" ]; then cp -r samples _site/; fi
+          touch _site/.nojekyll
+          echo "Web distribution assembled successfully:"
+          ls -la _site
+
+      - name: Deploy to gh-pages Branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages
+          force_orphan: true
+
+      - name: Setup GitHub Pages (Direct Actions)
+        id: pages
+        uses: actions/configure-pages@v5
+        continue-on-error: true
+        with:
+          enablement: true
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
+        continue-on-error: true
         with:
-          path: '.'
+          path: './_site'
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (Direct Actions)
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true

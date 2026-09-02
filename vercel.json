@@ -1,8 +1,17 @@
 ﻿{
   "version": 2,
   "cleanUrls": true,
-  "routes": [
-    { "src": "/creator", "dest": "/creator.html" },
-    { "src": "/(.*)", "dest": "/$1" }
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/creator", "destination": "/creator.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+      ]
+    }
   ]
 }
