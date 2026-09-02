@@ -1970,6 +1970,10 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="drop-icon">&#128196;</div>
         <h2>Open an LDOCX Document</h2>
         <p>Click "Open .ldocx" or drag &amp; drop a .ldocx file here</p>
+        <div style="margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="btn" style="background:linear-gradient(135deg,var(--gold),#d97706);color:#000;font-weight:800;padding:12px 24px;border-radius:12px;font-size:14px;box-shadow:0 8px 24px rgba(245,158,11,0.35);cursor:pointer;border:none" onclick="loadBundledCampaign(event)">⚡ Launch Grand Theft Auto VI Living Campaign</button>
+          <button class="btn" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:12px 20px;border-radius:12px;font-size:14px;cursor:pointer" onclick="document.getElementById('file-input').click()">📂 Browse .ldocx File</button>
+        </div>
       </div>
       <div id="loading">
         <div class="ldoc-logo-loader">
@@ -3352,6 +3356,34 @@ document.body.addEventListener('drop', e => {
   handleInteractivePageDrop(e);
 });
 
+
+async function loadBundledCampaign(e) {
+  if (e) e.stopPropagation();
+  showLoading();
+  try {
+    const listRes = await fetch(`${API}/documents`);
+    if (listRes.ok) {
+      const list = await listRes.json();
+      const gta = list.find(d => (d.title || '').includes('GTA') || (d.title || '').includes('Leonida'));
+      if (gta && gta.id) {
+        history.replaceState(null, '', `${location.pathname}?doc=${gta.id}${location.hash}`);
+        await openDoc(gta.id);
+        return;
+      }
+    }
+    const res = await fetch('gt6-velocity-unleashed.ldocx');
+    if (res.ok) {
+      const blob = await res.blob();
+      const file = new File([blob], 'gt6-velocity-unleashed.ldocx', { type: 'application/octet-stream' });
+      await loadFile(file);
+      return;
+    }
+  } catch (err) {
+    console.warn('Bundled campaign load failed:', err);
+  }
+  document.getElementById('file-input').click();
+}
+
 async function loadFile(file){
   showLoading();
   try{
@@ -4451,8 +4483,61 @@ async function saveDoc(){
   const tab=params.get('tab');
   if(tab==='converter'||tab==='editor'||tab==='docs'||tab==='templates') switchTab(tab);
   const id=params.get('doc');
-  if(!id)return;
-  try{await openDoc(id);}catch(e){showDropZone();}
+
+  async function attemptOpen(docId) {
+    for (let attempt = 0; attempt < 8; attempt++) {
+      try {
+        const check = await fetch(`${API}/documents/${docId}`);
+        if (check.ok) {
+          await openDoc(docId);
+          return true;
+        }
+      } catch (err) {
+        console.warn(`Connection attempt ${attempt + 1} to LDOC Server...`, err);
+      }
+      await new Promise(r => setTimeout(r, 400));
+    }
+    return false;
+  }
+
+  // 1. If URL has doc ID, try to open it with auto-retry
+  if (id) {
+    const success = await attemptOpen(id);
+    if (success) return;
+  }
+
+  // 2. Query /documents for available documents
+  try {
+    const listRes = await fetch(`${API}/documents`);
+    if (listRes.ok) {
+      const list = await listRes.json();
+      if (list && list.length > 0) {
+        const target = list.find(d => (d.title || '').includes('GTA') || (d.title || '').includes('Leonida')) || list[0];
+        if (target && target.id) {
+          history.replaceState(null, '', `${location.pathname}?doc=${target.id}${location.hash}`);
+          await openDoc(target.id);
+          return;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Auto-discovery error:', err);
+  }
+
+  // 3. If server has no documents in memory, auto-load bundled campaign!
+  try {
+    const bundledRes = await fetch('gt6-velocity-unleashed.ldocx');
+    if (bundledRes.ok) {
+      const blob = await bundledRes.blob();
+      const file = new File([blob], 'gt6-velocity-unleashed.ldocx', { type: 'application/octet-stream' });
+      await loadFile(file);
+      return;
+    }
+  } catch (err) {
+    console.warn('Auto-bootstrap bundled load error:', err);
+  }
+
+  showDropZone();
 })();
 
 async function refreshDocs(){
