@@ -1544,6 +1544,161 @@ body::before{
 .budget-amber { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
 .budget-red { background: rgba(248, 113, 113, 0.2); color: #f87171; }
 
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   10 UNIVERSAL PRESENTATION VISUAL MODES
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Mode 1: 📜 Tactile Paper */
+body.mode-paper .pres-page, body.mode-paper #creator-preview-body .pres-page, body.mode-paper #page-canvas {
+  background: #fdfbf7 !important;
+  color: #1c1917 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 15px 45px rgba(0,0,0,0.35), 0 2px 10px rgba(0,0,0,0.2) !important;
+  border: 1px solid #e7e5e4 !important;
+}
+body.mode-paper h1, body.mode-paper h2, body.mode-paper h3, body.mode-paper p, body.mode-paper li {
+  color: #1c1917 !important;
+  text-shadow: 0 0.5px 0.5px rgba(0,0,0,0.15) !important;
+}
+
+/* Mode 2: 💎 Glass Cards */
+body.mode-glass .pres-page, body.mode-glass #creator-preview-body .pres-page, body.mode-glass #page-canvas {
+  background: rgba(18, 20, 36, 0.72) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  border: 1.5px solid rgba(167, 139, 250, 0.35) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.8), 0 0 30px rgba(124, 58, 237, 0.25) !important;
+  border-radius: 20px !important;
+  color: #f8fafc !important;
+}
+
+/* Mode 3: 🎬 Keynote Deck */
+body.mode-deck .pres-page, body.mode-deck #creator-preview-body .pres-page, body.mode-deck #page-canvas {
+  max-width: 1100px !important;
+  aspect-ratio: 16/9 !important;
+  background: linear-gradient(145deg, #090b14, #121626) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.9) !important;
+  color: #f1f5f9 !important;
+}
+
+/* Mode 4: 📰 Editorial Gazette */
+body.mode-gazette .pres-page, body.mode-gazette #creator-preview-body .pres-page, body.mode-gazette #page-canvas {
+  background: #f4efe6 !important;
+  color: #1a1714 !important;
+  font-family: 'Playfair Display', Georgia, serif !important;
+  border: 2px solid #292524 !important;
+  border-radius: 2px !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3) !important;
+}
+
+/* Mode 5: ⚡ Cyber Terminal */
+body.mode-cyber .pres-page, body.mode-cyber #creator-preview-body .pres-page, body.mode-cyber #page-canvas {
+  background: #020617 !important;
+  color: #38bdf8 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  border: 1.5px solid #0284c7 !important;
+  box-shadow: 0 0 40px rgba(2, 132, 199, 0.35), inset 0 0 20px rgba(2, 132, 199, 0.15) !important;
+  border-radius: 8px !important;
+}
+body.mode-cyber h1, body.mode-cyber h2, body.mode-cyber h3 {
+  color: #38bdf8 !important;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.6) !important;
+}
+
+/* Mode 6: 👑 Royal Velvet */
+body.mode-velvet .pres-page, body.mode-velvet #creator-preview-body .pres-page, body.mode-velvet #page-canvas {
+  background: radial-gradient(circle at 50% 30%, #1e1028 0%, #0a040e 100%) !important;
+  color: #fef08a !important;
+  font-family: 'Cinzel', serif !important;
+  border: 2px solid #eab308 !important;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.95), 0 0 35px rgba(234, 179, 8, 0.25) !important;
+  border-radius: 18px !important;
+}
+
+/* Mode 7: 🌌 Cosmic Nebula */
+body.mode-nebula .pres-page, body.mode-nebula #creator-preview-body .pres-page, body.mode-nebula #page-canvas {
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.88), rgba(76, 29, 149, 0.78), rgba(15, 23, 42, 0.95)) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border: 1.5px solid #c084fc !important;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.9), 0 0 40px rgba(192, 132, 252, 0.35) !important;
+  border-radius: 24px !important;
+  color: #f3e8ff !important;
+}
+
+/* Mode 8: 🌿 Minimalist Zen */
+body.mode-zen .pres-page, body.mode-zen #creator-preview-body .pres-page, body.mode-zen #page-canvas {
+  background: #fbfbfa !important;
+  color: #262626 !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  border: 1px solid #e5e5e5 !important;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.06) !important;
+  border-radius: 12px !important;
+  letter-spacing: -0.2px !important;
+}
+body.mode-zen h1, body.mode-zen h2, body.mode-zen h3 { color: #171717 !important; }
+
+/* Mode 9: 🌊 Aquatic Deep */
+body.mode-aquatic .pres-page, body.mode-aquatic #creator-preview-body .pres-page, body.mode-aquatic #page-canvas {
+  background: linear-gradient(160deg, #032030, #041421 60%, #010a12) !important;
+  border: 1.5px solid #06b6d4 !important;
+  box-shadow: 0 25px 65px rgba(0,0,0,0.9), 0 0 35px rgba(6, 182, 212, 0.3) !important;
+  border-radius: 20px !important;
+  color: #e0f2fe !important;
+}
+
+/* Mode 10: 💎 Crystal Prism */
+body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, body.mode-prism #page-canvas {
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+  border: 2px solid transparent !important;
+  border-image: linear-gradient(135deg, #f43f5e, #ec4899, #a855f7, #3b82f6, #10b981) 1 !important;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.85), 0 0 35px rgba(236, 72, 153, 0.25) !important;
+  border-radius: 16px !important;
+  color: #ffffff !important;
+}
+
+/* Visual Mode Pill Bar Styling */
+.pres-mode-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 3px 6px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow-x: auto;
+  max-width: 65vw;
+}
+.pres-mode-selector::-webkit-scrollbar { height: 3px; }
+.pres-mode-selector::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+.mode-pill-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text3, #94a3b8);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.mode-pill-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+.mode-pill-btn.active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.5), rgba(245, 158, 11, 0.45));
+  border-color: var(--gold, #f59e0b);
+  color: #fef08a;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -1700,12 +1855,18 @@ body::before{
         </div>
 
         <!-- 🎭 Visual Artifact Presentation Mode Selector -->
-        <div class="pres-mode-selector" id="pres-mode-selector">
-          <button class="mode-pill-btn active" id="btn-mode-paper" onclick="setPresentationMode('paper')" title="Tactile Parchment Paper with Real-Time Human Hand Touch Physics">📜 Tactile Paper</button>
-          <button class="mode-pill-btn" id="btn-mode-glass" onclick="setPresentationMode('glass')" title="Modern Frosted Glass Holographic Cards with 3D Tilt">💎 Glass Cards</button>
-          <button class="mode-pill-btn" id="btn-mode-deck" onclick="setPresentationMode('deck')" title="16:9 Widescreen Executive Slide Deck">🎬 Keynote Deck</button>
-          <button class="mode-pill-btn" id="btn-mode-gazette" onclick="setPresentationMode('gazette')" title="Living Newspaper Editorial Gazette Layout">📰 Gazette</button>
-        </div>
+              <div class="pres-mode-selector" id="pres-mode-selector">
+        <button class="mode-pill-btn active" id="mode-paper" onclick="setPresentationMode('paper')" title="📜 Tactile Paper">📜 Paper</button>
+        <button class="mode-pill-btn" id="mode-glass" onclick="setPresentationMode('glass')" title="💎 Glass Cards">💎 Glass</button>
+        <button class="mode-pill-btn" id="mode-deck" onclick="setPresentationMode('deck')" title="🎬 Keynote Deck">🎬 Deck</button>
+        <button class="mode-pill-btn" id="mode-gazette" onclick="setPresentationMode('gazette')" title="📰 Gazette">📰 Gazette</button>
+        <button class="mode-pill-btn" id="mode-cyber" onclick="setPresentationMode('cyber')" title="⚡ Cyber Terminal">⚡ Cyber</button>
+        <button class="mode-pill-btn" id="mode-velvet" onclick="setPresentationMode('velvet')" title="👑 Royal Velvet">👑 Velvet</button>
+        <button class="mode-pill-btn" id="mode-nebula" onclick="setPresentationMode('nebula')" title="🌌 Cosmic Nebula">🌌 Nebula</button>
+        <button class="mode-pill-btn" id="mode-zen" onclick="setPresentationMode('zen')" title="🌿 Minimalist Zen">🌿 Zen</button>
+        <button class="mode-pill-btn" id="mode-aquatic" onclick="setPresentationMode('aquatic')" title="🌊 Aquatic Deep">🌊 Aquatic</button>
+        <button class="mode-pill-btn" id="mode-prism" onclick="setPresentationMode('prism')" title="💎 Crystal Prism">💎 Prism</button>
+      </div>
 
         <div style="display:flex;align-items:center;gap:8px">
           <!-- ✍️ In-Canvas Free Text Writing Tool -->

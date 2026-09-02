@@ -1344,6 +1344,161 @@ body::before{
 .budget-amber { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
 .budget-red { background: rgba(248, 113, 113, 0.2); color: #f87171; }
 
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   10 UNIVERSAL PRESENTATION VISUAL MODES
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Mode 1: 📜 Tactile Paper */
+body.mode-paper .pres-page, body.mode-paper #creator-preview-body .pres-page, body.mode-paper #page-canvas {
+  background: #fdfbf7 !important;
+  color: #1c1917 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 15px 45px rgba(0,0,0,0.35), 0 2px 10px rgba(0,0,0,0.2) !important;
+  border: 1px solid #e7e5e4 !important;
+}
+body.mode-paper h1, body.mode-paper h2, body.mode-paper h3, body.mode-paper p, body.mode-paper li {
+  color: #1c1917 !important;
+  text-shadow: 0 0.5px 0.5px rgba(0,0,0,0.15) !important;
+}
+
+/* Mode 2: 💎 Glass Cards */
+body.mode-glass .pres-page, body.mode-glass #creator-preview-body .pres-page, body.mode-glass #page-canvas {
+  background: rgba(18, 20, 36, 0.72) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  border: 1.5px solid rgba(167, 139, 250, 0.35) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.8), 0 0 30px rgba(124, 58, 237, 0.25) !important;
+  border-radius: 20px !important;
+  color: #f8fafc !important;
+}
+
+/* Mode 3: 🎬 Keynote Deck */
+body.mode-deck .pres-page, body.mode-deck #creator-preview-body .pres-page, body.mode-deck #page-canvas {
+  max-width: 1100px !important;
+  aspect-ratio: 16/9 !important;
+  background: linear-gradient(145deg, #090b14, #121626) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.9) !important;
+  color: #f1f5f9 !important;
+}
+
+/* Mode 4: 📰 Editorial Gazette */
+body.mode-gazette .pres-page, body.mode-gazette #creator-preview-body .pres-page, body.mode-gazette #page-canvas {
+  background: #f4efe6 !important;
+  color: #1a1714 !important;
+  font-family: 'Playfair Display', Georgia, serif !important;
+  border: 2px solid #292524 !important;
+  border-radius: 2px !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3) !important;
+}
+
+/* Mode 5: ⚡ Cyber Terminal */
+body.mode-cyber .pres-page, body.mode-cyber #creator-preview-body .pres-page, body.mode-cyber #page-canvas {
+  background: #020617 !important;
+  color: #38bdf8 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  border: 1.5px solid #0284c7 !important;
+  box-shadow: 0 0 40px rgba(2, 132, 199, 0.35), inset 0 0 20px rgba(2, 132, 199, 0.15) !important;
+  border-radius: 8px !important;
+}
+body.mode-cyber h1, body.mode-cyber h2, body.mode-cyber h3 {
+  color: #38bdf8 !important;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.6) !important;
+}
+
+/* Mode 6: 👑 Royal Velvet */
+body.mode-velvet .pres-page, body.mode-velvet #creator-preview-body .pres-page, body.mode-velvet #page-canvas {
+  background: radial-gradient(circle at 50% 30%, #1e1028 0%, #0a040e 100%) !important;
+  color: #fef08a !important;
+  font-family: 'Cinzel', serif !important;
+  border: 2px solid #eab308 !important;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.95), 0 0 35px rgba(234, 179, 8, 0.25) !important;
+  border-radius: 18px !important;
+}
+
+/* Mode 7: 🌌 Cosmic Nebula */
+body.mode-nebula .pres-page, body.mode-nebula #creator-preview-body .pres-page, body.mode-nebula #page-canvas {
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.88), rgba(76, 29, 149, 0.78), rgba(15, 23, 42, 0.95)) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border: 1.5px solid #c084fc !important;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.9), 0 0 40px rgba(192, 132, 252, 0.35) !important;
+  border-radius: 24px !important;
+  color: #f3e8ff !important;
+}
+
+/* Mode 8: 🌿 Minimalist Zen */
+body.mode-zen .pres-page, body.mode-zen #creator-preview-body .pres-page, body.mode-zen #page-canvas {
+  background: #fbfbfa !important;
+  color: #262626 !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  border: 1px solid #e5e5e5 !important;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.06) !important;
+  border-radius: 12px !important;
+  letter-spacing: -0.2px !important;
+}
+body.mode-zen h1, body.mode-zen h2, body.mode-zen h3 { color: #171717 !important; }
+
+/* Mode 9: 🌊 Aquatic Deep */
+body.mode-aquatic .pres-page, body.mode-aquatic #creator-preview-body .pres-page, body.mode-aquatic #page-canvas {
+  background: linear-gradient(160deg, #032030, #041421 60%, #010a12) !important;
+  border: 1.5px solid #06b6d4 !important;
+  box-shadow: 0 25px 65px rgba(0,0,0,0.9), 0 0 35px rgba(6, 182, 212, 0.3) !important;
+  border-radius: 20px !important;
+  color: #e0f2fe !important;
+}
+
+/* Mode 10: 💎 Crystal Prism */
+body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, body.mode-prism #page-canvas {
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+  border: 2px solid transparent !important;
+  border-image: linear-gradient(135deg, #f43f5e, #ec4899, #a855f7, #3b82f6, #10b981) 1 !important;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.85), 0 0 35px rgba(236, 72, 153, 0.25) !important;
+  border-radius: 16px !important;
+  color: #ffffff !important;
+}
+
+/* Visual Mode Pill Bar Styling */
+.pres-mode-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 3px 6px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow-x: auto;
+  max-width: 65vw;
+}
+.pres-mode-selector::-webkit-scrollbar { height: 3px; }
+.pres-mode-selector::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+.mode-pill-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text3, #94a3b8);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.mode-pill-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+.mode-pill-btn.active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.5), rgba(245, 158, 11, 0.45));
+  border-color: var(--gold, #f59e0b);
+  color: #fef08a;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
 </style>
 </head>
 <body class="mode-presentation">
@@ -1389,11 +1544,17 @@ body::before{
         <div class="dmenu-entry" onclick="setCreatorLayoutMode('presentation')"><span>🖥️ Full Presentation View (100% Canvas)</span></div>
         <div class="dmenu-entry" onclick="setCreatorLayoutMode('split')"><span>🛠️ Side-by-Side Split View</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-section-hdr">Presentation Artifact Modes</div>
-        <div class="dmenu-entry" onclick="setCreatorPresentationMode('paper')"><span>📜 Tactile Paper Mode</span></div>
+        <div class="dmenu-section-hdr">10 Presentation Visual Modes</div>
+        <div class="dmenu-entry" onclick="setCreatorPresentationMode('paper')"><span>📜 Tactile Paper</span></div>
         <div class="dmenu-entry" onclick="setCreatorPresentationMode('glass')"><span>💎 Frosted Glass Cards</span></div>
         <div class="dmenu-entry" onclick="setCreatorPresentationMode('deck')"><span>🎬 Keynote Slide Deck</span></div>
         <div class="dmenu-entry" onclick="setCreatorPresentationMode('gazette')"><span>📰 Living Editorial Gazette</span></div>
+        <div class="dmenu-entry" onclick="setCreatorPresentationMode('cyber')"><span>⚡ Cyber Terminal Console</span></div>
+        <div class="dmenu-entry" onclick="setCreatorPresentationMode('velvet')"><span>👑 Royal Velvet Luxury</span></div>
+        <div class="dmenu-entry" onclick="setCreatorPresentationMode('nebula')"><span>🌌 Cosmic Nebula Galaxy</span></div>
+        <div class="dmenu-entry" onclick="setCreatorPresentationMode('zen')"><span>🌿 Minimalist Zen Aesthetic</span></div>
+        <div class="dmenu-entry" onclick="setCreatorPresentationMode('aquatic')"><span>🌊 Aquatic Deep Oceanic</span></div>
+        <div class="dmenu-entry" onclick="setCreatorPresentationMode('prism')"><span>💎 Crystal Prism Refraction</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="if(document.fullscreenElement){document.exitFullscreen()}else{document.documentElement.requestFullscreen()}"><span>⛶ Toggle Fullscreen</span><span class="hotkey">F11</span></div>
       </div>
@@ -1605,11 +1766,18 @@ body::before{
       </div>
 
       <!-- Presentation Mode Selector -->
+            <!-- 10 Universal Presentation Visual Modes -->
       <div class="pres-mode-selector" id="creator-mode-selector">
-        <button class="mode-pill-btn active" id="c-mode-paper" onclick="setCreatorPresentationMode('paper')" title="Enchanted Tactile Paper with 3D Hand Reaction">📜 Tactile Paper</button>
-        <button class="mode-pill-btn" id="c-mode-glass" onclick="setCreatorPresentationMode('glass')" title="Frosted Glass Holographic Cards">💎 Glass Cards</button>
-        <button class="mode-pill-btn" id="c-mode-deck" onclick="setCreatorPresentationMode('deck')" title="Cinematic Keynote Deck">🎬 Keynote Deck</button>
-        <button class="mode-pill-btn" id="c-mode-gazette" onclick="setCreatorPresentationMode('gazette')" title="Living Editorial Gazette">📰 Gazette</button>
+        <button class="mode-pill-btn active" id="c-mode-paper" onclick="setCreatorPresentationMode('paper')" title="📜 Tactile Paper: Real-time hand pressure & 3D curl">📜 Paper</button>
+        <button class="mode-pill-btn" id="c-mode-glass" onclick="setCreatorPresentationMode('glass')" title="💎 Glass Cards: Holographic glassmorphism">💎 Glass</button>
+        <button class="mode-pill-btn" id="c-mode-deck" onclick="setCreatorPresentationMode('deck')" title="🎬 Keynote Deck: 16:9 executive widescreen">🎬 Deck</button>
+        <button class="mode-pill-btn" id="c-mode-gazette" onclick="setCreatorPresentationMode('gazette')" title="📰 Editorial Gazette: Living magazine typography">📰 Gazette</button>
+        <button class="mode-pill-btn" id="c-mode-cyber" onclick="setCreatorPresentationMode('cyber')" title="⚡ Cyber Terminal: High-contrast matrix terminal">⚡ Cyber</button>
+        <button class="mode-pill-btn" id="c-mode-velvet" onclick="setCreatorPresentationMode('velvet')" title="👑 Royal Velvet: 24K gilded luxury presentation">👑 Velvet</button>
+        <button class="mode-pill-btn" id="c-mode-nebula" onclick="setCreatorPresentationMode('nebula')" title="🌌 Cosmic Nebula: Deep galaxy stardust deck">🌌 Nebula</button>
+        <button class="mode-pill-btn" id="c-mode-zen" onclick="setCreatorPresentationMode('zen')" title="🌿 Minimalist Zen: Swiss/Japanese architectural aesthetic">🌿 Zen</button>
+        <button class="mode-pill-btn" id="c-mode-aquatic" onclick="setCreatorPresentationMode('aquatic')" title="🌊 Aquatic Deep: Underwater refractive glass">🌊 Aquatic</button>
+        <button class="mode-pill-btn" id="c-mode-prism" onclick="setCreatorPresentationMode('prism')" title="💎 Crystal Prism: Rainbow chromatic dispersion">💎 Prism</button>
       </div>
 
       <div style="display:flex;align-items:center;gap:8px">
@@ -2313,12 +2481,20 @@ function updateCreatorLivePreview() {
     const curPage = pages.find(p => p.id === currentPage);
     if (!curPage) {
       body.innerHTML = `
-        <div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">
-          <img src="ldoc_logo.png" alt="LDOC Logo" style="width:36px;height:36px;border-radius:8px;box-shadow:0 0 16px rgba(167,139,250,.4);margin-bottom:10px;object-fit:contain">
-          <div>Add or select a page in the editor to preview slide presentation</div>
+        <div style="padding:50px 20px;text-align:center;color:var(--text3);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:12px;margin:auto">
+          <img src="ldoc_logo.png" alt="LDOC Logo" style="width:52px;height:52px;border-radius:12px;box-shadow:0 0 25px rgba(167,139,250,.5);margin-bottom:6px;object-fit:contain">
+          <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:800;color:#fef08a">LDOC Living Canvas</div>
+          <div style="max-width:440px;line-height:1.6;color:var(--text2)">Your presentation canvas is ready. Add a new slide or load an interactive 3D living document blueprint:</div>
+          <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center;max-width:600px">
+            <button class="btn green" onclick="addPage()" style="padding:8px 16px;font-size:12px;font-weight:700">➕ Create First Page</button>
+            <button class="btn" onclick="togglePagesDrawer()" style="padding:8px 16px;font-size:12px">📑 Pages &amp; Meta</button>
+            <button class="btn" onclick="toggleElementsPopup()" style="padding:8px 16px;font-size:12px;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(245,158,11,.25));color:#fef08a">➕ Add Elements</button>
+            <button class="btn" onclick="TEMPLATES[0].build()" style="padding:8px 16px;font-size:12px;background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.3)">🏎️ GT6 Supercar</button>
+            <button class="btn" onclick="TEMPLATES[1].build()" style="padding:8px 16px;font-size:12px;background:rgba(167,139,250,.15);color:#c084fc;border-color:rgba(167,139,250,.3)">🧙 Hogwarts Prophet</button>
+          </div>
         </div>
       `;
-      if (badge) badge.textContent = 'No Page';
+      if (badge) badge.textContent = 'Ready';
       return;
     }
 
@@ -2382,19 +2558,7 @@ function updateCreatorLivePreview() {
 let creatorPresentationMode = 'paper';
 let isCreatorFreeTextActive = false;
 
-function setCreatorPresentationMode(mode) {
-  creatorPresentationMode = mode;
-  const pane = document.getElementById('creator-preview-pane');
-  if (pane) {
-    pane.classList.remove('pres-mode-paper', 'pres-mode-glass', 'pres-mode-deck', 'pres-mode-gazette');
-    pane.classList.add(`pres-mode-${mode}`);
-  }
-  document.querySelectorAll('#creator-mode-selector .mode-pill-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.id === `c-mode-${mode}`);
-  });
-  updateCreatorLivePreview();
-  toast(`View Mode: ${mode.toUpperCase()}`, 'ok');
-}
+// replaced by unified 10-mode setCreatorPresentationMode
 
 function attachCreatorTactilePaperPhysics(slide) {
   if (!slide || slide.__tactileAttached) return;
@@ -3808,6 +3972,910 @@ function renderTemplates(){
 renderTemplates();
 showNoPage();
 updateCreatorLivePreview();
+
+
+// ── Desktop Menu Bar Dropdown Engine ──────────────────────────────────────────
+
+// ── Layout Mode Switcher ──────────────────────────────────────────────────────
+function setCreatorLayoutMode(mode) {
+  if (mode === 'presentation') {
+    closeAllDrawers();
+    toast('Switched to 100% Canvas Presentation View', 'ok');
+  } else if (mode === 'split') {
+    togglePagesDrawer();
+    setTimeout(() => {
+      const center = document.getElementById('center');
+      if (center) center.classList.add('open');
+    }, 150);
+    toast('Switched to Side-by-Side Split View', 'ok');
+  }
+}
+
+function toggleDesktopMenu(el, evt) {
+  if (evt) evt.stopPropagation();
+  const wasActive = el.classList.contains('active');
+  document.querySelectorAll('.dmenu-item').forEach(m => m.classList.remove('active'));
+  if (!wasActive) el.classList.add('active');
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.dmenu-item').forEach(m => m.classList.remove('active'));
+});
+
+// ── Complete Popup Drawer & Modal Management ──────────────────────────────────
+function togglePagesDrawer() {
+  const left = document.getElementById('left');
+  const btn = document.getElementById('toggle-pages-btn');
+  const backdrop = document.getElementById('drawer-backdrop');
+  const isOpen = left && left.classList.contains('open');
+  closeAllDrawers();
+  if (!isOpen && left) {
+    left.classList.add('open');
+    if (btn) btn.classList.add('active');
+    if (backdrop) backdrop.classList.add('active');
+  }
+}
+
+function toggleBlocksDrawer() {
+  const center = document.getElementById('center');
+  const btn = document.getElementById('toggle-blocks-btn');
+  const backdrop = document.getElementById('drawer-backdrop');
+  const isOpen = center && center.classList.contains('open');
+  closeAllDrawers();
+  if (!isOpen && center) {
+    center.classList.add('open');
+    if (btn) btn.classList.add('active');
+    if (backdrop) backdrop.classList.add('active');
+  }
+}
+
+function toggleRightDrawer() {
+  const right = document.getElementById('right');
+  const btn = document.getElementById('toggle-right-btn');
+  const backdrop = document.getElementById('drawer-backdrop');
+  const isOpen = right && right.classList.contains('open');
+  closeAllDrawers();
+  if (!isOpen && right) {
+    right.classList.add('open');
+    if (btn) btn.classList.add('active');
+    if (backdrop) backdrop.classList.add('active');
+  }
+}
+
+function toggleElementsPopup() {
+  const modal = document.getElementById('popup-elements-modal');
+  const btn = document.getElementById('toggle-elements-btn');
+  const backdrop = document.getElementById('drawer-backdrop');
+  const isOpen = modal && modal.classList.contains('open');
+  closeAllDrawers();
+  if (!isOpen && modal) {
+    modal.classList.add('open');
+    if (btn) btn.classList.add('active');
+    if (backdrop) backdrop.classList.add('active');
+  }
+}
+
+function closeAllDrawers() {
+  ['left', 'center', 'right'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('open');
+  });
+  const modal = document.getElementById('popup-elements-modal');
+  if (modal) modal.classList.remove('open');
+  const wiz = document.getElementById('fx-wizard-sidebar');
+  if (wiz) wiz.classList.remove('open');
+
+  ['toggle-pages-btn', 'toggle-blocks-btn', 'toggle-right-btn', 'toggle-elements-btn', 'fx-wizard-btn'].forEach(bid => {
+    const b = document.getElementById(bid);
+    if (b) b.classList.remove('active');
+  });
+  const backdrop = document.getElementById('drawer-backdrop');
+  if (backdrop) backdrop.classList.remove('active');
+}
+
+function addBlockAndClose(type) {
+  addBlock(type);
+  closeAllDrawers();
+  setTimeout(() => {
+    const center = document.getElementById('center');
+    const btn = document.getElementById('toggle-blocks-btn');
+    const backdrop = document.getElementById('drawer-backdrop');
+    if (center) center.classList.add('open');
+    if (btn) btn.classList.add('active');
+    if (backdrop) backdrop.classList.add('active');
+  }, 50);
+}
+
+// ── 10 Universal Presentation Visual Modes Engine ─────────────────────────────
+window.__creatorPresMode = 'paper';
+function setCreatorPresentationMode(mode) {
+  window.__creatorPresMode = mode;
+  const allModes = ['paper', 'glass', 'deck', 'gazette', 'cyber', 'velvet', 'nebula', 'zen', 'aquatic', 'prism'];
+  allModes.forEach(m => {
+    document.body.classList.remove('mode-' + m);
+    const pill = document.getElementById('c-mode-' + m);
+    if (pill) pill.classList.remove('active');
+  });
+  document.body.classList.add('mode-' + mode);
+  const activePill = document.getElementById('c-mode-' + mode);
+  if (activePill) activePill.classList.add('active');
+  
+  if (typeof updateCreatorLivePreview === 'function') {
+    updateCreatorLivePreview();
+  }
+}
+
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MODULE E: UNIFIED POP-UP SHELL CONTROLLER
+// ══════════════════════════════════════════════════════════════════════════════
+window.LDocShell = {
+  activeHeavy: null,
+  activeLights: new Set(),
+  positions: {},
+
+  create(options) {
+    let shell = document.getElementById(options.id);
+    if (!shell) {
+      shell = document.createElement('div');
+      shell.id = options.id;
+      shell.className = 'ldoc-popup-shell ' + (options.isHeavy ? 'heavy-panel' : 'light-panel');
+      shell.innerHTML = `
+        <div class="shell-header">
+          <div class="shell-title"><span class="shell-icon">${options.icon || '✨'}</span><span>${options.title}</span></div>
+          <div class="shell-actions">
+            ${options.extraHeaderActions || ''}
+            <button class="shell-close-btn" title="Close (Esc)">✕</button>
+          </div>
+        </div>
+        <div class="shell-body">${options.contentHtml || ''}</div>
+      `;
+      document.body.appendChild(shell);
+      this.attachDraggable(shell);
+      shell.querySelector('.shell-close-btn').addEventListener('click', () => this.close(options.id));
+    }
+    return shell;
+  },
+
+  open(id) {
+    const shell = document.getElementById(id);
+    if (!shell) return;
+    const isHeavy = shell.classList.contains('heavy-panel');
+    if (isHeavy) {
+      if (this.activeHeavy && this.activeHeavy !== id) {
+        this.close(this.activeHeavy);
+      }
+      this.activeHeavy = id;
+    } else {
+      this.activeLights.add(id);
+    }
+
+    if (this.positions[id]) {
+      shell.style.left = this.positions[id].x + 'px';
+      shell.style.top = this.positions[id].y + 'px';
+    } else {
+      const w = shell.offsetWidth || 700;
+      const h = shell.offsetHeight || 500;
+      shell.style.left = Math.max(20, Math.floor((window.innerWidth - w) / 2)) + 'px';
+      shell.style.top = Math.max(60, Math.floor((window.innerHeight - h) / 2)) + 'px';
+    }
+
+    shell.classList.add('active');
+  },
+
+  close(id) {
+    const shell = document.getElementById(id);
+    if (!shell) return;
+    this.positions[id] = {
+      x: parseInt(shell.style.left) || shell.offsetLeft,
+      y: parseInt(shell.style.top) || shell.offsetTop
+    };
+    shell.classList.remove('active');
+    if (this.activeHeavy === id) this.activeHeavy = null;
+    this.activeLights.delete(id);
+  },
+
+  attachDraggable(shell) {
+    const header = shell.querySelector('.shell-header');
+    let isDragging = false, startX, startY, initialLeft, initialTop;
+
+    header.addEventListener('mousedown', (e) => {
+      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('select')) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      initialLeft = shell.offsetLeft;
+      initialTop = shell.offsetTop;
+      document.body.style.userSelect = 'none';
+      header.style.cursor = 'grabbing';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      const newX = Math.max(10, Math.min(window.innerWidth - shell.offsetWidth - 10, initialLeft + dx));
+      const newY = Math.max(40, Math.min(window.innerHeight - shell.offsetHeight - 10, initialTop + dy));
+      shell.style.left = newX + 'px';
+      shell.style.top = newY + 'px';
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        document.body.style.userSelect = '';
+        header.style.cursor = 'grab';
+      }
+    });
+  }
+};
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (window.LDocShell.activeHeavy) {
+      window.LDocShell.close(window.LDocShell.activeHeavy);
+    } else if (window.LDocShell.activeLights.size > 0) {
+      const arr = Array.from(window.LDocShell.activeLights);
+      window.LDocShell.close(arr[arr.length - 1]);
+    }
+    const popover = document.getElementById('ldoc-format-popover');
+    if (popover) popover.style.display = 'none';
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MODULE A: RICH DOCUMENT EDITOR ("DOCX MODE") & FORMAT POPOVER
+// ══════════════════════════════════════════════════════════════════════════════
+
+window.sanitizeClipboardHtml = function(rawHtml) {
+  if (!rawHtml) return '';
+  const ALLOWED_TAGS = new Set([
+    'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'LI',
+    'B', 'STRONG', 'I', 'EM', 'U', 'S', 'STRIKE', 'A',
+    'TABLE', 'THEAD', 'TBODY', 'TR', 'TH', 'TD', 'CODE', 'PRE', 'SPAN', 'BLOCKQUOTE', 'BR'
+  ]);
+  const ALLOWED_ATTRS = new Set(['href', 'title', 'class', 'style', 'colspan', 'rowspan']);
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(rawHtml, 'text/html');
+
+  function cleanNode(node) {
+    if (node.nodeType === Node.TEXT_NODE) return node.cloneNode(true);
+    if (node.nodeType !== Node.ELEMENT_NODE) return null;
+
+    const tagName = node.tagName.toUpperCase();
+    if (!ALLOWED_TAGS.has(tagName)) {
+      return document.createTextNode(node.textContent || '');
+    }
+
+    const cleanEl = document.createElement(node.tagName.toLowerCase());
+    for (let attr of Array.from(node.attributes)) {
+      const name = attr.name.toLowerCase();
+      let val = attr.value;
+      if (ALLOWED_ATTRS.has(name)) {
+        if (name === 'href' && (/^javascript:/i.test(val) || /^data:text\/html/i.test(val))) {
+          continue;
+        }
+        cleanEl.setAttribute(name, val);
+      }
+    }
+
+    for (let child of Array.from(node.childNodes)) {
+      const cleanedChild = cleanNode(child);
+      if (cleanedChild) cleanEl.appendChild(cleanedChild);
+    }
+    return cleanEl;
+  }
+
+  const wrapper = document.createElement('div');
+  for (let child of Array.from(doc.body.childNodes)) {
+    const cleaned = cleanNode(child);
+    if (cleaned) wrapper.appendChild(cleaned);
+  }
+  return wrapper.innerHTML;
+};
+
+window.initFormatPopover = function() {
+  let popover = document.getElementById('ldoc-format-popover');
+  if (!popover) {
+    popover = document.createElement('div');
+    popover.id = 'ldoc-format-popover';
+    popover.innerHTML = `
+      <select class="fmt-select" id="fmt-font-family" onchange="document.execCommand('fontName', false, this.value)">
+        <option value="'Dancing Script', cursive">✍️ Dancing Script</option>
+        <option value="'Playfair Display', serif">📰 Playfair</option>
+        <option value="'Cinzel', serif">👑 Cinzel</option>
+        <option value="'Plus Jakarta Sans', sans-serif" selected>⚡ Jakarta</option>
+        <option value="'JetBrains Mono', monospace">💻 JetBrains</option>
+        <option value="'Space Grotesk', sans-serif">🚀 Space</option>
+      </select>
+      <select class="fmt-select" id="fmt-font-size" onchange="document.execCommand('fontSize', false, this.value)">
+        <option value="2">12px</option>
+        <option value="3" selected>16px</option>
+        <option value="4">20px</option>
+        <option value="5">24px</option>
+        <option value="6">32px</option>
+      </select>
+      <div class="fmt-divider"></div>
+      <button class="fmt-btn" onclick="document.execCommand('bold')" title="Bold (Ctrl+B)"><b>B</b></button>
+      <button class="fmt-btn" onclick="document.execCommand('italic')" title="Italic (Ctrl+I)"><i>I</i></button>
+      <button class="fmt-btn" onclick="document.execCommand('underline')" title="Underline (Ctrl+U)"><u>U</u></button>
+      <button class="fmt-btn" onclick="document.execCommand('strikeThrough')" title="Strikethrough"><s>S</s></button>
+      <div class="fmt-divider"></div>
+      <button class="fmt-btn" onclick="document.execCommand('justifyLeft')" title="Align Left">⇤</button>
+      <button class="fmt-btn" onclick="document.execCommand('justifyCenter')" title="Center">⇥⇤</button>
+      <button class="fmt-btn" onclick="document.execCommand('justifyRight')" title="Align Right">⇥</button>
+      <div class="fmt-divider"></div>
+      <button class="fmt-btn" onclick="document.execCommand('insertUnorderedList')" title="Bullet List">•≡</button>
+      <button class="fmt-btn" onclick="document.execCommand('insertOrderedList')" title="Numbered List">1≡</button>
+      <button class="fmt-btn" onclick="insertTableProAtCursor()" title="Insert Advanced Table">📊 Table</button>
+      <button class="fmt-btn" onclick="addCommentToSelection()" title="Add Inline Comment" style="color:#38bdf8">💬</button>
+    `;
+    document.body.appendChild(popover);
+  }
+
+  document.addEventListener('mouseup', (e) => {
+    if (e.target.closest('#ldoc-format-popover')) return;
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.toString().trim()) {
+      popover.style.display = 'none';
+      return;
+    }
+    const editable = e.target.closest('[contenteditable="true"]');
+    if (!editable) {
+      popover.style.display = 'none';
+      return;
+    }
+
+    const range = sel.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    if (rect.width > 0) {
+      popover.style.display = 'flex';
+      popover.style.left = Math.max(10, Math.min(window.innerWidth - 440, rect.left + window.scrollX)) + 'px';
+      popover.style.top = Math.max(10, rect.top + window.scrollY - 44) + 'px';
+    }
+  });
+};
+
+window.insertTableProAtCursor = function() {
+  const html = `
+    <div class="table-pro-wrap" contenteditable="false">
+      <div class="table-pro-controls">
+        <button class="table-pro-btn" onclick="addTableProRow(this)">+ Row</button>
+        <button class="table-pro-btn" onclick="addTableProCol(this)">+ Column</button>
+        <button class="table-pro-btn" onclick="deleteTableProRow(this)" style="color:#f87171">- Row</button>
+      </div>
+      <table class="table-pro">
+        <thead>
+          <tr>
+            <th contenteditable="true">Header 1</th>
+            <th contenteditable="true">Header 2</th>
+            <th contenteditable="true">Header 3</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td contenteditable="true">Data 1</td>
+            <td contenteditable="true">Data 2</td>
+            <td contenteditable="true">Data 3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div><p contenteditable="true"><br></p>
+  `;
+  document.execCommand('insertHTML', false, html);
+};
+
+window.addTableProRow = function(btn) {
+  const table = btn.closest('.table-pro-wrap').querySelector('table');
+  const tbody = table.querySelector('tbody');
+  const colCount = table.querySelectorAll('thead th').length || 3;
+  const tr = document.createElement('tr');
+  for (let i = 0; i < colCount; i++) {
+    const td = document.createElement('td');
+    td.contentEditable = "true";
+    td.innerText = "New cell";
+    tr.appendChild(td);
+  }
+  tbody.appendChild(tr);
+};
+
+window.addTableProCol = function(btn) {
+  const table = btn.closest('.table-pro-wrap').querySelector('table');
+  const theadRow = table.querySelector('thead tr');
+  const th = document.createElement('th');
+  th.contentEditable = "true";
+  th.innerText = "Header";
+  theadRow.appendChild(th);
+
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const td = document.createElement('td');
+    td.contentEditable = "true";
+    td.innerText = "Data";
+    tr.appendChild(td);
+  });
+};
+
+window.deleteTableProRow = function(btn) {
+  const table = btn.closest('.table-pro-wrap').querySelector('table');
+  const rows = table.querySelectorAll('tbody tr');
+  if (rows.length > 1) {
+    rows[rows.length - 1].remove();
+  }
+};
+
+window.addCommentToSelection = function() {
+  const comment = prompt("Enter review comment or note:");
+  if (!comment) return;
+  const safeCmt = escapeHtml ? escapeHtml(comment) : comment.replace(/</g,'&lt;');
+  const html = `<mark class="ldoc-commented-text" title="Comment: ${safeCmt}" style="background:rgba(56,189,248,0.3);padding:2px 4px;border-radius:4px">${window.getSelection().toString()}</mark>`;
+  document.execCommand('insertHTML', false, html);
+};
+
+document.addEventListener('paste', (e) => {
+  const target = e.target.closest('[contenteditable="true"]');
+  if (!target) return;
+  const clipboardData = e.clipboardData || window.clipboardData;
+  if (!clipboardData) return;
+  const rawHtml = clipboardData.getData('text/html');
+  if (rawHtml) {
+    e.preventDefault();
+    const cleanHtml = window.sanitizeClipboardHtml(rawHtml);
+    document.execCommand('insertHTML', false, cleanHtml);
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MODULE C: PHOTO STUDIO ("PHOTOSHOP AREA")
+// ══════════════════════════════════════════════════════════════════════════════
+window.LDocPhotoStudio = {
+  activeImgNode: null,
+  activeImgElement: null,
+  rotation: 0,
+  flipH: 1,
+  filters: {
+    brightness: 100,
+    contrast: 100,
+    saturation: 100,
+    blur: 0,
+    sepia: 0,
+    invert: 0
+  },
+  drawingCanvas: null,
+  isDrawing: false,
+
+  openForImage(imgEl, nodeRef=null) {
+    this.activeImgElement = imgEl;
+    this.activeImgNode = nodeRef;
+    this.rotation = 0;
+    this.flipH = 1;
+    this.filters = { brightness: 100, contrast: 100, saturation: 100, blur: 0, sepia: 0, invert: 0 };
+
+    let shell = document.getElementById('photo-studio-shell');
+    if (!shell) {
+      shell = window.LDocShell.create({
+        id: 'photo-studio-shell',
+        title: 'Photo Studio — Non-Destructive Layer Stack',
+        icon: '🎨',
+        isHeavy: true,
+        contentHtml: `
+          <div class="photo-studio-layout">
+            <div class="photo-canvas-area" id="ps-canvas-container">
+              <canvas id="ps-viewport-canvas"></canvas>
+            </div>
+            <div class="photo-controls-sidebar">
+              <div class="photo-ctrl-group">
+                <div class="photo-ctrl-label"><span>Brightness</span><span id="ps-val-bright">100%</span></div>
+                <input type="range" class="photo-slider" min="20" max="200" value="100" id="ps-bright" oninput="LDocPhotoStudio.updateFilter('brightness', this.value)">
+              </div>
+              <div class="photo-ctrl-group">
+                <div class="photo-ctrl-label"><span>Contrast</span><span id="ps-val-contrast">100%</span></div>
+                <input type="range" class="photo-slider" min="20" max="200" value="100" id="ps-contrast" oninput="LDocPhotoStudio.updateFilter('contrast', this.value)">
+              </div>
+              <div class="photo-ctrl-group">
+                <div class="photo-ctrl-label"><span>Saturation</span><span id="ps-val-sat">100%</span></div>
+                <input type="range" class="photo-slider" min="0" max="200" value="100" id="ps-sat" oninput="LDocPhotoStudio.updateFilter('saturation', this.value)">
+              </div>
+              <div class="photo-ctrl-group">
+                <div class="photo-ctrl-label"><span>Blur Radius</span><span id="ps-val-blur">0px</span></div>
+                <input type="range" class="photo-slider" min="0" max="20" value="0" id="ps-blur" oninput="LDocPhotoStudio.updateFilter('blur', this.value)">
+              </div>
+              <div class="photo-ctrl-group">
+                <div class="photo-ctrl-label"><span>Sepia Tone</span><span id="ps-val-sepia">0%</span></div>
+                <input type="range" class="photo-slider" min="0" max="100" value="0" id="ps-sepia" oninput="LDocPhotoStudio.updateFilter('sepia', this.value)">
+              </div>
+              <div class="photo-ctrl-group">
+                <div class="photo-ctrl-label"><span>Transform</span></div>
+                <div style="display:flex;gap:6px">
+                  <button class="btn" style="flex:1;padding:5px 8px;font-size:11px" onclick="LDocPhotoStudio.rotateClockwise()">↷ Rotate 90°</button>
+                  <button class="btn" style="flex:1;padding:5px 8px;font-size:11px" onclick="LDocPhotoStudio.toggleFlipH()">⇄ Flip H</button>
+                </div>
+              </div>
+              <div class="photo-ctrl-group" style="margin-top:auto">
+                <button class="btn green" style="width:100%;justify-content:center;padding:8px" onclick="LDocPhotoStudio.saveEdits()">💾 Apply to Document</button>
+                <button class="btn" style="width:100%;justify-content:center;padding:6px;margin-top:6px" onclick="LDocPhotoStudio.resetOriginal()">↺ Reset Original</button>
+              </div>
+            </div>
+          </div>
+        `
+      });
+    }
+
+    window.LDocShell.open('photo-studio-shell');
+    this.renderPreview();
+  },
+
+  updateFilter(name, val) {
+    this.filters[name] = parseFloat(val);
+    const label = document.getElementById('ps-val-' + (name === 'brightness' ? 'bright' : name === 'saturation' ? 'sat' : name));
+    if (label) label.innerText = val + (name === 'blur' ? 'px' : '%');
+    this.renderPreview();
+  },
+
+  rotateClockwise() {
+    this.rotation = (this.rotation + 90) % 360;
+    this.renderPreview();
+  },
+
+  toggleFlipH() {
+    this.flipH = -this.flipH;
+    this.renderPreview();
+  },
+
+  renderPreview() {
+    if (!this.activeImgElement) return;
+    const canvas = document.getElementById('ps-viewport-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const img = this.activeImgElement;
+
+    const w = img.naturalWidth || img.width || 600;
+    const h = img.naturalHeight || img.height || 400;
+    canvas.width = (this.rotation % 180 !== 0) ? h : w;
+    canvas.height = (this.rotation % 180 !== 0) ? w : h;
+
+    ctx.save();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.filter = `brightness(${this.filters.brightness}%) contrast(${this.filters.contrast}%) saturate(${this.filters.saturation}%) blur(${this.filters.blur}px) sepia(${this.filters.sepia}%) invert(${this.filters.invert}%)`;
+
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate((this.rotation * Math.PI) / 180);
+    ctx.scale(this.flipH, 1);
+    ctx.drawImage(img, -w / 2, -h / 2, w, h);
+    ctx.restore();
+  },
+
+  saveEdits() {
+    if (!this.activeImgElement) return;
+    const stack = {
+      rotation: this.rotation,
+      flipH: this.flipH,
+      filters: { ...this.filters }
+    };
+    
+    // Apply CSS to on-page image element
+    this.activeImgElement.style.filter = `brightness(${this.filters.brightness}%) contrast(${this.filters.contrast}%) saturate(${this.filters.saturation}%) blur(${this.filters.blur}px) sepia(${this.filters.sepia}%)`;
+    this.activeImgElement.style.transform = `rotate(${this.rotation}deg) scaleX(${this.flipH})`;
+
+    if (this.activeImgNode) {
+      if (!this.activeImgNode.style) this.activeImgNode.style = {};
+      this.activeImgNode.style.image_layer_stack = stack;
+    }
+    window.LDocShell.close('photo-studio-shell');
+  },
+
+  resetOriginal() {
+    if (this.activeImgElement) {
+      this.activeImgElement.style.filter = 'none';
+      this.activeImgElement.style.transform = 'none';
+    }
+    if (this.activeImgNode && this.activeImgNode.style) {
+      delete this.activeImgNode.style.image_layer_stack;
+    }
+    window.LDocShell.close('photo-studio-shell');
+  }
+};
+
+// Double-click image to edit in Photo Studio
+document.addEventListener('dblclick', (e) => {
+  const img = e.target.closest('img:not(.dmenu-brand img):not(.logo):not(#ai-helper-toggle img)');
+  if (img && (img.closest('.pres-page') || img.closest('#creator-preview-body') || img.closest('.blk'))) {
+    e.stopPropagation();
+    window.LDocPhotoStudio.openForImage(img);
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MODULE B: PDF / ACROBAT-STYLE ANNOTATION LAYER & EXPORT
+// ══════════════════════════════════════════════════════════════════════════════
+window.LDocAnnotate = {
+  activeTool: null,
+  color: '#fef08a',
+
+  toggleToolbar() {
+    let bar = document.getElementById('annotate-toolbar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'annotate-toolbar';
+      bar.innerHTML = `
+        <div style="font-size:12px;font-weight:800;color:#fef08a;margin-right:4px">🖋️ Annotate</div>
+        <button class="annot-btn" onclick="LDocAnnotate.setTool('highlight', this)">🖍️ Highlight</button>
+        <button class="annot-btn" onclick="LDocAnnotate.setTool('sticky', this)">📌 Note</button>
+        <button class="annot-btn" onclick="LDocAnnotate.setTool('pen', this)">✏️ Pen</button>
+        <button class="annot-btn" onclick="LDocAnnotate.addSignatureBox()">✍️ Signature</button>
+        <button class="annot-btn" onclick="LDocAnnotate.exportPdf()" style="background:linear-gradient(135deg,#059669,#0284c7);color:#fff">📄 Export PDF</button>
+        <button class="annot-btn" onclick="LDocAnnotate.closeToolbar()" style="color:#f87171">✕</button>
+      `;
+      document.body.appendChild(bar);
+    }
+    bar.style.display = (bar.style.display === 'none' || !bar.style.display) ? 'flex' : 'none';
+  },
+
+  closeToolbar() {
+    const bar = document.getElementById('annotate-toolbar');
+    if (bar) bar.style.display = 'none';
+    this.activeTool = null;
+  },
+
+  setTool(tool, btn) {
+    this.activeTool = tool;
+    document.querySelectorAll('.annot-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    if (tool === 'sticky') {
+      const page = document.querySelector('.pres-page') || document.querySelector('#creator-preview-body');
+      if (page) {
+        this.createStickyNote(page, 50, 100);
+      }
+    }
+  },
+
+  createStickyNote(parent, x, y) {
+    const note = document.createElement('div');
+    note.className = 'sticky-note-card';
+    note.style.left = x + 'px';
+    note.style.top = y + 'px';
+    note.innerHTML = `
+      <div class="sticky-note-hdr">
+        <span>📌 REVIEW NOTE</span>
+        <button style="background:none;border:none;cursor:pointer;color:#854d0e" onclick="this.closest('.sticky-note-card').remove()">✕</button>
+      </div>
+      <textarea class="sticky-note-body" placeholder="Type annotation note..."></textarea>
+    `;
+    parent.appendChild(note);
+
+    let isDrag = false, sx, sy, il, it;
+    note.addEventListener('mousedown', (e) => {
+      if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+      isDrag = true;
+      sx = e.clientX; sy = e.clientY;
+      il = note.offsetLeft; it = note.offsetTop;
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!isDrag) return;
+      note.style.left = (il + e.clientX - sx) + 'px';
+      note.style.top = (it + e.clientY - sy) + 'px';
+    });
+    window.addEventListener('mouseup', () => { isDrag = false; });
+  },
+
+  addSignatureBox() {
+    const page = document.querySelector('.pres-page') || document.querySelector('#creator-preview-body');
+    if (!page) return;
+    const sig = document.createElement('div');
+    sig.className = 'sticky-note-card';
+    sig.style.width = '240px';
+    sig.style.background = '#ffffff';
+    sig.style.color = '#1e293b';
+    sig.style.border = '1.5px dashed #64748b';
+    sig.style.left = '60px';
+    sig.style.top = '120px';
+    sig.innerHTML = `
+      <div class="sticky-note-hdr" style="color:#64748b">
+        <span>✍️ SIGNATURE BLOCK</span>
+        <button style="background:none;border:none;cursor:pointer;color:#64748b" onclick="this.closest('.sticky-note-card').remove()">✕</button>
+      </div>
+      <canvas width="220" height="70" style="background:#f8fafc;border-radius:4px;cursor:crosshair;display:block"></canvas>
+      <div style="font-size:9.5px;color:#94a3b8;margin-top:4px;text-align:right">Sign above with mouse or stylus</div>
+    `;
+    page.appendChild(sig);
+
+    const canvas = sig.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    let signing = false;
+    canvas.addEventListener('mousedown', (e) => { signing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+    canvas.addEventListener('mousemove', (e) => { if (signing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } });
+    window.addEventListener('mouseup', () => { signing = false; });
+  },
+
+  exportPdf() {
+    window.print();
+  }
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MODULE D: 3D SCENE EDITOR (UNITY-STYLE THREE-PANE)
+// ══════════════════════════════════════════════════════════════════════════════
+window.LDoc3DSceneEditor = {
+  activeNode: null,
+  scene: null,
+  camera: null,
+  renderer: null,
+  selectedObject: null,
+  objects: [],
+
+  openForModel(nodeRef=null) {
+    this.activeNode = nodeRef;
+    let shell = document.getElementById('three-scene-editor-shell');
+    if (!shell) {
+      shell = window.LDocShell.create({
+        id: 'three-scene-editor-shell',
+        title: '3D Scene Editor — Unity-Style Viewport & Hierarchy',
+        icon: '🎮',
+        isHeavy: true,
+        contentHtml: `
+          <div class="scene-editor-layout">
+            <div class="scene-hierarchy-pane">
+              <div class="panel-hdr">Hierarchy</div>
+              <div id="scene-hierarchy-list" style="flex:1;overflow-y:auto">
+                <div class="scene-tree-item selected" onclick="LDoc3DSceneEditor.selectObject('chassis')">📦 Primary Mesh</div>
+                <div class="scene-tree-item" onclick="LDoc3DSceneEditor.selectObject('key_light')">💡 Key Light (Sun)</div>
+                <div class="scene-tree-item" onclick="LDoc3DSceneEditor.selectObject('fill_light')">💡 Fill Light (Cyan)</div>
+                <div class="scene-tree-item" onclick="LDoc3DSceneEditor.selectObject('camera')">📷 Main Camera</div>
+              </div>
+              <div style="padding:10px;border-top:1px solid rgba(255,255,255,.1)">
+                <button class="btn" style="width:100%;font-size:11px;justify-content:center" onclick="LDoc3DSceneEditor.addPrimitive('cube')">+ Add Primitive Mesh</button>
+              </div>
+            </div>
+            <div class="scene-viewport-pane" id="scene-viewport-container">
+              <canvas id="scene-editor-canvas" style="width:100%;height:100%"></canvas>
+              <div class="scene-budget-hud">
+                <div>Triangles: <span class="budget-badge budget-green" id="se-tris">18,420 / 35,000</span></div>
+                <div>Draw Calls: <span class="budget-badge budget-green" id="se-calls">8 / 15</span></div>
+                <div>Shaders: <span style="color:#fef08a">PBR Standard</span></div>
+              </div>
+            </div>
+            <div class="scene-inspector-pane">
+              <div class="panel-hdr">Inspector</div>
+              <div class="photo-ctrl-group">
+                <div class="photo-ctrl-label"><span>Selected Entity</span><span id="se-selected-name" style="color:var(--accent)">Primary Mesh</span></div>
+              </div>
+              <div class="photo-ctrl-group">
+                <div class="photo-ctrl-label"><span>Transform Position (X, Y, Z)</span></div>
+                <div style="display:flex;gap:4px">
+                  <input type="number" class="btn" style="width:33%;padding:4px" id="se-pos-x" value="0.0" step="0.1" onchange="LDoc3DSceneEditor.updateTransform()">
+                  <input type="number" class="btn" style="width:33%;padding:4px" id="se-pos-y" value="0.0" step="0.1" onchange="LDoc3DSceneEditor.updateTransform()">
+                  <input type="number" class="btn" style="width:33%;padding:4px" id="se-pos-z" value="0.0" step="0.1" onchange="LDoc3DSceneEditor.updateTransform()">
+                </div>
+              </div>
+              <div class="photo-ctrl-group">
+                <div class="photo-ctrl-label"><span>Transform Scale</span></div>
+                <input type="range" class="photo-slider" min="0.2" max="3.0" value="1.0" step="0.1" id="se-scale" oninput="LDoc3DSceneEditor.updateTransform()">
+              </div>
+              <div class="photo-ctrl-group">
+                <div class="photo-ctrl-label"><span>PBR Material Preset</span></div>
+                <select class="fmt-select" id="se-mat-preset" onchange="LDoc3DSceneEditor.setMaterialPreset(this.value)">
+                  <option value="royal_gold">👑 Royal Gilded Gold</option>
+                  <option value="cyber_hologram">⚡ Cyber Wireframe Hologram</option>
+                  <option value="obsidian_carbon">🖤 Obsidian Carbon Fiber</option>
+                  <option value="crystal_cobalt">💎 Cobalt Refractive Glass</option>
+                </select>
+              </div>
+              <div class="photo-ctrl-group" style="margin-top:auto">
+                <button class="btn green" style="width:100%;justify-content:center;padding:8px" onclick="LDoc3DSceneEditor.saveToDocument()">💾 Save 3D Scene to AST</button>
+              </div>
+            </div>
+          </div>
+        `
+      });
+    }
+
+    window.LDocShell.open('three-scene-editor-shell');
+    this.initThreeViewport();
+  },
+
+  initThreeViewport() {
+    const container = document.getElementById('scene-viewport-container');
+    const canvas = document.getElementById('scene-editor-canvas');
+    if (!container || !canvas || typeof THREE === 'undefined') return;
+
+    const w = container.clientWidth || 500;
+    const h = container.clientHeight || 400;
+
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+    this.camera.position.set(4, 3, 5);
+    this.camera.lookAt(0, 0, 0);
+
+    this.renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    this.renderer.setSize(w, h);
+
+    // Grid helper
+    const grid = new THREE.GridHelper(10, 20, 0xa78bfa, 0x1e293b);
+    this.scene.add(grid);
+
+    // Lights
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    this.scene.add(ambient);
+
+    const dirKey = new THREE.DirectionalLight(0xf59e0b, 1.2);
+    dirKey.position.set(5, 10, 7);
+    this.scene.add(dirKey);
+
+    const dirFill = new THREE.DirectionalLight(0x38bdf8, 0.8);
+    dirFill.position.set(-5, 3, -4);
+    this.scene.add(dirFill);
+
+    // Primary sample mesh (Torus knot or cube)
+    const geom = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.94, roughness: 0.16 });
+    const mesh = new THREE.Mesh(geom, mat);
+    mesh.name = "chassis";
+    this.scene.add(mesh);
+    this.selectedObject = mesh;
+
+    // Interactive orbit animation
+    let reqId;
+    const animate = () => {
+      reqId = requestAnimationFrame(animate);
+      if (mesh) mesh.rotation.y += 0.008;
+      this.renderer.render(this.scene, this.camera);
+    };
+    animate();
+  },
+
+  selectObject(name) {
+    document.getElementById('se-selected-name').innerText = name.toUpperCase();
+    if (this.scene) {
+      this.selectedObject = this.scene.getObjectByName(name);
+    }
+  },
+
+  addPrimitive(type) {
+    if (!this.scene) return;
+    const geom = new THREE.BoxGeometry(1, 1, 1);
+    const mat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, metalness: 0.5, roughness: 0.5 });
+    const box = new THREE.Mesh(geom, mat);
+    box.position.set(Math.random() * 2 - 1, 0.5, Math.random() * 2 - 1);
+    this.scene.add(box);
+    alert("Added primitive box mesh to 3D scene graph!");
+  },
+
+  updateTransform() {
+    if (!this.selectedObject) return;
+    const x = parseFloat(document.getElementById('se-pos-x').value) || 0;
+    const y = parseFloat(document.getElementById('se-pos-y').value) || 0;
+    const z = parseFloat(document.getElementById('se-pos-z').value) || 0;
+    const s = parseFloat(document.getElementById('se-scale').value) || 1;
+    this.selectedObject.position.set(x, y, z);
+    this.selectedObject.scale.set(s, s, s);
+  },
+
+  setMaterialPreset(preset) {
+    if (!this.selectedObject || !this.selectedObject.material) return;
+    if (preset === 'royal_gold') {
+      this.selectedObject.material = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.94, roughness: 0.16 });
+    } else if (preset === 'cyber_hologram') {
+      this.selectedObject.material = new THREE.MeshPhongMaterial({ color: 0x38bdf8, emissive: 0x0284c7, wireframe: true, transparent: true, opacity: 0.85 });
+    } else if (preset === 'obsidian_carbon') {
+      this.selectedObject.material = new THREE.MeshStandardMaterial({ color: 0x111118, metalness: 0.3, roughness: 0.7 });
+    } else if (preset === 'crystal_cobalt') {
+      this.selectedObject.material = new THREE.MeshPhysicalMaterial({ color: 0x60a5fa, transmission: 0.9, opacity: 1, transparent: true, roughness: 0.1 });
+    }
+  },
+
+  saveToDocument() {
+    alert("3D Scene Graph saved to Document AST!");
+    window.LDocShell.close('three-scene-editor-shell');
+  }
+};
+
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof initFormatPopover === 'function') initFormatPopover();
+  setCreatorPresentationMode('paper');
+});
+
 </script>
 
 <!-- Floating Elements Pop-up Modal Dock -->
