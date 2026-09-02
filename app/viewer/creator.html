@@ -1854,6 +1854,79 @@ body.mode-paper .page-fx-canvas {
   }
 }
 
+
+/* ── Universal Scrollable Containers ── */
+#ed-blocks, #ed-pages, #blocks-area, #page-list,
+#ed-preview-body, #creator-preview-body,
+.fx-wizard-drawer, .elements-button-grid, .ai-helper-messages {
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+#ed-blocks {
+  max-height: calc(100vh - 130px) !important;
+}
+
+#ed-preview-body, #creator-preview-body {
+  max-height: calc(100vh - 120px) !important;
+  padding: 24px 20px;
+}
+
+/* Elegant Scrollbars */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(10, 10, 20, 0.4);
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.3);
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.65);
+}
+
+/* ── Free Text HUD with Save Button & In-Place Placement ── */
+.ldoc-ambient-text {
+  position: absolute;
+  z-index: 50;
+  user-select: none;
+  transition: transform 0.15s ease;
+}
+.ldoc-ambient-text.saved .ambient-text-hud {
+  display: none !important;
+}
+.ldoc-ambient-text.saved:hover .ambient-text-hud {
+  display: flex !important;
+  opacity: 0.85;
+}
+.ldoc-ambient-text.saved .ambient-text-body {
+  border: 1px dashed transparent !important;
+}
+.ldoc-ambient-text.saved:hover .ambient-text-body {
+  border: 1px dashed rgba(56, 189, 248, 0.5) !important;
+}
+.hud-btn.hud-save {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  padding: 2px 9px !important;
+  border-radius: 6px !important;
+  font-size: 11px !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3) !important;
+}
+.hud-btn.hud-save:hover {
+  filter: brightness(1.15) !important;
+}
+
 </style>
   <script src="gta6_lightbox_mesh.js"></script>
 </head>
@@ -2153,6 +2226,8 @@ body.mode-paper .page-fx-canvas {
     <div class="panel-hdr">Actions</div>
     <div id="actions">
       <button class="btn green" onclick="buildDoc()">▶ Build &amp; Open in Studio</button>
+      <button class="btn" onclick="document.getElementById('creator-file-input').click()" style="background:rgba(56,189,248,0.18);border:1px solid #38bdf8;color:#38bdf8;font-weight:700;display:inline-flex;align-items:center;gap:6px">📂 Insert / Open File</button>
+      <input type="file" id="creator-file-input" accept=".ldocx,.ldoc,.png,.jpg,.jpeg,.webp,.mp4,.webm,.mp3,.wav,.3mf,.stl,.obj,.glb,.txt,.md,.json" style="display:none" onchange="handleCreatorFileInsert(this.files)">
       <button class="btn primary" onclick="downloadDoc()">⬇ Download .ldocx</button>
       <button class="btn" onclick="validateSpec()">✓ Validate Spec</button>
       <button class="btn" onclick="exportJSON()">{ } Export JSON Spec</button>
@@ -2833,6 +2908,201 @@ function toggleCreatorLivePreview() {
    ENTIRE page inner background, sandwiched between paper texture & content.
    ══════════════════════════════════════════════════════════════════════════════ */
 
+
+// ── Whole-Page Living Environmental Canvas: Dynamic Particle & Water Engine ──
+
+function initPageEnvironmentalFx(page, canvas, forceMode = null) {
+  if (!canvas || !page) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const mode = (forceMode || page.dataset.fx || 'water').toLowerCase();
+
+  // Cancel any running animation loop on this canvas
+  if (canvas.__animId) {
+    cancelAnimationFrame(canvas.__animId);
+    canvas.__animId = null;
+  }
+
+  function resize() {
+    canvas.width = page.clientWidth || page.offsetWidth || 1200;
+    canvas.height = page.clientHeight || page.offsetHeight || 800;
+  }
+  resize();
+
+  if (mode.includes('particle') || mode.includes('stardust') || mode.includes('constellation') || mode.includes('nebula') || mode.includes('starfield')) {
+    // ══════════════════════════════════════════════════════════
+    // ✨ DYNAMIC COSMIC PARTICLE CONSTELLATION SIMULATION
+    // ══════════════════════════════════════════════════════════
+    let pts = [];
+    const count = 48;
+    for (let i = 0; i < count; i++) {
+      pts.push({
+        x: Math.random() * (canvas.width || 900),
+        y: Math.random() * (canvas.height || 600),
+        vx: (Math.random() - 0.5) * 1.1,
+        vy: (Math.random() - 0.5) * 1.1,
+        r: Math.random() * 2.6 + 1.2,
+        glow: Math.random() * 0.4 + 0.6
+      });
+    }
+
+    let mouse = { x: -999, y: -999 };
+    const onMove = (e) => {
+      const r = page.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+    };
+    page.addEventListener('mousemove', onMove);
+
+    const onClick = (e) => {
+      const r = page.getBoundingClientRect();
+      const cx = e.clientX - r.left;
+      const cy = e.clientY - r.top;
+      // Burst 12 sparkling ember particles on click
+      for (let k = 0; k < 12; k++) {
+        const angle = Math.random() * Math.PI * 2;
+        const spd = Math.random() * 3.5 + 1.5;
+        pts.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * spd,
+          vy: Math.sin(angle) * spd,
+          r: Math.random() * 3 + 1.5,
+          glow: 1.0,
+          temporary: true,
+          life: 65
+        });
+      }
+    };
+    page.addEventListener('click', onClick);
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        // Gravitational steering towards or away from cursor
+        const dx = mouse.x - p.x;
+        const dy = mouse.y - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 110 && dist > 0) {
+          p.x -= (dx / dist) * 1.2;
+          p.y -= (dy / dist) * 1.2;
+        }
+
+        // Particle core
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(245, 158, 11, ${p.glow})`;
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Connect nearby nodes with golden stardust constellation lines
+        for (let j = i - 1; j >= 0; j--) {
+          const p2 = pts[j];
+          const cdx = p.x - p2.x;
+          const cdy = p.y - p2.y;
+          const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
+          if (cdist < 115) {
+            const alpha = (1 - cdist / 115) * 0.45;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(245, 158, 11, ${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+
+        if (p.temporary) {
+          p.life--;
+          p.glow *= 0.96;
+          if (p.life <= 0) pts.splice(i, 1);
+        }
+      }
+
+      canvas.__animId = requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+  } else {
+    // ══════════════════════════════════════════════════════════
+    // 🌊 FLUID TEMPORAL WATER WAVE SIMULATION
+    // ══════════════════════════════════════════════════════════
+    let ripples = [];
+    function addRipple(x, y, power = 1) {
+      ripples.push({
+        x, y,
+        r: 6,
+        alpha: 0.9 * power,
+        maxR: 140 + 100 * power,
+        speed: 2.6
+      });
+    }
+
+    const onMove = (e) => {
+      const r = page.getBoundingClientRect();
+      if (Math.random() > 0.6) {
+        addRipple(e.clientX - r.left, e.clientY - r.top, 0.5);
+      }
+    };
+    page.addEventListener('mousemove', onMove);
+
+    const onClick = (e) => {
+      const r = page.getBoundingClientRect();
+      const cx = e.clientX - r.left;
+      const cy = e.clientY - r.top;
+      addRipple(cx, cy, 1.4);
+      for (let k = 1; k <= 3; k++) {
+        setTimeout(() => {
+          addRipple(cx + (Math.random() * 24 - 12), cy + (Math.random() * 24 - 12), 1.0 - k * 0.2);
+        }, k * 130);
+      }
+    };
+    page.addEventListener('click', onClick);
+
+    function loopWater() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const rip = ripples[i];
+        rip.r += rip.speed;
+        rip.alpha *= 0.978;
+
+        // Primary cyan fluid wave
+        ctx.beginPath();
+        ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(56, 189, 248, ${rip.alpha})`;
+        ctx.lineWidth = Math.max(1, 3.2 * (rip.alpha / 0.9));
+        ctx.stroke();
+
+        // Secondary golden shimmer wave
+        ctx.beginPath();
+        ctx.arc(rip.x, rip.y, rip.r * 0.72, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(245, 158, 11, ${rip.alpha * 0.45})`;
+        ctx.lineWidth = 1.6;
+        ctx.stroke();
+
+        if (rip.alpha < 0.015 || rip.r > rip.maxR) {
+          ripples.splice(i, 1);
+        }
+      }
+
+      canvas.__animId = requestAnimationFrame(loopWater);
+    }
+    loopWater();
+  }
+}
+
 function initWholePageLivingFx(pageEl, canvas, fxType = 'water') {
   if (!canvas || !pageEl) return;
   const ctx = canvas.getContext('2d');
@@ -3115,7 +3385,7 @@ function updateCreatorLivePreview() {
       let fxType = 'water';
       if (JSON.stringify(curPage.blocks || []).includes('particles')) fxType = 'particles';
       slideDiv.dataset.fx = fxType;
-      setTimeout(() => initWholePageLivingFx(slideDiv, fxCanvas, fxType), 60);
+      setTimeout(() => initPageEnvironmentalFx(slideDiv, fxCanvas, fxType), 60);
       attachCreatorTactilePaperPhysics(slideDiv);
       enableCreatorInPlaceEditing(slideDiv);
       renderCreatorFloatingTexts();
@@ -3238,6 +3508,162 @@ function spawnCreatorAmbientText(x, y, text = 'Click to write dynamic text...') 
   renderCreatorFloatingTexts();
   scheduleAutoSave();
   toast('✍️ Text placed! Double-click anytime to edit in-place.', 'ok');
+}
+
+
+// ── 📂 Creator File Ingestion Engine (Multi-Format) ─────────────────────────
+async function handleCreatorFileInsert(files) {
+  if (!files || !files.length) return;
+  const file = files[0];
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  // 1. .ldocx / .ldoc Living Document Package
+  if (['ldocx', 'ldoc', 'zip'].includes(ext)) {
+    try {
+      showLoader('LDOC STUDIO', `Unzipping and loading ${file.name}...`);
+      if (typeof JSZip === 'undefined') throw new Error('JSZip library initializing...');
+      const zip = await JSZip.loadAsync(file);
+      const specFile = zip.file('spec.json') || zip.file('doc.json');
+      if (specFile) {
+        const specText = await specFile.async('text');
+        const spec = JSON.parse(specText);
+        loadSpec(spec);
+        toast(`✓ Loaded Living Document: ${spec.title || file.name}`, 'ok');
+        hideLoader();
+        return;
+      }
+    } catch(err) {
+      hideLoader();
+      toast('Could not open .ldocx: ' + err.message, 'err');
+      return;
+    }
+  }
+
+  // 2. Individual asset files (Image, Video, 3D, Audio, Text)
+  if (!pages.length) addPage();
+  const curPage = pages.find(p => p.id === currentPage) || pages[0];
+
+  if (['mp4', 'webm'].includes(ext)) {
+    const url = URL.createObjectURL(file);
+    curPage.blocks.push({
+      id: bid(),
+      type: 'web_video',
+      src: url,
+      label: file.name,
+      style: { src: url, label: file.name, autoplay: false }
+    });
+    renderBlocks();
+    updateCreatorLivePreview();
+    scheduleAutoSave();
+    toast(`✓ Ingested Video: ${file.name}`, 'ok');
+    return;
+  }
+
+  if (['png', 'jpg', 'jpeg', 'webp', 'svg'].includes(ext)) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      curPage.blocks.push({
+        id: bid(),
+        type: 'web_image',
+        src: e.target.result,
+        alt: file.name,
+        style: { src: e.target.result, alt: file.name }
+      });
+      renderBlocks();
+      updateCreatorLivePreview();
+      scheduleAutoSave();
+      toast(`✓ Ingested Image: ${file.name}`, 'ok');
+    };
+    reader.readAsDataURL(file);
+    return;
+  }
+
+  if (['3mf', 'stl', 'obj', 'glb', 'gltf'].includes(ext)) {
+    try {
+      if (typeof parse3DModelFile === 'function') {
+        const mesh = await parse3DModelFile(file);
+        curPage.blocks.push({
+          id: bid(),
+          type: '3d_model',
+          format: ext,
+          custom_label: file.name,
+          mesh_data: mesh,
+          material_mode: 'cyber_hologram'
+        });
+        renderBlocks();
+        updateCreatorLivePreview();
+        scheduleAutoSave();
+        toast(`✓ Ingested 3D Model: ${file.name}`, 'ok');
+        return;
+      }
+    } catch(err) {
+      toast('3D Model ingestion error: ' + err.message, 'err');
+      return;
+    }
+  }
+
+  if (['mp3', 'wav', 'ogg'].includes(ext)) {
+    const url = URL.createObjectURL(file);
+    curPage.blocks.push({
+      id: bid(),
+      type: 'web_audio',
+      src: url,
+      label: file.name,
+      style: { src: url, label: file.name, persistent: true }
+    });
+    renderBlocks();
+    updateCreatorLivePreview();
+    scheduleAutoSave();
+    toast(`✓ Ingested Soundtrack: ${file.name}`, 'ok');
+    return;
+  }
+
+  // Text / Markdown
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    curPage.blocks.push({
+      id: bid(),
+      type: 'paragraph',
+      text: e.target.result
+    });
+    renderBlocks();
+    updateCreatorLivePreview();
+    scheduleAutoSave();
+    toast(`✓ Ingested Text file: ${file.name}`, 'ok');
+  };
+  reader.readAsText(file);
+}
+
+
+function saveFt(ftId, btn) {
+  const textWrap = btn.closest('.ldoc-ambient-text');
+  if (textWrap) {
+    textWrap.classList.remove('active');
+    textWrap.classList.add('saved');
+    const hud = textWrap.querySelector('.ambient-text-hud');
+    if (hud) hud.style.display = 'none';
+    const bodyEl = textWrap.querySelector('.ambient-text-body');
+    if (bodyEl) {
+      bodyEl.style.border = 'none';
+      bodyEl.style.boxShadow = 'none';
+      bodyEl.contentEditable = 'false';
+    }
+  }
+  scheduleAutoSave();
+  toast('✓ Text saved and placed permanently on slide!', 'ok');
+}
+
+function editSavedFt(textWrap) {
+  if (!textWrap) return;
+  textWrap.classList.remove('saved');
+  textWrap.classList.add('active');
+  const hud = textWrap.querySelector('.ambient-text-hud');
+  if (hud) hud.style.display = 'flex';
+  const bodyEl = textWrap.querySelector('.ambient-text-body');
+  if (bodyEl) {
+    bodyEl.contentEditable = 'true';
+    bodyEl.focus();
+  }
 }
 
 function renderCreatorFloatingTexts() {

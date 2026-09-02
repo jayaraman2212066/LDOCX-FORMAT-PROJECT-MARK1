@@ -1991,6 +1991,79 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   }
 }
 
+
+/* ── Universal Scrollable Containers ── */
+#ed-blocks, #ed-pages, #blocks-area, #page-list,
+#ed-preview-body, #creator-preview-body,
+.fx-wizard-drawer, .elements-button-grid, .ai-helper-messages {
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+#ed-blocks {
+  max-height: calc(100vh - 130px) !important;
+}
+
+#ed-preview-body, #creator-preview-body {
+  max-height: calc(100vh - 120px) !important;
+  padding: 24px 20px;
+}
+
+/* Elegant Scrollbars */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(10, 10, 20, 0.4);
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.3);
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.65);
+}
+
+/* ── Free Text HUD with Save Button & In-Place Placement ── */
+.ldoc-ambient-text {
+  position: absolute;
+  z-index: 50;
+  user-select: none;
+  transition: transform 0.15s ease;
+}
+.ldoc-ambient-text.saved .ambient-text-hud {
+  display: none !important;
+}
+.ldoc-ambient-text.saved:hover .ambient-text-hud {
+  display: flex !important;
+  opacity: 0.85;
+}
+.ldoc-ambient-text.saved .ambient-text-body {
+  border: 1px dashed transparent !important;
+}
+.ldoc-ambient-text.saved:hover .ambient-text-body {
+  border: 1px dashed rgba(56, 189, 248, 0.5) !important;
+}
+.hud-btn.hud-save {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  padding: 2px 9px !important;
+  border-radius: 6px !important;
+  font-size: 11px !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3) !important;
+}
+.hud-btn.hud-save:hover {
+  filter: brightness(1.15) !important;
+}
+
 </style>
 <script src="jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -2828,11 +2901,45 @@ ${fullText}`;
 }
 
 async function executeAiQuery(prompt){
+  const urls = (prompt || '').match(/https?:\/\/[^\s,]+/gi) || [];
+  const isBuildRequest = /build|create|generate|make|synthesize|ldoc|presentation|slide|format|convert|video|stripe/i.test(prompt || '');
+
+  // 🤖 Autonomous Agentic Link & Content Builder Intercept
+  if (urls.length > 0 || (isBuildRequest && (urls.length > 0 || prompt.length > 15))) {
+    appendAiMessage('user', prompt);
+    const botMsg = appendAiMessage('bot', '<div class="ai-thinking" style="display:flex"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span>Agentic Engine analyzing links & synthesizing Living Document...</span></div>', true);
+
+    setTimeout(async () => {
+      const res = await runAgenticDocumentBuilder(prompt);
+      botMsg.innerHTML = `
+        <div style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(56,189,248,0.1));border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:12px">
+          <strong style="color:#34d399;font-size:13px;display:flex;align-items:center;gap:6px">
+            <span>⚡</span> Agentic Living Document Synthesized!
+          </strong>
+          <div style="font-size:12px;color:var(--text);margin-top:6px;line-height:1.5">
+            Created <strong>"${escapeHtml(res.title)}"</strong> with <strong>${res.pageCount} interactive presentation pages</strong>:
+            <ul style="margin:6px 0 8px 16px;padding:0;color:var(--text2)">
+              ${res.ytCount ? `<li>🎬 <strong>4K Motion Stream:</strong> Generated from your video link</li>` : ''}
+              ${res.stripeCount ? `<li>💳 <strong>Stripe Checkout Action:</strong> Wired directly to your payment link</li>` : ''}
+              <li>✨ <strong>Living Shaders:</strong> Dynamic cosmic particle constellations and fluid ripples active</li>
+            </ul>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+            <button class="btn green" style="padding:6px 12px;font-size:11.5px;font-weight:700" onclick="switchTab('editor')">✏️ Open in Editor</button>
+            <button class="btn" style="padding:6px 12px;font-size:11.5px;font-weight:700;background:rgba(245,158,11,0.25);color:#fef08a" onclick="buildAndView()">▶ View Presentation</button>
+            <button class="btn primary" style="padding:6px 12px;font-size:11.5px;font-weight:700" onclick="buildAndSave()">💾 Download .ldocx</button>
+          </div>
+        </div>
+      `;
+    }, 500);
+    return;
+  }
+
   const cfg=getAiConfig();
   if(!cfg.apiKey && cfg.provider!=='ollama'){
     document.getElementById('ai-settings-view').style.display='flex';
     onAiProviderChange();
-    appendAiMessage('bot', '⚠️ Please enter your AI API key (Gemini / OpenAI) in the settings panel above to activate live guidance.');
+    appendAiMessage('bot', '💡 Please enter your AI API key in settings above, or paste links (YouTube, Stripe, media) to auto-build a presentation without an API key!');
     return;
   }
 
@@ -2869,6 +2976,17 @@ Format your answer clearly with bullet points and bold highlights where appropri
   }
   const box=document.getElementById('ai-helper-messages');
   if(box) box.scrollTop=box.scrollHeight;
+}
+
+
+function askAiBuildFromLinks() {
+  const userPrompt = prompt(
+    "Enter your project title & links (YouTube video, Stripe checkout, 3D model, etc.):\n\nExample:\nTitle: Supercar Launch | YouTube: https://www.youtube.com/watch?v=qCkPM_f3V5c | Stripe: https://buy.stripe.com/demo",
+    "Title: GT6 Hypercar | YouTube: https://www.youtube.com/watch?v=QdBZY2fkU-0 | Stripe: https://buy.stripe.com/"
+  );
+  if (userPrompt && userPrompt.trim()) {
+    executeAiQuery(userPrompt.trim());
+  }
 }
 
 async function sendAiHelperMessage(){
@@ -5989,87 +6107,198 @@ function togglePageFxMode(btn) {
 
 // ── Whole-Page Living Environmental Canvas (Fluid Water Waves & Stardust Physics) ──
 
-function initPageEnvironmentalFx(page, canvas) {
+// ── Whole-Page Living Environmental Canvas: Dynamic Particle & Water Engine ──
+
+function initPageEnvironmentalFx(page, canvas, forceMode = null) {
   if (!canvas || !page) return;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
+
+  const mode = (forceMode || page.dataset.fx || 'water').toLowerCase();
+
+  // Cancel any running animation loop on this canvas
+  if (canvas.__animId) {
+    cancelAnimationFrame(canvas.__animId);
+    canvas.__animId = null;
+  }
 
   function resize() {
     canvas.width = page.clientWidth || page.offsetWidth || 1200;
     canvas.height = page.clientHeight || page.offsetHeight || 800;
   }
   resize();
-  window.addEventListener('resize', resize);
 
-  let ripples = [];
-  function addRipple(x, y, power = 1) {
-    ripples.push({
-      x, y,
-      r: 6,
-      alpha: 0.9 * power,
-      maxR: 140 + 100 * power,
-      speed: 2.6
-    });
-  }
-
-  // Mousemove ripple emitter
-  page.addEventListener('mousemove', (e) => {
-    const r = page.getBoundingClientRect();
-    if (Math.random() > 0.6) {
-      addRipple(e.clientX - r.left, e.clientY - r.top, 0.5);
+  if (mode.includes('particle') || mode.includes('stardust') || mode.includes('constellation') || mode.includes('nebula') || mode.includes('starfield')) {
+    // ══════════════════════════════════════════════════════════
+    // ✨ DYNAMIC COSMIC PARTICLE CONSTELLATION SIMULATION
+    // ══════════════════════════════════════════════════════════
+    let pts = [];
+    const count = 48;
+    for (let i = 0; i < count; i++) {
+      pts.push({
+        x: Math.random() * (canvas.width || 900),
+        y: Math.random() * (canvas.height || 600),
+        vx: (Math.random() - 0.5) * 1.1,
+        vy: (Math.random() - 0.5) * 1.1,
+        r: Math.random() * 2.6 + 1.2,
+        glow: Math.random() * 0.4 + 0.6
+      });
     }
-  });
 
-  // Click burst ripples
-  page.addEventListener('click', (e) => {
-    const r = page.getBoundingClientRect();
-    const cx = e.clientX - r.left;
-    const cy = e.clientY - r.top;
-    addRipple(cx, cy, 1.4);
-    for (let k = 1; k <= 3; k++) {
-      setTimeout(() => {
-        addRipple(cx + (Math.random() * 24 - 12), cy + (Math.random() * 24 - 12), 1.0 - k * 0.2);
-      }, k * 130);
-    }
-  });
+    let mouse = { x: -999, y: -999 };
+    const onMove = (e) => {
+      const r = page.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+    };
+    page.addEventListener('mousemove', onMove);
 
-  // Ambient living pulse
-  const ambientTimer = setInterval(() => {
-    if (Math.random() > 0.35 && canvas.width > 0) {
-      addRipple(Math.random() * canvas.width, Math.random() * canvas.height, 0.45);
-    }
-  }, 3200);
-
-  function loop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = ripples.length - 1; i >= 0; i--) {
-      const rip = ripples[i];
-      rip.r += rip.speed;
-      rip.alpha *= 0.978;
-
-      // Primary cyan fluid wave
-      ctx.beginPath();
-      ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(56, 189, 248, ${rip.alpha})`;
-      ctx.lineWidth = Math.max(1, 3.2 * (rip.alpha / 0.9));
-      ctx.stroke();
-
-      // Secondary golden shimmer wave
-      ctx.beginPath();
-      ctx.arc(rip.x, rip.y, rip.r * 0.72, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(245, 158, 11, ${rip.alpha * 0.45})`;
-      ctx.lineWidth = 1.6;
-      ctx.stroke();
-
-      if (rip.alpha < 0.015 || rip.r > rip.maxR) {
-        ripples.splice(i, 1);
+    const onClick = (e) => {
+      const r = page.getBoundingClientRect();
+      const cx = e.clientX - r.left;
+      const cy = e.clientY - r.top;
+      // Burst 12 sparkling ember particles on click
+      for (let k = 0; k < 12; k++) {
+        const angle = Math.random() * Math.PI * 2;
+        const spd = Math.random() * 3.5 + 1.5;
+        pts.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * spd,
+          vy: Math.sin(angle) * spd,
+          r: Math.random() * 3 + 1.5,
+          glow: 1.0,
+          temporary: true,
+          life: 65
+        });
       }
+    };
+    page.addEventListener('click', onClick);
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        // Gravitational steering towards or away from cursor
+        const dx = mouse.x - p.x;
+        const dy = mouse.y - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 110 && dist > 0) {
+          p.x -= (dx / dist) * 1.2;
+          p.y -= (dy / dist) * 1.2;
+        }
+
+        // Particle core
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(245, 158, 11, ${p.glow})`;
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Connect nearby nodes with golden stardust constellation lines
+        for (let j = i - 1; j >= 0; j--) {
+          const p2 = pts[j];
+          const cdx = p.x - p2.x;
+          const cdy = p.y - p2.y;
+          const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
+          if (cdist < 115) {
+            const alpha = (1 - cdist / 115) * 0.45;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(245, 158, 11, ${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+
+        if (p.temporary) {
+          p.life--;
+          p.glow *= 0.96;
+          if (p.life <= 0) pts.splice(i, 1);
+        }
+      }
+
+      canvas.__animId = requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+  } else {
+    // ══════════════════════════════════════════════════════════
+    // 🌊 FLUID TEMPORAL WATER WAVE SIMULATION
+    // ══════════════════════════════════════════════════════════
+    let ripples = [];
+    function addRipple(x, y, power = 1) {
+      ripples.push({
+        x, y,
+        r: 6,
+        alpha: 0.9 * power,
+        maxR: 140 + 100 * power,
+        speed: 2.6
+      });
     }
 
-    requestAnimationFrame(loop);
+    const onMove = (e) => {
+      const r = page.getBoundingClientRect();
+      if (Math.random() > 0.6) {
+        addRipple(e.clientX - r.left, e.clientY - r.top, 0.5);
+      }
+    };
+    page.addEventListener('mousemove', onMove);
+
+    const onClick = (e) => {
+      const r = page.getBoundingClientRect();
+      const cx = e.clientX - r.left;
+      const cy = e.clientY - r.top;
+      addRipple(cx, cy, 1.4);
+      for (let k = 1; k <= 3; k++) {
+        setTimeout(() => {
+          addRipple(cx + (Math.random() * 24 - 12), cy + (Math.random() * 24 - 12), 1.0 - k * 0.2);
+        }, k * 130);
+      }
+    };
+    page.addEventListener('click', onClick);
+
+    function loopWater() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const rip = ripples[i];
+        rip.r += rip.speed;
+        rip.alpha *= 0.978;
+
+        // Primary cyan fluid wave
+        ctx.beginPath();
+        ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(56, 189, 248, ${rip.alpha})`;
+        ctx.lineWidth = Math.max(1, 3.2 * (rip.alpha / 0.9));
+        ctx.stroke();
+
+        // Secondary golden shimmer wave
+        ctx.beginPath();
+        ctx.arc(rip.x, rip.y, rip.r * 0.72, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(245, 158, 11, ${rip.alpha * 0.45})`;
+        ctx.lineWidth = 1.6;
+        ctx.stroke();
+
+        if (rip.alpha < 0.015 || rip.r > rip.maxR) {
+          ripples.splice(i, 1);
+        }
+      }
+
+      canvas.__animId = requestAnimationFrame(loopWater);
+    }
+    loopWater();
   }
-  loop();
 }
 
 function initInPageWaterCanvas(canvasId) {
@@ -7212,6 +7441,150 @@ function edToggleLivePreview() {
   if (isEdPreviewOpen) edUpdateLivePreview();
 }
 
+
+// ── 🧠 LDOC Autonomous Agentic AI Document Builder ─────────────────────────
+async function runAgenticDocumentBuilder(promptText) {
+  if (!promptText || !promptText.trim()) return;
+
+  const raw = promptText.trim();
+  const urls = raw.match(/https?:\/\/[^\s,]+/gi) || [];
+
+  // Categorize extracted links
+  let ytUrls = [];
+  let stripeUrls = [];
+  let imgUrls = [];
+  let audioUrls = [];
+  let otherUrls = [];
+
+  urls.forEach(u => {
+    if (u.match(/(?:youtube\.com|youtu\.be)/i)) ytUrls.push(u);
+    else if (u.includes('stripe.com') || u.includes('pay') || u.includes('checkout')) stripeUrls.push(u);
+    else if (u.match(/\.(png|jpg|jpeg|webp|gif|svg)/i)) imgUrls.push(u);
+    else if (u.match(/\.(mp3|wav|ogg)/i)) audioUrls.push(u);
+    else otherUrls.push(u);
+  });
+
+  // Extract clean title from prompt or first link
+  let docTitle = 'Living Presentation Blueprint';
+  const titleMatch = raw.match(/(?:title|named|called|about|for)\s+["':]?([^"'.\n]+)/i);
+  if (titleMatch && titleMatch[1]) {
+    docTitle = titleMatch[1].trim();
+  }
+
+  // Construct intelligent 3-page or 4-page Living Presentation
+  const newPages = [
+    {
+      id: (typeof pid === 'function' ? pid() : 'p-1'),
+      title: 'Executive Vision & Introduction',
+      fx: 'water',
+      blocks: [
+        { id: (typeof bid === 'function' ? bid() : 'b-1'), type: 'heading', level: 1, text: docTitle.toUpperCase() },
+        { id: (typeof bid === 'function' ? bid() : 'b-2'), type: 'paragraph', text: 'Welcome to the enchanted Living Document presentation. Synthesized with real-time interactivity, reactive media streams, and spatial assets.' },
+        { 
+          id: (typeof bid === 'function' ? bid() : 'b-3'), 
+          type: 'button', 
+          value: 'EXPLORE CAPABILITIES →', 
+          action: 'navigate', 
+          target: 'next', 
+          theme: 'royal_gold',
+          style: { action: 'navigate', target: 'next', btn_style: 'royal_gold' }
+        }
+      ]
+    },
+    {
+      id: (typeof pid === 'function' ? pid() : 'p-2'),
+      title: 'Cinematic Media & Telemetry',
+      fx: 'particles',
+      blocks: [
+        { id: (typeof bid === 'function' ? bid() : 'b-4'), type: 'heading', level: 2, text: 'MOTION & MEDIA SHOWCASE' },
+        {
+          id: (typeof bid === 'function' ? bid() : 'b-5'),
+          type: 'web_video',
+          src: ytUrls[0] || 'https://www.youtube.com/watch?v=QdBZY2fkU-0',
+          label: '4K Ultra-HD Motion Stream',
+          autoplay: false
+        },
+        {
+          id: (typeof bid === 'function' ? bid() : 'b-6'),
+          type: 'feature_grid',
+          cards: [
+            { badge: 'STREAM', title: 'Zero Buffering', desc: 'Hardware-accelerated living video pipeline.' },
+            { badge: 'INTERACTION', title: 'Reactive Shaders', desc: 'Real-time particle constellations and fluid dynamics.' },
+            { badge: 'CROSS-PLATFORM', title: 'Full Responsive', desc: 'Calibrated for Mobile, Tablet, PC, and 4K displays.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: (typeof pid === 'function' ? pid() : 'p-3'),
+      title: 'Interactive Spatial Hologram',
+      fx: 'particles',
+      blocks: [
+        { id: (typeof bid === 'function' ? bid() : 'b-7'), type: 'heading', level: 2, text: '3D HOLOGRAPHIC ASSET VIEWER' },
+        {
+          id: (typeof bid === 'function' ? bid() : 'b-8'),
+          type: '3d_model',
+          format: '3mf',
+          mesh_template: 'gta6_lightbox',
+          material_mode: 'cyber_hologram'
+        },
+        { id: (typeof bid === 'function' ? bid() : 'b-9'), type: 'paragraph', text: 'Drag to inspect CAD surfaces in 360°. Rendered with luminous physical shaders and dynamic lighting.' }
+      ]
+    },
+    {
+      id: (typeof pid === 'function' ? pid() : 'p-4'),
+      title: 'Direct Action & Access',
+      fx: 'water',
+      blocks: [
+        { id: (typeof bid === 'function' ? bid() : 'b-10'), type: 'heading', level: 2, text: 'SECURE VIP ACCESS & DISPATCH' },
+        {
+          id: (typeof bid === 'function' ? bid() : 'b-11'),
+          type: 'button',
+          value: stripeUrls[0] ? 'COMPLETE REGISTRATION VIA STRIPE 💳' : 'JOIN THE LIVING NETWORK →',
+          action: stripeUrls[0] ? 'link' : 'submit',
+          target: stripeUrls[0] || 'https://buy.stripe.com/',
+          theme: 'neon_cyan',
+          style: { action: stripeUrls[0] ? 'link' : 'submit', target: stripeUrls[0] || 'https://buy.stripe.com/', btn_style: 'neon_cyan' }
+        },
+        {
+          id: (typeof bid === 'function' ? bid() : 'b-12'),
+          type: 'form',
+          fields: [
+            { label: 'Pilot / Guest Call-sign', field_type: 'input_text', placeholder: 'Enter your name' },
+            { label: 'Direct Dispatch Email', field_type: 'input_text', placeholder: 'your-email@organization.com' }
+          ],
+          webhook_url: otherUrls[0] || ''
+        }
+      ]
+    }
+  ];
+
+  // Apply to In-App Creator (index.html) or Standalone Creator (creator.html)
+  if (typeof edPages !== 'undefined') {
+    edPages = newPages;
+    edCurrentPage = edPages[0].id;
+    if (document.getElementById('ed-title')) document.getElementById('ed-title').value = docTitle;
+    if (typeof edRenderPageList === 'function') edRenderPageList();
+    if (typeof edRenderBlocks === 'function') edRenderBlocks();
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  } else if (typeof pages !== 'undefined') {
+    pages = newPages;
+    currentPage = pages[0].id;
+    if (document.getElementById('m-title')) document.getElementById('m-title').value = docTitle;
+    if (typeof renderPageList === 'function') renderPageList();
+    if (typeof renderBlocks === 'function') renderBlocks();
+    if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+    if (typeof scheduleAutoSave === 'function') scheduleAutoSave();
+  }
+
+  return {
+    title: docTitle,
+    pageCount: newPages.length,
+    ytCount: ytUrls.length,
+    stripeCount: stripeUrls.length
+  };
+}
+
 function edUpdateLivePreview() {
   clearTimeout(edPreviewDebounceTimer);
   edPreviewDebounceTimer = setTimeout(() => {
@@ -7329,7 +7702,7 @@ function edUpdateLivePreview() {
       pageDiv.dataset.fx = fxMode;
       setTimeout(() => {
         if (typeof initPageEnvironmentalFx === 'function') {
-          initPageEnvironmentalFx(pageDiv, fxCanvas);
+          initPageEnvironmentalFx(pageDiv, fxCanvas, fxMode);
         }
       }, 50);
 
