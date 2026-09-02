@@ -2551,6 +2551,150 @@ body.mode-paper .page-fx-canvas {
   }
 }
 
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   📱 PREMIUM MOBILE & TABLET TYPOGRAPHY, SPACING & TOUCH INTERACTION
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+@media screen and (max-width: 767px) {
+  /* Header & Navigation: Clean spacing and comfortable tap height */
+  #toolbar, #tb {
+    padding: 8px 10px !important;
+    gap: 6px !important;
+    height: 48px !important;
+    align-items: center !important;
+  }
+  .logo {
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    letter-spacing: 1px !important;
+  }
+  .tab-btn, .toolbar-btn, .btn {
+    padding: 7px 12px !important;
+    font-size: 12.5px !important;
+    min-height: 36px !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  /* Mobile View Segmented Switcher */
+  .mobile-view-tabs {
+    display: flex !important;
+    background: #0d1117 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    padding: 6px 10px !important;
+    gap: 6px !important;
+    z-index: 100 !important;
+  }
+  .mv-tab {
+    flex: 1 !important;
+    padding: 9px 8px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #94a3b8 !important;
+    border: 1px solid transparent !important;
+    cursor: pointer !important;
+    min-height: 38px !important;
+    letter-spacing: 0.3px !important;
+  }
+  .mv-tab.active {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(124, 58, 237, 0.25)) !important;
+    color: #fef08a !important;
+    border-color: rgba(245, 158, 11, 0.6) !important;
+  }
+
+  /* Swipable Quick Add Element Ribbon */
+  #ed-add-bar, #add-bar {
+    padding: 8px 10px !important;
+    gap: 8px !important;
+    height: 52px !important;
+    align-items: center !important;
+  }
+  .ed-add-btn, .add-btn {
+    padding: 7px 12px !important;
+    font-size: 12.5px !important;
+    min-height: 36px !important;
+    border-radius: 8px !important;
+    gap: 6px !important;
+    letter-spacing: 0.2px !important;
+  }
+
+  /* Block Editor Inputs & Typography */
+  .ed-block, .blk {
+    margin: 12px 0 !important;
+    padding: 14px 16px !important;
+    border-radius: 12px !important;
+  }
+  .ed-block input, .ed-block textarea, .blk input, .blk textarea {
+    font-size: 14.5px !important;
+    line-height: 1.6 !important;
+    padding: 9px 12px !important;
+    border-radius: 8px !important;
+    letter-spacing: 0.2px !important;
+  }
+  .ed-block label, .blk label {
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Slide Presentation Typography & Legibility */
+  .pres-page, .pres-slide {
+    width: calc(100vw - 16px) !important;
+    margin: 10px auto !important;
+    padding: 20px 16px !important;
+    border-radius: 16px !important;
+  }
+  .pres-section, .pres-heading, h1, h2 {
+    font-size: 22px !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0.6px !important;
+    margin-bottom: 12px !important;
+  }
+  .pres-p, p {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    letter-spacing: 0.25px !important;
+    color: #e2e8f0 !important;
+  }
+  .audio-card, .video-card, .telemetry-card {
+    padding: 14px 16px !important;
+    margin: 14px 0 !important;
+    border-radius: 14px !important;
+  }
+
+  /* Bottom Status Bar */
+  #ldoc-status-bar {
+    height: 26px !important;
+    padding: 0 10px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* Tablet Refinements */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .pres-section, .pres-heading, h1, h2 {
+    font-size: 26px !important;
+    letter-spacing: 0.7px !important;
+  }
+  .pres-p, p {
+    font-size: 16px !important;
+    line-height: 1.75 !important;
+    letter-spacing: 0.3px !important;
+  }
+  .tab-btn, .toolbar-btn, .btn {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    min-height: 34px !important;
+  }
+}
+
 </style>
   <script src="gta6_lightbox_mesh.js"></script>
 </head>
