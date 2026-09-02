@@ -1825,6 +1825,172 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
 }
 
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   📱 RESPONSIVE MULTI-DEVICE ARCHITECTURE (Mobile, Tablet, PC, 4K Monitors)
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+/* ── 🖥️ 4K Ultra-HD Displays (>= 2560px) ── */
+@media screen and (min-width: 2560px) {
+  #top, #tb, .quick-add-bar {
+    max-width: 2560px;
+    margin: 0 auto;
+  }
+  .pres-page, .pres-slide {
+    max-width: 1800px !important;
+    width: min(1800px, 92vw) !important;
+  }
+  .page-content-layer {
+    padding: 0 60px 60px 60px !important;
+  }
+  .pres-section {
+    font-size: 32px !important;
+  }
+  .pres-p {
+    font-size: 19px !important;
+    line-height: 1.85 !important;
+  }
+}
+
+/* ── 💻 Standard Laptops & Desktops (1025px - 1920px) ── */
+@media screen and (min-width: 1025px) and (max-width: 1920px) {
+  .pres-page, .pres-slide {
+    max-width: 1560px;
+    width: min(1560px, 94vw);
+  }
+}
+
+/* ── 📱 Tablets & Small Laptops (768px - 1024px) ── */
+@media screen and (max-width: 1024px) {
+  #top {
+    flex-wrap: wrap !important;
+    height: auto !important;
+    padding: 8px 12px !important;
+    gap: 8px !important;
+  }
+  #top-title {
+    max-width: 200px !important;
+  }
+  #creator-view, #main {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  #ed-sidebar, #left {
+    width: 100% !important;
+    max-height: 160px !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+  #ed-page-list, #page-list {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    gap: 8px !important;
+    padding: 8px !important;
+  }
+  #ed-blocks, #center {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-height: 500px !important;
+  }
+  #ed-live-preview, #creator-preview-pane {
+    width: 100% !important;
+    min-width: 100% !important;
+    border-left: none !important;
+    border-top: 1px solid var(--border) !important;
+  }
+  .pres-page, .pres-slide {
+    width: 96vw !important;
+    margin: 16px auto !important;
+    border-radius: 18px !important;
+  }
+  .page-content-layer {
+    padding: 0 24px 24px 24px !important;
+  }
+  .feature-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  }
+}
+
+/* ── 📱 Mobile Phones (< 768px) ── */
+@media screen and (max-width: 767px) {
+  body {
+    overflow-x: hidden !important;
+  }
+  #top, #tb {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    height: auto !important;
+    padding: 8px 10px !important;
+    gap: 6px !important;
+  }
+  .top-left, .tb-left {
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+  .top-center, .top-right, .tb-right {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    width: 100% !important;
+  }
+  .top-btn, .btn, .quick-add-btn {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+  #creator-view, #main {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  #ed-sidebar, #left {
+    width: 100% !important;
+    max-height: 120px !important;
+  }
+  #ed-blocks, #center {
+    width: 100% !important;
+    min-width: 100% !important;
+    border-right: none !important;
+  }
+  #ed-live-preview, #creator-preview-pane {
+    width: 100% !important;
+    min-width: 100% !important;
+    min-height: 360px !important;
+  }
+  .pres-page, .pres-slide {
+    width: 98vw !important;
+    margin: 8px auto !important;
+    border-radius: 14px !important;
+  }
+  .pres-page-header {
+    padding: 12px 16px 10px 16px !important;
+    margin-bottom: 16px !important;
+    font-size: 10px !important;
+  }
+  .page-content-layer {
+    padding: 0 16px 20px 16px !important;
+  }
+  .pres-section {
+    font-size: 22px !important;
+    margin-bottom: 12px !important;
+  }
+  .pres-p {
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+  }
+  .pres-3d-card, .video-card {
+    margin: 12px 0 !important;
+    padding: 8px !important;
+  }
+  .feature-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .quick-add-bar {
+    padding: 6px 8px !important;
+    gap: 4px !important;
+  }
+}
+
 </style>
 <script src="jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -7058,30 +7224,77 @@ function edUpdateLivePreview() {
     const curPage = edPages.find(p => p.id === edCurrentPage);
     if (!curPage) {
       body.innerHTML = `
-        <div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">
-          <img src="ldoc_logo.png" alt="LDOC Logo" style="width:36px;height:36px;border-radius:8px;box-shadow:0 0 16px rgba(245,158,11,.4);margin-bottom:10px;object-fit:contain">
-          <div>Add or select a page in the editor to preview presentation</div>
+        <div style="padding:40px 20px;text-align:center;color:var(--text3);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:12px;margin:auto">
+          <img src="ldoc_logo.png" alt="LDOC Logo" style="width:44px;height:44px;border-radius:10px;box-shadow:0 0 20px rgba(245,158,11,.4);object-fit:contain">
+          <div style="font-family:'Cinzel',serif;font-size:16px;font-weight:800;color:#fef08a">LDOC Living Canvas</div>
+          <div style="max-width:380px;line-height:1.6;color:var(--text2)">Select or create a slide in the editor to see real-time 3D models, 4K videos, and fluid wave dynamics.</div>
         </div>
       `;
       if (badge) badge.textContent = 'No Page Selected';
       return;
     }
 
-    if (badge) badge.textContent = curPage.title || 'Page ' + (edPages.indexOf(curPage) + 1);
+    const pageIdx = edPages.indexOf(curPage) + 1;
+    if (badge) badge.textContent = `Slide ${pageIdx} / ${edPages.length}`;
     body.innerHTML = '';
 
     try {
       const pageDiv = document.createElement('div');
       pageDiv.className = 'pres-page' + (typeof is3DTiltActive !== 'undefined' && is3DTiltActive ? ' tilt-active' : '');
-      pageDiv.style.cssText = 'padding:24px 28px;margin:0 auto;max-width:100%;min-height:280px;background:rgba(18,18,30,.92);border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 12px 36px rgba(0,0,0,.6)';
+      pageDiv.style.cssText = 'margin:0 auto;width:100%;min-height:360px;position:relative;overflow:hidden;border-radius:20px;border:1px solid rgba(245,158,11,0.35);box-shadow:0 16px 60px rgba(0,0,0,0.85);background:linear-gradient(180deg,#131322 0%,#0e0e18 100%)';
 
+      // Layer 1: Tactile Paper Texture Layer
+      const paperLayer = document.createElement('div');
+      paperLayer.className = 'page-paper-layer';
+      pageDiv.appendChild(paperLayer);
+
+      // Layer 2: Whole-Page Environmental Living Canvas Layer
+      const fxCanvas = document.createElement('canvas');
+      fxCanvas.className = 'page-fx-canvas';
+      fxCanvas.id = `ed-fx-canvas-${pageIdx}`;
+      pageDiv.appendChild(fxCanvas);
+
+      // Layer 3: Foreground Content Layer
+      const contentLayer = document.createElement('div');
+      contentLayer.className = 'page-content-layer';
+      pageDiv.appendChild(contentLayer);
+
+      // Slide Header
       const header = document.createElement('div');
-      header.style.cssText = 'font-family:Cinzel,serif;font-size:14px;font-weight:800;color:var(--gold);margin-bottom:18px;border-bottom:1px solid rgba(245,158,11,.25);padding-bottom:8px;display:flex;align-items:center;gap:8px';
-      header.innerHTML = `<img src="ldoc_logo.png" alt="LDOC Logo" style="width:18px;height:18px;border-radius:4px;object-fit:contain"> <span>${escapeHtml(curPage.title || 'Page')}</span>`;
-      pageDiv.appendChild(header);
+      header.className = 'pres-page-header';
+      header.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px">
+          <img src="ldoc_logo.png" alt="LDOC Logo" style="width:18px;height:18px;border-radius:4px;object-fit:contain">
+          <span>${escapeHtml(curPage.title || 'Untitled Slide')}</span>
+        </div>
+        <span style="font-size:10.5px;color:var(--gold);opacity:0.85">SLIDE ${pageIdx} OF ${edPages.length}</span>
+      `;
+      contentLayer.appendChild(header);
+
+      let fxMode = 'water';
+      let hasFxBlock = false;
 
       (curPage.blocks || []).forEach(b => {
         try {
+          if (b.type === 'water_effect' || b.type === 'fluid_canvas') {
+            hasFxBlock = true;
+            fxMode = 'water';
+            const badge = document.createElement('div');
+            badge.style.cssText = 'display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(2,132,199,0.22);border:1px solid rgba(56,189,248,0.45);border-radius:20px;font-family:Cinzel,serif;font-size:11.5px;color:#38bdf8;font-weight:700;margin:10px 0;backdrop-filter:blur(8px);box-shadow:0 4px 16px rgba(56,189,248,0.2)';
+            badge.innerHTML = `<span>🌊 Full-Page Fluid Wave Dynamics Active</span> <button onclick="emitWholePageSurge(this)" style="background:linear-gradient(135deg,#38bdf8,#0284c7);border:none;color:#0a0a14;padding:3px 10px;border-radius:10px;cursor:pointer;font-weight:800;font-size:10.5px;margin-left:4px">⚡ Pulse Wave</button>`;
+            contentLayer.appendChild(badge);
+            return;
+          }
+          if (b.type === 'particles' || b.type === 'particle_canvas') {
+            hasFxBlock = true;
+            fxMode = b.value || (b.style && b.style.mode) || 'stardust';
+            const badge = document.createElement('div');
+            badge.style.cssText = 'display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.45);border-radius:20px;font-family:Cinzel,serif;font-size:11.5px;color:#fef08a;font-weight:700;margin:10px 0;backdrop-filter:blur(8px);box-shadow:0 4px 16px rgba(245,158,11,0.2)';
+            badge.innerHTML = `<span>✨ Cosmic Particle Field Active (${fxMode.toUpperCase()})</span>`;
+            contentLayer.appendChild(badge);
+            return;
+          }
+
           const astNode = {
             node_type: b.type,
             value: b.text || b.value || b.prompt || b.title || '',
@@ -7101,16 +7314,25 @@ function edUpdateLivePreview() {
               checkout_url: (b.style && b.style.checkout_url) || b.checkout_url
             })
           };
-          renderBlockNode(astNode, pageDiv);
+          renderBlockNode(astNode, contentLayer);
         } catch(nodeErr) {
           const errDiv = document.createElement('div');
           errDiv.className = 'ldoc-error-fallback';
           errDiv.innerHTML = `<div class="error-icon">⚠️</div><div class="error-msg"><strong>Block Preview Deferred</strong><div>${escapeHtml(nodeErr.message || 'Block updating')}</div></div>`;
-          pageDiv.appendChild(errDiv);
+          contentLayer.appendChild(errDiv);
         }
       });
 
       body.appendChild(pageDiv);
+
+      // Start full-page environmental living wave dynamics
+      pageDiv.dataset.fx = fxMode;
+      setTimeout(() => {
+        if (typeof initPageEnvironmentalFx === 'function') {
+          initPageEnvironmentalFx(pageDiv, fxCanvas);
+        }
+      }, 50);
+
       pageDiv.querySelectorAll('.img-card-3d').forEach(attach3DTilt);
       attachTactilePaperPhysics(pageDiv);
       enableInPlaceEditing(pageDiv);
@@ -7125,7 +7347,7 @@ function edUpdateLivePreview() {
         </div>
       `;
     }
-  }, 80);
+  }, 60);
 }
 </script>
 
@@ -7986,7 +8208,10 @@ function edRenderBlocks() {
 
 async function buildAndView() {
   if (!edPages.length) { alert('Add at least one page.'); return; }
-  const btn = document.getElementById('build-btn'); btn.textContent = 'Building...'; btn.disabled = true;
+  const btn = document.getElementById('build-view-btn');
+  btn.textContent = 'Building...';
+  btn.disabled = true;
+
   try {
     const spec = {
       title: document.getElementById('ed-title').value || 'Living Document',
@@ -7994,51 +8219,79 @@ async function buildAndView() {
       lang: document.getElementById('ed-lang').value || 'en',
       pages: edPages.map(p => ({
         title: p.title,
-        blocks: p.blocks.map(b => {
-          if (b.type === 'heading') return { type: 'heading', level: b.level, text: b.text };
-          if (b.type === 'paragraph') return { type: 'paragraph', text: b.text };
-          if (b.type === 'quote') return { type: 'quote', text: b.text };
-          if (b.type === 'list') return { type: 'list', items: b.items || [] };
-          if (b.type === 'code') return { type: 'code', language: b.language, code: b.code };
-          if (b.type === 'table') return { type: 'table', headers: b.headers || [], rows: b.rows || [] };
-          if (b.type === 'ai') return { type: 'ai', prompt: b.prompt };
-          if (b.type === 'form') return { type: 'form', fields: b.fields || [] };
-          if (b.type === 'web_image') return { type: 'web_image', value: b.alt || 'Image', style: { src: b.src, alt: b.alt } };
-          if (b.type === 'web_audio') return { type: 'web_audio', value: b.label || 'Soundtrack', style: { src: b.src, label: b.label, persistent: true } };
-          if (b.type === 'web_video') return { type: 'web_video', value: b.label || 'Video', style: { src: b.src, label: b.label, autoplay: b.autoplay !== false } };
-          if (b.type === '3d_model') return { type: '3d_model', format: b.format || 'obj', mesh_template: b.mesh_template || 'supercar', material_mode: b.material_mode || 'cyber_hologram' };
-          if (b.type === 'feature_grid') return { type: 'feature_grid', cards: b.cards || [] };
-          if (b.type === 'button') return { type: 'button', value: b.value, style: { action: b.action, target: b.target } };
-          if (b.type === 'live_feed') return { type: 'live_feed', title: b.title, sources: b.sources };
-          if (b.type === 'preorder') return { type: 'preorder', tier: b.tier, price: b.price, perks: b.perks };
-          if (b.type === 'jsx_canvas') return { type: 'jsx_canvas', value: b.value || 'Interactive Sandbox', style: { code: b.style?.code || '', title: b.value } };
-          if (b.type === 'particles') return { type: 'particles', value: b.value || 'stardust', style: { mode: b.value || 'stardust' } };
-          if (b.type === 'water_effect') return { type: 'water_effect', value: 'Interactive Fluid Canvas' };
-          return null;
-        }).filter(Boolean)
+        blocks: (p.blocks || []).map(b => Object.assign({}, b))
       }))
     };
 
-    const res = await fetch(`${API}/documents/build`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(spec)
-    });
-    const j = await res.json();
-    if (!j.id) throw new Error(j.error || 'Build failed');
-    switchTab('viewer');
-    await openDoc(j.id);
-  } catch (e) {
-    alert('Build failed: ' + e.message);
+    // Compile client-side
+    const { blob, title } = await compileLdocxClientSide(spec);
+    showViewer();
+    // Direct load into browser memory
+    await loadLdocxFileDirect(blob);
+    if (typeof showRepairBanner === 'function') {
+      showRepairBanner(`✓ Built and opened "${title}" in Live Presentation!`, true);
+    }
+  } catch(err) {
+    alert('Build error: ' + err.message);
   } finally {
     btn.textContent = '▶ Build & View';
     btn.disabled = false;
   }
 }
 
+
+// ── 📦 Client-Side Zero-Server .ldocx Compiler (100% Vercel & Offline Compatible) ──
+async function compileLdocxClientSide(spec) {
+  if (typeof JSZip === 'undefined') {
+    throw new Error('JSZip library is initializing, please try again in a moment.');
+  }
+  const zip = new JSZip();
+
+  const docId = 'doc_' + Math.random().toString(36).slice(2, 11);
+  const title = spec.title || 'Living Document';
+  const manifest = {
+    ldoc_version: "2.4.0",
+    id: docId,
+    title: title,
+    author: spec.author || "Living Document Creator",
+    lang: spec.lang || "en",
+    created_at: new Date().toISOString(),
+    theme: spec.theme || "velocity",
+    page_count: (spec.pages || []).length,
+    assets: []
+  };
+
+  zip.file("manifest.json", JSON.stringify(manifest, null, 2));
+  zip.file("spec.json", JSON.stringify(spec, null, 2));
+
+  const pagesFolder = zip.folder("pages");
+  (spec.pages || []).forEach((p, idx) => {
+    const pageNum = String(idx + 1).padStart(3, '0');
+    const pData = {
+      id: p.id || `page_${pageNum}`,
+      page_number: idx + 1,
+      title: p.title || `Page ${idx + 1}`,
+      blocks: p.blocks || [],
+      floating_texts: p.floating_texts || []
+    };
+    pagesFolder.file(`page_${pageNum}.json`, JSON.stringify(pData, null, 2));
+  });
+
+  const blob = await zip.generateAsync({
+    type: "blob",
+    compression: "DEFLATE",
+    compressionOptions: { level: 6 }
+  });
+
+  return { blob, docId, title, manifest };
+}
+
 async function buildAndSave() {
   if (!edPages.length) { alert('Add at least one page.'); return; }
-  const btn = document.getElementById('build-save-btn'); btn.textContent = 'Saving...'; btn.disabled = true;
+  const btn = document.getElementById('build-save-btn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
   try {
     const spec = {
       title: document.getElementById('ed-title').value || 'Living Document',
@@ -8046,46 +8299,26 @@ async function buildAndSave() {
       lang: document.getElementById('ed-lang').value || 'en',
       pages: edPages.map(p => ({
         title: p.title,
-        blocks: p.blocks.map(b => {
-          if (b.type === 'heading') return { type: 'heading', level: b.level, text: b.text };
-          if (b.type === 'paragraph') return { type: 'paragraph', text: b.text };
-          if (b.type === 'quote') return { type: 'quote', text: b.text };
-          if (b.type === 'list') return { type: 'list', items: b.items || [] };
-          if (b.type === 'code') return { type: 'code', language: b.language, code: b.code };
-          if (b.type === 'table') return { type: 'table', headers: b.headers || [], rows: b.rows || [] };
-          if (b.type === 'ai') return { type: 'ai', prompt: b.prompt };
-          if (b.type === 'form') return { type: 'form', fields: b.fields || [] };
-          if (b.type === 'web_image') return { type: 'web_image', value: b.alt || 'Image', style: { src: b.src, alt: b.alt } };
-          if (b.type === 'web_audio') return { type: 'web_audio', value: b.label || 'Soundtrack', style: { src: b.src, label: b.label, persistent: true } };
-          if (b.type === 'web_video') return { type: 'web_video', value: b.label || 'Video', style: { src: b.src, label: b.label, autoplay: b.autoplay !== false } };
-          if (b.type === '3d_model') return { type: '3d_model', format: b.format || 'obj', mesh_template: b.mesh_template || 'supercar', material_mode: b.material_mode || 'cyber_hologram' };
-          if (b.type === 'feature_grid') return { type: 'feature_grid', cards: b.cards || [] };
-          if (b.type === 'button') return { type: 'button', value: b.value, style: { action: b.action, target: b.target } };
-          if (b.type === 'live_feed') return { type: 'live_feed', title: b.title, sources: b.sources };
-          if (b.type === 'preorder') return { type: 'preorder', tier: b.tier, price: b.price, perks: b.perks };
-          if (b.type === 'jsx_canvas') return { type: 'jsx_canvas', value: b.value || 'Interactive Sandbox', style: { code: b.style?.code || '', title: b.value } };
-          if (b.type === 'particles') return { type: 'particles', value: b.value || 'stardust', style: { mode: b.value || 'stardust' } };
-          if (b.type === 'water_effect') return { type: 'water_effect', value: 'Interactive Fluid Canvas' };
-          return null;
-        }).filter(Boolean)
+        blocks: (p.blocks || []).map(b => Object.assign({}, b))
       }))
     };
 
-    const res = await fetch(`${API}/documents/build`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(spec)
-    });
-    const j = await res.json();
-    if (!j.id) throw new Error(j.error || 'Build failed');
+    // 1. Client-Side Packaging (100% Vercel & Offline Guaranteed)
+    const { blob, title } = await compileLdocxClientSide(spec);
+    const safeTitle = (title || 'document').replace(/[^a-z0-9_\-]/gi, '_');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = safeTitle + '.ldocx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
 
-    const exp = await fetch(`${API}/documents/${j.id}/export`);
-    if (!exp.ok) throw new Error('Export failed');
-    const blob = await exp.blob();
-    const title = (spec.title || 'document').replace(/[^a-z0-9_\-]/gi, '_');
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = title + '.ldocx'; a.click(); URL.revokeObjectURL(a.href);
-  } catch (e) {
-    alert('Save failed: ' + e.message);
+    if (typeof showRepairBanner === 'function') {
+      showRepairBanner(`✓ Saved & Downloaded "${safeTitle}.ldocx"!`, true);
+    }
+  } catch(err) {
+    alert('Save error: ' + err.message);
   } finally {
     btn.textContent = '💾 Build & Save';
     btn.disabled = false;

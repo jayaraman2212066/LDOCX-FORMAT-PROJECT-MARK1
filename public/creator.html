@@ -1688,6 +1688,172 @@ body.mode-paper .page-fx-canvas {
   color: #fca5a5;
 }
 
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   📱 RESPONSIVE MULTI-DEVICE ARCHITECTURE (Mobile, Tablet, PC, 4K Monitors)
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+/* ── 🖥️ 4K Ultra-HD Displays (>= 2560px) ── */
+@media screen and (min-width: 2560px) {
+  #top, #tb, .quick-add-bar {
+    max-width: 2560px;
+    margin: 0 auto;
+  }
+  .pres-page, .pres-slide {
+    max-width: 1800px !important;
+    width: min(1800px, 92vw) !important;
+  }
+  .page-content-layer {
+    padding: 0 60px 60px 60px !important;
+  }
+  .pres-section {
+    font-size: 32px !important;
+  }
+  .pres-p {
+    font-size: 19px !important;
+    line-height: 1.85 !important;
+  }
+}
+
+/* ── 💻 Standard Laptops & Desktops (1025px - 1920px) ── */
+@media screen and (min-width: 1025px) and (max-width: 1920px) {
+  .pres-page, .pres-slide {
+    max-width: 1560px;
+    width: min(1560px, 94vw);
+  }
+}
+
+/* ── 📱 Tablets & Small Laptops (768px - 1024px) ── */
+@media screen and (max-width: 1024px) {
+  #top {
+    flex-wrap: wrap !important;
+    height: auto !important;
+    padding: 8px 12px !important;
+    gap: 8px !important;
+  }
+  #top-title {
+    max-width: 200px !important;
+  }
+  #creator-view, #main {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  #ed-sidebar, #left {
+    width: 100% !important;
+    max-height: 160px !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+  #ed-page-list, #page-list {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    gap: 8px !important;
+    padding: 8px !important;
+  }
+  #ed-blocks, #center {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-height: 500px !important;
+  }
+  #ed-live-preview, #creator-preview-pane {
+    width: 100% !important;
+    min-width: 100% !important;
+    border-left: none !important;
+    border-top: 1px solid var(--border) !important;
+  }
+  .pres-page, .pres-slide {
+    width: 96vw !important;
+    margin: 16px auto !important;
+    border-radius: 18px !important;
+  }
+  .page-content-layer {
+    padding: 0 24px 24px 24px !important;
+  }
+  .feature-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  }
+}
+
+/* ── 📱 Mobile Phones (< 768px) ── */
+@media screen and (max-width: 767px) {
+  body {
+    overflow-x: hidden !important;
+  }
+  #top, #tb {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    height: auto !important;
+    padding: 8px 10px !important;
+    gap: 6px !important;
+  }
+  .top-left, .tb-left {
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+  .top-center, .top-right, .tb-right {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    width: 100% !important;
+  }
+  .top-btn, .btn, .quick-add-btn {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+  #creator-view, #main {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  #ed-sidebar, #left {
+    width: 100% !important;
+    max-height: 120px !important;
+  }
+  #ed-blocks, #center {
+    width: 100% !important;
+    min-width: 100% !important;
+    border-right: none !important;
+  }
+  #ed-live-preview, #creator-preview-pane {
+    width: 100% !important;
+    min-width: 100% !important;
+    min-height: 360px !important;
+  }
+  .pres-page, .pres-slide {
+    width: 98vw !important;
+    margin: 8px auto !important;
+    border-radius: 14px !important;
+  }
+  .pres-page-header {
+    padding: 12px 16px 10px 16px !important;
+    margin-bottom: 16px !important;
+    font-size: 10px !important;
+  }
+  .page-content-layer {
+    padding: 0 16px 20px 16px !important;
+  }
+  .pres-section {
+    font-size: 22px !important;
+    margin-bottom: 12px !important;
+  }
+  .pres-p {
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+  }
+  .pres-3d-card, .video-card {
+    margin: 12px 0 !important;
+    padding: 8px !important;
+  }
+  .feature-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .quick-add-bar {
+    padding: 6px 8px !important;
+    gap: 4px !important;
+  }
+}
+
 </style>
   <script src="gta6_lightbox_mesh.js"></script>
 </head>
@@ -4611,6 +4777,53 @@ async function buildDoc(){
     hideLoader();
     btn.disabled=false;btn.textContent='▶ Build & Open in Studio';
   }
+}
+
+
+// ── 📦 Client-Side Zero-Server .ldocx Compiler (100% Vercel & Offline Compatible) ──
+async function compileLdocxClientSide(spec) {
+  if (typeof JSZip === 'undefined') {
+    throw new Error('JSZip library is initializing, please try again in a moment.');
+  }
+  const zip = new JSZip();
+
+  const docId = 'doc_' + Math.random().toString(36).slice(2, 11);
+  const title = spec.title || 'Living Document';
+  const manifest = {
+    ldoc_version: "2.4.0",
+    id: docId,
+    title: title,
+    author: spec.author || "Living Document Creator",
+    lang: spec.lang || "en",
+    created_at: new Date().toISOString(),
+    theme: spec.theme || "velocity",
+    page_count: (spec.pages || []).length,
+    assets: []
+  };
+
+  zip.file("manifest.json", JSON.stringify(manifest, null, 2));
+  zip.file("spec.json", JSON.stringify(spec, null, 2));
+
+  const pagesFolder = zip.folder("pages");
+  (spec.pages || []).forEach((p, idx) => {
+    const pageNum = String(idx + 1).padStart(3, '0');
+    const pData = {
+      id: p.id || `page_${pageNum}`,
+      page_number: idx + 1,
+      title: p.title || `Page ${idx + 1}`,
+      blocks: p.blocks || [],
+      floating_texts: p.floating_texts || []
+    };
+    pagesFolder.file(`page_${pageNum}.json`, JSON.stringify(pData, null, 2));
+  });
+
+  const blob = await zip.generateAsync({
+    type: "blob",
+    compression: "DEFLATE",
+    compressionOptions: { level: 6 }
+  });
+
+  return { blob, docId, title, manifest };
 }
 
 async function downloadDoc(){
