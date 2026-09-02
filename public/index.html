@@ -2064,6 +2064,45 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   filter: brightness(1.15) !important;
 }
 
+
+#editor-panel {
+  display: flex !important;
+  height: calc(100vh - 100px) !important;
+  overflow: hidden !important;
+}
+#ed-pages {
+  overflow-y: auto !important;
+  height: 100% !important;
+  max-height: 100% !important;
+}
+#ed-main {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+#ed-body {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  height: 100% !important;
+  max-height: calc(100vh - 160px) !important;
+}
+#ed-blocks-panel {
+  overflow-y: auto !important;
+  height: auto !important;
+  max-height: 100% !important;
+  padding-bottom: 60px !important;
+}
+#ed-preview-pane {
+  height: 100% !important;
+  overflow: hidden !important;
+}
+#ed-preview-body {
+  overflow-y: auto !important;
+  height: calc(100% - 44px) !important;
+  max-height: calc(100vh - 150px) !important;
+}
+
 </style>
 <script src="jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -4492,13 +4531,24 @@ function renderBlockNode(node,parent){
     }
     case 'image':{make3DImageCard(assetUrl(node),(node.aria&&node.aria.alt)||node.value||'Image',parent);break;}
     case 'web_image':{make3DImageCard((node.style&&node.style.src)||'',(node.style&&node.style.alt)||node.value||'Image',parent);break;}
-    case 'audio':case 'web_audio':{
-      const src=(node.style&&node.style.src)||assetUrl(node);
+        case 'audio':case 'web_audio':{
+      const src=(node.style&&node.style.src)||node.src||assetUrl(node)||'';
       const lbl=(node.style&&node.style.label)||(node.aria&&node.aria.label)||node.value||'Atmospheric Soundtrack';
-      if(src){
+      if(src && typeof GlobalAudio !== 'undefined' && GlobalAudio.setTrack){
         GlobalAudio.setTrack(src, lbl);
       }
-      // Do not render inline card to keep the document layout clean & let the bottom-right floating bar handle on/off
+      const audioCard = document.createElement('div');
+      audioCard.className = 'audio-card';
+      audioCard.style.cssText = 'background:rgba(20,20,38,0.92);border:1.5px solid rgba(245,158,11,0.4);border-radius:16px;padding:14px 18px;margin:16px 0;display:flex;align-items:center;gap:14px;box-shadow:0 8px 30px rgba(0,0,0,0.7);backdrop-filter:blur(10px);position:relative;z-index:10;';
+      audioCard.innerHTML = `
+        <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 16px rgba(245,158,11,0.5)">🎵</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13.5px;color:#fef08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(lbl)}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">Atmospheric High-Fidelity Audio Stream</div>
+        </div>
+        <audio controls src="${escapeHtml(src)}" style="height:34px;max-width:260px;outline:none"></audio>
+      `;
+      parent.appendChild(audioCard);
       break;
     }
     case 'video':case 'web_video':{
@@ -7696,6 +7746,19 @@ function edUpdateLivePreview() {
         }
       });
 
+            // Render any Free Text placed on this page
+      (curPage.floating_texts || []).forEach(ft => {
+        const ftDiv = document.createElement('div');
+        ftDiv.className = 'ldoc-ambient-text saved';
+        ftDiv.style.cssText = `position:absolute;left:${ft.x || 40}px;top:${ft.y || 40}px;z-index:90;pointer-events:auto;`;
+        const body = document.createElement('div');
+        body.className = 'ambient-text-body';
+        body.style.cssText = `font-family:${ft.font || 'Cinzel'};font-size:${ft.size || 22}px;color:${ft.color || '#fef08a'};text-shadow:0 0 12px ${ft.color || '#f59e0b'};cursor:pointer;padding:4px 8px;`;
+        body.textContent = ft.text || '';
+        ftDiv.appendChild(body);
+        pageDiv.appendChild(ftDiv);
+      });
+
       body.appendChild(pageDiv);
 
       // Start full-page environmental living wave dynamics
@@ -8345,7 +8408,7 @@ function edRenderBlocks() {
       if (ph) el.placeholder = ph;
       if (val !== undefined) el.value = val;
       if (extra) Object.assign(el, extra);
-      el.oninput = () => cb(el.value);
+      el.oninput = () => { cb(el.value); edUpdateLivePreview(); };
       div.appendChild(el);
       return el;
     };
@@ -8364,12 +8427,12 @@ function edRenderBlocks() {
         if (n == block.level) o.selected = true;
         sel.appendChild(o);
       });
-      sel.onchange = () => { block.level = +sel.value; };
+      sel.onchange = () => { block.level = +sel.value; edUpdateLivePreview(); };
       const inp = document.createElement('input');
       inp.placeholder = 'Heading text';
       inp.value = block.text || '';
       inp.style.flex = '1';
-      inp.oninput = () => { block.text = inp.value; };
+      inp.oninput = () => { block.text = inp.value; edUpdateLivePreview(); };
       row([sel, inp]);
     } else if (block.type === 'paragraph' || block.type === 'quote') {
       mk('textarea', block.type === 'quote' ? 'Quote text...' : 'Paragraph text...', block.text || '', v => { block.text = v; }, { rows: 3 });
@@ -8413,7 +8476,7 @@ function edRenderBlocks() {
         if (t === block.mesh_template) o.selected = true;
         tpl.appendChild(o);
       });
-      tpl.onchange = () => { block.mesh_template = tpl.value; };
+      tpl.onchange = () => { block.mesh_template = tpl.value; edUpdateLivePreview(); };
       tplDiv.appendChild(tpl);
 
       const matDiv = document.createElement('div');
@@ -8425,7 +8488,7 @@ function edRenderBlocks() {
         if (m === block.material_mode) o.selected = true;
         mat.appendChild(o);
       });
-      mat.onchange = () => { block.material_mode = mat.value; };
+      mat.onchange = () => { block.material_mode = mat.value; edUpdateLivePreview(); };
       matDiv.appendChild(mat);
 
       rowDiv.appendChild(tplDiv);

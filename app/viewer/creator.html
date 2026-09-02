@@ -1927,6 +1927,99 @@ body.mode-paper .page-fx-canvas {
   filter: brightness(1.15) !important;
 }
 
+
+/* ── Unified 3-Column Split View for Creator Studio (Mirroring Editor) ── */
+#main {
+  display: flex !important;
+  flex-direction: row !important;
+  height: calc(100vh - 78px) !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #080811 !important;
+}
+
+#left {
+  position: static !important;
+  transform: none !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  width: 220px !important;
+  min-width: 200px !important;
+  max-width: 260px !important;
+  background: rgba(14, 16, 28, 0.98) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+  flex-shrink: 0 !important;
+  z-index: 10 !important;
+}
+
+#center {
+  position: static !important;
+  transform: none !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  width: 480px !important;
+  min-width: 360px !important;
+  max-width: 580px !important;
+  background: rgba(10, 10, 20, 0.95) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  z-index: 10 !important;
+}
+
+#creator-preview-pane {
+  position: static !important;
+  transform: none !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  flex: 1 !important;
+  min-width: 400px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  background: #0a0a14 !important;
+}
+
+#creator-preview-body {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 30px 24px !important;
+  max-height: calc(100vh - 120px) !important;
+}
+
+#blocks-area {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 14px !important;
+  max-height: calc(100vh - 180px) !important;
+}
+
+#page-list {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  max-height: calc(100vh - 180px) !important;
+}
+
+/* On mobile / tablet, adapt gracefully */
+@media screen and (max-width: 1024px) {
+  #left {
+    width: 180px !important;
+    min-width: 160px !important;
+  }
+  #center {
+    width: 360px !important;
+    min-width: 320px !important;
+  }
+}
+
 </style>
   <script src="gta6_lightbox_mesh.js"></script>
 </head>
@@ -4240,11 +4333,24 @@ function renderPageList(){
   });
 }
 function showNoPage(){
-  document.getElementById('no-page').style.display='flex';
-  document.getElementById('blocks-area').style.display='none';
-  document.getElementById('add-bar').style.display='none';
-  document.getElementById('page-title-bar').style.display='none';
-  updateCreatorLivePreview();
+  const noPage = document.getElementById('no-page');
+  const blocksArea = document.getElementById('blocks-area');
+  const titleBar = document.getElementById('page-title-bar');
+  const addBar = document.getElementById('add-bar');
+  if (noPage) {
+    noPage.style.display = 'flex';
+    noPage.innerHTML = `
+      <div style="text-align:center;padding:40px 20px;max-width:380px;margin:auto">
+        <div style="font-size:48px;margin-bottom:12px">📄</div>
+        <div style="font-family:'Cinzel',serif;font-size:16px;font-weight:800;color:#fef08a;margin-bottom:8px">No Slides Yet</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:16px">Create your first slide to start adding 3D holograms, 4K videos, dynamic text, and interactive buttons.</div>
+        <button class="btn primary" onclick="addPage()" style="background:linear-gradient(135deg,#f59e0b,#7c3aed);color:#fff;font-weight:800;padding:8px 18px;border-radius:10px;font-size:13px">+ Create First Slide</button>
+      </div>
+    `;
+  }
+  if (blocksArea) blocksArea.style.display = 'none';
+  if (titleBar) titleBar.style.display = 'none';
+  if (addBar) addBar.style.display = 'none';
 }
 
 // ── Dynamic Canvas & Typography Styling ───────────────────────────────────────
@@ -6382,20 +6488,13 @@ window.LDoc3DSceneEditor = {
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof initFormatPopover === 'function') initFormatPopover();
   setCreatorPresentationMode('paper');
+  // Clean user-driven initialization: No dummy Page 1
   if (pages.length === 0) {
-    addPage();
-    if (pages[0] && (!pages[0].blocks || pages[0].blocks.length === 0)) {
-      pages[0].blocks = [
-        { id: bid(), type: 'heading', level: 1, text: 'Interactive Living Document Canvas' },
-        { id: bid(), type: 'paragraph', text: 'Welcome to LDOC Creator Studio. Click elements below or use keyboard shortcuts to build dynamic presentations with 3D holograms, 4K videos, and smart actions.' },
-        { id: bid(), type: 'button', value: 'EXPLORE CAPABILITIES →', action: 'navigate', target: 'next', theme: 'royal_gold', style: { action: 'navigate', target: 'next', btn_style: 'royal_gold' } }
-      ];
-      renderBlocks();
-      if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
-    }
+    renderPageList();
+    showNoPage();
+    if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
   }
 });
-
 </script>
 
 <!-- Floating Elements Pop-up Modal Dock -->
