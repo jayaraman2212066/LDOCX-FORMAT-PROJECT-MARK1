@@ -1,13 +1,24 @@
-@echo off
-REM LDOC Studio - Quick Launcher
-REM Double-click this file to launch LDOC Studio as a Windows Application
-
+﻿@echo off
+setlocal
+title LDOC Living Document Studio
 cd /d "%~dp0"
 
-REM Launch using PowerShell for better experience
-powershell -NoProfile -ExecutionPolicy Bypass -File "LDOC_TOOLS\Launch-LDOC-Studio.ps1"
+:: Check if native exe exists
+if exist "LDOC-Studio.exe" (
+    start "" "LDOC-Studio.exe"
+    exit /b 0
+)
 
-REM If PowerShell is unavailable, fallback to batch
-REM LDOC_TOOLS\LAUNCH_LDOC_STUDIO.bat
+:: Fallback if exe missing
+set APP_DIR=%~dp0app
+set SERVER_EXE=%APP_DIR%\ldoc-server.exe
+if not exist "%SERVER_EXE%" (
+    echo [ERROR] Server executable not found at: "%SERVER_EXE%"
+    pause
+    exit /b 1
+)
 
-pause
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%SERVER_EXE%' -WorkingDirectory '%APP_DIR%' -WindowStyle Hidden"
+timeout /t 1 /nobreak >nul
+start msedge.exe --app="http://127.0.0.1:8080/" --user-data-dir="%LOCALAPPDATA%\LDOCStudio\AppProfile" --window-size=1440,900
+exit /b 0
