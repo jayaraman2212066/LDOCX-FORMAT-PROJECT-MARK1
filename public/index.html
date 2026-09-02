@@ -2157,6 +2157,273 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   }
 }
 
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   ⚡ VS CODE-GRADE IDE SUITE STYLES
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. VS Code Modern Status Bar (Bottom) ── */
+#ldoc-status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: #0d1117;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+  font-size: 11px;
+  color: #8b949e;
+  z-index: 9999;
+  user-select: none;
+}
+.sb-left, .sb-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.sb-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f0f6fc;
+}
+.sb-item.highlight {
+  color: #f59e0b;
+  font-weight: 700;
+}
+.sb-item.success {
+  color: #34d399;
+}
+
+/* ── 2. Universal Command Palette (Ctrl+Shift+P / F1) ── */
+#command-palette-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  z-index: 100000;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 60px;
+}
+#command-palette-modal.open {
+  display: flex;
+}
+.cmd-palette-box {
+  width: 640px;
+  max-width: 92vw;
+  background: #161b22;
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 24px rgba(245, 158, 11, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cmd-palette-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0d1117;
+}
+.cmd-palette-input-wrap input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #f0f6fc;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+.cmd-palette-list {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+.cmd-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.12s;
+  font-size: 12.5px;
+  color: #c9d1d9;
+}
+.cmd-entry:hover, .cmd-entry.active {
+  background: linear-gradient(90deg, rgba(245,158,11,0.25), rgba(124,58,237,0.25));
+  color: #ffffff;
+  border-left: 3px solid #f59e0b;
+}
+.cmd-entry .cmd-category {
+  font-size: 10.5px;
+  color: #8b949e;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-right: 8px;
+}
+.cmd-entry .cmd-hotkey {
+  font-size: 10.5px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #8b949e;
+  font-family: monospace;
+}
+
+/* ── 3. Global Find & Replace HUD (Ctrl+F / Ctrl+H) ── */
+#find-replace-hud {
+  display: none;
+  position: fixed;
+  top: 50px;
+  right: 30px;
+  width: 360px;
+  background: #161b22;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.85);
+  padding: 10px 14px;
+  z-index: 10001;
+  flex-direction: column;
+  gap: 8px;
+}
+#find-replace-hud.open {
+  display: flex;
+}
+.find-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.find-row input {
+  flex: 1;
+  background: #0d1117;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #f0f6fc;
+  padding: 5px 8px;
+  font-size: 12px;
+  outline: none;
+}
+.find-row input:focus {
+  border-color: #f59e0b;
+}
+.find-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #c9d1d9;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.find-btn:hover {
+  background: #f59e0b;
+  color: #0a0a14;
+}
+
+/* ── 4. Live Bidirectional AST / JSON Split Inspector ── */
+#ast-inspector-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
+  z-index: 100000;
+  align-items: center;
+  justify-content: center;
+}
+#ast-inspector-modal.open {
+  display: flex;
+}
+.ast-inspector-box {
+  width: 820px;
+  max-width: 94vw;
+  height: 80vh;
+  background: #0d1117;
+  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  border-radius: 14px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ast-inspector-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: #161b22;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+#ast-json-editor {
+  flex: 1;
+  background: #090d13;
+  color: #79c0ff;
+  font-family: "Fira Code", Consolas, Monaco, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  padding: 16px;
+  border: none;
+  outline: none;
+  resize: none;
+  overflow-y: auto;
+}
+
+/* ── 5. Right-Click IDE Context Menu ── */
+#ldoc-context-menu {
+  display: none;
+  position: fixed;
+  background: #161b22;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85);
+  padding: 6px 0;
+  z-index: 100002;
+  min-width: 190px;
+}
+.ctx-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #c9d1d9;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.ctx-item:hover {
+  background: #238636;
+  color: #ffffff;
+}
+.ctx-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 4px 0;
+}
+
 </style>
 <script src="jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -7887,5 +8154,524 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
+
+<!-- ── VS Code Modern Status Bar ── -->
+<div id="ldoc-status-bar">
+  <div class="sb-left">
+    <div class="sb-item highlight" onclick="toggleCommandPalette()" title="Click to open Command Palette (Ctrl+Shift+P / F1)">
+      <span>⚡</span> <strong>LDOC Studio</strong>
+    </div>
+    <div class="sb-item success" id="sb-ast-status" title="Document AST Integrity">
+      <span>✓</span> <span>AST Valid</span>
+    </div>
+    <div class="sb-item" id="sb-slide-counter" onclick="toggleCommandPalette('slide')" title="Current Slide">
+      <span>📑</span> <span id="sb-slide-text">Slide 1 of 1</span>
+    </div>
+    <div class="sb-item" id="sb-blocks-counter" title="Total Elements on Active Slide">
+      <span>🧱</span> <span id="sb-blocks-text">0 Blocks</span>
+    </div>
+    <div class="sb-item" id="sb-fx-indicator" title="Active Environmental Canvas">
+      <span>✨</span> <span id="sb-fx-text">FX: Stardust</span>
+    </div>
+  </div>
+  <div class="sb-right">
+    <div class="sb-item" title="Character Encoding">UTF-8</div>
+    <div class="sb-item" onclick="toggleAstInspector()" title="Inspect AST JSON (Ctrl+Shift+I)">
+      <span>{ }</span> <span>JSON AST</span>
+    </div>
+    <div class="sb-item" onclick="toggleFindReplaceHud()" title="Find & Replace (Ctrl+F)">
+      <span>🔍</span> <span>Find</span>
+    </div>
+    <div class="sb-item" id="sb-autosave-indicator" title="Auto-Save State">
+      <span>💾</span> <span>Auto-Saved</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Universal Command Palette Modal ── -->
+<div id="command-palette-modal" onclick="if(event.target===this)toggleCommandPalette()">
+  <div class="cmd-palette-box">
+    <div class="cmd-palette-input-wrap">
+      <span style="color:#f59e0b;font-size:16px">❯</span>
+      <input type="text" id="cmd-pal-input" placeholder="Type a command or element to insert (e.g. video, 3d, save, particle)..." oninput="filterCommandPalette(this.value)" onkeydown="navigateCommandPalette(event)">
+      <span style="font-size:10.5px;color:#8b949e">ESC to close</span>
+    </div>
+    <div class="cmd-palette-list" id="cmd-pal-results"></div>
+  </div>
+</div>
+
+<!-- ── Global Find & Replace HUD ── -->
+<div id="find-replace-hud">
+  <div class="find-row">
+    <input type="text" id="find-input" placeholder="Find in document..." oninput="executeFind(this.value)" onkeydown="if(event.key==='Enter')findNextMatch(event.shiftKey)">
+    <span id="find-count" style="font-size:10.5px;color:#8b949e;white-space:nowrap">0/0</span>
+    <button class="find-btn" onclick="findNextMatch(true)" title="Previous Match (Shift+Enter)">▲</button>
+    <button class="find-btn" onclick="findNextMatch(false)" title="Next Match (Enter)">▼</button>
+    <button class="find-btn" onclick="toggleFindReplaceHud()" title="Close (Escape)">✕</button>
+  </div>
+  <div class="find-row" id="replace-row" style="display:flex">
+    <input type="text" id="replace-input" placeholder="Replace with...">
+    <button class="find-btn" onclick="executeReplaceOne()" title="Replace Match">Replace</button>
+    <button class="find-btn" onclick="executeReplaceAll()" title="Replace All Matches">All</button>
+  </div>
+</div>
+
+<!-- ── Live Bidirectional AST / JSON Split Inspector Modal ── -->
+<div id="ast-inspector-modal" onclick="if(event.target===this)toggleAstInspector()">
+  <div class="ast-inspector-box">
+    <div class="ast-inspector-header">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="color:#38bdf8;font-size:16px">{ }</span>
+        <strong style="font-family:'Cinzel',serif;font-size:13px;color:#fef08a">Live Bidirectional AST / JSON Inspector</strong>
+        <span style="font-size:10.5px;color:#8b949e">Real-time sync between JSON &amp; visual canvas</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="find-btn" onclick="formatAstJson()" title="Format JSON">✨ Format</button>
+        <button class="find-btn" onclick="applyAstJsonDirectly()" style="background:#238636;color:#fff;font-weight:700" title="Apply JSON Changes">✓ Apply Changes</button>
+        <button class="find-btn" onclick="toggleAstInspector()">✕ Close</button>
+      </div>
+    </div>
+    <textarea id="ast-json-editor" spellcheck="false" placeholder="Loading AST JSON..."></textarea>
+  </div>
+</div>
+
+<!-- ── Right-Click IDE Context Menu ── -->
+<div id="ldoc-context-menu">
+  <div class="ctx-item" onclick="ctxMenuAction('duplicate')"><span>📋 Duplicate Block</span><span style="font-size:10px;opacity:.6">Shift+Alt+↓</span></div>
+  <div class="ctx-item" onclick="ctxMenuAction('move_up')"><span>⬆ Move Up</span><span style="font-size:10px;opacity:.6">Alt+↑</span></div>
+  <div class="ctx-item" onclick="ctxMenuAction('move_down')"><span>⬇ Move Down</span><span style="font-size:10px;opacity:.6">Alt+↓</span></div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item" onclick="ctxMenuAction('inspect_ast')"><span>💻 Inspect AST JSON</span><span style="font-size:10px;opacity:.6">Ctrl+~</span></div>
+  <div class="ctx-item" onclick="ctxMenuAction('find')"><span>🔍 Find in Slide</span><span style="font-size:10px;opacity:.6">Ctrl+F</span></div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item" onclick="ctxMenuAction('delete')" style="color:#f87171"><span>🗑 Delete Block</span><span style="font-size:10px;opacity:.6">Del</span></div>
+</div>
+
+<script>
+
+// ═════════════════════════════════════════════════════════════════════════════
+// ⚡ VS CODE-GRADE IDE ENGINE (Command Palette, Status Bar, AST Sync, Find)
+// ═════════════════════════════════════════════════════════════════════════════
+
+// ── 1. Commands Registry ───────────────────────────────────────────────────
+const LDOC_COMMANDS = [
+  // Document & Storage
+  { id: 'save_doc', cat: 'Document', name: 'Build & Save .ldocx (Client-Side)', hotkey: 'Ctrl+S', run: () => (typeof buildAndSave === 'function' ? buildAndSave() : downloadDoc()) },
+  { id: 'open_doc', cat: 'Document', name: 'Open / Ingest .ldocx File', hotkey: 'Ctrl+O', run: () => document.getElementById('ed-file-input')?.click() || document.getElementById('creator-file-input')?.click() },
+  { id: 'add_slide', cat: 'Slide', name: 'Add New Slide / Page', hotkey: 'Ctrl+Shift+A', run: () => (typeof edAddPage === 'function' ? edAddPage() : addPage()) },
+  { id: 'view_pres', cat: 'View', name: 'Launch Presentation Fullscreen', hotkey: 'F11', run: () => (typeof buildAndView === 'function' ? buildAndView() : switchTab('viewer')) },
+  { id: 'find_replace', cat: 'Edit', name: 'Find & Replace Across Document', hotkey: 'Ctrl+F', run: () => toggleFindReplaceHud() },
+  { id: 'inspect_ast', cat: 'Developer', name: 'Open Live Bidirectional AST JSON Inspector', hotkey: 'Ctrl+Shift+I', run: () => toggleAstInspector() },
+
+  // Elements Insertion
+  { id: 'ins_heading', cat: 'Insert', name: 'Heading (H1 - H6)', run: () => (typeof edAddBlock === 'function' ? edAddBlock('heading') : addBlock('heading')) },
+  { id: 'ins_text', cat: 'Insert', name: 'Paragraph Text', run: () => (typeof edAddBlock === 'function' ? edAddBlock('paragraph') : addBlock('paragraph')) },
+  { id: 'ins_video', cat: 'Insert', name: '4K Motion Stream / YouTube Player', run: () => (typeof edAddBlock === 'function' ? edAddBlock('web_video') : addBlock('web_video')) },
+  { id: 'ins_3d', cat: 'Insert', name: '3D Spatial Hologram (STL, OBJ, 3MF, GLB)', run: () => (typeof edAddBlock === 'function' ? edAddBlock('3d_model') : addBlock('3d_model')) },
+  { id: 'ins_audio', cat: 'Insert', name: 'Atmospheric Soundtrack Player', run: () => (typeof edAddBlock === 'function' ? edAddBlock('web_audio') : addBlock('web_audio')) },
+  { id: 'ins_button', cat: 'Insert', name: 'Interactive Action / Stripe Checkout Button', run: () => (typeof edAddBlock === 'function' ? edAddBlock('button') : addBlock('button')) },
+  { id: 'ins_grid', cat: 'Insert', name: '3-Card Feature Grid', run: () => (typeof edAddBlock === 'function' ? edAddBlock('feature_grid') : addBlock('feature_grid')) },
+  { id: 'ins_telem', cat: 'Insert', name: 'Live Interactive Telemetry Beacon', run: () => (typeof edAddBlock === 'function' ? edAddBlock('live_feed') : addBlock('live_feed')) },
+  { id: 'ins_form', cat: 'Insert', name: 'Smart Dispatch Form & Webhook', run: () => (typeof edAddBlock === 'function' ? edAddBlock('form') : addBlock('form')) },
+
+  // Environmental Living FX
+  { id: 'fx_particles', cat: 'Environmental FX', name: 'Activate Cosmic Particle Constellation Field', run: () => setPageEnvironmentalMode('particles') },
+  { id: 'fx_water', cat: 'Environmental FX', name: 'Activate Fluid Temporal Water Waves', run: () => setPageEnvironmentalMode('water') },
+
+  // Agentic AI
+  { id: 'ai_build', cat: 'AI Agent', name: 'Auto-Build Living Presentation from My Links', run: () => (typeof askAiBuildFromLinks === 'function' ? askAiBuildFromLinks() : toggleAiHelper()) },
+  { id: 'ai_toggle', cat: 'AI Agent', name: 'Toggle LDOC AI Assistant', run: () => (typeof toggleAiHelper === 'function' ? toggleAiHelper() : null) }
+];
+
+let selectedCmdIndex = 0;
+let filteredCommands = [];
+
+function toggleCommandPalette(initialFilter = '') {
+  const modal = document.getElementById('command-palette-modal');
+  if (!modal) return;
+  const isOpen = modal.classList.toggle('open');
+  if (isOpen) {
+    const input = document.getElementById('cmd-pal-input');
+    if (input) {
+      input.value = initialFilter;
+      filterCommandPalette(initialFilter);
+      setTimeout(() => input.focus(), 40);
+    }
+  }
+}
+
+function filterCommandPalette(q = '') {
+  const query = (q || '').trim().toLowerCase();
+  filteredCommands = LDOC_COMMANDS.filter(c => 
+    !query || c.name.toLowerCase().includes(query) || c.cat.toLowerCase().includes(query) || (c.hotkey && c.hotkey.toLowerCase().includes(query))
+  );
+  selectedCmdIndex = 0;
+  renderCommandPaletteResults();
+}
+
+function renderCommandPaletteResults() {
+  const list = document.getElementById('cmd-pal-results');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!filteredCommands.length) {
+    list.innerHTML = '<div style="padding:16px;text-align:center;color:#8b949e;font-size:12px">No matching commands</div>';
+    return;
+  }
+  filteredCommands.forEach((cmd, idx) => {
+    const el = document.createElement('div');
+    el.className = 'cmd-entry' + (idx === selectedCmdIndex ? ' active' : '');
+    el.innerHTML = `
+      <div>
+        <span class="cmd-category">${cmd.cat}</span>
+        <span>${cmd.name}</span>
+      </div>
+      ${cmd.hotkey ? `<span class="cmd-hotkey">${cmd.hotkey}</span>` : ''}
+    `;
+    el.onclick = () => {
+      toggleCommandPalette();
+      cmd.run();
+    };
+    list.appendChild(el);
+  });
+}
+
+function navigateCommandPalette(e) {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    selectedCmdIndex = (selectedCmdIndex + 1) % filteredCommands.length;
+    renderCommandPaletteResults();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    selectedCmdIndex = (selectedCmdIndex - 1 + filteredCommands.length) % filteredCommands.length;
+    renderCommandPaletteResults();
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (filteredCommands[selectedCmdIndex]) {
+      toggleCommandPalette();
+      filteredCommands[selectedCmdIndex].run();
+    }
+  } else if (e.key === 'Escape') {
+    toggleCommandPalette();
+  }
+}
+
+// ── 2. Live Status Bar Updates ──────────────────────────────────────────────
+function updateLdocStatusBar() {
+  const slideText = document.getElementById('sb-slide-text');
+  const blocksText = document.getElementById('sb-blocks-text');
+  const fxText = document.getElementById('sb-fx-text');
+
+  let curIdx = 1;
+  let totalSlides = 1;
+  let blockCount = 0;
+  let currentFx = 'water';
+
+  if (typeof edPages !== 'undefined' && edPages.length) {
+    const curP = edPages.find(p => p.id === edCurrentPage) || edPages[0];
+    curIdx = edPages.indexOf(curP) + 1;
+    totalSlides = edPages.length;
+    blockCount = (curP.blocks || []).length;
+    currentFx = curP.fx || (curP.blocks || []).some(b => b.type === 'particles') ? 'stardust' : 'water';
+  } else if (typeof pages !== 'undefined' && pages.length) {
+    const curP = pages.find(p => p.id === currentPage) || pages[0];
+    curIdx = pages.indexOf(curP) + 1;
+    totalSlides = pages.length;
+    blockCount = (curP.blocks || []).length;
+    currentFx = curP.fx || 'water';
+  }
+
+  if (slideText) slideText.textContent = `Slide ${curIdx} of ${totalSlides}`;
+  if (blocksText) blocksText.textContent = `${blockCount} Elements`;
+  if (fxText) fxText.textContent = `FX: ${currentFx.charAt(0).toUpperCase() + currentFx.slice(1)}`;
+}
+setInterval(updateLdocStatusBar, 500);
+
+function setPageEnvironmentalMode(mode) {
+  if (typeof edPages !== 'undefined') {
+    const cur = edPages.find(p => p.id === edCurrentPage);
+    if (cur) {
+      cur.fx = mode;
+      if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+    }
+  } else if (typeof pages !== 'undefined') {
+    const cur = pages.find(p => p.id === currentPage);
+    if (cur) {
+      cur.fx = mode;
+      if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+    }
+  }
+  updateLdocStatusBar();
+}
+
+// ── 3. Live Bidirectional AST / JSON Inspector ──────────────────────────────
+function toggleAstInspector() {
+  const modal = document.getElementById('ast-inspector-modal');
+  if (!modal) return;
+  const isOpen = modal.classList.toggle('open');
+  if (isOpen) {
+    const editor = document.getElementById('ast-json-editor');
+    if (!editor) return;
+    let docData = {};
+    if (typeof edPages !== 'undefined') {
+      docData = {
+        title: document.getElementById('ed-title')?.value || 'Living Document',
+        pages: edPages
+      };
+    } else if (typeof pages !== 'undefined') {
+      docData = {
+        title: document.getElementById('m-title')?.value || 'Living Document',
+        pages: pages
+      };
+    }
+    editor.value = JSON.stringify(docData, null, 2);
+  }
+}
+
+function formatAstJson() {
+  const editor = document.getElementById('ast-json-editor');
+  if (!editor) return;
+  try {
+    const parsed = JSON.parse(editor.value);
+    editor.value = JSON.stringify(parsed, null, 2);
+  } catch(err) {
+    alert('JSON Syntax Error: ' + err.message);
+  }
+}
+
+function applyAstJsonDirectly() {
+  const editor = document.getElementById('ast-json-editor');
+  if (!editor) return;
+  try {
+    const parsed = JSON.parse(editor.value);
+    if (parsed.pages) {
+      if (typeof edPages !== 'undefined') {
+        edPages = parsed.pages;
+        if (parsed.title && document.getElementById('ed-title')) document.getElementById('ed-title').value = parsed.title;
+        if (typeof edRenderPageList === 'function') edRenderPageList();
+        if (typeof edRenderBlocks === 'function') edRenderBlocks();
+        if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+      } else if (typeof pages !== 'undefined') {
+        pages = parsed.pages;
+        if (parsed.title && document.getElementById('m-title')) document.getElementById('m-title').value = parsed.title;
+        if (typeof renderPageList === 'function') renderPageList();
+        if (typeof renderBlocks === 'function') renderBlocks();
+        if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+      }
+    }
+    toggleAstInspector();
+    if (typeof toast === 'function') toast('✓ Live AST Synchronized!', 'ok');
+  } catch(err) {
+    alert('Invalid AST JSON: ' + err.message);
+  }
+}
+
+// ── 4. Global Find & Replace Across All Slides ─────────────────────────────
+let findMatches = [];
+let activeMatchIdx = -1;
+
+function toggleFindReplaceHud() {
+  const hud = document.getElementById('find-replace-hud');
+  if (!hud) return;
+  const isOpen = hud.classList.toggle('open');
+  if (isOpen) {
+    const inp = document.getElementById('find-input');
+    if (inp) setTimeout(() => inp.focus(), 50);
+  }
+}
+
+function executeFind(q = '') {
+  findMatches = [];
+  activeMatchIdx = -1;
+  const countEl = document.getElementById('find-count');
+  const term = (q || '').trim().toLowerCase();
+  if (!term) {
+    if (countEl) countEl.textContent = '0/0';
+    return;
+  }
+
+  const allPgs = typeof edPages !== 'undefined' ? edPages : (typeof pages !== 'undefined' ? pages : []);
+  allPgs.forEach((p, pIdx) => {
+    (p.blocks || []).forEach((b, bIdx) => {
+      const textVal = (b.text || b.value || b.label || b.title || '').toLowerCase();
+      if (textVal.includes(term)) {
+        findMatches.push({ pageId: p.id, pageIdx: pIdx, blockId: b.id, blockIdx: bIdx });
+      }
+    });
+  });
+
+  if (countEl) countEl.textContent = `${findMatches.length ? 1 : 0}/${findMatches.length}`;
+  if (findMatches.length) {
+    activeMatchIdx = 0;
+    jumpToMatch(findMatches[0]);
+  }
+}
+
+function findNextMatch(isReverse = false) {
+  if (!findMatches.length) return;
+  if (isReverse) {
+    activeMatchIdx = (activeMatchIdx - 1 + findMatches.length) % findMatches.length;
+  } else {
+    activeMatchIdx = (activeMatchIdx + 1) % findMatches.length;
+  }
+  const countEl = document.getElementById('find-count');
+  if (countEl) countEl.textContent = `${activeMatchIdx + 1}/${findMatches.length}`;
+  jumpToMatch(findMatches[activeMatchIdx]);
+}
+
+function jumpToMatch(match) {
+  if (!match) return;
+  if (typeof edSelectPage === 'function') {
+    edSelectPage(match.pageId);
+  } else if (typeof selectPage === 'function') {
+    selectPage(match.pageId);
+  }
+  setTimeout(() => {
+    const blkCard = document.querySelector(`[data-block-id="${match.blockId}"]`);
+    if (blkCard) {
+      blkCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      blkCard.style.outline = '2px solid #f59e0b';
+      setTimeout(() => { blkCard.style.outline = ''; }, 1200);
+    }
+  }, 100);
+}
+
+function executeReplaceOne() {
+  const findTerm = (document.getElementById('find-input')?.value || '').trim();
+  const replTerm = document.getElementById('replace-input')?.value || '';
+  if (!findTerm || activeMatchIdx < 0 || !findMatches[activeMatchIdx]) return;
+
+  const m = findMatches[activeMatchIdx];
+  const allPgs = typeof edPages !== 'undefined' ? edPages : (typeof pages !== 'undefined' ? pages : []);
+  const p = allPgs.find(pg => pg.id === m.pageId);
+  if (p) {
+    const b = (p.blocks || []).find(bk => bk.id === m.blockId);
+    if (b) {
+      ['text', 'value', 'label', 'title'].forEach(k => {
+        if (typeof b[k] === 'string' && b[k].toLowerCase().includes(findTerm.toLowerCase())) {
+          const reg = new RegExp(findTerm, 'gi');
+          b[k] = b[k].replace(reg, replTerm);
+        }
+      });
+      if (typeof edRenderBlocks === 'function') edRenderBlocks();
+      if (typeof renderBlocks === 'function') renderBlocks();
+      if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+      if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+    }
+  }
+  executeFind(findTerm);
+}
+
+function executeReplaceAll() {
+  const findTerm = (document.getElementById('find-input')?.value || '').trim();
+  const replTerm = document.getElementById('replace-input')?.value || '';
+  if (!findTerm) return;
+
+  const allPgs = typeof edPages !== 'undefined' ? edPages : (typeof pages !== 'undefined' ? pages : []);
+  let count = 0;
+  allPgs.forEach(p => {
+    (p.blocks || []).forEach(b => {
+      ['text', 'value', 'label', 'title'].forEach(k => {
+        if (typeof b[k] === 'string' && b[k].toLowerCase().includes(findTerm.toLowerCase())) {
+          const reg = new RegExp(findTerm, 'gi');
+          b[k] = b[k].replace(reg, replTerm);
+          count++;
+        }
+      });
+    });
+  });
+
+  if (typeof edRenderBlocks === 'function') edRenderBlocks();
+  if (typeof renderBlocks === 'function') renderBlocks();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+  executeFind(findTerm);
+  alert(`Replaced ${count} occurrences across document!`);
+}
+
+// ── 5. Right-Click IDE Context Menu ─────────────────────────────────────────
+let contextTargetBlockId = null;
+
+window.addEventListener('contextmenu', (e) => {
+  const blk = e.target.closest('.ed-block') || e.target.closest('.blk');
+  if (blk) {
+    e.preventDefault();
+    contextTargetBlockId = blk.dataset.blockId || blk.dataset.id;
+    const menu = document.getElementById('ldoc-context-menu');
+    if (menu) {
+      menu.style.display = 'block';
+      menu.style.left = `${Math.min(window.innerWidth - 200, e.clientX)}px`;
+      menu.style.top = `${Math.min(window.innerHeight - 200, e.clientY)}px`;
+    }
+  }
+});
+
+window.addEventListener('click', (e) => {
+  const menu = document.getElementById('ldoc-context-menu');
+  if (menu && !e.target.closest('#ldoc-context-menu')) {
+    menu.style.display = 'none';
+  }
+});
+
+function ctxMenuAction(act) {
+  const menu = document.getElementById('ldoc-context-menu');
+  if (menu) menu.style.display = 'none';
+  if (!contextTargetBlockId) return;
+
+  if (act === 'duplicate') {
+    if (typeof edDuplicateBlock === 'function') edDuplicateBlock(contextTargetBlockId);
+    else if (typeof duplicateBlock === 'function') duplicateBlock(contextTargetBlockId);
+  } else if (act === 'delete') {
+    if (typeof edDeleteBlock === 'function') edDeleteBlock(contextTargetBlockId);
+    else if (typeof deleteBlock === 'function') deleteBlock(contextTargetBlockId);
+  } else if (act === 'move_up') {
+    if (typeof edMoveBlock === 'function') edMoveBlock(contextTargetBlockId, -1);
+    else if (typeof moveBlock === 'function') moveBlock(contextTargetBlockId, -1);
+  } else if (act === 'move_down') {
+    if (typeof edMoveBlock === 'function') edMoveBlock(contextTargetBlockId, 1);
+    else if (typeof moveBlock === 'function') moveBlock(contextTargetBlockId, 1);
+  } else if (act === 'inspect_ast') {
+    toggleAstInspector();
+  } else if (act === 'find') {
+    toggleFindReplaceHud();
+  }
+}
+
+// ── 6. Power-User Keyboard Shortcuts Registry ──────────────────────────────
+window.addEventListener('keydown', (e) => {
+  // Command Palette: Ctrl+Shift+P or F1
+  if ((e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p') || e.key === 'F1') {
+    e.preventDefault();
+    toggleCommandPalette();
+    return;
+  }
+  // Find: Ctrl+F
+  if (e.ctrlKey && !e.shiftKey && e.key.toLowerCase() === 'f') {
+    e.preventDefault();
+    toggleFindReplaceHud();
+    return;
+  }
+  // Replace: Ctrl+H
+  if (e.ctrlKey && e.key.toLowerCase() === 'h') {
+    e.preventDefault();
+    toggleFindReplaceHud();
+    document.getElementById('replace-input')?.focus();
+    return;
+  }
+  // AST Inspector: Ctrl+Shift+I or Ctrl+` (backtick)
+  if ((e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') || (e.ctrlKey && e.key === '`')) {
+    e.preventDefault();
+    toggleAstInspector();
+    return;
+  }
+  // Save: Ctrl+S
+  if (e.ctrlKey && !e.shiftKey && e.key.toLowerCase() === 's') {
+    e.preventDefault();
+    if (typeof buildAndSave === 'function') buildAndSave();
+    else if (typeof downloadDoc === 'function') downloadDoc();
+    return;
+  }
+});
+
+</script>
 </body>
 </html>
