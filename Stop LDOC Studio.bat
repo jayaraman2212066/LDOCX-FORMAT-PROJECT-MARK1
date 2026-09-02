@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 title Stop LDOC Living Document Studio
 echo Stopping all running instances of ldoc-server.exe...
 taskkill /F /IM ldoc-server.exe >nul 2>&1

@@ -1,4 +1,4 @@
-﻿$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Stop"
 try {
     $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
     $targetBat = Join-Path $scriptDir "Launch LDOC Studio.bat"

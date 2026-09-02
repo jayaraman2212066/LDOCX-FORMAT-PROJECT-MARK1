@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 setlocal
 title LDOC Document Creator
 cd /d "%~dp0"

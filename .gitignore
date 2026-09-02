@@ -1,4 +1,4 @@
-﻿# Rust compilation target directories
+# Rust compilation target directories
 /source/target/
 target/
 **/target/

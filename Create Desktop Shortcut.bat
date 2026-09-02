@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 title Create LDOC Studio Desktop Shortcut
 echo.
 echo ============================================================

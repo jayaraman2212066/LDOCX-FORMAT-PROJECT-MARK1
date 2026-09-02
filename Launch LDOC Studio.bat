@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 setlocal
 title LDOC Living Document Studio
 cd /d "%~dp0"

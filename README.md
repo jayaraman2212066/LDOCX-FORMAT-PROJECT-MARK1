@@ -1,4 +1,4 @@
-﻿# ◈ LDOCX — The Living Document Architecture & Studio
+# ◈ LDOCX — The Living Document Architecture & Studio
 
 [![Deploy to GitHub Pages](https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/actions/workflows/deploy.yml/badge.svg)](https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
