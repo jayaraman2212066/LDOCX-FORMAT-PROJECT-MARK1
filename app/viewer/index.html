@@ -7,6 +7,7 @@
 <link rel="icon" type="image/png" href="ldoc_logo.png">
 <link rel="shortcut icon" href="app.ico">
 <link rel="apple-touch-icon" href="ldoc_logo.png">
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -494,21 +495,17 @@ body::before{
 .ed-pt-input{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 9px;font-size:13px;width:100%}
 .ed-pt-input:focus{outline:none;border-color:var(--gold)}
 
-/* ── ◈ LDOC Dynamic Loading Animation ──────────────────────────────────────── */
-@keyframes ldocGemPulse {
-  0%   { transform: scale(0.8) rotate(0deg); opacity: 0.35; filter: drop-shadow(0 0 4px rgba(245,158,11,.3)); }
-  50%  { transform: scale(1.35) rotate(45deg); opacity: 1; filter: drop-shadow(0 0 16px rgba(245,158,11,.9)) drop-shadow(0 0 28px rgba(192,132,252,.6)); }
-  100% { transform: scale(0.8) rotate(90deg); opacity: 0.35; filter: drop-shadow(0 0 4px rgba(245,158,11,.3)); }
+/* ── LDOC Dynamic Loading Animation ────────────────────────────────────────── */
+@keyframes ldocLogoFloat {
+  0%   { transform: translateY(0) scale(0.96); filter: drop-shadow(0 0 10px rgba(245,158,11,.4)); }
+  50%  { transform: translateY(-6px) scale(1.04); filter: drop-shadow(0 0 26px rgba(245,158,11,.8)) drop-shadow(0 0 36px rgba(192,132,252,.5)); }
+  100% { transform: translateY(0) scale(0.96); filter: drop-shadow(0 0 10px rgba(245,158,11,.4)); }
 }
 .ldoc-logo-loader{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:36px 20px}
-.ldoc-gems-row{display:flex;align-items:center;gap:14px}
-.ldoc-gem-symbol{
-  font-size:32px;display:inline-block;cursor:default;user-select:none;
-  animation:ldocGemPulse 1.4s cubic-bezier(.4,0,.2,1) infinite alternate;
+.ldoc-loader-glow-img{
+  width:64px;height:64px;border-radius:16px;object-fit:contain;
+  animation:ldocLogoFloat 2.2s ease-in-out infinite;
 }
-.ldoc-gem-symbol:nth-child(1){animation-delay:0s;color:var(--gold)}
-.ldoc-gem-symbol:nth-child(2){animation-delay:0.25s;color:#c084fc;font-size:38px}
-.ldoc-gem-symbol:nth-child(3){animation-delay:0.5s;color:#38bdf8}
 .ldoc-loading-caption{
   font-family:'Cinzel',serif;font-size:13px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
   background:linear-gradient(135deg,#fef08a,#f59e0b,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
@@ -869,7 +866,7 @@ body::before{
 <div id="toolbar">
   <div style="display:inline-flex;align-items:center;gap:9px;margin-right:6px">
     <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 12px rgba(245,158,11,.45)">
-    <span class="logo">&#9672; LDOC</span>
+    <span class="logo">LDOC</span>
   </div>
   <button class="tab-btn active" id="tab-viewer" onclick="switchTab('viewer')">Viewer</button>
   <button class="tab-btn" id="tab-editor" onclick="switchTab('editor')">Editor</button>
@@ -909,7 +906,7 @@ body::before{
   <input type="file" id="file-input" accept=".ldocx,.ldoc">
 </div>
 
-<button class="toolbar-btn primary" id="ai-helper-toggle" onclick="toggleAiHelper()"><img src="/viewer/ai-brain.png" alt="AI helper" style="width:18px;height:18px;object-fit:cover;border-radius:50%" /> AI Helper</button>
+  <button class="toolbar-btn primary" id="ai-helper-toggle" onclick="toggleAiHelper()"><img src="ldoc_logo.png" alt="LDOC AI" style="width:18px;height:18px;object-fit:contain;border-radius:4px" /> AI Helper</button>
 
 <div id="main">
   <div id="viewer-panel" style="display:flex;flex:1;overflow:hidden;position:relative">
@@ -933,12 +930,7 @@ body::before{
       </div>
       <div id="loading">
         <div class="ldoc-logo-loader">
-          <img src="ldoc_logo.png" alt="LDOC Logo" style="width:58px;height:58px;border-radius:14px;box-shadow:0 0 30px rgba(245,158,11,.6);margin-bottom:12px;object-fit:contain">
-          <div class="ldoc-gems-row">
-            <span class="ldoc-gem-symbol">◈</span>
-            <span class="ldoc-gem-symbol">◈</span>
-            <span class="ldoc-gem-symbol">◈</span>
-          </div>
+          <img src="ldoc_logo.png" class="ldoc-loader-glow-img" alt="LDOC Logo">
           <div class="ldoc-loading-caption">LDOC STUDIO</div>
           <div class="ldoc-loading-sub" id="ldoc-loading-subtext">Compiling Enchanted Living Presentation&#8230;</div>
         </div>
@@ -1100,8 +1092,8 @@ body::before{
       </div>
       <div class="preview-body" id="ed-preview-body">
         <div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">
-          <div class="ldoc-gem-symbol" style="font-size:24px;margin-bottom:8px">◈</div>
-          Select or add a page to view live presentation
+          <img src="ldoc_logo.png" alt="LDOC Logo" style="width:36px;height:36px;border-radius:8px;box-shadow:0 0 16px rgba(245,158,11,.4);margin-bottom:8px;object-fit:contain">
+          <div>Select or add a page to view live presentation</div>
         </div>
       </div>
     </div>
@@ -1119,7 +1111,7 @@ body::before{
   <!-- Header -->
   <div class="ai-helper-header">
     <div class="ai-helper-header-left">
-      <img class="ai-helper-brand" src="/viewer/ai-brain.png" alt="AI helper" />
+      <img class="ai-helper-brand" src="ldoc_logo.png" alt="LDOC AI" style="width:24px;height:24px;border-radius:6px;object-fit:contain" />
       <div>
         <strong id="ai-panel-title">LDOCX AI Assistant</strong>
         <span id="ai-panel-subtitle">Document Intelligence &amp; Live Sync</span>
@@ -4148,8 +4140,8 @@ function edUpdateLivePreview() {
     if (!curPage) {
       body.innerHTML = `
         <div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">
-          <div class="ldoc-gem-symbol" style="font-size:26px;margin-bottom:10px">◈</div>
-          Add or select a page in the editor to preview presentation
+          <img src="ldoc_logo.png" alt="LDOC Logo" style="width:36px;height:36px;border-radius:8px;box-shadow:0 0 16px rgba(245,158,11,.4);margin-bottom:10px;object-fit:contain">
+          <div>Add or select a page in the editor to preview presentation</div>
         </div>
       `;
       if (badge) badge.textContent = 'No Page Selected';
@@ -4166,7 +4158,7 @@ function edUpdateLivePreview() {
 
       const header = document.createElement('div');
       header.style.cssText = 'font-family:Cinzel,serif;font-size:14px;font-weight:800;color:var(--gold);margin-bottom:18px;border-bottom:1px solid rgba(245,158,11,.25);padding-bottom:8px;display:flex;align-items:center;gap:8px';
-      header.innerHTML = `<span style="color:var(--gold)">◈</span> <span>${escapeHtml(curPage.title || 'Page')}</span>`;
+      header.innerHTML = `<img src="ldoc_logo.png" alt="LDOC Logo" style="width:18px;height:18px;border-radius:4px;object-fit:contain"> <span>${escapeHtml(curPage.title || 'Page')}</span>`;
       pageDiv.appendChild(header);
 
       (curPage.blocks || []).forEach(b => {
