@@ -2020,6 +2020,61 @@ body.mode-paper .page-fx-canvas {
   }
 }
 
+
+/* ── VSCode-Style Draggable Resizable Splitters ── */
+.ed-splitter, .creator-splitter {
+  width: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: col-resize;
+  position: relative;
+  z-index: 25;
+  transition: background 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+  user-select: none;
+}
+.ed-splitter:hover, .ed-splitter.dragging,
+.creator-splitter:hover, .creator-splitter.dragging {
+  background: var(--gold) !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.75) !important;
+}
+
+/* ── Mobile View Segmented Switcher Bar ── */
+.mobile-view-tabs {
+  display: none;
+  background: rgba(18, 18, 30, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 10px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.mv-tab {
+  flex: 1;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text2);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+.mv-tab.active {
+  background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(124,58,237,0.25));
+  border-color: var(--gold);
+  color: #fef08a;
+}
+
+@media screen and (max-width: 768px) {
+  .mobile-view-tabs {
+    display: flex !important;
+  }
+  .ed-splitter, .creator-splitter {
+    display: none !important;
+  }
+}
+
 </style>
   <script src="gta6_lightbox_mesh.js"></script>
 </head>
@@ -2241,6 +2296,7 @@ body.mode-paper .page-fx-canvas {
   </div>
 
   <!-- CENTER: block editor -->
+  <div class="creator-splitter" id="creator-splitter-left" title="Drag to resize Pages sidebar"></div>
   <div id="center">
     <div id="center-panel-header"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">🧩</span><strong style="font-family:'Cinzel',serif;font-size:13px;color:#fef08a">Block Editor &amp; Inspector</strong></div><button class="drawer-close-btn" onclick="toggleBlocksDrawer()">✕ Close</button></div>
     <div id="page-title-bar" style="display:none;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px;flex:1"><label>Page Title</label><input id="pg-title-inp" placeholder="Page title" oninput="onPageTitleChange(this.value)"></div><button class="drawer-close-btn" onclick="toggleBlocksDrawer()" style="margin-left:10px">✕ Close</button></div><div style="display:none">
@@ -2279,6 +2335,7 @@ body.mode-paper .page-fx-canvas {
   </div>
 
   <!-- LIVE SLIDE PRESENTATION PREVIEW PANE (SPLIT VIEW) -->
+  <div class="creator-splitter" id="creator-splitter-right" title="Drag to resize Live Slide Presentation"></div>
   <div id="creator-preview-pane" class="open">
     <div class="preview-header">
       <div style="display:flex;align-items:center;gap:8px">
@@ -6484,6 +6541,79 @@ window.LDoc3DSceneEditor = {
   }
 };
 
+
+
+// ── VSCode-Style Splitters for Standalone Creator ───────────────────────────
+function initCreatorPanelSplitters() {
+  const leftSplitter = document.getElementById('creator-splitter-left');
+  const rightSplitter = document.getElementById('creator-splitter-right');
+  const left = document.getElementById('left');
+  const center = document.getElementById('center');
+  const preview = document.getElementById('creator-preview-pane');
+
+  if (leftSplitter && left) {
+    let isDragging = false;
+    leftSplitter.addEventListener('mousedown', () => {
+      isDragging = true;
+      leftSplitter.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const newW = Math.max(140, Math.min(420, e.clientX));
+      left.style.width = newW + 'px';
+    });
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        leftSplitter.classList.remove('dragging');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      }
+    });
+  }
+
+  if (rightSplitter && preview) {
+    let isDragging = false;
+    rightSplitter.addEventListener('mousedown', () => {
+      isDragging = true;
+      rightSplitter.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const newW = Math.max(280, Math.min(window.innerWidth - 380, window.innerWidth - e.clientX));
+      preview.style.width = newW + 'px';
+      if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+    });
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        rightSplitter.classList.remove('dragging');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      }
+    });
+  }
+}
+window.addEventListener('DOMContentLoaded', initCreatorPanelSplitters);
+
+function triggerTelemetryBurst(btn) {
+  const card = btn.closest('.telemetry-card');
+  if (!card) return;
+  btn.textContent = '⚡ Scanning...';
+  btn.style.opacity = '0.6';
+  setTimeout(() => {
+    const vals = card.querySelectorAll('.telem-val');
+    if (vals[0]) vals[0].textContent = (Math.random() * 2 + 4).toFixed(2) + ' GB/s';
+    if (vals[1]) vals[1].textContent = (99.4 + Math.random() * 0.5).toFixed(1) + '%';
+    if (vals[2]) vals[2].textContent = (Math.random() * 4 + 10).toFixed(1) + ' ms';
+    btn.textContent = '⚡ Scan Telemetry';
+    btn.style.opacity = '1';
+  }, 400);
+}
 
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof initFormatPopover === 'function') initFormatPopover();
