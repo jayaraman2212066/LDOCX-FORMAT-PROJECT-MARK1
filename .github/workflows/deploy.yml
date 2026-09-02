@@ -40,6 +40,8 @@ jobs:
           cp daily-prophet.ldocx _site/ || true
           if [ -d "samples" ]; then cp -r samples _site/; fi
           cp manifest.json _site/ || true
+          cp jszip.min.js _site/ || true
+          cp gta6_lightbox_mesh.js _site/ || true
           touch _site/.nojekyll
           echo "Web distribution assembled successfully:"
           ls -la _site
