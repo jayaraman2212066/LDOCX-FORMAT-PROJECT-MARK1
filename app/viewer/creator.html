@@ -2342,6 +2342,215 @@ body.mode-paper .page-fx-canvas {
   margin: 4px 0;
 }
 
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   📱 PERFECT MOBILE & TABLET RESPONSIVE ARCHITECTURE
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+/* Compact Toolbar & Header */
+#toolbar, #tb {
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+}
+#toolbar::-webkit-scrollbar, #tb::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Horizontal Swipable Quick Add Bar */
+#ed-add-bar, #add-bar {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding: 8px 10px !important;
+  gap: 6px !important;
+  background: rgba(14, 16, 28, 0.98) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  scrollbar-width: none !important;
+}
+#ed-add-bar::-webkit-scrollbar, #add-bar::-webkit-scrollbar {
+  display: none !important;
+}
+
+.ed-add-btn, .add-btn {
+  padding: 4px 9px !important;
+  font-size: 11.5px !important;
+  white-space: nowrap !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── 📱 Mobile Phone Specific (< 768px) ── */
+@media screen and (max-width: 767px) {
+  /* Header adjustments */
+  #toolbar, #tb {
+    padding: 6px 8px !important;
+    gap: 4px !important;
+    height: 42px !important;
+  }
+  .logo {
+    font-size: 13px !important;
+  }
+  .tab-btn, .toolbar-btn, .btn {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+  }
+  .doc-title {
+    display: none !important;
+  }
+
+  /* Mobile Segmented View Control */
+  .mobile-view-tabs {
+    display: flex !important;
+    background: #0d1117 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding: 4px 8px !important;
+    gap: 4px !important;
+    z-index: 100 !important;
+  }
+  .mv-tab {
+    flex: 1 !important;
+    padding: 6px 4px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #8b949e !important;
+    border: 1px solid transparent !important;
+    cursor: pointer !important;
+  }
+  .mv-tab.active {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #fef08a !important;
+    border-color: rgba(245, 158, 11, 0.5) !important;
+  }
+
+  /* In mobile: Hide splitters */
+  .ed-splitter, .creator-splitter {
+    display: none !important;
+  }
+
+  /* Single panel full width according to active mobile tab */
+  #editor-panel, #main {
+    flex-direction: column !important;
+    height: calc(100vh - 96px) !important;
+    overflow: hidden !important;
+  }
+
+  body[data-mobile-tab="pages"] #ed-pages,
+  body[data-mobile-tab="pages"] #left {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+  body[data-mobile-tab="pages"] #ed-main,
+  body[data-mobile-tab="pages"] #center,
+  body[data-mobile-tab="pages"] #ed-preview-pane,
+  body[data-mobile-tab="pages"] #creator-preview-pane {
+    display: none !important;
+  }
+
+  body[data-mobile-tab="editor"] #ed-main,
+  body[data-mobile-tab="editor"] #center {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+  body[data-mobile-tab="editor"] #ed-pages,
+  body[data-mobile-tab="editor"] #left,
+  body[data-mobile-tab="editor"] #ed-preview-pane,
+  body[data-mobile-tab="editor"] #creator-preview-pane {
+    display: none !important;
+  }
+
+  body[data-mobile-tab="preview"] #ed-preview-pane,
+  body[data-mobile-tab="preview"] #creator-preview-pane {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+  body[data-mobile-tab="preview"] #ed-pages,
+  body[data-mobile-tab="preview"] #left,
+  body[data-mobile-tab="preview"] #ed-main,
+  body[data-mobile-tab="preview"] #center {
+    display: none !important;
+  }
+
+  /* Default mobile tab state (editor active) */
+  body:not([data-mobile-tab]) #ed-main,
+  body:not([data-mobile-tab]) #center {
+    display: flex !important;
+    width: 100% !important;
+  }
+  body:not([data-mobile-tab]) #ed-pages,
+  body:not([data-mobile-tab]) #left,
+  body:not([data-mobile-tab]) #ed-preview-pane,
+  body:not([data-mobile-tab]) #creator-preview-pane {
+    display: none !important;
+  }
+
+  /* Slide Presentation Canvas Full Width */
+  .pres-page, .pres-slide {
+    width: calc(100vw - 16px) !important;
+    margin: 8px auto !important;
+    padding: 14px !important;
+  }
+  .page-content-layer {
+    padding: 0 !important;
+  }
+
+  /* Status Bar: Compact on Mobile */
+  #ldoc-status-bar {
+    height: 22px !important;
+    padding: 0 6px !important;
+    font-size: 10px !important;
+  }
+  #ldoc-status-bar .sb-right .sb-item:not(#sb-autosave-indicator) {
+    display: none !important;
+  }
+  #sb-blocks-counter, #sb-fx-indicator {
+    display: none !important;
+  }
+}
+
+/* ── 💻 Tablet Specific (768px - 1024px) ── */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  #editor-panel, #main {
+    flex-direction: row !important;
+    height: calc(100vh - 100px) !important;
+  }
+  #ed-pages, #left {
+    width: 160px !important;
+    min-width: 140px !important;
+  }
+  #ed-main, #center {
+    width: 320px !important;
+    min-width: 280px !important;
+  }
+  #ed-preview-pane, #creator-preview-pane {
+    flex: 1 !important;
+    min-width: 300px !important;
+  }
+  .pres-page, .pres-slide {
+    width: 95% !important;
+    margin: 10px auto !important;
+  }
+}
+
 </style>
   <script src="gta6_lightbox_mesh.js"></script>
 </head>
@@ -2464,6 +2673,13 @@ body.mode-paper .page-fx-canvas {
 <div id="drawer-backdrop" onclick="closeAllDrawers()"></div>
 
 <div id="main">
+
+<div class="mobile-view-tabs" id="mobile-view-switcher">
+  <button class="mv-tab" id="mv-tab-pages" onclick="setMobileView('pages')">📑 Slides</button>
+  <button class="mv-tab active" id="mv-tab-editor" onclick="setMobileView('editor')">✏️ Blocks</button>
+  <button class="mv-tab" id="mv-tab-preview" onclick="setMobileView('preview')">⚡ Live Slide</button>
+</div>
+
   <!-- LEFT: doc meta + pages -->
   <div id="left">
     <div class="panel-hdr"><span>Document Identity &amp; Canvas</span><button class="drawer-close-btn" onclick="togglePagesDrawer()">✕ Close</button></div>
@@ -7469,6 +7685,21 @@ window.addEventListener('keydown', (e) => {
     return;
   }
 });
+
+</script>
+<script>
+
+// ── Mobile View Segmented Controller ────────────────────────────────────────
+function setMobileView(tab) {
+  document.body.dataset.mobileTab = tab;
+  document.querySelectorAll('.mv-tab').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('mv-tab-' + tab);
+  if (btn) btn.classList.add('active');
+  if (tab === 'preview') {
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+    if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+  }
+}
 
 </script>
 </body>
