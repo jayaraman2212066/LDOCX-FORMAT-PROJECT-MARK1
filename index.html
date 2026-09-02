@@ -1892,7 +1892,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
     <span class="logo">LDOC</span>
   </div>
   <button class="tab-btn active" id="tab-viewer" onclick="switchTab('viewer')">Viewer</button>
-  <button class="tab-btn" id="tab-editor" onclick="switchTab('editor')">Editor</button>
+  <button class="tab-btn" id="tab-editor" onclick="switchTab('editor')">🎨 Creator &amp; Editor</button>
   <button class="tab-btn" id="tab-converter" onclick="switchTab('converter')">⚡ Converter</button>
   <button class="tab-btn" id="tab-templates" onclick="switchTab('templates')">🌟 Templates</button>
   <button class="tab-btn" id="tab-docs" onclick="switchTab('docs')">Documents</button>
@@ -2429,7 +2429,7 @@ function switchTab(tab){
   document.getElementById('build-save-btn').style.display=tab==='editor'?'':'none';
   if(tab==='docs')refreshDocs();
   if(tab==='templates')renderTemplateVault();
-  if(tab==='editor')edUpdateLivePreview();
+  if(tab==='editor'){if(typeof edPages!=='undefined'&&edPages.length===0){edAddPage();}edUpdateLivePreview();}
 }
 
 // ── AI Assistant Controller ─────────────────────────────────────────────────
@@ -4289,7 +4289,6 @@ function renderBlockNode(node,parent){
             ]
           };
         }
-      }
       
       const container=document.createElement('div');
       container.className='pres-3d-card';

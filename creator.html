@@ -5179,6 +5179,18 @@ window.LDoc3DSceneEditor = {
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof initFormatPopover === 'function') initFormatPopover();
   setCreatorPresentationMode('paper');
+  if (pages.length === 0) {
+    addPage();
+    if (pages[0] && (!pages[0].blocks || pages[0].blocks.length === 0)) {
+      pages[0].blocks = [
+        { id: bid(), type: 'heading', level: 1, text: 'Interactive Living Document Canvas' },
+        { id: bid(), type: 'paragraph', text: 'Welcome to LDOC Creator Studio. Click elements below or open the FX Wizard to add 3D holograms, 4K videos, fluid water ripples, or AI blocks.' },
+        { id: bid(), type: 'water_effect', value: 'Interactive Fluid Dynamics' }
+      ];
+      renderBlocks();
+      if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+    }
+  }
 });
 
 </script>
