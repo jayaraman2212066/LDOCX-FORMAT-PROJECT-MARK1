@@ -1,11 +1,11 @@
 {
   "name": "ldocx-living-document-studio",
   "version": "1.0.0",
-  "description": "LDOCX — The Living Document Architecture & Studio",
+  "description": "LDOCX \u2014 The Living Document Architecture & Studio",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve .",
-    "build": "echo 'Static build ready'"
+    "build": "node ./build_static.js",
+    "start": "npx serve public"
   },
   "keywords": [
     "ldocx",
