@@ -437,6 +437,45 @@ body.mode-paper .page-paper-layer {
   opacity: 0.95;
 }
 
+
+/* ── Enhanced 3-Layer Visual Hierarchy & Slide Styling ── */
+.pres-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Cinzel', serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--gold, #f59e0b);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 16px 28px 14px 28px;
+  margin: 0 0 28px 0;
+  background: rgba(15, 15, 25, 0.6);
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 10;
+}
+.page-content-layer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding: 0 44px 44px 44px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.page-fx-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
 /* Layer 3: Foreground Content Layer (First Layer: Text, Video, 3D Render, Visuals) */
 .page-content-layer {
   position: relative;
@@ -2980,14 +3019,14 @@ class ThreeJsViewer {
     this.init();
   }
 
-  init() {
+init() {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x0a0a14);
 
     const w = this.container.clientWidth || 600;
     const h = this.container.clientHeight || 480;
-    this.camera = new THREE.PerspectiveCamera(65, w / h, 0.1, 1000);
-    this.camera.position.set(0, 0, 3.2);
+    this.camera = new THREE.PerspectiveCamera(55, w / h, 0.1, 1000);
+    this.camera.position.set(0, 0, 3.8);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
     this.renderer.setSize(w, h);
@@ -2995,17 +3034,21 @@ class ThreeJsViewer {
     this.renderer.shadowMap.enabled = true;
     this.container.appendChild(this.renderer.domElement);
 
-    // Dynamic Lighting
-    this.ambientLight = new THREE.AmbientLight(0xdbeafe, 0.7);
+    // Dynamic Multi-Source High-Contrast Lighting
+    this.ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
     this.scene.add(this.ambientLight);
 
-    this.dirLight = new THREE.DirectionalLight(0xa78bfa, 1.2);
+    this.dirLight = new THREE.DirectionalLight(0xfde047, 2.0);
     this.dirLight.position.set(5, 10, 7);
     this.scene.add(this.dirLight);
 
-    this.pointLight = new THREE.PointLight(0x38bdf8, 1.5, 20);
-    this.pointLight.position.set(-5, -5, 5);
-    this.scene.add(this.pointLight);
+    const backLight = new THREE.DirectionalLight(0x38bdf8, 2.0);
+    backLight.position.set(-5, -6, -7);
+    this.scene.add(backLight);
+
+    const frontLight = new THREE.DirectionalLight(0xffffff, 1.6);
+    frontLight.position.set(0, 2, 8);
+    this.scene.add(frontLight);
 
     // Mouse Controls
     this.container.addEventListener('mousedown', (e) => this.onMouseDown(e));
@@ -3013,7 +3056,7 @@ class ThreeJsViewer {
     window.addEventListener('mouseup', (e) => this.onMouseUp(e));
     this.container.addEventListener('wheel', (e) => this.onMouseWheel(e), { passive: false });
 
-    // Touch Controls for mobile/tablet
+    // Touch Controls
     this.container.addEventListener('touchstart', (e) => {
       if(e.touches.length === 1){
         this.isDragging = true;
@@ -3037,41 +3080,58 @@ class ThreeJsViewer {
   }
 
   createMaterial(mode) {
-    if(mode === 'gold') {
+    mode = (mode || '').toLowerCase();
+    if (mode.includes('cyber') || mode.includes('hologram')) {
       return new THREE.MeshStandardMaterial({
-        color: 0xf59e0b,
-        emissive: 0x78350f,
-        roughness: 0.25,
-        metalness: 0.85,
+        color: 0x38bdf8,
+        emissive: 0x0284c7,
+        emissiveIntensity: 0.65,
+        roughness: 0.2,
+        metalness: 0.3,
+        wireframe: false,
         side: THREE.DoubleSide
       });
-    } else if(mode === 'cyber' || mode === 'hologram') {
+    } else if (mode.includes('gold') || mode.includes('amber')) {
+      return new THREE.MeshStandardMaterial({
+        color: 0xf59e0b,
+        emissive: 0xd97706,
+        emissiveIntensity: 0.5,
+        roughness: 0.25,
+        metalness: 0.6,
+        side: THREE.DoubleSide
+      });
+    } else if (mode.includes('obsidian') || mode.includes('carbon')) {
+      return new THREE.MeshStandardMaterial({
+        color: 0x334155,
+        emissive: 0x0f172a,
+        emissiveIntensity: 0.4,
+        roughness: 0.15,
+        metalness: 0.8,
+        side: THREE.DoubleSide
+      });
+    } else if (mode.includes('crystal') || mode.includes('cobalt')) {
+      return new THREE.MeshStandardMaterial({
+        color: 0x818cf8,
+        emissive: 0x4338ca,
+        emissiveIntensity: 0.55,
+        roughness: 0.1,
+        metalness: 0.5,
+        side: THREE.DoubleSide
+      });
+    } else if (mode.includes('wireframe')) {
       return new THREE.MeshBasicMaterial({
         color: 0x38bdf8,
         wireframe: true,
         transparent: true,
-        opacity: 0.85
+        opacity: 0.9
       });
-    } else if(mode === 'obsidian' || mode === 'carbon') {
-      return new THREE.MeshStandardMaterial({
-        color: 0x0f172a,
-        roughness: 0.15,
-        metalness: 0.95,
-        side: THREE.DoubleSide
-      });
-    } else if(mode === 'wireframe') {
-      return new THREE.MeshStandardMaterial({
-        color: 0xc084fc,
-        wireframe: true,
-        side: THREE.DoubleSide
-      });
-    } else { // hologram / default
+    } else {
       return new THREE.MeshStandardMaterial({
         color: 0xf59e0b,
-        emissive: 0x221100,
-        roughness: 0.2,
-        metalness: 0.85,
-        wireframe: false,
+        emissive: 0x78350f,
+        emissiveIntensity: 0.5,
+        roughness: 0.3,
+        metalness: 0.5,
         side: THREE.DoubleSide
       });
     }
@@ -3152,25 +3212,6 @@ class ThreeJsViewer {
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     }
 
-    // Set normals
-    if (meshData.normals && meshData.normals.length > 0) {
-      const normals = new Float32Array(meshData.normals.length * 3);
-      meshData.normals.forEach((n, i) => {
-        if(Array.isArray(n)){
-          normals[i * 3] = n[0] || 0;
-          normals[i * 3 + 1] = n[1] || 0;
-          normals[i * 3 + 2] = n[2] || 0;
-        }else{
-          normals[i * 3] = n.x || 0;
-          normals[i * 3 + 1] = n.y || 0;
-          normals[i * 3 + 2] = n.z || 0;
-        }
-      });
-      geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
-    } else {
-      geometry.computeVertexNormals();
-    }
-
     // Set faces/indices
     if (meshData.faces && meshData.faces.length > 0) {
       const indices = [];
@@ -3190,6 +3231,17 @@ class ThreeJsViewer {
       }
     }
 
+    // Check if CAD model is lying flat in the X-Z print-bed plane (thickness along Y is very small)
+    geometry.computeBoundingBox();
+    const initBox = geometry.boundingBox;
+    const sz = new THREE.Vector3();
+    initBox.getSize(sz);
+    if (sz.y < sz.z * 0.35 && sz.y < sz.x * 0.35) {
+      // Rotate 90 degrees around X so it stands upright facing the camera!
+      geometry.rotateX(-Math.PI / 2);
+    }
+
+    geometry.computeVertexNormals();
     geometry.computeBoundingBox();
     geometry.center();
 
@@ -3203,51 +3255,15 @@ class ThreeJsViewer {
 
   fitCameraToObject() {
     if (!this.mesh || !this.geometry) return;
-    const box = new THREE.Box3().setFromObject(this.mesh);
-    const size = box.getSize(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z, 0.1);
+    this.geometry.computeBoundingBox();
+    const box = this.geometry.boundingBox;
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z, 0.4);
     const fov = this.camera.fov * (Math.PI / 180);
-    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-    cameraZ *= 1.6;
-    this.camera.position.z = Math.max(cameraZ, 1.2);
+    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.5;
+    this.camera.position.set(0, 0, Math.max(cameraZ, 2.2));
     this.camera.lookAt(0, 0, 0);
-  }
-
-  onMouseDown(e) {
-    this.isDragging = true;
-    this.previousMousePosition = { x: e.clientX, y: e.clientY };
-  }
-
-  onMouseMove(e) {
-    if (!this.isDragging || !this.mesh) return;
-    const deltaX = e.clientX - this.previousMousePosition.x;
-    const deltaY = e.clientY - this.previousMousePosition.y;
-    this.rotation.y += deltaX * 0.007;
-    this.rotation.x += deltaY * 0.007;
-    this.mesh.rotation.y = this.rotation.y;
-    this.mesh.rotation.x = this.rotation.x;
-    this.previousMousePosition = { x: e.clientX, y: e.clientY };
-  }
-
-  onMouseUp() {
-    this.isDragging = false;
-  }
-
-  onMouseWheel(e) {
-    e.preventDefault();
-    this.camera.position.z += e.deltaY * 0.004;
-    this.camera.position.z = Math.max(0.6, Math.min(40, this.camera.position.z));
-  }
-
-  onWindowResize() {
-    if(!this.container || !this.renderer) return;
-    const w = this.container.clientWidth;
-    const h = this.container.clientHeight;
-    if(w > 0 && h > 0){
-      this.camera.aspect = w / h;
-      this.camera.updateProjectionMatrix();
-      this.renderer.setSize(w, h);
-    }
   }
 
   wakeUp() {
@@ -5802,6 +5818,92 @@ function togglePageFxMode(btn) {
       showRepairBanner(`✨ Switched Whole-Page Background FX to: ${page.dataset.fx.toUpperCase()}`, true);
     }
   }
+}
+
+
+// ── Whole-Page Living Environmental Canvas (Fluid Water Waves & Stardust Physics) ──
+
+function initPageEnvironmentalFx(page, canvas) {
+  if (!canvas || !page) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  function resize() {
+    canvas.width = page.clientWidth || page.offsetWidth || 1200;
+    canvas.height = page.clientHeight || page.offsetHeight || 800;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let ripples = [];
+  function addRipple(x, y, power = 1) {
+    ripples.push({
+      x, y,
+      r: 6,
+      alpha: 0.9 * power,
+      maxR: 140 + 100 * power,
+      speed: 2.6
+    });
+  }
+
+  // Mousemove ripple emitter
+  page.addEventListener('mousemove', (e) => {
+    const r = page.getBoundingClientRect();
+    if (Math.random() > 0.6) {
+      addRipple(e.clientX - r.left, e.clientY - r.top, 0.5);
+    }
+  });
+
+  // Click burst ripples
+  page.addEventListener('click', (e) => {
+    const r = page.getBoundingClientRect();
+    const cx = e.clientX - r.left;
+    const cy = e.clientY - r.top;
+    addRipple(cx, cy, 1.4);
+    for (let k = 1; k <= 3; k++) {
+      setTimeout(() => {
+        addRipple(cx + (Math.random() * 24 - 12), cy + (Math.random() * 24 - 12), 1.0 - k * 0.2);
+      }, k * 130);
+    }
+  });
+
+  // Ambient living pulse
+  const ambientTimer = setInterval(() => {
+    if (Math.random() > 0.35 && canvas.width > 0) {
+      addRipple(Math.random() * canvas.width, Math.random() * canvas.height, 0.45);
+    }
+  }, 3200);
+
+  function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = ripples.length - 1; i >= 0; i--) {
+      const rip = ripples[i];
+      rip.r += rip.speed;
+      rip.alpha *= 0.978;
+
+      // Primary cyan fluid wave
+      ctx.beginPath();
+      ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(56, 189, 248, ${rip.alpha})`;
+      ctx.lineWidth = Math.max(1, 3.2 * (rip.alpha / 0.9));
+      ctx.stroke();
+
+      // Secondary golden shimmer wave
+      ctx.beginPath();
+      ctx.arc(rip.x, rip.y, rip.r * 0.72, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(245, 158, 11, ${rip.alpha * 0.45})`;
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+
+      if (rip.alpha < 0.015 || rip.r > rip.maxR) {
+        ripples.splice(i, 1);
+      }
+    }
+
+    requestAnimationFrame(loop);
+  }
+  loop();
 }
 
 function initInPageWaterCanvas(canvasId) {
