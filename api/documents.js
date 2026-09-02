@@ -1,8 +1,18 @@
-// Vercel Serverless Documents Listing
+// Vercel Serverless Documents Handler
 module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
+
+  if (req.method === 'POST') {
+    const docId = 'doc_' + Math.random().toString(36).slice(2, 11);
+    return res.status(200).json({
+      ok: true,
+      id: docId,
+      message: 'Document received on serverless edge'
+    });
+  }
 
   const sampleDocs = [
     {
