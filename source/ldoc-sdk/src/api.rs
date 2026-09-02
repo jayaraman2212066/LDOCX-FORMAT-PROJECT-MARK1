@@ -344,14 +344,20 @@ impl LdocApi {
                                 } else {
                                     Self::generate_mesh_template(template)
                                 };
+                                let mut st_json = serde_json::json!({
+                                    "format": format,
+                                    "template": template,
+                                    "mesh_data": mesh_data,
+                                    "material": block["material_mode"].as_str().or_else(|| block["style"]["material"].as_str()).unwrap_or("cyber"),
+                                    "auto_rotate": true,
+                                });
+                                if let Some(ft) = block.get("floating_texts") {
+                                    st_json["floating_texts"] = ft.clone();
+                                }
                                 Some(ContentBlock::Custom {
                                     node_type: "3d_model".to_string(),
                                     value: Some(format!("{} Model", format.to_uppercase())),
-                                    style: Some(serde_json::json!({
-                                        "format": format,
-                                        "template": template,
-                                        "mesh_data": mesh_data
-                                    })),
+                                    style: Some(st_json),
                                 })
                             }
                             "ai_live" | "ai_live_data" => {
@@ -480,10 +486,26 @@ impl LdocApi {
                                 })
                             }
                             "water_effect" | "fluid_canvas" => {
+                                let val = block["value"].as_str().unwrap_or("Interactive Fluid Dynamics Ripple Canvas").to_string();
+                                let mut style = block.get("style").cloned().unwrap_or(serde_json::json!({ "interactive": true }));
+                                if let Some(ft) = block.get("floating_texts") {
+                                    style["floating_texts"] = ft.clone();
+                                }
                                 Some(ContentBlock::Custom {
                                     node_type: "water_effect".to_string(),
-                                    value: Some("Interactive Fluid Dynamics".to_string()),
-                                    style: Some(serde_json::json!({ "interactive": true })),
+                                    value: Some(val),
+                                    style: Some(style),
+                                })
+                            }
+                            "floating_text" | "ambient_text" => {
+                                let text = block["text"].as_str()
+                                    .or_else(|| block["value"].as_str())
+                                    .unwrap_or("Floating Text").to_string();
+                                let style = block.get("style").cloned().unwrap_or(serde_json::json!({}));
+                                Some(ContentBlock::Custom {
+                                    node_type: "floating_text".to_string(),
+                                    value: Some(text),
+                                    style: Some(style),
                                 })
                             }
                             "jsx_canvas" | "interactive_sandbox" => {
@@ -501,7 +523,14 @@ impl LdocApi {
                                     style: block.get("style").cloned(),
                                 })
                             }
-                            _ => None,
+                            _ => {
+                                let val = block["value"].as_str().or_else(|| block["text"].as_str()).map(|s| s.to_string());
+                                Some(ContentBlock::Custom {
+                                    node_type: btype.to_string(),
+                                    value: val,
+                                    style: block.get("style").cloned(),
+                                })
+                            },
                         };
                         if let Some(cb) = cb { page.content.push(cb); }
                     }
