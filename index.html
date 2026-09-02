@@ -427,14 +427,14 @@ body.mode-paper .page-paper-layer {
   height: 100%;
   z-index: 2;
   pointer-events: none;
-  mix-blend-mode: screen;
-  opacity: 0.88;
+  mix-blend-mode: normal !important;
+  opacity: 0.95;
   transition: opacity 0.4s ease;
 }
 
-body.mode-paper .page-fx-canvas {
-  mix-blend-mode: multiply;
-  opacity: 0.75;
+.pres-mode-paper .page-fx-canvas, body.mode-paper .page-fx-canvas {
+  mix-blend-mode: normal !important;
+  opacity: 0.95;
 }
 
 /* Layer 3: Foreground Content Layer (First Layer: Text, Video, 3D Render, Visuals) */
@@ -2740,43 +2740,55 @@ function toggleLivingMotion(){
   }
 }
 
-// ── Global Background Audio Engine ──────────────────────────────────────────
+// ── Global Background Audio Engine (Supports YouTube & Direct Audio Streams) ──
 const GlobalAudio = {
   currentAudio: null,
   currentSrc: '',
   currentLabel: '',
   isPlaying: false,
+  isYouTube: false,
   volume: 0.85,
   audioCtx: null,
   synthInterval: null,
   isSynthesizing: false,
 
   setTrack(src, label){
-    if(this.currentSrc === src && (this.currentAudio || this.isSynthesizing)) return;
+    if(!src) return;
     this.currentSrc = src;
     this.currentLabel = label || 'Vice City Atmosphere — Hot Together';
+
     if(this.currentAudio){
       this.currentAudio.pause();
       this.currentAudio = null;
     }
     this.stopSynthwave();
-    
-    // Check if YouTube soundtrack
-    const ytMatch = src.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+
+    // Comprehensive YouTube URL matcher
+    const ytMatch = (src || '').match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?.*v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
     if (ytMatch && ytMatch[1]) {
+      const ytId = ytMatch[1];
+      this.isYouTube = true;
+
       let ytFrame = document.getElementById('bg-youtube-audio-frame');
       if (!ytFrame) {
         ytFrame = document.createElement('iframe');
         ytFrame.id = 'bg-youtube-audio-frame';
-        ytFrame.style.cssText = 'position:fixed;bottom:-1000px;left:-1000px;width:10px;height:10px;opacity:0;pointer-events:none;';
+        ytFrame.style.cssText = 'position:fixed;bottom:12px;left:14px;width:200px;height:44px;border:1px solid rgba(245,158,11,0.5);border-radius:12px;z-index:9999;background:#0f0f1c;box-shadow:0 8px 30px rgba(0,0,0,0.85);';
         document.body.appendChild(ytFrame);
       }
-      ytFrame.src = `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?autoplay=1&loop=1&playlist=${ytMatch[1]}&enablejsapi=1`;
+      ytFrame.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&enablejsapi=1&loop=1&playlist=${ytId}&origin=${encodeURIComponent(location.origin)}`;
+      ytFrame.allow = 'autoplay; encrypted-media';
       this.isPlaying = true;
       this.showFloatingBar();
       this.updateUI();
+      if (typeof showRepairBanner === 'function') {
+        showRepairBanner(`🎵 YouTube BGM Active: ${this.currentLabel}`, true);
+      }
       return;
     }
+
+    // Direct audio URL
+    this.isYouTube = false;
     this.currentAudio = new Audio(src);
     this.currentAudio.volume = this.volume;
     this.currentAudio.loop = true;
@@ -2786,7 +2798,8 @@ const GlobalAudio = {
     this.currentAudio.onpause = () => { this.isPlaying = false; this.updateUI(); };
     this.currentAudio.onended = () => { this.isPlaying = false; this.updateUI(); };
     this.currentAudio.onerror = (e) => {
-      console.warn('Audio network error, falling back to Web Audio Synthwave generator:', e);
+      console.warn('Audio stream error, activating Web Audio Synthwave:', e);
+      this.startSynthwave();
     };
 
     this.showFloatingBar();
@@ -2799,21 +2812,44 @@ const GlobalAudio = {
   },
 
   startAudio(){
+    if(this.isYouTube){
+      const ytFrame = document.getElementById('bg-youtube-audio-frame');
+      if(ytFrame && ytFrame.contentWindow){
+        ytFrame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        this.isPlaying = true;
+        this.updateUI();
+        return;
+      }
+    }
     if(this.currentAudio){
       this.currentAudio.play().then(()=>{
         this.isPlaying = true;
         this.stopSynthwave();
         this.updateUI();
       }).catch(err => {
-        console.warn('Direct audio play blocked or failed, activating Web Audio Synthwave:', err);
+        console.warn('Direct audio play blocked, activating Web Audio Synthwave:', err);
         this.startSynthwave();
       });
-    } else {
+    } else if(!this.isYouTube) {
       this.startSynthwave();
     }
   },
 
   togglePlay(){
+    if(this.isYouTube){
+      const ytFrame = document.getElementById('bg-youtube-audio-frame');
+      if(ytFrame && ytFrame.contentWindow){
+        if(this.isPlaying){
+          ytFrame.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+          this.isPlaying = false;
+        } else {
+          ytFrame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+          this.isPlaying = true;
+        }
+        this.updateUI();
+        return;
+      }
+    }
     if(this.isPlaying){
       if(this.currentAudio) this.currentAudio.pause();
       this.stopSynthwave();
@@ -3024,12 +3060,13 @@ class ThreeJsViewer {
         wireframe: true,
         side: THREE.DoubleSide
       });
-    } else { // crystal / default
-      return new THREE.MeshPhongMaterial({
-        color: 0x60a5fa,
-        emissive: 0x1e3a8a,
-        specular: 0x93c5fd,
-        shininess: 120,
+    } else { // hologram / default
+      return new THREE.MeshStandardMaterial({
+        color: 0xf59e0b,
+        emissive: 0x221100,
+        roughness: 0.2,
+        metalness: 0.85,
+        wireframe: false,
         side: THREE.DoubleSide
       });
     }
@@ -3875,32 +3912,42 @@ function renderBlockNode(node,parent){
       break;
     }
     case 'video':case 'web_video':{
-      const src=(node.style&&node.style.src)||assetUrl(node);
-      const lbl=(node.style&&node.style.label)||(node.aria&&node.aria.label)||node.value||'Moving Photograph';
-      const card=document.createElement('div');card.className='video-card';
-      card.style.cssText = 'background:rgba(15,15,28,0.85);border:1px solid rgba(245,158,11,0.3);border-radius:16px;padding:12px;margin:16px 0;box-shadow:0 12px 36px rgba(0,0,0,0.8);';
-      const videoSrc=src||'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackSeeTheWorld.mp4';
-      
-      const ytMatch = videoSrc.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      const rawSrc = (node.style && node.style.src) || node.src || assetUrl(node) || '';
+      const lbl = (node.style && node.style.label) || (node.aria && node.aria.label) || node.value || 'Grand Theft Auto VI Trailer 1 (Official 4K HDR Stream)';
+      const card = document.createElement('div');
+      card.className = 'video-card';
+      card.style.cssText = 'background:rgba(15,15,28,0.92);border:1.5px solid rgba(245,158,11,0.4);border-radius:18px;padding:14px;margin:20px 0;box-shadow:0 16px 48px rgba(0,0,0,0.85);position:relative;z-index:10;';
+
+      const videoSrc = rawSrc || 'https://www.youtube-nocookie.com/embed/QdBZY2fkU-0';
+      // Robust YouTube matching: handles youtube.com, youtube-nocookie.com, youtu.be, embed, watch?v=, etc.
+      const ytMatch = videoSrc.match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?.*v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+
       if (ytMatch && ytMatch[1]) {
+        const videoId = ytMatch[1];
         const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?rel=0&modestbranding=1&enablejsapi=1`;
+        iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
         iframe.title = lbl;
         iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
         iframe.allowFullscreen = true;
-        iframe.style.cssText = 'width:100%;aspect-ratio:16/9;border:none;border-radius:12px;display:block;background:#000;';
+        iframe.style.cssText = 'width:100%;aspect-ratio:16/9;border:none;border-radius:12px;display:block;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.9);';
         card.appendChild(iframe);
       } else {
-        const v=document.createElement('video');
-        v.controls=true;v.loop=true;v.playsInline=true;v.muted=false;v.volume=1.0;
-        v.src=videoSrc;v.style.cssText='width:100%;max-height:580px;border-radius:12px;display:block;';
+        const v = document.createElement('video');
+        v.controls = true;
+        v.loop = true;
+        v.playsInline = true;
+        v.src = videoSrc;
+        v.style.cssText = 'width:100%;aspect-ratio:16/9;border-radius:12px;display:block;background:#000;';
         card.appendChild(v);
       }
-      const vl=document.createElement('div');vl.className='video-label';
-      vl.style.cssText = 'display:flex;align-items:center;gap:8px;padding-top:10px;font-family:Cinzel,serif;font-size:13px;color:#fef08a;font-weight:700;';
-      vl.innerHTML=`<span style="color:var(--gold);font-size:16px">🎬</span> <span>${lbl}</span> <span style="margin-left:auto;font-size:11px;color:#38bdf8;font-family:monospace">🔊 HD Video & Audio Stream</span>`;
+
+      const vl = document.createElement('div');
+      vl.className = 'video-label';
+      vl.style.cssText = 'display:flex;align-items:center;gap:10px;padding-top:12px;font-family:Cinzel,serif;font-size:14px;color:#fef08a;font-weight:700;';
+      vl.innerHTML = `<span style="color:var(--gold);font-size:18px">🎬</span> <span>${escapeHtml(lbl)}</span> <span style="margin-left:auto;font-size:11px;color:#38bdf8;font-family:monospace">4K 60 FPS Video Stream</span>`;
       card.appendChild(vl);
-      parent.appendChild(card);break;
+      parent.appendChild(card);
+      break;
     }
     case 'iframe':{
       const src=(node.style&&node.style.src)||'';
@@ -4138,9 +4185,11 @@ function renderBlockNode(node,parent){
       const modelUrl = st.src || st.url || node.src || node.url || '';
       let modelData = node.mesh_data || st.mesh_data || (st.vertices ? st : null) || node.data || null;
       
-      if (!modelData || !modelData.vertices || !modelData.vertices.length) {
-        if (template.includes('lightbox') || template.includes('gta6_lightbox') || template.includes('logo') || template.includes('gta6')) {
-          modelData = typeof GTA6_LIGHTBOX_MESH !== 'undefined' ? GTA6_LIGHTBOX_MESH : null;
+      // If modelData is missing or generic 8-vert placeholder cube, use authentic GTA6_LIGHTBOX_MESH
+      if (!modelData || !modelData.vertices || modelData.vertices.length <= 12 || template.includes('lightbox') || template.includes('gta6')) {
+        if (typeof GTA6_LIGHTBOX_MESH !== 'undefined') {
+          modelData = GTA6_LIGHTBOX_MESH;
+        }
         } else if (template.includes('lucia') || template.includes('girl') || template.includes('female')) {
           modelData = typeof GTA6_LUCIA_MESH !== 'undefined' ? GTA6_LUCIA_MESH : null;
         } else if (template.includes('jason') || template.includes('guy') || template.includes('male')) {
@@ -4338,29 +4387,19 @@ function renderBlockNode(node,parent){
       break;
     }
     case 'water_effect':case 'fluid_canvas':{
-      const card = document.createElement('div');
-      card.className = 'water-canvas-card living-fx-hud';
-      card.style.cssText = 'background:rgba(15,23,42,0.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1.5px solid rgba(56,189,248,0.4);border-radius:18px;padding:16px 24px;margin:20px 0;box-shadow:0 12px 40px rgba(0,0,0,0.7);position:relative;z-index:10;';
-      card.innerHTML = `
-        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-          <span style="font-size:26px">🌊</span>
-          <div style="flex:1;min-width:240px">
-            <div style="font-family:'Cinzel Decorative',serif;font-size:15px;color:#fef08a;font-weight:900;letter-spacing:1px">WHOLE-PAGE FLUID DYNAMICS ACTIVE</div>
-            <div style="font-size:11px;color:#38bdf8;font-family:monospace;margin-top:2px">Surface wave physics radiating across the entire page beneath text &amp; paper grain</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <button class="btn" style="background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;border-radius:14px;padding:6px 14px;font-size:11px;font-weight:700;border:none;cursor:pointer" onclick="emitWholePageSurge(this)">💧 Pulse Wave</button>
-            <button class="btn" style="background:rgba(255,255,255,0.1);color:#f1f5f9;border:1px solid rgba(255,255,255,0.2);border-radius:14px;padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer" onclick="togglePageFxMode(this)">✨ Toggle FX</button>
-          </div>
-        </div>
-      `;
-      parent.appendChild(card);
+      // No bulky card! Render sleek minimal badge and spawn ambient text directly onto the page!
+      const badge = document.createElement('div');
+      badge.className = 'page-living-fx-badge';
+      badge.style.cssText = 'display:inline-flex;align-items:center;gap:10px;padding:6px 16px;background:rgba(2,132,199,0.15);border:1px solid rgba(56,189,248,0.35);border-radius:20px;font-family:Cinzel,serif;font-size:11.5px;color:#0284c7;font-weight:700;margin:12px 0;backdrop-filter:blur(8px);';
+      badge.innerHTML = `<span>🌊 Full-Page Fluid Dynamics Active</span> <button onclick="emitWholePageSurge(this)" style="background:none;border:none;color:#0284c7;font-weight:800;cursor:pointer;font-size:12px">💧 Pulse Wave</button>`;
+      parent.appendChild(badge);
+
       const fts = (node.style && node.style.floating_texts) || node.floating_texts || [];
       if (Array.isArray(fts)) {
         fts.forEach(ft => {
-          const x = parseInt(ft.left, 10) || 20;
-          const y = parseInt(ft.top, 10) || 60;
-          spawnAmbientText(x, y, ft.text, ft, card);
+          const x = parseInt(ft.left, 10) || 40;
+          const y = parseInt(ft.top, 10) || 120;
+          spawnAmbientText(x, y, ft.text, ft, parent);
         });
       }
       break;
@@ -5342,23 +5381,45 @@ function initWholePageLivingFx(pageEl, canvas, fxType = 'water') {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (currentFx === 'water') {
+      // Draw gentle ambient background ocean caustics so the paper is visibly alive
+      const time = performance.now() * 0.0015;
+      const isPaper = document.getElementById('content-area')?.classList.contains('pres-mode-paper') || document.body.classList.contains('mode-paper');
+      
+      ctx.lineWidth = isPaper ? 3.5 : 2.6;
+      for (let w = 0; w < 3; w++) {
+        ctx.beginPath();
+        const yOffset = (w * canvas.height / 3 + Math.sin(time + w) * 35) % (canvas.height || 600);
+        ctx.moveTo(0, yOffset);
+        for (let x = 0; x < canvas.width; x += 30) {
+          const y = yOffset + Math.sin(x * 0.015 + time * 1.5 + w) * 16;
+          ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = isPaper 
+          ? `rgba(2, 132, 199, 0.22)` 
+          : `rgba(56, 189, 248, 0.28)`;
+        ctx.stroke();
+      }
+
+      // Draw dynamic mouse & typing interactive ripples
       drops.forEach((d, i) => {
         d.radius += d.speed;
-        d.alpha *= 0.965;
+        d.alpha *= 0.96;
 
-        // Primary outer caustic wave (Vice City Neon Cyan)
         ctx.beginPath();
         ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(56, 189, 248, ${d.alpha})`;
-        ctx.lineWidth = 2.2;
+        ctx.strokeStyle = isPaper
+          ? `rgba(2, 132, 199, ${Math.min(1, d.alpha * 1.3)})`
+          : `rgba(56, 189, 248, ${d.alpha})`;
+        ctx.lineWidth = isPaper ? 3.6 : 2.4;
         ctx.stroke();
 
-        // Secondary inner caustic wave (Sunset Gold)
-        if (d.radius > 16) {
+        if (d.radius > 14) {
           ctx.beginPath();
           ctx.arc(d.x, d.y, d.radius * 0.65, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(245, 158, 11, ${d.alpha * 0.7})`;
-          ctx.lineWidth = 1.4;
+          ctx.strokeStyle = isPaper
+            ? `rgba(180, 83, 9, ${d.alpha * 0.85})`
+            : `rgba(245, 158, 11, ${d.alpha * 0.75})`;
+          ctx.lineWidth = isPaper ? 2.4 : 1.6;
           ctx.stroke();
         }
 
