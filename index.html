@@ -1971,8 +1971,9 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <h2>Open an LDOCX Document</h2>
         <p>Click "Open .ldocx" or drag &amp; drop a .ldocx file here</p>
         <div style="margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-          <button class="btn" style="background:linear-gradient(135deg,var(--gold),#d97706);color:#000;font-weight:800;padding:12px 24px;border-radius:12px;font-size:14px;box-shadow:0 8px 24px rgba(245,158,11,0.35);cursor:pointer;border:none" onclick="loadBundledCampaign(event)">⚡ Launch Grand Theft Auto VI Living Campaign</button>
-          <button class="btn" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:12px 20px;border-radius:12px;font-size:14px;cursor:pointer" onclick="document.getElementById('file-input').click()">📂 Browse .ldocx File</button>
+          <button class="btn primary" style="padding:12px 24px;border-radius:12px;font-size:14px;cursor:pointer;font-weight:700" onclick="document.getElementById('file-input').click()">📂 Browse .ldocx File</button>
+          <button class="btn" style="background:rgba(167,139,250,.15);color:#c084fc;border:1px solid rgba(167,139,250,.3);padding:12px 20px;border-radius:12px;font-size:14px;cursor:pointer;font-weight:700" onclick="location.href='creator.html'">🎨 Open Visual Creator</button>
+          <button class="btn" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:12px 20px;border-radius:12px;font-size:14px;cursor:pointer" onclick="switchTab('templates')">📑 Template Gallery</button>
         </div>
       </div>
       <div id="loading">
@@ -4505,37 +4506,7 @@ async function saveDoc(){
     if (success) return;
   }
 
-  // 2. Query /documents for available documents
-  try {
-    const listRes = await fetch(`${API}/documents`);
-    if (listRes.ok) {
-      const list = await listRes.json();
-      if (list && list.length > 0) {
-        const target = list.find(d => (d.title || '').includes('GTA') || (d.title || '').includes('Leonida')) || list[0];
-        if (target && target.id) {
-          history.replaceState(null, '', `${location.pathname}?doc=${target.id}${location.hash}`);
-          await openDoc(target.id);
-          return;
-        }
-      }
-    }
-  } catch (err) {
-    console.warn('Auto-discovery error:', err);
-  }
-
-  // 3. If server has no documents in memory, auto-load bundled campaign!
-  try {
-    const bundledRes = await fetch('gt6-velocity-unleashed.ldocx');
-    if (bundledRes.ok) {
-      const blob = await bundledRes.blob();
-      const file = new File([blob], 'gt6-velocity-unleashed.ldocx', { type: 'application/octet-stream' });
-      await loadFile(file);
-      return;
-    }
-  } catch (err) {
-    console.warn('Auto-bootstrap bundled load error:', err);
-  }
-
+  // 2. Default: show clean drop-zone without auto-loading any document
   showDropZone();
 })();
 
