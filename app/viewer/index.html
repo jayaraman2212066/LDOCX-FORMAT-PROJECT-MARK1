@@ -9655,5 +9655,22 @@ async function downloadCurrentDocument() {
 
 window.initFormatPopover();
 </script>
+
+// ── ⌨️ Global Viewer Shortcuts ─────────────────────────────
+window.addEventListener('keydown', (e) => {
+  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const cmd = isMac ? e.metaKey : e.ctrlKey;
+  if (cmd && e.shiftKey && (e.key === 'S' || e.key === 's')) {
+    e.preventDefault();
+    if (typeof downloadCurrentDocument === 'function') downloadCurrentDocument();
+    return;
+  }
+  if (cmd && (e.key === 'S' || e.key === 's')) {
+    e.preventDefault();
+    if (typeof saveDoc === 'function') saveDoc();
+    return;
+  }
+});
+
 </body>
 </html>

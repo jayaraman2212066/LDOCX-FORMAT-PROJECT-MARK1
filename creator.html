@@ -1579,6 +1579,115 @@ body.mode-paper .page-fx-canvas {
   z-index: 10;
 }
 
+
+/* ── 🚀 User-Friendly Quick-Add Toolbar & Block Drag-Drop ── */
+.quick-add-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background: rgba(18, 18, 30, 0.95);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(12px);
+}
+.quick-add-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 5px 11px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+.quick-add-btn:hover {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: var(--gold);
+  color: #fef08a;
+  transform: translateY(-1px);
+}
+.autosave-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #34d399;
+  font-weight: 700;
+  padding: 4px 10px;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: 12px;
+  font-family: monospace;
+}
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  background: #34d399;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #34d399;
+  animation: pulseDot 2s infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+.ed-block-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.ed-block-card.dragging {
+  opacity: 0.45;
+  transform: scale(0.98);
+  border-color: var(--gold) !important;
+}
+.ed-block-card.drag-over {
+  border-top: 2px solid var(--gold) !important;
+}
+.block-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.block-drag-handle {
+  cursor: grab;
+  color: var(--text3);
+  font-size: 14px;
+  padding: 2px 4px;
+  user-select: none;
+}
+.block-drag-handle:active { cursor: grabbing; }
+.block-tool-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text2);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.block-tool-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-color: var(--gold);
+}
+.block-tool-btn.del:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #fca5a5;
+}
+
 </style>
   <script src="gta6_lightbox_mesh.js"></script>
 </head>
@@ -2432,20 +2541,19 @@ function applyWizardFx(action) {
     document.getElementById('m-theme').value = 'velocity';
     document.getElementById('m-canvas-bg').value = 'nebula';
     applyCanvasStyles();
-    addBlock('water_effect');
-    toast('🌊 Water dynamics applied to active page', 'ok');
+    curPage.fx = 'water';
+    updateCreatorLivePreview();
+    scheduleAutoSave();
+    toast('🌊 Water dynamics applied to whole-page background', 'ok');
   } else if (action === 'bg_particles') {
     document.getElementById('m-canvas-bg').value = 'starfield';
     applyCanvasStyles();
     const mode = document.getElementById('wiz-particle-mode')?.value || 'stardust';
-    addBlock('particles');
-    const p = pages.find(p => p.id === currentPage);
-    if (p && p.blocks.length) {
-      p.blocks[p.blocks.length - 1].value = mode;
-      renderBlocks();
-      updateCreatorLivePreview();
-    }
-    toast('✨ Particle Starfield applied', 'ok');
+    curPage.fx = 'particles';
+    curPage.particle_mode = mode;
+    updateCreatorLivePreview();
+    scheduleAutoSave();
+    toast('✨ Particle Starfield applied to whole-page background', 'ok');
   } else if (action === 'insert_water') {
     addBlock('water_effect');
     toast('🌊 Water Ripple block inserted', 'ok');
@@ -2844,6 +2952,7 @@ function updateCreatorLivePreview() {
       setTimeout(() => initWholePageLivingFx(slideDiv, fxCanvas, fxType), 60);
       attachCreatorTactilePaperPhysics(slideDiv);
       enableCreatorInPlaceEditing(slideDiv);
+      renderCreatorFloatingTexts();
     } catch(err) {
       body.innerHTML = `
         <div class="ldoc-error-fallback">
@@ -2941,6 +3050,141 @@ function toggleCreatorFreeTextTool() {
   }
 }
 
+
+function spawnCreatorAmbientText(x, y, text = 'Click to write dynamic text...') {
+  const curPage = pages.find(p => p.id === currentPage) || pages[0];
+  if (!curPage) return;
+  curPage.floating_texts = curPage.floating_texts || [];
+
+  const ftId = 'ft-' + Math.random().toString(36).slice(2, 9);
+  const ftObj = {
+    id: ftId,
+    text: text,
+    left: Math.max(10, Math.round(x - 80)),
+    top: Math.max(10, Math.round(y - 30)),
+    font: "'Cinzel Decorative', serif",
+    size: '22px',
+    color: '#f59e0b',
+    glow: true
+  };
+  curPage.floating_texts.push(ftObj);
+
+  renderCreatorFloatingTexts();
+  scheduleAutoSave();
+  toast('✍️ Text placed! Double-click anytime to edit in-place.', 'ok');
+}
+
+function renderCreatorFloatingTexts() {
+  const body = document.getElementById('creator-preview-body');
+  if (!body) return;
+  const slide = body.querySelector('.pres-slide');
+  if (!slide) return;
+
+  // Remove existing floating text elements in preview
+  slide.querySelectorAll('.ldoc-ambient-text').forEach(el => el.remove());
+
+  const curPage = pages.find(p => p.id === currentPage);
+  if (!curPage || !curPage.floating_texts) return;
+
+  curPage.floating_texts.forEach(ft => {
+    const textWrap = document.createElement('div');
+    textWrap.className = 'ldoc-ambient-text active';
+    textWrap.dataset.ftId = ft.id;
+    textWrap.style.left = `${ft.left}px`;
+    textWrap.style.top = `${ft.top}px`;
+    textWrap.style.zIndex = '25';
+
+    textWrap.innerHTML = `
+      <div class="ambient-text-hud">
+        <div class="hud-handle" title="Drag to move anywhere on slide">⋮⋮</div>
+        <select class="hud-select" onchange="updateFtProp('${ft.id}', 'font', this.value)">
+          <option value="'Cinzel Decorative', serif" ${ft.font.includes('Cinzel')?'selected':''}>👑 Royal</option>
+          <option value="'Dancing Script', cursive" ${ft.font.includes('Dancing')?'selected':''}>✍️ Hand Script</option>
+          <option value="'Playfair Display', serif" ${ft.font.includes('Playfair')?'selected':''}>📰 Editorial</option>
+          <option value="'Plus Jakarta Sans', sans-serif" ${ft.font.includes('Jakarta')?'selected':''}>⚡ Modern</option>
+          <option value="'JetBrains Mono', monospace" ${ft.font.includes('JetBrains')?'selected':''}>💻 Mono</option>
+        </select>
+        <select class="hud-select" onchange="updateFtProp('${ft.id}', 'size', this.value)">
+          <option value="16px" ${ft.size==='16px'?'selected':''}>16px</option>
+          <option value="22px" ${ft.size==='22px'?'selected':''}>22px</option>
+          <option value="32px" ${ft.size==='32px'?'selected':''}>32px</option>
+          <option value="44px" ${ft.size==='44px'?'selected':''}>44px</option>
+        </select>
+        <div class="hud-colors">
+          <span class="hud-dot" style="background:#f59e0b" onclick="updateFtProp('${ft.id}', 'color', '#f59e0b')"></span>
+          <span class="hud-dot" style="background:#38bdf8" onclick="updateFtProp('${ft.id}', 'color', '#38bdf8')"></span>
+          <span class="hud-dot" style="background:#c084fc" onclick="updateFtProp('${ft.id}', 'color', '#c084fc')"></span>
+          <span class="hud-dot" style="background:#34d399" onclick="updateFtProp('${ft.id}', 'color', '#34d399')"></span>
+          <span class="hud-dot" style="background:#ffffff" onclick="updateFtProp('${ft.id}', 'color', '#ffffff')"></span>
+        </div>
+        <button class="hud-btn hud-del" onclick="deleteFt('${ft.id}')">✕</button>
+      </div>
+      <div class="ambient-text-body" contenteditable="true" spellcheck="false" 
+           style="font-family:${ft.font};font-size:${ft.size};color:${ft.color};outline:none;min-width:60px">
+        ${escapeHtml(ft.text)}
+      </div>
+    `;
+
+    // Live typing sync
+    const bodyEl = textWrap.querySelector('.ambient-text-body');
+    bodyEl.oninput = () => {
+      ft.text = bodyEl.innerText;
+      scheduleAutoSave();
+    };
+
+    // Draggable
+    let isDragging = false, startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+    const handle = textWrap.querySelector('.hud-handle');
+    handle.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      initialLeft = textWrap.offsetLeft;
+      initialTop = textWrap.offsetTop;
+      e.stopPropagation();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const newL = Math.max(5, initialLeft + (e.clientX - startX));
+      const newT = Math.max(5, initialTop + (e.clientY - startY));
+      textWrap.style.left = `${newL}px`;
+      textWrap.style.top = `${newT}px`;
+      ft.left = newL;
+      ft.top = newT;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        scheduleAutoSave();
+      }
+    });
+
+    slide.appendChild(textWrap);
+  });
+}
+
+function updateFtProp(ftId, prop, val) {
+  const curPage = pages.find(p => p.id === currentPage);
+  if (!curPage || !curPage.floating_texts) return;
+  const ft = curPage.floating_texts.find(f => f.id === ftId);
+  if (ft) {
+    ft[prop] = val;
+    renderCreatorFloatingTexts();
+    scheduleAutoSave();
+  }
+}
+
+function deleteFt(ftId) {
+  const curPage = pages.find(p => p.id === currentPage);
+  if (!curPage || !curPage.floating_texts) return;
+  curPage.floating_texts = curPage.floating_texts.filter(f => f.id !== ftId);
+  renderCreatorFloatingTexts();
+  scheduleAutoSave();
+  toast('Deleted text annotation', 'ok');
+}
+
 function spawnCreatorAmbientText(x, y, text = 'Click to write dynamic text...') {
   const body = document.getElementById('creator-preview-body');
   if (!body) return;
@@ -3024,6 +3268,47 @@ document.addEventListener('DOMContentLoaded', () => {
     spawnCreatorAmbientText(e.clientX - r.left + body.scrollLeft, e.clientY - r.top + body.scrollTop);
   });
 });
+
+
+// ── Universal YouTube & HTML5 Video Engine ────────────────────────────────
+function parseYouTubeId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?.*v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+  return m ? m[1] : null;
+}
+
+function createVideoPlayerHtml(src, label = '', autoplay = false, height = '220px') {
+  if (!src) {
+    return `<div style="padding:22px 14px;text-align:center;color:var(--text3);font-size:12px;background:rgba(0,0,0,0.3);border-radius:12px;border:1px dashed rgba(255,255,255,0.15)">
+      🎬 Video Source Pending. Paste a YouTube URL or upload an MP4/WebM file.
+    </div>`;
+  }
+
+  const ytId = parseYouTubeId(src);
+  if (ytId) {
+    const autoParam = autoplay ? '&autoplay=1&mute=1' : '';
+    return `
+      <div class="video-embed-container" style="position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.85)">
+        <iframe src="https://www.youtube-nocookie.com/embed/${ytId}?rel=0&modestbranding=1&enablejsapi=1${autoParam}" 
+                title="${escapeHtml(label || 'YouTube 4K Stream')}"
+                style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;display:block"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+      </div>
+      ${label ? `<div style="font-size:11px;color:var(--text2);padding:6px 12px;background:rgba(0,0,0,0.6);border-radius:0 0 10px 10px;display:flex;align-items:center;gap:6px">
+        <span style="color:#ef4444">▶</span> <strong>${escapeHtml(label)}</strong>
+        <span style="margin-left:auto;color:#38bdf8;font-family:monospace">YouTube 4K Stream</span>
+      </div>` : ''}
+    `;
+  }
+
+  return `
+    <div style="border-radius:12px;overflow:hidden;background:#000;box-shadow:0 8px 24px rgba(0,0,0,0.7)">
+      <video controls playsinline ${autoplay ? 'autoplay muted' : ''} src="${escapeHtml(src)}" style="width:100%;max-height:${height};display:block"></video>
+      ${label ? `<div style="font-size:11px;color:var(--text2);padding:6px 12px;background:rgba(0,0,0,0.6)">🎬 ${escapeHtml(label)}</div>` : ''}
+    </div>
+  `;
+}
 
 function renderCreatorSlideBlock(b, container) {
   const t = b.type;
@@ -3148,19 +3433,11 @@ function renderCreatorSlideBlock(b, container) {
       ${b.src ? `<audio controls src="${escapeHtml(b.src)}" style="height:32px;max-width:180px"></audio>` : '<span style="font-size:11px;color:var(--text3)">Offline audio</span>'}
     `;
     container.appendChild(wrap);
-  } else if (t === 'web_video') {
+  } else if (t === 'web_video' || t === 'video') {
     const wrap = document.createElement('div');
-    wrap.style.cssText = 'margin:8px 0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 24px rgba(0,0,0,.5);background:#000';
-    if (b.src) {
-      wrap.innerHTML = `
-        <video controls playsinline ${b.autoplay ? 'autoplay muted' : ''} src="${escapeHtml(b.src)}" style="width:100%;max-height:220px;display:block"></video>
-        ${b.label ? `<div style="font-size:11px;color:var(--text2);padding:6px 12px;background:rgba(0,0,0,.5)">${escapeHtml(b.label)}</div>` : ''}
-      `;
-    } else {
-      wrap.style.padding = '24px';
-      wrap.style.textAlign = 'center';
-      wrap.innerHTML = '<span style="color:var(--text3);font-size:12px">🎬 Video Source Pending</span>';
-    }
+    wrap.className = 'creator-video-slide-wrap';
+    wrap.style.cssText = 'margin:12px 0;border-radius:14px;overflow:hidden;border:1.5px solid rgba(245,158,11,0.35);box-shadow:0 12px 36px rgba(0,0,0,0.75);background:#090912;position:relative;z-index:10';
+    wrap.innerHTML = createVideoPlayerHtml(b.src, b.label, b.autoplay);
     container.appendChild(wrap);
   } else if (t === '3d_model') {
     const wrap = document.createElement('div');
@@ -3563,6 +3840,214 @@ function dupBlock(id){
   p.blocks.splice(i+1,0,copy);renderBlocks();updateStats();updateCreatorLivePreview();
 }
 
+
+// ── 💾 Auto-Save Engine & Keyboard Shortcuts ─────────────────────────────
+let autoSaveTimer = null;
+let undoStack = [];
+let redoStack = [];
+
+function pushUndoSnapshot() {
+  if (undoStack.length > 30) undoStack.shift();
+  try {
+    undoStack.push(JSON.stringify({ pages, currentPage, theme: document.getElementById('m-theme')?.value }));
+    redoStack = [];
+  } catch(_) {}
+}
+
+function undo() {
+  if (!undoStack.length) { toast('Nothing to undo', 'err'); return; }
+  redoStack.push(JSON.stringify({ pages, currentPage, theme: document.getElementById('m-theme')?.value }));
+  const snap = JSON.parse(undoStack.pop());
+  pages = snap.pages || [];
+  currentPage = snap.currentPage || (pages[0] && pages[0].id);
+  if (snap.theme && document.getElementById('m-theme')) {
+    document.getElementById('m-theme').value = snap.theme;
+    applyCanvasStyles();
+  }
+  renderPageList();
+  renderBlocks();
+  updateCreatorLivePreview();
+  scheduleAutoSave();
+  toast('↩️ Undo action', 'ok');
+}
+
+function redo() {
+  if (!redoStack.length) { toast('Nothing to redo', 'err'); return; }
+  undoStack.push(JSON.stringify({ pages, currentPage, theme: document.getElementById('m-theme')?.value }));
+  const snap = JSON.parse(redoStack.pop());
+  pages = snap.pages || [];
+  currentPage = snap.currentPage || (pages[0] && pages[0].id);
+  if (snap.theme && document.getElementById('m-theme')) {
+    document.getElementById('m-theme').value = snap.theme;
+    applyCanvasStyles();
+  }
+  renderPageList();
+  renderBlocks();
+  updateCreatorLivePreview();
+  scheduleAutoSave();
+  toast('↪️ Redo action', 'ok');
+}
+
+function scheduleAutoSave(immediate = false) {
+  clearTimeout(autoSaveTimer);
+  const doSave = () => {
+    try {
+      const spec = getDocSpec();
+      localStorage.setItem('ldoc_creator_autosave', JSON.stringify(spec));
+      updateAutoSaveIndicator(true);
+    } catch(err) {
+      console.warn('Auto-save error:', err);
+    }
+  };
+  if (immediate) doSave();
+  else autoSaveTimer = setTimeout(doSave, 800);
+}
+
+function updateAutoSaveIndicator(saved = true) {
+  let badge = document.getElementById('autosave-indicator');
+  if (!badge) {
+    const tb = document.getElementById('tb');
+    if (tb) {
+      badge = document.createElement('div');
+      badge.id = 'autosave-indicator';
+      badge.className = 'autosave-badge';
+      badge.style.marginLeft = 'auto';
+      badge.innerHTML = '<span class="pulse-dot"></span> Auto-Saved';
+      tb.appendChild(badge);
+    }
+  }
+  if (badge) {
+    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    badge.innerHTML = `<span class="pulse-dot"></span> Saved ${now}`;
+    badge.title = 'Document continuously saved in your browser local storage';
+  }
+}
+
+function restoreAutoSavedWorkspace() {
+  try {
+    const saved = localStorage.getItem('ldoc_creator_autosave');
+    if (saved) {
+      const spec = JSON.parse(saved);
+      if (spec && spec.pages && spec.pages.length > 0) {
+        loadSpec(spec);
+        toast('✓ Restored your auto-saved workspace!', 'ok');
+        updateAutoSaveIndicator(true);
+        return true;
+      }
+    }
+  } catch(err) {
+    console.warn('Restore error:', err);
+  }
+  return false;
+}
+
+// ── Global Keyboard Shortcuts Setup ──
+window.addEventListener('keydown', (e) => {
+  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const cmd = isMac ? e.metaKey : e.ctrlKey;
+
+  // Ctrl + Shift + S: Instant Download .ldocx
+  if (cmd && e.shiftKey && (e.key === 'S' || e.key === 's')) {
+    e.preventDefault();
+    downloadDoc();
+    return;
+  }
+
+  // Ctrl + S: Quick Save & Build
+  if (cmd && (e.key === 'S' || e.key === 's')) {
+    e.preventDefault();
+    scheduleAutoSave(true);
+    toast('💾 Auto-Saved & Synced! (Ctrl+S)', 'ok');
+    buildDoc();
+    return;
+  }
+
+  // Ctrl + Z: Undo
+  if (cmd && (e.key === 'Z' || e.key === 'z') && !e.shiftKey) {
+    if (!e.target.isContentEditable && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      undo();
+      return;
+    }
+  }
+
+  // Ctrl + Y: Redo
+  if (cmd && (e.key === 'Y' || e.key === 'y')) {
+    if (!e.target.isContentEditable && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      redo();
+      return;
+    }
+  }
+
+  // Ctrl + P: Toggle Slide Presentation Preview
+  if (cmd && (e.key === 'P' || e.key === 'p')) {
+    e.preventDefault();
+    toggleCreatorLivePreview();
+    return;
+  }
+});
+
+
+function moveBlockUp(idx) {
+  const curPage = pages.find(p => p.id === currentPage);
+  if (!curPage || idx <= 0) return;
+  pushUndoSnapshot();
+  const temp = curPage.blocks[idx];
+  curPage.blocks[idx] = curPage.blocks[idx - 1];
+  curPage.blocks[idx - 1] = temp;
+  renderBlocks();
+  updateCreatorLivePreview();
+  scheduleAutoSave();
+}
+
+function moveBlockDown(idx) {
+  const curPage = pages.find(p => p.id === currentPage);
+  if (!curPage || idx >= curPage.blocks.length - 1) return;
+  pushUndoSnapshot();
+  const temp = curPage.blocks[idx];
+  curPage.blocks[idx] = curPage.blocks[idx + 1];
+  curPage.blocks[idx + 1] = temp;
+  renderBlocks();
+  updateCreatorLivePreview();
+  scheduleAutoSave();
+}
+
+function duplicateBlock(idx) {
+  const curPage = pages.find(p => p.id === currentPage);
+  if (!curPage || !curPage.blocks[idx]) return;
+  pushUndoSnapshot();
+  const clone = JSON.parse(JSON.stringify(curPage.blocks[idx]));
+  clone.id = bid();
+  curPage.blocks.splice(idx + 1, 0, clone);
+  renderBlocks();
+  updateCreatorLivePreview();
+  scheduleAutoSave();
+  toast('📋 Block duplicated', 'ok');
+}
+
+function quickAddBlock(type) {
+  pushUndoSnapshot();
+  addBlock(type);
+  scheduleAutoSave();
+}
+
+
+function setVideoPreset(blockId, url, label) {
+  const curPage = pages.find(p => p.id === currentPage);
+  if (!curPage) return;
+  const b = curPage.blocks.find(blk => blk.id === blockId);
+  if (b) {
+    b.src = url;
+    b.label = label;
+    b.offline_info = null;
+    renderBlocks();
+    updateCreatorLivePreview();
+    scheduleAutoSave();
+    toast(`✓ Loaded video preset: ${label}`, 'ok');
+  }
+}
+
 function renderBlocks(){
   const p=pages.find(p=>p.id===currentPage);
   document.getElementById('no-page').style.display='none';
@@ -3571,12 +4056,61 @@ function renderBlocks(){
   document.getElementById('add-bar').style.display='flex';
   document.getElementById('pg-title-inp').value=p?p.title:'';
   const area=document.getElementById('blocks-area');area.innerHTML='';
+  // Sticky Quick-Add Bar
+  const qbar = document.createElement('div');
+  qbar.className = 'quick-add-bar';
+  qbar.innerHTML = `
+    <span style="font-size:11px;font-weight:800;color:var(--gold);margin-right:4px">⚡ QUICK ADD:</span>
+    <button type="button" class="quick-add-btn" onclick="quickAddBlock('heading')">🏷️ + Heading</button>
+    <button type="button" class="quick-add-btn" onclick="quickAddBlock('paragraph')">📝 + Text</button>
+    <button type="button" class="quick-add-btn" onclick="quickAddBlock('web_video')" style="border-color:#ef4444;color:#fca5a5">🎬 + Video / YouTube</button>
+    <button type="button" class="quick-add-btn" onclick="quickAddBlock('button')" style="border-color:#f59e0b;color:#fef08a">⚡ + Button</button>
+    <button type="button" class="quick-add-btn" onclick="quickAddBlock('3d_model')" style="border-color:#a78bfa;color:#c084fc">📦 + 3D Model</button>
+    <button type="button" class="quick-add-btn" onclick="quickAddBlock('web_audio')">🎵 + Audio</button>
+    <button type="button" class="quick-add-btn" onclick="quickAddBlock('web_image')">🖼️ + Image</button>
+    <button type="button" class="quick-add-btn" onclick="quickAddBlock('table')">📊 + Table</button>
+    <button type="button" class="quick-add-btn" onclick="toggleElementsPopup()" style="background:rgba(255,255,255,0.1)">➕ All</button>
+  `;
+  area.appendChild(qbar);
+
   if(!p||!p.blocks.length){
     const e=document.createElement('div');e.style.cssText='color:var(--text3);font-size:13px;text-align:center;padding:24px';
     e.textContent='No blocks yet — use the Add Element bar below';area.appendChild(e);return;
   }
   p.blocks.forEach(b=>{
-    const div=document.createElement('div');div.className='blk';
+    const div=document.createElement('div');div.className='blk ed-block-card';
+    div.draggable = true;
+    div.dataset.blockIndex = p.blocks.indexOf(b);
+    div.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', p.blocks.indexOf(b));
+      div.classList.add('dragging');
+    });
+    div.addEventListener('dragend', () => {
+      div.classList.remove('dragging');
+      document.querySelectorAll('.ed-block-card').forEach(c => c.classList.remove('drag-over'));
+    });
+    div.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      div.classList.add('drag-over');
+    });
+    div.addEventListener('dragleave', () => {
+      div.classList.remove('drag-over');
+    });
+    div.addEventListener('drop', (e) => {
+      e.preventDefault();
+      div.classList.remove('drag-over');
+      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'), 10);
+      const toIdx = p.blocks.indexOf(b);
+      if (!isNaN(fromIdx) && fromIdx !== toIdx) {
+        pushUndoSnapshot();
+        const moved = p.blocks.splice(fromIdx, 1)[0];
+        p.blocks.splice(toIdx, 0, moved);
+        renderBlocks();
+        updateCreatorLivePreview();
+        scheduleAutoSave();
+        toast('↕️ Block reordered via drag-and-drop', 'ok');
+      }
+    });
     const tl=document.createElement('div');tl.className='blk-type';tl.textContent=b.type.replace(/_/g,' ');div.appendChild(tl);
     // actions
     const acts=document.createElement('div');acts.className='blk-actions';
@@ -3781,7 +4315,8 @@ function renderBlocks(){
       inp('Or Web Audio URL (https://…)',b.src,v=>{b.src=v;b.offline_info=null;});
       inp('Track Title / Label',b.label,v=>{b.label=v;});
 
-    } else if(b.type==='web_video'){
+    } else if(b.type==='web_video'||b.type==='video'){
+      // 🎬 Enhanced Working Video & YouTube Integration
       const upCont=document.createElement('div');
       upCont.style.cssText='margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap';
       const fileInp=document.createElement('input');
@@ -3801,6 +4336,8 @@ function renderBlocks(){
           if(!b.label) b.label=f.name;
           toast(`✓ Offline Video Embedded (${Math.round(res.size/1024)} KB)`,'ok');
           renderBlocks();
+          updateCreatorLivePreview();
+          scheduleAutoSave();
         }catch(err){toast('Video Load error: '+err.message,'err');}
       };
       upCont.appendChild(upBtn);
@@ -3809,24 +4346,51 @@ function renderBlocks(){
       if(b.offline_info){
         const badge=document.createElement('span');
         badge.style.cssText='font-size:11px;color:#34d399;font-weight:600';
-        badge.textContent='✓ Offline Video: ' + b.offline_info;
+        badge.textContent='✓ ' + b.offline_info;
         upCont.appendChild(badge);
       }
       div.appendChild(upCont);
 
-      inp('Or Web Video URL (https://…)',b.src,v=>{b.src=v;b.offline_info=null;});
-      inp('Video Title / Caption',b.label,v=>{b.label=v;});
+      // Quick Preset Stream Buttons
+      const presetRow = document.createElement('div');
+      presetRow.style.cssText = 'display:flex;gap:6px;margin:8px 0 4px 0;flex-wrap:wrap';
+      presetRow.innerHTML = `
+        <span style="font-size:10.5px;font-weight:800;color:var(--gold);line-height:22px">⚡ 4K PRESETS:</span>
+        <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://www.youtube.com/watch?v=QdBZY2fkU-0', 'Grand Theft Auto VI — Trailer 1')">GTA VI 4K</button>
+        <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://www.youtube.com/watch?v=qCkPM_f3V5c', 'GT6 Hypercar In-Engine Motion')">GT6 Supercar</button>
+        <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm', '4K In-Engine Open Video')">4K WebM</button>
+      `;
+      div.appendChild(presetRow);
+
+      const urlInp = inp('YouTube URL (https://www.youtube.com/watch?v=...) or Web Video MP4',b.src,v=>{
+        b.src=v.trim();b.offline_info=null;
+        updateCreatorLivePreview();
+        scheduleAutoSave();
+        if(videoPreviewEl) videoPreviewEl.innerHTML = createVideoPlayerHtml(b.src, b.label, false, '160px');
+      });
+
+      const lblInp = inp('Video Title / Caption',b.label,v=>{
+        b.label=v;
+        updateCreatorLivePreview();
+        scheduleAutoSave();
+      });
 
       const autoCont=document.createElement('div');
       autoCont.style.cssText='margin-top:6px;display:flex;align-items:center;gap:6px';
       const autoInp=document.createElement('input');
       autoInp.type='checkbox';autoInp.id='auto-'+b.id;autoInp.checked=b.autoplay!==false;autoInp.style.width='auto';
-      autoInp.onchange=()=>{b.autoplay=autoInp.checked;};
+      autoInp.onchange=()=>{b.autoplay=autoInp.checked;updateCreatorLivePreview();scheduleAutoSave();};
       const autoLbl=document.createElement('label');
       autoLbl.htmlFor='auto-'+b.id;autoLbl.style.cssText='font-size:11px;color:var(--accent);font-weight:700;cursor:pointer';
-      autoLbl.textContent='▶ Autoplay with audio when page arrives';
+      autoLbl.textContent='▶ Autoplay when slide arrives';
       autoCont.appendChild(autoInp);autoCont.appendChild(autoLbl);
       div.appendChild(autoCont);
+
+      // Live In-Card Video Test Player
+      const videoPreviewEl = document.createElement('div');
+      videoPreviewEl.style.cssText = 'margin-top:10px;border-radius:10px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,0.15)';
+      videoPreviewEl.innerHTML = createVideoPlayerHtml(b.src, b.label, false, '160px');
+      div.appendChild(videoPreviewEl);
 
     } else if(b.type==='iframe'){
       inp('Embed URL (https://…)',b.src,v=>{b.src=v;});
@@ -5184,8 +5748,8 @@ window.addEventListener('DOMContentLoaded', () => {
     if (pages[0] && (!pages[0].blocks || pages[0].blocks.length === 0)) {
       pages[0].blocks = [
         { id: bid(), type: 'heading', level: 1, text: 'Interactive Living Document Canvas' },
-        { id: bid(), type: 'paragraph', text: 'Welcome to LDOC Creator Studio. Click elements below or open the FX Wizard to add 3D holograms, 4K videos, fluid water ripples, or AI blocks.' },
-        { id: bid(), type: 'water_effect', value: 'Interactive Fluid Dynamics' }
+        { id: bid(), type: 'paragraph', text: 'Welcome to LDOC Creator Studio. Click elements below or use keyboard shortcuts to build dynamic presentations with 3D holograms, 4K videos, and smart actions.' },
+        { id: bid(), type: 'button', value: 'EXPLORE CAPABILITIES →', action: 'navigate', target: 'next', theme: 'royal_gold', style: { action: 'navigate', target: 'next', btn_style: 'royal_gold' } }
       ];
       renderBlocks();
       if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
