@@ -4864,6 +4864,220 @@ function onPageTitleChange(v){
   const p=pages.find(p=>p.id===currentPage);if(!p)return;
   p.title=v;renderPageList();updateCreatorLivePreview();
 }
+
+// ═════════════════════════════════════════════════════════════════════════════
+// 🎬 AUTONOMOUS DYNAMIC AD CREATIVE DIRECTOR & CLIENT-SIDE LLM CALLER
+// ═════════════════════════════════════════════════════════════════════════════
+
+window.__adDirectorSession = null;
+
+function startAdDirectorSession() {
+  window.__adDirectorSession = {
+    step: 1,
+    title: '',
+    model3d: 'car',
+    videoUrl: 'https://www.youtube.com/watch?v=QdBZY2fkU-0',
+    audioUrl: 'https://www.youtube.com/watch?v=qCkPM_f3V5c',
+    stripeUrl: 'https://buy.stripe.com/demo_ad_launch'
+  };
+  return `🎬 **Dynamic Ad Creative Director Activated!**\n\nI will guide you step-by-step to create an ultra-immersive Living Ad presentation featuring 3D holograms, 4K video teaser, looping soundtrack, and live telemetry.\n\n👉 **Question 1 of 5: Product / Campaign Vision**\nWhat is your **Brand or Product Name** (and key slogan / theme)?\n*(e.g., "Porsche 911 GT3 RS — Born for the Track" or "Quantum Audio — Feel the Sound")*`;
+}
+
+function handleAdDirectorStep(input) {
+  const s = window.__adDirectorSession;
+  if (!s) return null;
+  const val = (input || '').trim();
+
+  if (s.step === 1) {
+    s.title = val || 'Next-Gen Hypercar Launch';
+    s.step = 2;
+    return `✓ Product confirmed: **${s.title}**!\n\n👉 **Question 2 of 5: 3D Hologram Model**\nWhich 3D asset would you like in your product showcase slide?\n- 🏎️ Type \`car\` for GT Hypercar\n- ⚙️ Type \`rim\` for Titanium Rim\n- 🏆 Type \`snitch\` for Golden Artifact\n- 🔷 Type \`matrix\` for Quantum Polyhedron\n- Or paste an offline/online \`.stl\`, \`.obj\`, or \`.glb\` model link!`;
+  }
+
+  if (s.step === 2) {
+    const low = val.toLowerCase();
+    if (low.includes('rim')) s.model3d = 'wheel';
+    else if (low.includes('snitch') || low.includes('gold')) s.model3d = 'snitch';
+    else if (low.includes('matrix') || low.includes('poly')) s.model3d = 'polyhedron';
+    else if (low.includes('.stl') || low.includes('.obj') || low.includes('.glb')) s.model3d = val;
+    else s.model3d = 'car';
+    s.step = 3;
+    return `✓ 3D Hologram asset set to **${s.model3d}**!\n\n👉 **Question 3 of 5: 4K Commercial Video**\nEnter a **YouTube Video Link** for your cinematic commercial trailer.\n*(e.g. \`https://www.youtube.com/watch?v=...\` or type \`default\` to use 4K demo)*`;
+  }
+
+  if (s.step === 3) {
+    if (val && !val.toLowerCase().includes('default') && val.startsWith('http')) {
+      s.videoUrl = val;
+    }
+    s.step = 4;
+    return `✓ 4K Commercial Video link linked!\n\n👉 **Question 4 of 5: Atmospheric Looping Soundtrack**\nEnter a **YouTube Soundtrack Link** for the background audio.\n*(I will automatically configure it in **Loop Mode** so it plays continuously across the presentation!)*\n*(e.g. \`https://www.youtube.com/watch?v=...\` or type \`default\` to use Cyberpunk Synthwave)*`;
+  }
+
+  if (s.step === 4) {
+    if (val && !val.toLowerCase().includes('default') && val.startsWith('http')) {
+      s.audioUrl = val;
+    }
+    s.step = 5;
+    return `✓ Looping YouTube Soundtrack configured!\n\n👉 **Question 5 of 5: Call-to-Action & Checkout**\nEnter your **Stripe Checkout / Pre-Order URL** or VIP Form action link.\n*(e.g. \`https://buy.stripe.com/...\` or type \`default\` for instant pre-order button)*`;
+  }
+
+  if (s.step === 5) {
+    if (val && !val.toLowerCase().includes('default') && val.startsWith('http')) {
+      s.stripeUrl = val;
+    }
+    // Final Step: Synthesize Full Living Ad
+    const res = synthesizeLivingAd(s);
+    window.__adDirectorSession = null;
+    return res;
+  }
+
+  return null;
+}
+
+function synthesizeLivingAd(s) {
+  const newPages = [
+    // Page 1: Cinematic Trailer & Looping Soundtrack
+    {
+      id: 'p-ad-hero',
+      title: 'Commercial Premiere',
+      fx: 'particles',
+      blocks: [
+        { type: 'heading', level: 1, text: `${s.title.toUpperCase()} — OFFICIAL PREMIERE` },
+        { type: 'paragraph', text: `Experience the future of performance and design. Streamed in authentic 4K with dynamic atmospheric acoustic sync.` },
+        { type: 'web_video', src: s.videoUrl, label: `${s.title} — Official 4K Motion Trailer` },
+        { type: 'web_audio', src: s.audioUrl, label: `${s.title} — Atmospheric Soundtrack (Loop Mode)` },
+        { type: 'button', value: 'EXPLORE 3D SPECS & TELEMETRY →', action: 'navigate', target: 'next', theme: 'royal_gold' }
+      ]
+    },
+    // Page 2: 3D Holographic Showcase
+    {
+      id: 'p-ad-3d',
+      title: '3D Hologram & Aerodynamics',
+      fx: 'particles',
+      blocks: [
+        { type: 'heading', level: 2, text: 'AERODYNAMIC 3D SPATIAL TELEMETRY' },
+        { type: 'paragraph', text: 'Interactive real-time 3D inspection. Rotate and inspect laser-scanned surfaces with dynamic holographic shading.' },
+        { type: '3d_model', format: s.model3d.includes('.') ? 'obj' : 'preset', mesh_template: s.model3d, material_mode: 'cyber_hologram' },
+        {
+          type: 'feature_grid',
+          cards: [
+            { badge: 'POWER', title: '1,400 BHP Hybrid', desc: 'Instant electric torque vectoring with active telemetry.' },
+            { badge: 'AERO', title: 'Active DRS Wing', desc: 'Sub-millimeter laser tuned downforce dynamics.' },
+            { badge: 'CHASSIS', title: 'Carbon Monocoque', desc: 'Ultra-rigid lightweight aerospace carbon fiber structure.' }
+          ]
+        },
+        { type: 'button', value: 'CLAIM VIP ACCESS & PRE-ORDER →', action: 'navigate', target: 'next', theme: 'neon_cyan' }
+      ]
+    },
+    // Page 3: Live Telemetry Beacon & Pre-Order
+    {
+      id: 'p-ad-preorder',
+      title: 'Live Telemetry & Pre-Order Deck',
+      fx: 'water',
+      blocks: [
+        { type: 'heading', level: 2, text: 'LIVE DISPATCH & VIP ALLOCATION' },
+        { type: 'live_feed', value: `${s.title.toUpperCase()} ACTIVE TELEMETRY BEACON` },
+        {
+          type: 'form',
+          fields: [
+            { label: 'Pilot Full Name', field_type: 'input_text', placeholder: 'e.g. Alex Hunter' },
+            { label: 'VIP Direct Dispatch Email', field_type: 'input_email', placeholder: 'pilot@velocity.com' },
+            { label: 'Select Founder Edition', field_type: 'select', placeholder: 'Founder Relic Edition ($149)' }
+          ]
+        },
+        { type: 'button', value: 'CLAIM VIP ALLOCATION VIA STRIPE', action: 'link', target: s.stripeUrl, theme: 'royal_gold' }
+      ]
+    }
+  ];
+
+  if (typeof edPages !== 'undefined') {
+    edPages = newPages;
+    if (document.getElementById('ed-title')) document.getElementById('ed-title').value = s.title;
+    if (typeof edRenderPageList === 'function') edRenderPageList();
+    if (typeof edRenderBlocks === 'function') edRenderBlocks();
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  } else if (typeof pages !== 'undefined') {
+    pages = newPages;
+    if (document.getElementById('m-title')) document.getElementById('m-title').value = s.title;
+    if (typeof renderPageList === 'function') renderPageList();
+    if (typeof renderBlocks === 'function') renderBlocks();
+    if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+  }
+
+  // Play Looping Audio
+  if (typeof GlobalAudio !== 'undefined' && GlobalAudio.setTrack) {
+    GlobalAudio.setTrack(s.audioUrl, `${s.title} Soundtrack`);
+  }
+
+  return `
+    <div style="background:linear-gradient(135deg,rgba(16,185,129,0.18),rgba(56,189,248,0.12));border:1.5px solid #34d399;border-radius:12px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,0.8)">
+      <strong style="color:#34d399;font-size:14px;display:flex;align-items:center;gap:6px">
+        <span>🎉</span> Dynamic Living Ad Synthesized Successfully!
+      </strong>
+      <div style="font-size:12px;color:var(--text);margin-top:8px;line-height:1.5">
+        Synthesized <strong>"${escapeHtml(s.title)}"</strong> into <strong>3 immersive presentation slides</strong>:
+        <ul style="margin:6px 0 10px 18px;padding:0;color:var(--text2)">
+          <li>🎬 <strong>4K Motion Premiere:</strong> Embedded video commercial</li>
+          <li>🔁 <strong>Looping YouTube Soundtrack:</strong> Playing atmospherically in background loop mode</li>
+          <li>📦 <strong>3D Spatial Hologram:</strong> Interactive 3D ${escapeHtml(s.model3d)} with cyber shaders</li>
+          <li>⚡ <strong>Live Telemetry &amp; Stripe:</strong> Real-time sensor test &amp; pre-order checkout</li>
+        </ul>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn green" style="padding:6px 14px;font-size:12px;font-weight:700" onclick="switchTab('editor')">✏️ Open in Editor</button>
+        <button class="btn" style="padding:6px 14px;font-size:12px;font-weight:700;background:rgba(245,158,11,0.25);color:#fef08a" onclick="buildAndView()">▶ Launch Presentation</button>
+        <button class="btn primary" style="padding:6px 14px;font-size:12px;font-weight:700" onclick="buildAndSave()">💾 Download .ldocx</button>
+      </div>
+    </div>
+  `;
+}
+
+// ── Client-Side Direct Gemini / OpenAI API Caller ───────────────────────────
+async function callClientSideLlm(prompt, system, context, cfg) {
+  if (cfg.provider === 'gemini') {
+    const model = cfg.model || 'gemini-2.5-flash';
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cfg.apiKey}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              { text: `${system}\n\nContext:\n${context}\n\nUser Prompt:\n${prompt}` }
+            ]
+          }
+        ]
+      })
+    });
+    const j = await res.json();
+    if (j.error) throw new Error(j.error.message || 'Gemini API Error');
+    return j.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
+  } else if (cfg.provider === 'openai') {
+    const model = cfg.model || 'gpt-4o-mini';
+    const url = 'https://api.openai.com/v1/chat/completions';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cfg.apiKey}`
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: [
+          { role: 'system', content: `${system}\n\nContext:\n${context}` },
+          { role: 'user', content: prompt }
+        ]
+      })
+    });
+    const j = await res.json();
+    if (j.error) throw new Error(j.error.message || 'OpenAI API Error');
+    return j.choices?.[0]?.message?.content || 'No response generated.';
+  }
+  throw new Error('Unsupported client-side provider');
+}
+
 function renderPageList(){
   const list=document.getElementById('page-list');list.innerHTML='';
   pages.forEach((p,i)=>{

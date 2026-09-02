@@ -3065,6 +3065,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 
   <!-- Quick Action Chips -->
   <div id="ai-quick-actions" style="display:flex;gap:6px;padding:8px 12px;background:rgba(15,15,23,.95);border-bottom:1px solid var(--border);overflow-x:auto;flex-shrink:0">
+    <button class="ai-chip" onclick="executeAiQuery('Create dynamic ad for me')" style="background:linear-gradient(135deg,rgba(245,158,11,0.3),rgba(124,58,237,0.3));border-color:var(--gold);color:#fef08a;font-weight:700">🎬 Create Dynamic Ad</button>
     <button class="ai-chip" onclick="askAiGuide()">📖 Guide</button>
     <button class="ai-chip" onclick="validateDocumentSources()">🌐 Check Live Sources</button>
     <button class="ai-chip" onclick="askAiSummary()">📝 Page Summary</button>
@@ -3455,6 +3456,220 @@ function appendAiMessage(role, rawContent, isHtml=false){
   return msg;
 }
 
+
+// ═════════════════════════════════════════════════════════════════════════════
+// 🎬 AUTONOMOUS DYNAMIC AD CREATIVE DIRECTOR & CLIENT-SIDE LLM CALLER
+// ═════════════════════════════════════════════════════════════════════════════
+
+window.__adDirectorSession = null;
+
+function startAdDirectorSession() {
+  window.__adDirectorSession = {
+    step: 1,
+    title: '',
+    model3d: 'car',
+    videoUrl: 'https://www.youtube.com/watch?v=QdBZY2fkU-0',
+    audioUrl: 'https://www.youtube.com/watch?v=qCkPM_f3V5c',
+    stripeUrl: 'https://buy.stripe.com/demo_ad_launch'
+  };
+  return `🎬 **Dynamic Ad Creative Director Activated!**\n\nI will guide you step-by-step to create an ultra-immersive Living Ad presentation featuring 3D holograms, 4K video teaser, looping soundtrack, and live telemetry.\n\n👉 **Question 1 of 5: Product / Campaign Vision**\nWhat is your **Brand or Product Name** (and key slogan / theme)?\n*(e.g., "Porsche 911 GT3 RS — Born for the Track" or "Quantum Audio — Feel the Sound")*`;
+}
+
+function handleAdDirectorStep(input) {
+  const s = window.__adDirectorSession;
+  if (!s) return null;
+  const val = (input || '').trim();
+
+  if (s.step === 1) {
+    s.title = val || 'Next-Gen Hypercar Launch';
+    s.step = 2;
+    return `✓ Product confirmed: **${s.title}**!\n\n👉 **Question 2 of 5: 3D Hologram Model**\nWhich 3D asset would you like in your product showcase slide?\n- 🏎️ Type \`car\` for GT Hypercar\n- ⚙️ Type \`rim\` for Titanium Rim\n- 🏆 Type \`snitch\` for Golden Artifact\n- 🔷 Type \`matrix\` for Quantum Polyhedron\n- Or paste an offline/online \`.stl\`, \`.obj\`, or \`.glb\` model link!`;
+  }
+
+  if (s.step === 2) {
+    const low = val.toLowerCase();
+    if (low.includes('rim')) s.model3d = 'wheel';
+    else if (low.includes('snitch') || low.includes('gold')) s.model3d = 'snitch';
+    else if (low.includes('matrix') || low.includes('poly')) s.model3d = 'polyhedron';
+    else if (low.includes('.stl') || low.includes('.obj') || low.includes('.glb')) s.model3d = val;
+    else s.model3d = 'car';
+    s.step = 3;
+    return `✓ 3D Hologram asset set to **${s.model3d}**!\n\n👉 **Question 3 of 5: 4K Commercial Video**\nEnter a **YouTube Video Link** for your cinematic commercial trailer.\n*(e.g. \`https://www.youtube.com/watch?v=...\` or type \`default\` to use 4K demo)*`;
+  }
+
+  if (s.step === 3) {
+    if (val && !val.toLowerCase().includes('default') && val.startsWith('http')) {
+      s.videoUrl = val;
+    }
+    s.step = 4;
+    return `✓ 4K Commercial Video link linked!\n\n👉 **Question 4 of 5: Atmospheric Looping Soundtrack**\nEnter a **YouTube Soundtrack Link** for the background audio.\n*(I will automatically configure it in **Loop Mode** so it plays continuously across the presentation!)*\n*(e.g. \`https://www.youtube.com/watch?v=...\` or type \`default\` to use Cyberpunk Synthwave)*`;
+  }
+
+  if (s.step === 4) {
+    if (val && !val.toLowerCase().includes('default') && val.startsWith('http')) {
+      s.audioUrl = val;
+    }
+    s.step = 5;
+    return `✓ Looping YouTube Soundtrack configured!\n\n👉 **Question 5 of 5: Call-to-Action & Checkout**\nEnter your **Stripe Checkout / Pre-Order URL** or VIP Form action link.\n*(e.g. \`https://buy.stripe.com/...\` or type \`default\` for instant pre-order button)*`;
+  }
+
+  if (s.step === 5) {
+    if (val && !val.toLowerCase().includes('default') && val.startsWith('http')) {
+      s.stripeUrl = val;
+    }
+    // Final Step: Synthesize Full Living Ad
+    const res = synthesizeLivingAd(s);
+    window.__adDirectorSession = null;
+    return res;
+  }
+
+  return null;
+}
+
+function synthesizeLivingAd(s) {
+  const newPages = [
+    // Page 1: Cinematic Trailer & Looping Soundtrack
+    {
+      id: 'p-ad-hero',
+      title: 'Commercial Premiere',
+      fx: 'particles',
+      blocks: [
+        { type: 'heading', level: 1, text: `${s.title.toUpperCase()} — OFFICIAL PREMIERE` },
+        { type: 'paragraph', text: `Experience the future of performance and design. Streamed in authentic 4K with dynamic atmospheric acoustic sync.` },
+        { type: 'web_video', src: s.videoUrl, label: `${s.title} — Official 4K Motion Trailer` },
+        { type: 'web_audio', src: s.audioUrl, label: `${s.title} — Atmospheric Soundtrack (Loop Mode)` },
+        { type: 'button', value: 'EXPLORE 3D SPECS & TELEMETRY →', action: 'navigate', target: 'next', theme: 'royal_gold' }
+      ]
+    },
+    // Page 2: 3D Holographic Showcase
+    {
+      id: 'p-ad-3d',
+      title: '3D Hologram & Aerodynamics',
+      fx: 'particles',
+      blocks: [
+        { type: 'heading', level: 2, text: 'AERODYNAMIC 3D SPATIAL TELEMETRY' },
+        { type: 'paragraph', text: 'Interactive real-time 3D inspection. Rotate and inspect laser-scanned surfaces with dynamic holographic shading.' },
+        { type: '3d_model', format: s.model3d.includes('.') ? 'obj' : 'preset', mesh_template: s.model3d, material_mode: 'cyber_hologram' },
+        {
+          type: 'feature_grid',
+          cards: [
+            { badge: 'POWER', title: '1,400 BHP Hybrid', desc: 'Instant electric torque vectoring with active telemetry.' },
+            { badge: 'AERO', title: 'Active DRS Wing', desc: 'Sub-millimeter laser tuned downforce dynamics.' },
+            { badge: 'CHASSIS', title: 'Carbon Monocoque', desc: 'Ultra-rigid lightweight aerospace carbon fiber structure.' }
+          ]
+        },
+        { type: 'button', value: 'CLAIM VIP ACCESS & PRE-ORDER →', action: 'navigate', target: 'next', theme: 'neon_cyan' }
+      ]
+    },
+    // Page 3: Live Telemetry Beacon & Pre-Order
+    {
+      id: 'p-ad-preorder',
+      title: 'Live Telemetry & Pre-Order Deck',
+      fx: 'water',
+      blocks: [
+        { type: 'heading', level: 2, text: 'LIVE DISPATCH & VIP ALLOCATION' },
+        { type: 'live_feed', value: `${s.title.toUpperCase()} ACTIVE TELEMETRY BEACON` },
+        {
+          type: 'form',
+          fields: [
+            { label: 'Pilot Full Name', field_type: 'input_text', placeholder: 'e.g. Alex Hunter' },
+            { label: 'VIP Direct Dispatch Email', field_type: 'input_email', placeholder: 'pilot@velocity.com' },
+            { label: 'Select Founder Edition', field_type: 'select', placeholder: 'Founder Relic Edition ($149)' }
+          ]
+        },
+        { type: 'button', value: 'CLAIM VIP ALLOCATION VIA STRIPE', action: 'link', target: s.stripeUrl, theme: 'royal_gold' }
+      ]
+    }
+  ];
+
+  if (typeof edPages !== 'undefined') {
+    edPages = newPages;
+    if (document.getElementById('ed-title')) document.getElementById('ed-title').value = s.title;
+    if (typeof edRenderPageList === 'function') edRenderPageList();
+    if (typeof edRenderBlocks === 'function') edRenderBlocks();
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  } else if (typeof pages !== 'undefined') {
+    pages = newPages;
+    if (document.getElementById('m-title')) document.getElementById('m-title').value = s.title;
+    if (typeof renderPageList === 'function') renderPageList();
+    if (typeof renderBlocks === 'function') renderBlocks();
+    if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+  }
+
+  // Play Looping Audio
+  if (typeof GlobalAudio !== 'undefined' && GlobalAudio.setTrack) {
+    GlobalAudio.setTrack(s.audioUrl, `${s.title} Soundtrack`);
+  }
+
+  return `
+    <div style="background:linear-gradient(135deg,rgba(16,185,129,0.18),rgba(56,189,248,0.12));border:1.5px solid #34d399;border-radius:12px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,0.8)">
+      <strong style="color:#34d399;font-size:14px;display:flex;align-items:center;gap:6px">
+        <span>🎉</span> Dynamic Living Ad Synthesized Successfully!
+      </strong>
+      <div style="font-size:12px;color:var(--text);margin-top:8px;line-height:1.5">
+        Synthesized <strong>"${escapeHtml(s.title)}"</strong> into <strong>3 immersive presentation slides</strong>:
+        <ul style="margin:6px 0 10px 18px;padding:0;color:var(--text2)">
+          <li>🎬 <strong>4K Motion Premiere:</strong> Embedded video commercial</li>
+          <li>🔁 <strong>Looping YouTube Soundtrack:</strong> Playing atmospherically in background loop mode</li>
+          <li>📦 <strong>3D Spatial Hologram:</strong> Interactive 3D ${escapeHtml(s.model3d)} with cyber shaders</li>
+          <li>⚡ <strong>Live Telemetry &amp; Stripe:</strong> Real-time sensor test &amp; pre-order checkout</li>
+        </ul>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn green" style="padding:6px 14px;font-size:12px;font-weight:700" onclick="switchTab('editor')">✏️ Open in Editor</button>
+        <button class="btn" style="padding:6px 14px;font-size:12px;font-weight:700;background:rgba(245,158,11,0.25);color:#fef08a" onclick="buildAndView()">▶ Launch Presentation</button>
+        <button class="btn primary" style="padding:6px 14px;font-size:12px;font-weight:700" onclick="buildAndSave()">💾 Download .ldocx</button>
+      </div>
+    </div>
+  `;
+}
+
+// ── Client-Side Direct Gemini / OpenAI API Caller ───────────────────────────
+async function callClientSideLlm(prompt, system, context, cfg) {
+  if (cfg.provider === 'gemini') {
+    const model = cfg.model || 'gemini-2.5-flash';
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cfg.apiKey}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              { text: `${system}\n\nContext:\n${context}\n\nUser Prompt:\n${prompt}` }
+            ]
+          }
+        ]
+      })
+    });
+    const j = await res.json();
+    if (j.error) throw new Error(j.error.message || 'Gemini API Error');
+    return j.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
+  } else if (cfg.provider === 'openai') {
+    const model = cfg.model || 'gpt-4o-mini';
+    const url = 'https://api.openai.com/v1/chat/completions';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cfg.apiKey}`
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: [
+          { role: 'system', content: `${system}\n\nContext:\n${context}` },
+          { role: 'user', content: prompt }
+        ]
+      })
+    });
+    const j = await res.json();
+    if (j.error) throw new Error(j.error.message || 'OpenAI API Error');
+    return j.choices?.[0]?.message?.content || 'No response generated.';
+  }
+  throw new Error('Unsupported client-side provider');
+}
+
 function collectDocumentContext(){
   const title=document.getElementById('doc-title')?.textContent||'Untitled Document';
   const canvas=document.getElementById('page-canvas');
@@ -3479,81 +3694,117 @@ ${fullText}`;
 }
 
 async function executeAiQuery(prompt){
-  const urls = (prompt || '').match(/https?:\/\/[^\s,]+/gi) || [];
-  const isBuildRequest = /build|create|generate|make|synthesize|ldoc|presentation|slide|format|convert|video|stripe/i.test(prompt || '');
+  prompt = (prompt || '').trim();
+  if (!prompt) return;
 
-  // 🤖 Autonomous Agentic Link & Content Builder Intercept
-  if (urls.length > 0 || (isBuildRequest && (urls.length > 0 || prompt.length > 15))) {
+  // 1. Check if interactive Ad Director session is currently active
+  if (window.__adDirectorSession) {
+    appendAiMessage('user', prompt);
+    const stepResponse = handleAdDirectorStep(prompt);
+    if (stepResponse) {
+      appendAiMessage('bot', stepResponse, stepResponse.startsWith('<div'));
+      return;
+    }
+  }
+
+  // 2. Check if user requests to start a Dynamic Ad creation
+  const isAdRequest = /create.*ad|dynamic ad|make.*ad|build.*ad|ad create|commercial|campaign/i.test(prompt);
+  if (isAdRequest && !window.__adDirectorSession) {
+    const urls = prompt.match(/https?:\/\/[^\s,]+/gi) || [];
+    // If user provided multiple URLs upfront, synthesize immediately
+    if (urls.length >= 2) {
+      appendAiMessage('user', prompt);
+      const botMsg = appendAiMessage('bot', '<div class="ai-thinking" style="display:flex"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span>Synthesizing Dynamic Living Ad from your links...</span></div>', true);
+      setTimeout(() => {
+        let videoUrl = urls.find(u => u.includes('youtube') || u.includes('youtu.be')) || urls[0];
+        let audioUrl = urls.find(u => u !== videoUrl) || videoUrl;
+        let stripeUrl = urls.find(u => u.includes('stripe') || u.includes('buy')) || 'https://buy.stripe.com/demo';
+        const resHtml = synthesizeLivingAd({
+          title: prompt.replace(/https?:\/\/[^\s,]+/gi, '').replace(/create|dynamic|ad|for|me|with|online|search|via/gi, '').trim() || 'Dynamic Brand Campaign',
+          model3d: 'car',
+          videoUrl: videoUrl,
+          audioUrl: audioUrl,
+          stripeUrl: stripeUrl
+        });
+        botMsg.innerHTML = resHtml;
+      }, 500);
+      return;
+    }
+
+    // Start Interactive Step-by-Step Ad Director Questionnaire
+    appendAiMessage('user', prompt);
+    const introMsg = startAdDirectorSession();
+    appendAiMessage('bot', introMsg);
+    return;
+  }
+
+  // 3. Check for general URL ingestion
+  const urls = prompt.match(/https?:\/\/[^\s,]+/gi) || [];
+  if (urls.length > 0 && /build|synthesize|generate|create/i.test(prompt)) {
     appendAiMessage('user', prompt);
     const botMsg = appendAiMessage('bot', '<div class="ai-thinking" style="display:flex"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span>Agentic Engine analyzing links & synthesizing Living Document...</span></div>', true);
-
     setTimeout(async () => {
-      const res = await runAgenticDocumentBuilder(prompt);
-      botMsg.innerHTML = `
-        <div style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(56,189,248,0.1));border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:12px">
-          <strong style="color:#34d399;font-size:13px;display:flex;align-items:center;gap:6px">
-            <span>⚡</span> Agentic Living Document Synthesized!
-          </strong>
-          <div style="font-size:12px;color:var(--text);margin-top:6px;line-height:1.5">
-            Created <strong>"${escapeHtml(res.title)}"</strong> with <strong>${res.pageCount} interactive presentation pages</strong>:
-            <ul style="margin:6px 0 8px 16px;padding:0;color:var(--text2)">
-              ${res.ytCount ? `<li>🎬 <strong>4K Motion Stream:</strong> Generated from your video link</li>` : ''}
-              ${res.stripeCount ? `<li>💳 <strong>Stripe Checkout Action:</strong> Wired directly to your payment link</li>` : ''}
-              <li>✨ <strong>Living Shaders:</strong> Dynamic cosmic particle constellations and fluid ripples active</li>
-            </ul>
-          </div>
-          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-            <button class="btn green" style="padding:6px 12px;font-size:11.5px;font-weight:700" onclick="switchTab('editor')">✏️ Open in Editor</button>
-            <button class="btn" style="padding:6px 12px;font-size:11.5px;font-weight:700;background:rgba(245,158,11,0.25);color:#fef08a" onclick="buildAndView()">▶ View Presentation</button>
-            <button class="btn primary" style="padding:6px 12px;font-size:11.5px;font-weight:700" onclick="buildAndSave()">💾 Download .ldocx</button>
-          </div>
-        </div>
-      `;
+      let videoUrl = urls.find(u => u.includes('youtube') || u.includes('youtu.be')) || urls[0];
+      let audioUrl = urls.find(u => u !== videoUrl) || videoUrl;
+      let stripeUrl = urls.find(u => u.includes('stripe') || u.includes('buy')) || 'https://buy.stripe.com/demo';
+      const resHtml = synthesizeLivingAd({
+        title: prompt.replace(/https?:\/\/[^\s,]+/gi, '').replace(/build|create|synthesize|generate/gi, '').trim() || 'Agentic Living Document',
+        model3d: 'car',
+        videoUrl: videoUrl,
+        audioUrl: audioUrl,
+        stripeUrl: stripeUrl
+      });
+      botMsg.innerHTML = resHtml;
     }, 500);
     return;
   }
 
-  const cfg=getAiConfig();
-  if(!cfg.apiKey && cfg.provider!=='ollama'){
-    document.getElementById('ai-settings-view').style.display='flex';
-    onAiProviderChange();
-    appendAiMessage('bot', '💡 Please enter your AI API key in settings above, or paste links (YouTube, Stripe, media) to auto-build a presentation without an API key!');
+  // 4. LLM Query (Client-Side Direct Gemini / OpenAI or Backend Fallback)
+  const cfg = getAiConfig();
+  if (!cfg.apiKey && cfg.provider !== 'ollama') {
+    appendAiMessage('user', prompt);
+    appendAiMessage('bot', `💡 **Tip:** Enter a Gemini or OpenAI API Key in ⚙️ Settings for live AI intelligence, or say **"Create a dynamic ad for me"** to let the agent autonomously construct an interactive Living Ad step-by-step with 3D, videos, and looping audio!`);
     return;
   }
 
   appendAiMessage('user', prompt);
-  const botMsg=appendAiMessage('bot', '<div class="ai-thinking" style="display:flex"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span>Analyzing document &amp; thinking…</span></div>', true);
+  const botMsg = appendAiMessage('bot', '<div class="ai-thinking" style="display:flex"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span>Analyzing document & thinking…</span></div>', true);
 
-  const context=collectDocumentContext();
-  const system=`You are the intelligent LDOCX Living Document Assistant. 
-The user is viewing an interactive .ldocx document.
+  const context = collectDocumentContext();
+  const system = `You are the intelligent LDOCX Living Document Assistant and Creative Ad Director.
 Guide the user with precision, explain key concepts, highlight interactive widgets (forms, 3D models, audio, videos), and validate any live internet data mentioned in the document.
 Format your answer clearly with bullet points and bold highlights where appropriate.`;
 
-  try{
-    const res=await fetch(`${API}/ai/chat`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        provider: cfg.provider,
-        api_key: cfg.apiKey,
-        model: cfg.model,
-        prompt: prompt,
-        system: system,
-        context: context
-      })
-    });
-    const data=await res.json();
-    if(data.status==='ok' && data.answer){
-      botMsg.innerHTML=formatAiText(data.answer);
-    }else{
-      botMsg.innerHTML=`<span style="color:#f87171">⚠️ ${data.error || 'Could not generate answer'}</span>`;
+  try {
+    const answer = await callClientSideLlm(prompt, system, context, cfg);
+    botMsg.innerHTML = formatAiText(answer);
+  } catch (err) {
+    try {
+      // Fallback to backend /ai/chat if client-side direct call was blocked
+      const res = await fetch(`${API}/ai/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider: cfg.provider,
+          api_key: cfg.apiKey,
+          model: cfg.model,
+          prompt: prompt,
+          system: system,
+          context: context
+        })
+      });
+      const data = await res.json();
+      if (data.status === 'ok' && data.answer) {
+        botMsg.innerHTML = formatAiText(data.answer);
+      } else {
+        botMsg.innerHTML = `<span style="color:#f87171">⚠️ ${err.message || data.error || 'Could not generate answer'}</span>`;
+      }
+    } catch (e2) {
+      botMsg.innerHTML = `<span style="color:#f87171">⚠️ ${err.message}</span>`;
     }
-  }catch(err){
-    botMsg.innerHTML=`<span style="color:#f87171">⚠️ Request error: ${err.message}. Please check connection or AI API key.</span>`;
   }
-  const box=document.getElementById('ai-helper-messages');
-  if(box) box.scrollTop=box.scrollHeight;
+  const box = document.getElementById('ai-helper-messages');
+  if (box) box.scrollTop = box.scrollHeight;
 }
 
 
@@ -5070,7 +5321,7 @@ function renderBlockNode(node,parent){
     }
     case 'image':{make3DImageCard(assetUrl(node),(node.aria&&node.aria.alt)||node.value||'Image',parent);break;}
     case 'web_image':{make3DImageCard((node.style&&node.style.src)||'',(node.style&&node.style.alt)||node.value||'Image',parent);break;}
-        case 'audio':case 'web_audio':{
+            case 'audio':case 'web_audio':{
       const src=(node.style&&node.style.src)||node.src||assetUrl(node)||'';
       const lbl=(node.style&&node.style.label)||(node.aria&&node.aria.label)||node.value||'Atmospheric Soundtrack';
       if(src && typeof GlobalAudio !== 'undefined' && GlobalAudio.setTrack){
@@ -5078,15 +5329,39 @@ function renderBlockNode(node,parent){
       }
       const audioCard = document.createElement('div');
       audioCard.className = 'audio-card';
-      audioCard.style.cssText = 'background:rgba(20,20,38,0.92);border:1.5px solid rgba(245,158,11,0.4);border-radius:16px;padding:14px 18px;margin:16px 0;display:flex;align-items:center;gap:14px;box-shadow:0 8px 30px rgba(0,0,0,0.7);backdrop-filter:blur(10px);position:relative;z-index:10;';
-      audioCard.innerHTML = `
-        <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 16px rgba(245,158,11,0.5)">🎵</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13.5px;color:#fef08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(lbl)}</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:2px">Atmospheric High-Fidelity Audio Stream</div>
-        </div>
-        <audio controls src="${escapeHtml(src)}" style="height:34px;max-width:260px;outline:none"></audio>
-      `;
+      audioCard.style.cssText = 'background:rgba(20,20,38,0.94);border:1.5px solid rgba(245,158,11,0.45);border-radius:16px;padding:14px 18px;margin:16px 0;display:flex;align-items:center;gap:14px;box-shadow:0 8px 30px rgba(0,0,0,0.75);backdrop-filter:blur(10px);position:relative;z-index:10;';
+
+      const ytMatch = (src || '').match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?.*v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_\-]{11})/i);
+
+      if (ytMatch && ytMatch[1]) {
+        const ytId = ytMatch[1];
+        audioCard.innerHTML = `
+          <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 16px rgba(239,68,68,0.5)">▶</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13.5px;color:#fef08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(lbl)}</div>
+            <div style="font-size:11px;color:#34d399;margin-top:3px;display:flex;align-items:center;gap:5px">
+              <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399"></span>
+              <strong>YouTube Audio Stream (Loop Mode: Active)</strong>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button type="button" onclick="GlobalAudio.playTrack('${escapeHtml(src)}', '${escapeHtml(lbl)}')" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#0a0a14;border:none;padding:6px 14px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer;box-shadow:0 2px 10px rgba(245,158,11,0.4)">▶ Play Loop</button>
+            <iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=0&enablejsapi=1&loop=1&playlist=${ytId}&controls=1" style="width:140px;height:36px;border:none;border-radius:6px;outline:none;background:#000" allow="autoplay; encrypted-media"></iframe>
+          </div>
+        `;
+      } else {
+        audioCard.innerHTML = `
+          <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 16px rgba(245,158,11,0.5)">🎵</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13.5px;color:#fef08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(lbl)}</div>
+            <div style="font-size:11px;color:#34d399;margin-top:3px;display:flex;align-items:center;gap:5px">
+              <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399"></span>
+              <strong>Atmospheric Audio (Loop Mode: Active)</strong>
+            </div>
+          </div>
+          <audio controls loop src="${escapeHtml(src)}" style="height:34px;max-width:240px;outline:none"></audio>
+        `;
+      }
       parent.appendChild(audioCard);
       break;
     }
