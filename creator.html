@@ -1503,6 +1503,86 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   3-LAYER LIVING DOCUMENT ARCHITECTURE
+   Layer 1: Tactile Paper Texture Layer (Base paper grain, parchment, fiber)
+   Layer 2: FX Wizard Inner Background Layer (Whole-Page Fluid Water / Cosmic Particles)
+   Layer 3: Foreground Content Layer (First Layer: Text, Video, 3D Renders, Visuals)
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.pres-page, .pres-slide {
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate;
+}
+
+/* Layer 1: Tactile Paper Texture Layer (Directly above page base, beneath FX) */
+.page-paper-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(ellipse at 50% 30%, rgba(254, 243, 199, 0.08) 0%, rgba(180, 140, 90, 0.03) 60%, rgba(15, 15, 26, 0.2) 100%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.055'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.92;
+  transition: opacity 0.3s ease;
+}
+
+body.mode-paper .page-paper-layer {
+  background-image: 
+    radial-gradient(ellipse at 30% 20%, #fcf9f2 0%, #f5eedc 60%, #ede0c6 100%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+
+/* Layer 2: Whole-Page Living FX Canvas (Fluid Water Waves, Stardust, Particles) */
+.page-fx-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.88;
+  transition: opacity 0.4s ease;
+}
+
+body.mode-paper .page-fx-canvas {
+  mix-blend-mode: multiply;
+  opacity: 0.75;
+}
+
+/* Layer 3: Foreground Content Layer (First Layer: Text, Video, 3D Render, Visuals) */
+.page-content-layer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content-layer h1, 
+.page-content-layer h2, 
+.page-content-layer h3, 
+.page-content-layer p,
+.page-content-layer .pres-section,
+.page-content-layer .video-card,
+.page-content-layer .pres-3d-card,
+.page-content-layer .feature-grid,
+.page-content-layer .preorder-card,
+.page-content-layer .pres-btn,
+.page-content-layer .ldoc-ambient-text {
+  position: relative;
+  z-index: 10;
+}
+
 </style>
 </head>
 <body class="mode-presentation">
@@ -2472,6 +2552,207 @@ function toggleCreatorLivePreview() {
   if (isCreatorPreviewOpen) updateCreatorLivePreview();
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   WHOLE-PAGE LIVING FX ENGINE (Module 3.2 Full-Page Environmental Physics)
+   Simulates volumetric water ripple dynamics & cosmic particles across the
+   ENTIRE page inner background, sandwiched between paper texture & content.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+function initWholePageLivingFx(pageEl, canvas, fxType = 'water') {
+  if (!canvas || !pageEl) return;
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    const rect = pageEl.getBoundingClientRect();
+    const w = Math.round(rect.width) || pageEl.offsetWidth || 1200;
+    const h = Math.max(pageEl.scrollHeight, pageEl.offsetHeight, 600);
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+    }
+  }
+  resizeCanvas();
+
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(() => resizeCanvas());
+    ro.observe(pageEl);
+  }
+
+  // --- Water Waves Ripple Simulation State ---
+  let drops = [];
+  function addPageRipple(x, y, intensity = 1.0, maxRad = 130) {
+    if (drops.length > 60) drops.shift();
+    drops.push({
+      x, y,
+      radius: 4,
+      alpha: 0.95 * intensity,
+      maxRadius: maxRad,
+      speed: 2.6 * intensity
+    });
+  }
+
+  // Mouse Movement across the WHOLE page generates fluid ripples
+  let lastMove = 0;
+  pageEl.addEventListener('mousemove', (e) => {
+    if (pageEl.dataset.fx !== 'water') return;
+    const now = performance.now();
+    if (now - lastMove < 35) return;
+    lastMove = now;
+    const rect = pageEl.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    addPageRipple(x, y, 0.75, 95);
+  });
+
+  // Clicks anywhere on the page send a triple ripple shockwave
+  pageEl.addEventListener('click', (e) => {
+    if (pageEl.dataset.fx !== 'water') return;
+    const rect = pageEl.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    for (let k = 0; k < 3; k++) {
+      setTimeout(() => addPageRipple(x, y, 1.2, 140), k * 110);
+    }
+  });
+
+  // Keystrokes inside editable text radiate surface ripples from the element!
+  pageEl.addEventListener('input', (e) => {
+    if (pageEl.dataset.fx !== 'water') return;
+    const rect = pageEl.getBoundingClientRect();
+    const targetRect = e.target.getBoundingClientRect();
+    const x = (targetRect.left + targetRect.right) / 2 - rect.left;
+    const y = targetRect.bottom - rect.top;
+    addPageRipple(x, y, 1.3, 110);
+  });
+
+  // Gentle idle harmonic ripples so the page is always subtly alive
+  setInterval(() => {
+    if (pageEl.dataset.fx === 'water' && document.body.contains(pageEl) && drops.length < 5) {
+      const rx = Math.random() * (canvas.width || 1000);
+      const ry = Math.random() * (canvas.height || 600);
+      addPageRipple(rx, ry, 0.5, 80);
+    }
+  }, 2400);
+
+  // --- Particles Simulation State ---
+  const particles = [];
+  const particleCount = 45;
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * (canvas.width || 1200),
+      y: Math.random() * (canvas.height || 800),
+      vx: (Math.random() - 0.5) * 1.4,
+      vy: (Math.random() - 0.5) * 1.4,
+      radius: Math.random() * 2.8 + 0.8,
+      color: Math.random() > 0.5 ? '#f59e0b' : '#38bdf8'
+    });
+  }
+
+  let mousePos = { x: -999, y: -999 };
+  pageEl.addEventListener('mousemove', (e) => {
+    const rect = pageEl.getBoundingClientRect();
+    mousePos.x = e.clientX - rect.left;
+    mousePos.y = e.clientY - rect.top;
+  });
+
+  let isRunning = true;
+  function renderLoop() {
+    if (!isRunning || !document.body.contains(pageEl)) return;
+
+    const currentFx = pageEl.dataset.fx || fxType;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (currentFx === 'water') {
+      drops.forEach((d, i) => {
+        d.radius += d.speed;
+        d.alpha *= 0.965;
+
+        // Primary outer caustic wave (Vice City Neon Cyan)
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(56, 189, 248, ${d.alpha})`;
+        ctx.lineWidth = 2.2;
+        ctx.stroke();
+
+        // Secondary inner caustic wave (Sunset Gold)
+        if (d.radius > 16) {
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.radius * 0.65, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(245, 158, 11, ${d.alpha * 0.7})`;
+          ctx.lineWidth = 1.4;
+          ctx.stroke();
+        }
+
+        if (d.alpha < 0.015 || d.radius > d.maxRadius) {
+          drops.splice(i, 1);
+        }
+      });
+    } else if (currentFx === 'particles') {
+      particles.forEach((p, idx) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        const dist = Math.hypot(p.x - mousePos.x, p.y - mousePos.y);
+        if (dist < 100) {
+          p.x += (mousePos.x - p.x) * 0.03;
+          p.y += (mousePos.y - p.y) * 0.03;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        for (let j = idx + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const d2 = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (d2 < 85) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(245, 158, 11, ${(1 - d2 / 85) * 0.25})`;
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      });
+    }
+
+    requestAnimationFrame(renderLoop);
+  }
+
+  requestAnimationFrame(renderLoop);
+
+  pageEl.__surgeRipple = () => {
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    for (let k = 0; k < 5; k++) {
+      setTimeout(() => addPageRipple(cx + (Math.random()-0.5)*200, cy + (Math.random()-0.5)*200, 1.5, 200), k * 90);
+    }
+  };
+}
+
+function emitWholePageSurge(btn) {
+  const page = btn.closest('.pres-page') || btn.closest('.pres-slide') || document.querySelector('.pres-page.page-active') || document.querySelector('.pres-page');
+  if (page && typeof page.__surgeRipple === 'function') {
+    page.__surgeRipple();
+  }
+}
+
+function togglePageFxMode(btn) {
+  const page = btn.closest('.pres-page') || btn.closest('.pres-slide') || document.querySelector('.pres-page.page-active') || document.querySelector('.pres-page');
+  if (page) {
+    page.dataset.fx = (page.dataset.fx === 'water') ? 'particles' : 'water';
+    if (typeof showRepairBanner === 'function') {
+      showRepairBanner(`✨ Switched Whole-Page Background FX to: ${page.dataset.fx.toUpperCase()}`, true);
+    }
+  }
+}
+
 function updateCreatorLivePreview() {
   clearTimeout(creatorPreviewDebounceTimer);
   creatorPreviewDebounceTimer = setTimeout(() => {
@@ -2509,21 +2790,37 @@ function updateCreatorLivePreview() {
       const slideDiv = document.createElement('div');
       slideDiv.className = 'pres-slide' + (typeof is3DTiltActive !== 'undefined' && is3DTiltActive ? ' tilt-active' : '');
 
+      // Layer 1: Tactile Paper Texture Layer
+      const paperLayer = document.createElement('div');
+      paperLayer.className = 'page-paper-layer';
+      slideDiv.appendChild(paperLayer);
+
+      // Layer 2: Whole-Page Living FX Canvas Layer
+      const fxCanvas = document.createElement('canvas');
+      fxCanvas.className = 'page-fx-canvas';
+      fxCanvas.id = `creator-fx-canvas-${pageIdx}`;
+      slideDiv.appendChild(fxCanvas);
+
+      // Layer 3: Foreground Content Layer (First Layer: Text, Video, 3D Render)
+      const contentLayer = document.createElement('div');
+      contentLayer.className = 'page-content-layer';
+      slideDiv.appendChild(contentLayer);
+
       const titleBar = document.createElement('div');
       titleBar.className = 'pres-slide-title-bar';
       titleBar.innerHTML = `<img src="ldoc_logo.png" alt="LDOC" style="width:16px;height:16px;border-radius:4px;object-fit:contain"> <span style="flex:1">${escapeHtml(curPage.title || 'Untitled Slide')}</span> <span style="font-size:10px;opacity:0.7">SLIDE ${pageIdx}</span>`;
-      slideDiv.appendChild(titleBar);
+      contentLayer.appendChild(titleBar);
 
       if (!curPage.blocks || !curPage.blocks.length) {
         const emptyHint = document.createElement('div');
         emptyHint.style.cssText = 'padding:32px 16px;text-align:center;color:var(--text3);font-size:13px;border:1px dashed var(--border);border-radius:12px';
         emptyHint.textContent = 'This slide has no elements yet. Use the bottom element bar or FX Wizard to add content.';
-        slideDiv.appendChild(emptyHint);
+        contentLayer.appendChild(emptyHint);
       }
 
       (curPage.blocks || []).forEach(b => {
         try {
-          renderCreatorSlideBlock(b, slideDiv);
+          renderCreatorSlideBlock(b, contentLayer);
         } catch(nodeErr) {
           const errDiv = document.createElement('div');
           errDiv.className = 'ldoc-error-fallback';
@@ -2535,11 +2832,16 @@ function updateCreatorLivePreview() {
               <button class="ldoc-error-retry" onclick="updateCreatorLivePreview()">🔄 Retry</button>
             </div>
           `;
-          slideDiv.appendChild(errDiv);
+          contentLayer.appendChild(errDiv);
         }
       });
 
       body.appendChild(slideDiv);
+
+      let fxType = 'water';
+      if (JSON.stringify(curPage.blocks || []).includes('particles')) fxType = 'particles';
+      slideDiv.dataset.fx = fxType;
+      setTimeout(() => initWholePageLivingFx(slideDiv, fxCanvas, fxType), 60);
       attachCreatorTactilePaperPhysics(slideDiv);
       enableCreatorInPlaceEditing(slideDiv);
     } catch(err) {
