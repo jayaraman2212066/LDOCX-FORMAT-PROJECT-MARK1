@@ -6824,7 +6824,7 @@ function renderBlockNode(node,parent){
       `;
       parent.appendChild(card);break;
     }
-    case 'ai_live_data':case 'ai_live':{
+    case 'ai':case 'ai_live_data':case 'ai_live':{
       const prompt=node.value||text||'Live Internet Data';
       const st=node.style||{};
       const srcUrl=st.source_url||'';
