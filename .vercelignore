@@ -1,4 +1,7 @@
-# Windows executables and large binaries
+# Exclude nested npm workspace SDK from Vercel web deployment
+packages/
+
+# Windows executables and heavy binaries
 *.exe
 app/*.exe
 app/ldoc-server.exe
@@ -9,8 +12,6 @@ scratch/
 test_*.js
 *.log
 
-# Git and IDE
-.git
-.github
+# Editor configs
 .vscode
 .idea

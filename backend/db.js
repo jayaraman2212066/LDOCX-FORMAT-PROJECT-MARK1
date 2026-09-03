@@ -3,17 +3,49 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const DATA_DIR = path.join(__dirname, 'data');
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+const IS_SERVERLESS = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const DATA_DIR = IS_SERVERLESS ? path.join('/tmp', 'ldoc_data') : path.join(__dirname, 'data');
+
+try {
+  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+} catch (e) {
+  // Read-only filesystem fallback
+}
+
+// In-memory cache fallback for serverless environments
+const memStore = {};
 
 function getTablePath(table) { return path.join(DATA_DIR, `${table}.json`); }
+
 function readTable(table) {
+  if (memStore[table]) return memStore[table];
   const p = getTablePath(table);
-  if (!fs.existsSync(p)) return [];
-  try { return JSON.parse(fs.readFileSync(p, 'utf8') || '[]'); } catch (err) { return []; }
+  if (fs.existsSync(p)) {
+    try {
+      const d = JSON.parse(fs.readFileSync(p, 'utf8') || '[]');
+      memStore[table] = d;
+      return d;
+    } catch (err) {}
+  }
+  // Fallback to initial seed files if running in /tmp
+  const seedP = path.join(__dirname, 'data', `${table}.json`);
+  if (fs.existsSync(seedP)) {
+    try {
+      const d = JSON.parse(fs.readFileSync(seedP, 'utf8') || '[]');
+      memStore[table] = d;
+      return d;
+    } catch (err) {}
+  }
+  return [];
 }
+
 function writeTable(table, rows) {
-  fs.writeFileSync(getTablePath(table), JSON.stringify(rows, null, 2), 'utf8');
+  memStore[table] = rows;
+  try {
+    fs.writeFileSync(getTablePath(table), JSON.stringify(rows, null, 2), 'utf8');
+  } catch (err) {
+    // Graceful fallback on read-only environments
+  }
 }
 
 function seedTemplatesIfEmpty() {

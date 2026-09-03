@@ -70,5 +70,21 @@
     "password_hash": "f17e19b59e0f1737c39b85ee09c43cf5:58d52e7015cab2a771ae3d96b2d7bd4c1887329b505343ed0cb3999e9958fcf27aa6a56f0955972f62d6ef65827cde0228967523247274f9f0fa42f193fcf94b",
     "plan": "free",
     "created_at": "2026-09-03T06:42:28.386Z"
+  },
+  {
+    "id": "usr_31ce673de36d9dd3",
+    "email": "vip_1788419486607@ldoc-studio.com",
+    "name": "VIP Studio Creator",
+    "password_hash": "68947e3bbbe83fefefb59c199530a5ef:9da7518a98e150615642132e3ee1171619b94d1d9e0731060191e1d5cde88281bcd36648c82c7d9fbdfa47ffdba1139f97104ae448d623d7002aaefc174797d4",
+    "plan": "free",
+    "created_at": "2026-09-03T07:11:26.611Z"
+  },
+  {
+    "id": "usr_af8592d306bf01a1",
+    "email": "http_user_1788419488@ldoc-studio.com",
+    "name": "HTTP Test User",
+    "password_hash": "f73845f0ff1e358fe13ab4e635b1d082:ea9869657ca5be9b75fd49f80cbfe4d7ec338f508ff8040d3e9a4c76811ff30fe810c81bab54194ca6f7538fca36b5a9a05b87d26d6dcdf6bb738477ef68f736",
+    "plan": "free",
+    "created_at": "2026-09-03T07:11:28.709Z"
   }
 ]

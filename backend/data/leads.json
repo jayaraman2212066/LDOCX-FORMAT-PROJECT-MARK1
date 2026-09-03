@@ -1,5 +1,27 @@
 [
   {
+    "id": "lead_0cae5f17a7f43609",
+    "name": "Carl Johnson",
+    "email": "cj@grove-street.com",
+    "platform": "PS5 / Xbox Series X / PC",
+    "interest_tier": "VIP Access",
+    "source_campaign": "GTA 6 Welcome to Leonida",
+    "message": "VIP Priority Access Reservation",
+    "routed_to": "jayaramankalidasan@gmail.com",
+    "captured_at": "2026-09-03T07:11:43.806Z"
+  },
+  {
+    "id": "lead_a91ced6a8f7c3066",
+    "name": "Tommy Vercetti VIP",
+    "email": "tommy.vercetti@vicecity.com",
+    "platform": "PlayStation 5 Pro",
+    "interest_tier": "Founder Pre-Order",
+    "source_campaign": "GTA 6 Welcome to Leonida",
+    "message": "VIP Priority Access Reservation",
+    "routed_to": "jayaramankalidasan@gmail.com",
+    "captured_at": "2026-09-03T07:11:35.994Z"
+  },
+  {
     "id": "lead_ce100cd0ffb553e6",
     "name": "Carl Johnson",
     "email": "cj@grove-street.com",

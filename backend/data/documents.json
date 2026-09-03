@@ -535,5 +535,102 @@
     "version": 1,
     "created_at": "2026-09-03T06:42:28.409Z",
     "updated_at": "2026-09-03T06:42:28.409Z"
+  },
+  {
+    "id": "doc_fcb7b71e9e4b2f22",
+    "user_id": "usr_31ce673de36d9dd3",
+    "title": "Autonomous Spacecraft Specification v2",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "Autonomous Spacecraft Specification",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Propulsion",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Ion Drive"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 2,
+    "created_at": "2026-09-03T07:11:26.620Z",
+    "updated_at": "2026-09-03T07:11:26.625Z"
+  },
+  {
+    "id": "doc_f3175e187796c4d8",
+    "user_id": "usr_31ce673de36d9dd3",
+    "title": "GTA VI: Welcome to Leonida (Clone)",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "GTA VI: Welcome to Leonida",
+      "theme": "dark_gold",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Leonida Premiere",
+          "fx": "particles",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 1,
+              "text": "GRAND THEFT AUTO VI"
+            },
+            {
+              "type": "paragraph",
+              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
+            },
+            {
+              "type": "web_video",
+              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
+              "label": "4K In-Engine Motion"
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "title": "3D Spatial Hologram",
+          "fx": "none",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 2,
+              "text": "SPATIAL TELEMETRY & CHASSIS"
+            },
+            {
+              "type": "3d_model",
+              "format": "obj",
+              "mesh_template": "supercar",
+              "material_mode": "cyber_hologram"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 1,
+    "created_at": "2026-09-03T07:11:26.627Z",
+    "updated_at": "2026-09-03T07:11:26.627Z"
+  },
+  {
+    "id": "doc_b7f0c1037e2e383e",
+    "user_id": "usr_af8592d306bf01a1",
+    "title": "HTTP Cloud Living Document",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "HTTP Cloud Living Document",
+      "pages": []
+    },
+    "version": 1,
+    "created_at": "2026-09-03T07:11:28.728Z",
+    "updated_at": "2026-09-03T07:11:28.729Z"
   }
 ]
