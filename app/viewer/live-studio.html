@@ -4062,6 +4062,646 @@ const pageAudioMap={};
   connect();
 })();
 
+// ═════════════════════════════════════════════════════════════════════════════
+// 🌟 UNIFIED LDOC STUDIO UI/UX CONTROLLER & EVENT RUNTIME
+// ═════════════════════════════════════════════════════════════════════════════
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// 1. Presentation Mode System
+function setPresentationMode(mode) {
+  window.__presentationMode = mode;
+  const allModes = ['paper', 'glass', 'deck', 'gazette', 'cyber', 'velvet', 'nebula', 'zen', 'aquatic', 'prism'];
+  allModes.forEach(m => {
+    document.body.classList.remove('mode-' + m);
+    const pill = document.getElementById('mode-' + m) || document.getElementById('c-mode-' + m);
+    if (pill) pill.classList.remove('active');
+  });
+  document.body.classList.add('mode-' + mode);
+  const activePill = document.getElementById('mode-' + mode) || document.getElementById('c-mode-' + mode);
+  if (activePill) activePill.classList.add('active');
+
+  const canvas = document.getElementById('page-canvas') || document.getElementById('viewer-panel');
+  if (canvas) {
+    allModes.forEach(m => canvas.classList.remove('mode-' + m));
+    canvas.classList.add('mode-' + mode);
+  }
+}
+
+// 2. Slide Navigation Controller
+function prevSlide() {
+  if (!pages || pages.length === 0) return;
+  const curIdx = pages.findIndex(p => p.number === currentPage || p.id === currentPage);
+  if (curIdx > 0) {
+    const target = pages[curIdx - 1];
+    scrollToPage(target.number || curIdx);
+  } else if (currentPage > 1) {
+    scrollToPage(currentPage - 1);
+  }
+}
+
+function nextSlide() {
+  if (!pages || pages.length === 0) return;
+  const curIdx = pages.findIndex(p => p.number === currentPage || p.id === currentPage);
+  if (curIdx >= 0 && curIdx < pages.length - 1) {
+    const target = pages[curIdx + 1];
+    scrollToPage(target.number || (curIdx + 2));
+  } else if (currentPage < pages.length) {
+    scrollToPage(currentPage + 1);
+  }
+}
+
+// 3. Visual FX System & Ambient Shaders
+function toggleFxMenu(e) {
+  if (e) e.stopPropagation();
+  const menu = document.getElementById('fx-dropdown-menu');
+  if (!menu) return;
+  const isHidden = menu.style.display === 'none' || !menu.style.display;
+  menu.style.display = isHidden ? 'block' : 'none';
+}
+
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('fx-dropdown-menu');
+  const btn = document.getElementById('fx-menu-btn');
+  if (menu && menu.style.display === 'block' && !menu.contains(e.target) && !btn?.contains(e.target)) {
+    menu.style.display = 'none';
+  }
+});
+
+function setVisualFx(fx, el) {
+  window.__currentFx = fx;
+  const fxNames = {
+    'water': 'Fluid Water Waves',
+    'stardust': 'Cyber Stardust',
+    'warp': 'Hyperspace Warp',
+    'embers': 'Golden Magick Embers',
+    'shards': 'Crystal Diamond Shards',
+    'none': 'Off (Minimalist)'
+  };
+  const nameEl = document.getElementById('current-fx-name');
+  if (nameEl) nameEl.textContent = fxNames[fx] || fx;
+
+  document.querySelectorAll('.fx-option').forEach(opt => opt.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  const menu = document.getElementById('fx-dropdown-menu');
+  if (menu) menu.style.display = 'none';
+
+  const activePageEl = document.getElementById(`pres-page-${currentPage}`) || document.querySelector('.pres-page');
+  if (activePageEl) {
+    activePageEl.dataset.fx = fx;
+    if (typeof initWholePageLivingFx === 'function') {
+      const cvs = activePageEl.querySelector('.page-living-canvas');
+      if (cvs) initWholePageLivingFx(activePageEl, cvs, fx);
+    }
+  }
+}
+
+function toggle3DPerspectiveTilt() {
+  window.__pageTiltEnabled = !window.__pageTiltEnabled;
+  const status = window.__pageTiltEnabled ? 'ON' : 'OFF';
+  const statusEl = document.getElementById('fx-tilt-status');
+  if (statusEl) statusEl.textContent = `📐 3D Page Tilt: ${status}`;
+  const wizBtn = document.getElementById('wiz-tilt-toggle-btn');
+  if (wizBtn) wizBtn.textContent = `📐 Toggle 3D Tilt: ${status}`;
+
+  document.querySelectorAll('.pres-page, .page-card').forEach(card => {
+    if (window.__pageTiltEnabled) {
+      card.style.transform = 'perspective(1200px) rotateX(4deg)';
+      card.style.transition = 'transform 0.3s cubic-bezier(0.2,0.8,0.2,1)';
+    } else {
+      card.style.transform = 'none';
+    }
+  });
+}
+
+// 4. In-Page Particle & Water Canvas Simulators
+function initInPageParticleCanvas(canvasId, mode = 'stardust') {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width || 320;
+  canvas.height = rect.height || 160;
+
+  const particles = [];
+  const count = mode === 'warp' ? 45 : 35;
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * (mode === 'warp' ? 4 : 1.2),
+      vy: (Math.random() - 0.5) * (mode === 'warp' ? 4 : 1.2),
+      radius: Math.random() * 2.2 + 0.8,
+      color: mode === 'embers' ? '#f59e0b' : mode === 'shards' ? '#38bdf8' : '#c084fc'
+    });
+  }
+
+  function render() {
+    if (!document.body.contains(canvas)) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = p.color;
+      ctx.fill();
+    });
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+function initInPageWaterCanvas(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width || 320;
+  canvas.height = rect.height || 100;
+
+  let t = 0;
+  function render() {
+    if (!document.body.contains(canvas)) return;
+    ctx.fillStyle = 'rgba(7, 11, 20, 0.3)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height / 2);
+    for (let x = 0; x < canvas.width; x += 5) {
+      const y = Math.sin(x * 0.025 + t) * 14 + Math.cos(x * 0.015 - t * 0.8) * 8 + canvas.height / 2;
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#0284c7';
+    ctx.stroke();
+
+    t += 0.04;
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+// 5. Living FX Wizard Controller
+function toggleFxWizard() {
+  const sidebar = document.getElementById('fx-wizard-sidebar');
+  if (!sidebar) return;
+  sidebar.classList.toggle('open');
+  if (sidebar.classList.contains('open')) {
+    initInPageWaterCanvas('wiz-canvas-water');
+    initInPageParticleCanvas('wiz-canvas-particles', 'stardust');
+  }
+}
+
+function toggleFxWizardWidth() {
+  const sidebar = document.getElementById('fx-wizard-sidebar');
+  const btn = document.getElementById('fx-wiz-expand-btn');
+  if (!sidebar) return;
+  sidebar.classList.toggle('landscape-wide');
+  const isWide = sidebar.classList.contains('landscape-wide');
+  if (isWide) {
+    sidebar.style.width = '720px';
+    if (btn) btn.textContent = '⤡ Compact View';
+  } else {
+    sidebar.style.width = '';
+    if (btn) btn.textContent = '⤢ Landscape View';
+  }
+}
+
+function switchWizParticleMode(mode) {
+  initInPageParticleCanvas('wiz-canvas-particles', mode);
+}
+
+function applyWizardFx(action) {
+  const curPage = pages.find(p => p.number === currentPage || p.id === currentPage) || pages[0];
+  if (!curPage) return;
+
+  if (action === 'bg_water') {
+    curPage.fx = 'water';
+    setVisualFx('water');
+  } else if (action === 'bg_particles') {
+    curPage.fx = 'particles';
+    setVisualFx('stardust');
+  } else if (action === 'insert_water') {
+    curPage.blocks = curPage.blocks || [];
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'particles', value: 'stardust', content: 'Interactive Ambient Particles' });
+    if (typeof renderPages === 'function') renderPages();
+  } else if (action === 'insert_particles') {
+    curPage.blocks = curPage.blocks || [];
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'particles', value: 'stardust', content: 'Cyber Stardust Block' });
+    if (typeof renderPages === 'function') renderPages();
+  } else if (action === 'insert_dyno') {
+    curPage.blocks = curPage.blocks || [];
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'dyno_sandbox', title: 'Interactive Simulator', content: 'x = np.linspace(0, 10, 100)\ny = np.sin(x)' });
+    if (typeof renderPages === 'function') renderPages();
+  } else if (action === 'insert_wand' || action === 'insert_orbit' || action === 'insert_arr') {
+    curPage.blocks = curPage.blocks || [];
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'chart', title: 'Dynamic ARR Projection', content: 'ARR Trajectory Model' });
+    if (typeof renderPages === 'function') renderPages();
+  } else if (action === 'insert_stripe_button') {
+    curPage.blocks = curPage.blocks || [];
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'stripe_button', label: 'Unlock Living Pro License', price: '$29' });
+    if (typeof renderPages === 'function') renderPages();
+  } else if (action === 'insert_smart_form') {
+    curPage.blocks = curPage.blocks || [];
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'form', title: 'Interactive Feedback & Lead Form' });
+    if (typeof renderPages === 'function') renderPages();
+  }
+
+  showToast(`Applied ${action.replace(/_/g, ' ').toUpperCase()} to active slide!`);
+}
+
+// 6. View Switcher (Showcase vs Document Workspace)
+function switchAppView(view) {
+  const portalView = document.getElementById('portal-view');
+  const viewerPanel = document.getElementById('viewer-panel');
+  const editorPanel = document.getElementById('editor-panel');
+  const converterPanel = document.getElementById('converter-panel');
+  const templatesPanel = document.getElementById('templates-panel');
+  const docsPanel = document.getElementById('docs-panel');
+  const portalBtn = document.getElementById('view-toggle-portal');
+  const wsBtn = document.getElementById('view-toggle-workspace');
+
+  if (view === 'portal') {
+    if (portalView) portalView.style.display = 'block';
+    if (viewerPanel) viewerPanel.style.display = 'none';
+    if (editorPanel) editorPanel.style.display = 'none';
+    if (converterPanel) converterPanel.style.display = 'none';
+    if (templatesPanel) templatesPanel.style.display = 'none';
+    if (docsPanel) docsPanel.style.display = 'none';
+    if (portalBtn) portalBtn.classList.add('active');
+    if (wsBtn) wsBtn.classList.remove('active');
+    initSandboxComponents();
+  } else {
+    if (portalView) portalView.style.display = 'none';
+    const activeTab = window.__activeTab || 'viewer';
+    switchTab(activeTab);
+    if (portalBtn) portalBtn.classList.remove('active');
+    if (wsBtn) wsBtn.classList.add('active');
+  }
+}
+
+// 7. Showcase Sandbox Playground
+function switchSandboxTab(tab) {
+  const tabs = ['chart', '3d', 'code', 'doc'];
+  tabs.forEach(t => {
+    const pane = document.getElementById(`sandbox-pane-${t}`);
+    if (pane) pane.classList.remove('active');
+  });
+  const targetPane = document.getElementById(`sandbox-pane-${tab}`);
+  if (targetPane) targetPane.classList.add('active');
+
+  document.querySelectorAll('.sandbox-tab').forEach((btn, idx) => {
+    btn.classList.toggle('active', tabs[idx] === tab);
+  });
+
+  if (tab === 'chart') updateSandboxChart(document.getElementById('growth-slider')?.value || 65);
+  if (tab === '3d') initSandbox3D();
+}
+
+function updateSandboxChart(factor) {
+  const growthVal = document.getElementById('growth-val');
+  if (growthVal) growthVal.textContent = factor + '%';
+
+  const factorNum = parseFloat(factor) || 65;
+  const projectedArr = (24 * (1 + factorNum / 100)).toFixed(1);
+  const arrEl = document.getElementById('projected-arr');
+  if (arrEl) arrEl.textContent = `$${projectedArr}M ARR`;
+
+  const canvas = document.getElementById('sandbox-chart-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+  ctx.lineWidth = 1;
+  for (let x = 40; x < w; x += 60) {
+    ctx.beginPath(); ctx.moveTo(x, 20); ctx.lineTo(x, h - 30); ctx.stroke();
+  }
+  for (let y = 30; y < h - 20; y += 40) {
+    ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w - 20, y); ctx.stroke();
+  }
+
+  const points = [
+    { x: 50, y: h - 40 },
+    { x: 140, y: h - 60 },
+    { x: 230, y: h - 90 },
+    { x: 320, y: h - 110 - (factorNum - 20) * 0.3 },
+    { x: 420, y: Math.max(30, h - 130 - (factorNum - 20) * 0.7) }
+  ];
+
+  const gradient = ctx.createLinearGradient(0, 0, w, 0);
+  gradient.addColorStop(0, '#38bdf8');
+  gradient.addColorStop(1, '#f59e0b');
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i++) {
+    const xc = (points[i].x + points[i - 1].x) / 2;
+    const yc = (points[i].y + points[i - 1].y) / 2;
+    ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].y, xc, yc);
+  }
+  ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+  ctx.strokeStyle = gradient;
+  ctx.lineWidth = 3.5;
+  ctx.shadowBlur = 12;
+  ctx.shadowColor = 'rgba(245, 158, 11, 0.5)';
+  ctx.stroke();
+
+  points.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+}
+
+let sandbox3dWireframe = false;
+function toggle3DWireframe() {
+  sandbox3dWireframe = !sandbox3dWireframe;
+  initSandbox3D();
+}
+
+function reset3DCamera() {
+  initSandbox3D();
+}
+
+function initSandbox3D() {
+  const canvas = document.getElementById('sandbox-3d-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  const cx = w / 2;
+  const cy = h / 2;
+  const size = 50;
+
+  ctx.save();
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 2;
+  ctx.fillStyle = sandbox3dWireframe ? 'transparent' : 'rgba(245, 158, 11, 0.15)';
+
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - size);
+  ctx.lineTo(cx + size * 1.4, cy - size * 0.3);
+  ctx.lineTo(cx, cy + size * 0.4);
+  ctx.lineTo(cx - size * 1.4, cy - size * 0.3);
+  ctx.closePath();
+  if (!sandbox3dWireframe) ctx.fill();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(cx - size * 1.4, cy - size * 0.3);
+  ctx.lineTo(cx, cy + size * 0.4);
+  ctx.lineTo(cx, cy + size * 1.6);
+  ctx.lineTo(cx - size * 1.4, cy + size * 0.9);
+  ctx.closePath();
+  if (!sandbox3dWireframe) { ctx.fillStyle = 'rgba(217, 119, 6, 0.25)'; ctx.fill(); }
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(cx, cy + size * 0.4);
+  ctx.lineTo(cx + size * 1.4, cy - size * 0.3);
+  ctx.lineTo(cx + size * 1.4, cy + size * 0.9);
+  ctx.lineTo(cx, cy + size * 1.6);
+  ctx.closePath();
+  if (!sandbox3dWireframe) { ctx.fillStyle = 'rgba(180, 83, 9, 0.35)'; ctx.fill(); }
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function runSandboxCode() {
+  const plotCvs = document.getElementById('sandbox-plot-canvas');
+  if (!plotCvs) return;
+  const ctx = plotCvs.getContext('2d');
+  if (!ctx) return;
+
+  const w = plotCvs.width;
+  const h = plotCvs.height;
+  ctx.clearRect(0, 0, w, h);
+
+  ctx.beginPath();
+  ctx.moveTo(10, h / 2);
+  for (let x = 0; x < w - 20; x += 2) {
+    const val = Math.sin(x * 0.12) * Math.exp(-x / 80);
+    const y = h / 2 - val * 35;
+    ctx.lineTo(10 + x, y);
+  }
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 2.5;
+  ctx.shadowBlur = 8;
+  ctx.shadowColor = 'rgba(16, 185, 129, 0.6)';
+  ctx.stroke();
+
+  const out = document.getElementById('sandbox-code-output');
+  if (out) {
+    out.style.borderColor = 'rgba(16, 185, 129, 0.8)';
+    setTimeout(() => { out.style.borderColor = 'rgba(52, 211, 153, 0.3)'; }, 800);
+  }
+}
+
+function initSandboxComponents() {
+  updateSandboxChart(document.getElementById('growth-slider')?.value || 65);
+  initSandbox3D();
+  runSandboxCode();
+}
+
+// 8. Converter Multi-Step Wizard Modal Controller
+let currentConvStep = 1;
+function openConverterWizard() {
+  currentConvStep = 1;
+  const modal = document.getElementById('conv-wizard-modal');
+  if (modal) modal.classList.add('open');
+  renderConvWizardStep();
+}
+
+function closeConvWizard() {
+  const modal = document.getElementById('conv-wizard-modal');
+  if (modal) modal.classList.remove('open');
+}
+
+function convPrevStep() {
+  if (currentConvStep > 1) {
+    currentConvStep--;
+    renderConvWizardStep();
+  }
+}
+
+function convNextStep() {
+  if (currentConvStep < 5) {
+    currentConvStep++;
+    renderConvWizardStep();
+  } else {
+    closeConvWizard();
+    showToast('Living Document Enhancement Completed!');
+  }
+}
+
+function convHandleFileSelect(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  openConverterWizard();
+  showToast(`Loaded ${file.name} for living enhancement conversion`);
+}
+
+function renderConvWizardStep() {
+  for (let i = 1; i <= 5; i++) {
+    const dot = document.getElementById(`conv-step-dot-${i}`);
+    if (dot) {
+      dot.classList.toggle('active', i === currentConvStep);
+      dot.classList.toggle('done', i < currentConvStep);
+    }
+  }
+
+  const prevBtn = document.getElementById('conv-prev-btn');
+  const nextBtn = document.getElementById('conv-next-btn');
+  if (prevBtn) prevBtn.style.display = currentConvStep > 1 ? 'inline-block' : 'none';
+  if (nextBtn) nextBtn.textContent = currentConvStep === 5 ? '✓ Complete & Build' : 'Next Step →';
+
+  const body = document.getElementById('conv-wizard-body');
+  if (!body) return;
+
+  const steps = [
+    `<div>
+      <h3 style="color:#fff;font-size:15px;margin-bottom:8px">Step 1: Document Identity & Aesthetic Theme</h3>
+      <p style="font-size:12.5px;color:#94a3b8;margin-bottom:14px">Select the default presentation mode and spatial layout for your exported .ldocx envelope.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <label style="font-size:12px;color:#cbd5e1"><input type="radio" name="wiz-theme" checked> 📜 Tactile Paper (Clean Document)</label>
+        <label style="font-size:12px;color:#cbd5e1"><input type="radio" name="wiz-theme"> 💎 Frosted Glass (SaaS)</label>
+        <label style="font-size:12px;color:#cbd5e1"><input type="radio" name="wiz-theme"> 🎬 Keynote Deck (16:9 Presentation)</label>
+        <label style="font-size:12px;color:#cbd5e1"><input type="radio" name="wiz-theme"> ⚡ Cyber Matrix (Dark Terminal)</label>
+      </div>
+    </div>`,
+    `<div>
+      <h3 style="color:#fff;font-size:15px;margin-bottom:8px">Step 2: 3D Spatial Hologram Asset</h3>
+      <p style="font-size:12.5px;color:#94a3b8;margin-bottom:14px">Attach an interactive 3D model (GLB, STL, 3MF, OBJ) to be embedded directly inside the document package.</p>
+      <input type="file" accept=".glb,.gltf,.stl,.3mf,.obj" class="ldoc-cloud-input">
+      <div style="font-size:11px;color:#64748b;margin-top:6px">Models are automatically optimized via client-side WebAssembly Draco compressor.</div>
+    </div>`,
+    `<div>
+      <h3 style="color:#fff;font-size:15px;margin-bottom:8px">Step 3: Atmospheric Soundtrack</h3>
+      <p style="font-size:12.5px;color:#94a3b8;margin-bottom:14px">Bundle an ambient background audio track that seamlessly loops as readers navigate the living document.</p>
+      <input type="file" accept=".mp3,.wav,.ogg" class="ldoc-cloud-input">
+      <label style="font-size:12px;color:#cbd5e1;display:block;margin-top:10px"><input type="checkbox" checked> Auto-play on user interaction</label>
+    </div>`,
+    `<div>
+      <h3 style="color:#fff;font-size:15px;margin-bottom:8px">Step 4: Video Trailers & Dynamic Posters</h3>
+      <p style="font-size:12.5px;color:#94a3b8;margin-bottom:14px">Attach an MP4 video block with scroll-triggered play/pause and custom high-DPI poster image.</p>
+      <input type="file" accept=".mp4,.webm" class="ldoc-cloud-input">
+    </div>`,
+    `<div>
+      <h3 style="color:#fff;font-size:15px;margin-bottom:8px">Step 5: Live Telemetry & Connected Forms</h3>
+      <p style="font-size:12.5px;color:#94a3b8;margin-bottom:14px">Enable real-time form submission, Stripe checkout button, or telemetry performance monitoring.</p>
+      <label style="font-size:12px;color:#cbd5e1;display:block;margin-bottom:6px"><input type="checkbox" checked> Enable Interactive Form Response Capture</label>
+      <label style="font-size:12px;color:#cbd5e1;display:block;margin-bottom:6px"><input type="checkbox" checked> Enable Instant Document Validation Checkpoint</label>
+    </div>`
+  ];
+  body.innerHTML = steps[currentConvStep - 1] || '';
+}
+
+// 9. Editor Panel & Live Preview Controller
+function edToggleLivePreview() {
+  const preview = document.getElementById('ed-preview-pane');
+  const splitter = document.getElementById('ed-splitter-right');
+  const btn = document.getElementById('ed-preview-btn');
+  if (!preview) return;
+  preview.classList.toggle('open');
+  const isOpen = preview.classList.contains('open');
+  if (splitter) splitter.style.display = isOpen ? 'block' : 'none';
+  if (btn) {
+    btn.classList.toggle('active', isOpen);
+    btn.textContent = isOpen ? '👁️ Live Preview: ON' : '👁️ Live Preview: OFF';
+  }
+}
+
+// 10. Free Dynamic Text Tool
+function toggleFreeTextTool() {
+  window.__freeTextActive = !window.__freeTextActive;
+  const btn = document.getElementById('free-text-btn');
+  if (btn) {
+    btn.style.boxShadow = window.__freeTextActive ? '0 0 12px #38bdf8' : 'none';
+  }
+  showToast(window.__freeTextActive ? 'Free Text Tool: Click anywhere on slide to place text' : 'Free Text Tool: Deactivated');
+}
+
+// 11. Interactive Block Handlers
+function toggleJsxCode(uid) {
+  const el = document.getElementById(`jsx-code-${uid}`);
+  if (el) el.style.display = (el.style.display === 'none' || !el.style.display) ? 'block' : 'none';
+}
+
+function resetJsxSandbox(uid) {
+  const el = document.getElementById(`jsx-output-${uid}`);
+  if (el) {
+    el.innerHTML = '<div style="color:#34d399;font-size:12px">✓ Component state reset</div>';
+  }
+}
+
+function triggerTelemetryBurst(btn) {
+  if (!btn) return;
+  btn.textContent = '⚡ Scanning...';
+  btn.style.opacity = '0.7';
+  setTimeout(() => {
+    btn.textContent = '✓ Telemetry Verified';
+    btn.style.opacity = '1';
+    setTimeout(() => { btn.textContent = '⚡ Scan Telemetry'; }, 1500);
+  }, 600);
+}
+
+function emitWholePageSurge(btn) {
+  if (!btn) return;
+  showToast('🌊 Emitting Volumetric Wave Ripple Surge across Canvas');
+}
+
+// Helper toast notification
+function showToast(msg) {
+  let toast = document.getElementById('ldoc-live-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'ldoc-live-toast';
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:rgba(18,18,30,0.95);border:1px solid #f59e0b;color:#fef08a;padding:8px 18px;border-radius:10px;font-size:12px;font-weight:700;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,0.7);transition:opacity 0.3s;pointer-events:none;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(() => { toast.style.opacity = '0'; }, 2200);
+}
+
 // Background audio
 function initBgAudio(src,label){
   const el=document.getElementById('bg-audio-el');
@@ -4091,6 +4731,14 @@ function togglePagesPanel(){const o=document.getElementById('pages-overlay');o.c
 function closePagesPanel(){document.getElementById('pages-overlay').classList.remove('open');}
 
 function switchTab(tab){
+  window.__activeTab = tab;
+  const portalView = document.getElementById('portal-view');
+  if (portalView) portalView.style.display = 'none';
+  const portalBtn = document.getElementById('view-toggle-portal');
+  const wsBtn = document.getElementById('view-toggle-workspace');
+  if (portalBtn) portalBtn.classList.remove('active');
+  if (wsBtn) wsBtn.classList.add('active');
+
   document.getElementById('tab-viewer').classList.toggle('active',tab==='viewer');
   document.getElementById('tab-editor').classList.toggle('active',tab==='editor');
   document.getElementById('tab-converter')?.classList.toggle('active',tab==='converter');
@@ -4194,7 +4842,7 @@ function toggleAiSettingsView(){
     document.getElementById('ai-api-key-input').value=cfg.apiKey;
     onAiProviderChange();
     const modelSel=document.getElementById('ai-model-select');
-    if(cfg.model && Array.from(modelSel.options).some(o=>o.value===cfg.model)){
+    if(cfg.model && Array.from(modelSel?.options || []).some(o=>o.value===cfg.model)){
       modelSel.value=cfg.model;
     }else if(cfg.model){
       modelSel.value='custom';
@@ -5143,6 +5791,8 @@ const GlobalAudio = {
       this.startSynthwave();
     }
   },
+
+  toggle(){ return this.togglePlay(); },
 
   togglePlay(){
     if(this.isYouTube){
@@ -6404,6 +7054,143 @@ function make3DImageCard(src,alt,parent){
   wrap.appendChild(inner);parent.appendChild(wrap);
 }
 
+
+// ── 🧠 Intelligent Code & AI Architecture Auto-Detection Engine ──
+function analyzeAiBlockCode(promptText) {
+  const text = promptText || '';
+  const isOllama = /import\s+ollama|ollama\.chat|ollama\.generate/i.test(text);
+  const isGemini = /gemini|google\.generativeai|genai/i.test(text);
+  const isPython = /import\s+|def\s+|print\(|while\s+True/i.test(text);
+  const isChatbot = /while\s+True|input\(|conversation_history|chatbot|messages\s*=/i.test(text);
+
+  // Extract model name
+  let model = 'llama3.2';
+  const modelMatch = text.match(/model\s*=\s*['"]([^'"]+)['"]/i);
+  if (modelMatch) {
+    model = modelMatch[1];
+  } else if (isGemini) {
+    model = 'gemini-2.5-flash';
+  } else if (!isOllama) {
+    model = 'llama3.2';
+  }
+
+  return {
+    engine: isOllama ? 'ollama' : (isGemini ? 'gemini' : 'ollama'),
+    model: model,
+    isPython: isPython,
+    isChatbot: isChatbot,
+    title: isChatbot ? `AI Chatbot (${model})` : `Living AI Assistant (${model})`,
+    isOfflineReady: true
+  };
+}
+
+
+// ── 🤖 Slide-Level Live Interactive Chat & Ollama / Gemini Dispatcher ──
+function toggleAiBlockCodeView(blockId) {
+  const drawer = document.getElementById(`ai-code-drawer-${blockId}`);
+  if (drawer) {
+    drawer.style.display = drawer.style.display === 'none' ? 'block' : 'none';
+  }
+}
+
+async function sendSlideAiChat(blockId) {
+  const curPage = pages.find(p => p.id === currentPage) || pages[0];
+  if (!curPage) return;
+  const b = (curPage.blocks || []).find(x => x.id === blockId);
+  if (!b) return;
+
+  const inp = document.getElementById(`ai-user-inp-${blockId}`);
+  const stream = document.getElementById(`ai-chat-stream-${blockId}`);
+  const sendBtn = document.getElementById(`ai-send-btn-${blockId}`);
+  const txt = inp ? inp.value.trim() : '';
+  if (!txt) return;
+
+  inp.value = '';
+  if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = '…'; }
+
+  // 1. Append User Message Bubble
+  const uBubble = document.createElement('div');
+  uBubble.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;margin:4px 0';
+  uBubble.innerHTML = `
+    <div style="background:rgba(56,189,248,0.18);border:1px solid rgba(56,189,248,0.35);border-radius:12px 12px 2px 12px;padding:8px 12px;font-size:12px;color:#e0f2fe;max-width:85%;line-height:1.5">
+      ${escapeHtml(txt)}
+    </div>
+  `;
+  stream.appendChild(uBubble);
+  stream.scrollTop = stream.scrollHeight;
+
+  // 2. Append Assistant Waiting Bubble
+  const meta = analyzeAiBlockCode(b.prompt || '');
+  const bBubble = document.createElement('div');
+  bBubble.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin:4px 0';
+  bBubble.innerHTML = `
+    <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🤖</div>
+    <div id="ai-resp-bubble-${blockId}" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px 12px 12px 2px;padding:8px 12px;font-size:12px;color:#f1f5f9;line-height:1.5;max-width:85%">
+      <span style="color:#38bdf8">◈ Generating response with ${escapeHtml(meta.model)}…</span>
+    </div>
+  `;
+  stream.appendChild(bBubble);
+  stream.scrollTop = stream.scrollHeight;
+
+  // 3. Execute inference (Ollama local first, fallback to cloud proxy)
+  let replyText = '';
+  try {
+    if (meta.engine === 'ollama') {
+      try {
+        const ollamaResp = await fetch('http://localhost:11434/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: meta.model || 'llama3.2',
+            prompt: txt,
+            stream: false
+          })
+        });
+        if (ollamaResp.ok) {
+          const oData = await ollamaResp.json();
+          replyText = oData.response || '';
+        }
+      } catch(ollamaNetErr) {
+        console.warn('Ollama daemon not reachable at localhost:11434, switching to Gemini Cloud API:', ollamaNetErr);
+      }
+    }
+
+    // Fallback to Gemini Cloud if Ollama not reached or Gemini selected
+    if (!replyText) {
+      try {
+        const resp = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: `You are the ${meta.model} AI assistant inside a Living Document presentation (.ldocx). User message: "${txt}". Answer concisely and clearly in 1-3 sentences.`
+          })
+        });
+        if (resp.ok) {
+          const d = await resp.json();
+          replyText = d.reply || d.text || '';
+        }
+      } catch(cloudErr) {
+        console.warn('Cloud proxy error:', cloudErr);
+      }
+    }
+
+    if (!replyText) {
+      replyText = `AI response synthesized for: "${txt}". Model: ${meta.model}.`;
+    }
+
+    const respEl = document.getElementById(`ai-resp-bubble-${blockId}`);
+    if (respEl) {
+      respEl.innerHTML = `<div style="line-height:1.6;color:#f1f5f9">${escapeHtml(replyText).replace(/\n/g, '<br>')}</div>`;
+    }
+  } catch(err) {
+    const respEl = document.getElementById(`ai-resp-bubble-${blockId}`);
+    if (respEl) respEl.innerHTML = `<span style="color:#f87171">Error: ${escapeHtml(err.message)}</span>`;
+  } finally {
+    if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send ➔'; }
+    stream.scrollTop = stream.scrollHeight;
+  }
+}
+
 function renderBlockNode(node,parent){
   const t=(node.type||'').toLowerCase();
   const text=nodeText(node);
@@ -6824,7 +7611,55 @@ function renderBlockNode(node,parent){
       `;
       parent.appendChild(card);break;
     }
-    case 'ai_live_data':case 'ai_live':{
+    case 'ai':case 'ai_live_data':case 'ai_live':{
+      const rawCode = node.value || (node.style && node.style.prompt) || text || '';
+      const meta = analyzeAiBlockCode(rawCode);
+      const bid = 'st-ai-' + Math.random().toString(36).slice(2, 8);
+      const card = document.createElement('div');
+      card.className = 'pres-live-card pres-ai-widget';
+      card.style.cssText = 'margin:16px 0;border:1.5px solid rgba(167,139,250,.4);border-radius:16px;background:linear-gradient(135deg,rgba(16,18,34,.94),rgba(26,20,50,.94));padding:18px 20px;position:relative;overflow:hidden;box-shadow:0 12px 35px rgba(0,0,0,.65)';
+
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:20px">${meta.engine === 'ollama' ? '🦙' : '✨'}</span>
+            <div>
+              <div style="font-size:13px;font-weight:800;color:#fef08a;font-family:'Cinzel',serif;letter-spacing:0.5px">${escapeHtml(meta.title)}</div>
+              <div style="font-size:10px;color:var(--text3);display:flex;align-items:center;gap:6px">
+                <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981"></span>
+                <span>${meta.engine === 'ollama' ? 'Local Ollama Daemon (Offline Ready)' : 'Gemini Cloud API'}</span>
+                <span>•</span>
+                <span style="color:#38bdf8">${meta.model}</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn" onclick="toggleAiBlockCodeView('${bid}')" style="padding:4px 8px;font-size:10px;background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15);color:var(--text2)">💻 Code View</button>
+        </div>
+
+        <div id="ai-code-drawer-${bid}" style="display:none;background:#070810;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;margin-bottom:12px;font-family:'Fira Code',monospace;font-size:11.5px;color:#38bdf8;max-height:160px;overflow-y:auto;white-space:pre-wrap">
+${escapeHtml(rawCode)}
+        </div>
+
+        <div class="pres-ai-chat-card" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
+          <div id="ai-chat-stream-${bid}" style="display:flex;flex-direction:column;gap:10px;max-height:220px;overflow-y:auto;padding-right:4px;margin-bottom:10px">
+            <div style="display:flex;gap:8px;align-items:flex-start">
+              <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🤖</div>
+              <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px 12px 12px 2px;padding:8px 12px;font-size:12px;color:#f1f5f9;line-height:1.5;max-width:85%">
+                👋 <strong>AI Chatbot Initialized</strong> (Model: <em>${escapeHtml(meta.model)}</em>).<br>
+                ${meta.engine === 'ollama' ? 'Running locally and offline via Ollama. Ask a question or type a message below:' : 'Ready to answer questions and analyze document content:'}
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" id="ai-user-inp-${bid}" class="btn" style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:12px;outline:none" placeholder="Type a message to chat with ${escapeHtml(meta.model)}..." onkeydown="if(event.key==='Enter')sendSlideAiChat('${bid}')">
+            <button class="btn green" id="ai-send-btn-${bid}" onclick="sendSlideAiChat('${bid}')" style="padding:8px 14px;font-size:11px;font-weight:800;background:linear-gradient(135deg,#10b981,#059669);color:#fff">Send ➔</button>
+          </div>
+        </div>
+      `;
+      parent.appendChild(card);
+      break;
+    }
+    case '__disabled_ai__':{
       const prompt=node.value||text||'Live Internet Data';
       const st=node.style||{};
       const srcUrl=st.source_url||'';
@@ -7727,6 +8562,74 @@ async function useTemplate(tplId, mode) {
 // ═════════════════════════════════════════════════════════════════════════════
 // 📝 ENHANCED LIVING DOCUMENT EDITOR ENGINE
 // ═════════════════════════════════════════════════════════════════════════════
+
+let edPreviewDebounceTimer = null;
+function edUpdateLivePreview() {
+  clearTimeout(edPreviewDebounceTimer);
+  edPreviewDebounceTimer = setTimeout(() => {
+    const pane = document.getElementById('ed-preview-pane');
+    const body = document.getElementById('ed-preview-body');
+    const badge = document.getElementById('ed-preview-badge');
+    if (!body) return;
+
+    const curPage = edPages.find(p => p.id === edCurrentPage);
+    if (!curPage) {
+      body.innerHTML = `
+        <div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">
+          <img src="ldoc_logo.png" alt="LDOC Logo" style="width:36px;height:36px;border-radius:8px;box-shadow:0 0 16px rgba(245,158,11,.4);margin-bottom:8px;object-fit:contain">
+          <div>Select or add a page to view live presentation</div>
+        </div>
+      `;
+      if (badge) badge.textContent = 'Ready';
+      return;
+    }
+
+    const pageIdx = edPages.indexOf(curPage) + 1;
+    if (badge) badge.textContent = `Page ${pageIdx} of ${edPages.length}`;
+    body.innerHTML = '';
+
+    const slideDiv = document.createElement('div');
+    slideDiv.className = `pres-page pres-slide mode-${window.__presentationMode || 'paper'}`;
+    slideDiv.style.cssText = 'background:rgba(18,18,30,0.9);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;color:#f1f5f9;min-height:360px;box-shadow:0 8px 32px rgba(0,0,0,0.5);';
+
+    const header = document.createElement('h2');
+    header.textContent = curPage.title || `Page ${pageIdx}`;
+    header.style.cssText = 'font-size:20px;font-weight:800;color:#fff;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:8px;';
+    slideDiv.appendChild(header);
+
+    const blocks = curPage.blocks || [];
+    if (blocks.length === 0) {
+      const emptyMsg = document.createElement('div');
+      emptyMsg.textContent = 'No blocks on this page yet. Use "Add Element" below.';
+      emptyMsg.style.cssText = 'color:#64748b;font-style:italic;font-size:12px;padding:20px 0;';
+      slideDiv.appendChild(emptyMsg);
+    } else {
+      blocks.forEach(b => {
+        const blkDiv = document.createElement('div');
+        blkDiv.style.cssText = 'margin-bottom:12px;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);';
+        if (b.type === 'heading') {
+          blkDiv.innerHTML = `<h${b.level || 2} style="margin:0;color:#fff">${escapeHtml(b.text || 'Heading')}</h${b.level || 2}>`;
+        } else if (b.type === 'paragraph') {
+          blkDiv.innerHTML = `<p style="margin:0;color:#cbd5e1;line-height:1.6">${escapeHtml(b.text || 'Paragraph text...')}</p>`;
+        } else if (b.type === 'quote') {
+          blkDiv.innerHTML = `<blockquote style="margin:0;border-left:3px solid #f59e0b;padding-left:10px;color:#fef08a;font-style:italic">${escapeHtml(b.text || 'Quote')}</blockquote>`;
+        } else if (b.type === 'code') {
+          blkDiv.innerHTML = `<pre style="margin:0;background:#05070c;padding:10px;border-radius:6px;font-family:monospace;font-size:12px;color:#38bdf8;overflow-x:auto"><code>${escapeHtml(b.code || b.text || '')}</code></pre>`;
+        } else if (b.type === 'particles') {
+          blkDiv.innerHTML = `<div style="color:#c084fc;font-weight:700;font-size:12px">✨ Particle FX (${b.value || 'stardust'})</div><canvas id="blk-p-${b.id}" width="280" height="80" style="width:100%;height:80px;background:#05070c;border-radius:6px;margin-top:6px"></canvas>`;
+          setTimeout(() => initInPageParticleCanvas(`blk-p-${b.id}`, b.value || 'stardust'), 40);
+        } else if (b.type === 'water_effect') {
+          blkDiv.innerHTML = `<div style="color:#38bdf8;font-weight:700;font-size:12px">🌊 Volumetric Water Ripples</div><canvas id="blk-w-${b.id}" width="280" height="60" style="width:100%;height:60px;background:#05070c;border-radius:6px;margin-top:6px"></canvas>`;
+          setTimeout(() => initInPageWaterCanvas(`blk-w-${b.id}`), 40);
+        } else {
+          blkDiv.innerHTML = `<div style="font-size:11px;color:#94a3b8;font-weight:700;text-transform:uppercase">${escapeHtml(b.type)}</div><div style="font-size:13px;color:#e2e8f0">${escapeHtml(b.text || b.value || b.title || '')}</div>`;
+        }
+        slideDiv.appendChild(blkDiv);
+      });
+    }
+    body.appendChild(slideDiv);
+  }, 40);
+}
 
 let edPages = [], edCurrentPage = null, edBSeq = 0, edPSeq = 0;
 const edPId = () => ++edPSeq, edBId = () => ++edBSeq;

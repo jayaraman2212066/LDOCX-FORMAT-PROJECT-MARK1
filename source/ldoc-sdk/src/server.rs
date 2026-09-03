@@ -280,7 +280,14 @@ fn handle_request(
 ) -> Response<std::io::Cursor<Vec<u8>>> {
     let method = req.method().clone();
     let url = req.url().to_string();
-    let path = url.split('?').next().unwrap_or("").to_string();
+    let raw_path = url.split('?').next().unwrap_or("").to_string();
+    let path = if raw_path == "/api" {
+        "/".to_string()
+    } else if let Some(stripped) = raw_path.strip_prefix("/api/") {
+        format!("/{}", stripped)
+    } else {
+        raw_path.clone()
+    };
 
     if method == Method::Options {
         return json_response(204, "");

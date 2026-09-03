@@ -1055,6 +1055,7 @@ dependencies = [
  "tobj",
  "uuid",
  "xml-rs",
+ "zip",
 ]
 
 [[package]]
