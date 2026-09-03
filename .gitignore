@@ -20,6 +20,10 @@ redist/
 output/
 *.log
 
+# Backups & Archives
+_backups/
+*.bundle
+
 # Environment secrets and API keys
 .env
 .env.*
