@@ -2729,7 +2729,9 @@ body.mode-paper .page-fx-canvas {
 
 <!-- Native Desktop Menu Bar (Antigravity Style) -->
 <div id="desktop-menubar">
-  <div class="dmenu-brand" onclick="alert('LDOCX Document Creator v2.4.0 (Enterprise Reactive 3D Edition)')">
+  <a href="/models" class="dmenu-brand" style="text-decoration:none;margin-right:4px">🏛️ Models Hub</a>
+    <a href="/" class="dmenu-brand" style="text-decoration:none;margin-right:8px">🌐 Portal</a>
+    <div class="dmenu-brand" onclick="alert('LDOCX Document Creator v2.4.0 (Enterprise Reactive 3D Edition)')">
     <img src="ldoc_logo.png" alt="LDOC">
     <span>LDOC Creator</span>
   </div>
@@ -2890,7 +2892,7 @@ body.mode-paper .page-fx-canvas {
           <label>Dynamic Color Scheme</label>
           <select id="m-theme" onchange="applyCanvasStyles()">
             <option value="velocity">🏎️ Velocity High-Octane (Cyan/Purple)</option>
-            <option value="prophet">✨ Wizarding Gold (Gilded Amber)</option>
+            <option value="gold">✨ Executive Gold (Gilded Amber)</option>
             <option value="matrix">🌌 Neo-Tokyo Matrix (Emerald/Cobalt)</option>
             <option value="crystal">💎 Royal Crystal (Diamond Frost)</option>
             <option value="sunset">🌅 Sunset Velvet (Crimson/Coral)</option>
@@ -4122,8 +4124,10 @@ function updateCreatorLivePreview() {
             <button class="btn green" onclick="addPage()" style="padding:8px 16px;font-size:12px;font-weight:700">➕ Create First Page</button>
             <button class="btn" onclick="togglePagesDrawer()" style="padding:8px 16px;font-size:12px">📑 Pages &amp; Meta</button>
             <button class="btn" onclick="toggleElementsPopup()" style="padding:8px 16px;font-size:12px;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(245,158,11,.25));color:#fef08a">➕ Add Elements</button>
-            <button class="btn" onclick="TEMPLATES[0].build()" style="padding:8px 16px;font-size:12px;background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.3)">🔮 Quantum Qubit Sphere</button>
-            <button class="btn" onclick="TEMPLATES[1].build()" style="padding:8px 16px;font-size:12px;background:rgba(167,139,250,.15);color:#c084fc;border-color:rgba(167,139,250,.3)">🧙 Hogwarts Prophet</button>
+            <button class="btn" onclick="TEMPLATES[0].build()" style="padding:8px 16px;font-size:12px;background:rgba(16,185,129,.15);color:#10b981;border-color:rgba(16,185,129,.3)">📊 Financial Annual Report</button>
+            <button class="btn" onclick="TEMPLATES[1].build()" style="padding:8px 16px;font-size:12px;background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.3)">⚛️ Quantum Living Paper</button>
+            <button class="btn" onclick="TEMPLATES[2].build()" style="padding:8px 16px;font-size:12px;background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.3)">🚀 Series A Pitch Deck</button>
+            <button class="btn" onclick="TEMPLATES[3].build()" style="padding:8px 16px;font-size:12px;background:rgba(167,139,250,.15);color:#c084fc;border-color:rgba(167,139,250,.3)">🤖 Robotics Architecture</button>
           </div>
         </div>
       `;
@@ -5622,7 +5626,7 @@ function applyCanvasStyles(){
     root.style.setProperty('--accent', '#00f0ff');
     root.style.setProperty('--accent2', '#a855f7');
     root.style.setProperty('--border', '#3b2064');
-  } else if(theme === 'prophet'){
+  } else if(theme === 'gold'){
     root.style.setProperty('--accent', '#f59e0b');
     root.style.setProperty('--accent2', '#fef08a');
     root.style.setProperty('--border', '#452c0f');
@@ -5688,14 +5692,14 @@ async function sendAiPrompt(){
 
   aiBusy = true;
   try {
-    const isGame = txt.toLowerCase().includes('game') || txt.toLowerCase().includes('launch') || txt.toLowerCase().includes('gt6') || txt.toLowerCase().includes('speed');
+    const isGame = txt.toLowerCase().includes('game') || txt.toLowerCase().includes('launch') || txt.toLowerCase().includes('speed');
     const isNews = txt.toLowerCase().includes('news') || txt.toLowerCase().includes('prophet') || txt.toLowerCase().includes('wizard') || txt.toLowerCase().includes('magic');
     const isDeck = txt.toLowerCase().includes('deck') || txt.toLowerCase().includes('saas') || txt.toLowerCase().includes('investor') || txt.toLowerCase().includes('pitch');
 
     let title = isGame ? 'Velocity Unleashed — Next-Gen Experience' : (isNews ? 'The Daily Enchanter' : (isDeck ? 'Apex Intelligence — Investor Deck' : 'Interactive Living Presentation'));
     document.getElementById('m-title').value = title;
     if(isGame) document.getElementById('m-theme').value = 'velocity';
-    if(isNews) document.getElementById('m-theme').value = 'prophet';
+    if(isNews) document.getElementById('m-theme').value = 'gold';
     if(isDeck) document.getElementById('m-theme').value = 'matrix';
     applyCanvasStyles();
 
@@ -6310,7 +6314,7 @@ function renderBlocks(){
       presetRow.innerHTML = `
         <span style="font-size:10.5px;font-weight:800;color:var(--gold);line-height:22px">⚡ 4K PRESETS:</span>
         <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://www.youtube.com/watch?v=QdBZY2fkU-0', 'Grand Theft Auto VI — Trailer 1')">Quantum Computing Demo</button>
-        <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://www.youtube.com/watch?v=qCkPM_f3V5c', 'GT6 Hypercar In-Engine Motion')">Executive Briefing</button>
+        <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://www.youtube.com/watch?v=qCkPM_f3V5c', 'Executive Financial Briefing')">Executive Briefing</button>
         <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm', '4K In-Engine Open Video')">4K WebM</button>
       `;
       div.appendChild(presetRow);
@@ -6718,91 +6722,115 @@ function clearAll(){
 
 // ── Templates ─────────────────────────────────────────────────────────────────
 const TEMPLATES=[
-  {name:'📊 Enterprise Financial Annual Report',desc:'Reactive ARR charts, dynamic balance sheet, executive briefing, and audio walkthrough',badge:'3 pages',badgeType:'media',
-   build:()=>{
-    document.getElementById('m-theme').value = 'velocity';applyCanvasStyles();
-    loadSpec({title:'GT6: Velocity Unleashed',pages:[
-      {title:'The Reveal',blocks:[
-        {type:'heading',level:1,text:'GT6: VELOCITY UNLEASHED'},
-        {type:'paragraph',text:'The next era of hyper-realistic racing simulation.'},
-        {type:'3d_model',format:'obj',mesh_template:'polyhedron',material_mode:'cyber_hologram'},
-        {type:'web_audio',src:'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg',label:'GT6 Synthwave Adrenaline Drive'}
-      ]},
-      {title:'Track Mastery',blocks:[
-        {type:'heading',level:2,text:'ENGINEERING & DYNAMICS'},
-        {type:'feature_grid',cards:[
-          {badge:'CHASSIS',title:'Carbon Monocoque',desc:'Sub-millimeter laser scans of world hypercars.'},
-          {badge:'ENGINE',title:'Twin-Turbo Hybrid V8',desc:'1,400 BHP reactive audio synthesis.'},
-          {badge:'AERO',title:'Active DRS Wing',desc:'Dynamic downforce adjustments in real time.'}
-        ]},
-        {type:'web_video',src:'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm',label:'4K In-Engine Motion',autoplay:true}
-      ]},
-      {title:'Dispatch & Pre-Order',blocks:[
-        {type:'heading',level:2,text:'TELEMETRY & VIP ACCESS'},
-        {type:'live_feed',title:'GLOBAL PIT BEACON',sources:'Track: Nürburgring 24H | Asphalt Temp: 42°C | Grip: 99.4%'},
-        {type:'preorder',tier:'FOUNDER VELOCITY PASS',price:'$99.99',perks:'Instant Day-1 Access, Exclusive Holographic GT Car Skin'},
-        {type:'form',fields:[
-          {label:'Driver Name / Call-sign',field_type:'input_text',placeholder:'Enter callsign'},
-          {label:'VIP Email',field_type:'input_text',placeholder:'pilot@velocity.com'}
-        ]},
-        {type:'button',value:'CONFIRM PRE-ORDER',action:'submit',target:'order_confirm'}
-      ]}
-    ]});
-  }},
-  {name:'🧙‍♂️ The Daily Prophet',desc:'Enchanted newspaper with moving living portraits, 3D Snitch, and live spell feed',badge:'3 pages',badgeType:'pages',
-   build:()=>{
-    document.getElementById('m-theme').value = 'prophet';applyCanvasStyles();
-    loadSpec({title:'The Daily Prophet — LDOC Edition',pages:[
-      {title:'Breaking News',blocks:[
-        {type:'heading',level:1,text:'THE DAILY PROPHET'},
-        {type:'paragraph',text:'DIAGON ALLEY — Living Document Format conquers the wizarding world.'},
-        {type:'3d_model',format:'obj',mesh_template:'snitch',material_mode:'royal_gold'},
-        {type:'web_audio',src:'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg',label:'Diagon Alley Symphony'}
-      ]},
-      {title:'Living Blueprint',blocks:[
-        {type:'heading',level:2,text:'MAGICAL LDOC BLUEPRINT'},
-        {type:'feature_grid',cards:[
-          {badge:'CONTAINER',title:'Zero-Loss Zip Envelope',desc:'Carries raw offline 3D models and videos.'},
-          {badge:'SECURITY',title:'Signed CRC-32 Header',desc:'Tamper-proof magical enchantment verification.'},
-          {badge:'AST NODE',title:'Dynamic Tree Representation',desc:'Renders responsive interactive enchantments.'}
-        ]}
-      ]},
-      {title:'Ministry Dispatch',blocks:[
-        {type:'heading',level:2,text:'MINISTRY DISPATCH BEACON'},
-        {type:'live_feed',title:'MINISTRY ALERT NETWORK',sources:'Status: ALL CLEAR | Auror Node: Active | Floo Network: Open'},
-        {type:'form',fields:[
-          {label:'Wizard / Witch Name',field_type:'input_text',placeholder:'Name'},
-          {label:'Owl Address',field_type:'input_text',placeholder:'owl@hogwarts.ac.uk'}
-        ]},
-        {type:'button',value:'DISPATCH OWL',action:'submit',target:'dispatch_owl'}
-      ]}
-    ]});
-  }},
-  {name:'🛰️ Aerospace Mission',desc:'Deep space satellite orbital deployment dossier with 3D model & telemetry',badge:'3 pages',badgeType:'media',
-   build:()=>{
-    document.getElementById('m-theme').value = 'crystal';applyCanvasStyles();
-    loadSpec({title:'AeroSpace Vanguard X-1 Dossier',pages:[
-      {title:'Mission Brief',blocks:[
-        {type:'heading',level:1,text:'VANGUARD X-1 ORBITAL DOSSIER'},
-        {type:'paragraph',text:'Autonomous deep-space explorer spacecraft specifications and trajectory.'},
-        {type:'3d_model',format:'obj',mesh_template:'polyhedron',material_mode:'crystal_cobalt'}
-      ]},
-      {title:'Telemetry & Subsystems',blocks:[
-        {type:'heading',level:2,text:'ORBITAL SUBSYSTEM MATRIX'},
-        {type:'feature_grid',cards:[
-          {badge:'PROPULSION',title:'Ion Thruster Array',desc:'Continuous 0.25N specific impulse output.'},
-          {badge:'POWER',title:'GaAs Solar Wings',desc:'12.4 kW peak solar conversion efficiency.'},
-          {badge:'COMMS',title:'Ka-Band Phased Array',desc:'1.2 Gbps optical deep space downlink.'}
-        ]}
-      ]},
-      {title:'Launch Control',blocks:[
-        {type:'heading',level:2,text:'LIVE TELEMETRY BEACON'},
-        {type:'live_feed',title:'MISSION CLOCK BEACON',sources:'T+ 00:42:18 | Apogee: 35,786 km | Signal Lock: 99.9%'}
-      ]}
-    ]});
-  }},
-  {name:'Blank Document',desc:'Start with a single empty page',badge:'1 page',badgeType:'pages',
-   build:()=>{addPage();}}
+  {
+    name:'📊 Financial & ESG Annual Living Report',
+    desc:'Executive financial report with reactive ARR growth charts, dynamic balance sheet, and currency switcher',
+    badge:'3 pages',
+    badgeType:'media',
+    build:()=>{
+      document.getElementById('m-theme').value = 'dark_gold';
+      applyCanvasStyles();
+      loadSpec({
+        title: 'Financial & ESG Annual Living Report',
+        pages: [
+          {
+            title: 'Executive Financial Highlights',
+            blocks: [
+              { type: 'heading', level: 1, text: 'GLOBAL ENTERPRISE ANNUAL REPORT' },
+              { type: 'paragraph', text: 'Interactive corporate financial report compiled in the open .ldocx standard with reactive telemetry.' },
+              { type: 'feature_grid', cards: [
+                { badge: 'REVENUE', title: '$48.6M', desc: '+64% Year-over-Year' },
+                { badge: 'RETENTION', title: '138%', desc: 'Net Revenue Retention' },
+                { badge: 'CARBON', title: 'Net Zero', desc: 'Scope 1 & 2 Neutral' }
+              ]},
+              { type: 'button', label: 'DOWNLOAD AUDITED REPORT', action: 'export' }
+            ]
+          },
+          {
+            title: 'Revenue Trajectory & EBITDA',
+            blocks: [
+              { type: 'heading', level: 2, text: 'REACTIVE FINANCIAL MODEL' },
+              { type: 'chart', title: '2026 Quarterly Revenue ($M)', data: [8.2, 10.5, 13.8, 16.1] },
+              { type: 'code', language: 'python', code: 'import numpy as np\narr = np.array([8.2, 10.5, 13.8, 16.1])\nebitda = arr * 0.28\nprint("Projected EBITDA:", ebitda)' }
+            ]
+          }
+        ]
+      });
+    }
+  },
+  {
+    name:'⚛️ Quantum Qubit Coherence Living Paper',
+    desc:'Executable scientific publication with live Hamiltonian Python runner and 3D WebGL qubit Bloch sphere model',
+    badge:'3 pages',
+    badgeType:'pages',
+    build:()=>{
+      document.getElementById('m-theme').value = 'cyber';
+      applyCanvasStyles();
+      loadSpec({
+        title: 'Topological Qubit Coherence & Fidelity',
+        pages: [
+          {
+            title: 'Abstract & Coherence Simulation',
+            blocks: [
+              { type: 'heading', level: 1, text: 'TOPOLOGICAL QUANTUM COHERENCE' },
+              { type: 'paragraph', text: 'Published as an executable Living Document. Readers can interactively adjust Hamiltonian parameters and inspect real-time state vectors.' },
+              { type: '3d_model', format: 'obj', mesh_template: 'polyhedron', material_mode: 'cyber_hologram' },
+              { type: 'code', language: 'python', code: 'import numpy as np\nh = np.array([[1, 0], [0, -1]])\nprint("State vector fidelity: 99.982%")' }
+            ]
+          }
+        ]
+      });
+    }
+  },
+  {
+    name:'🚀 Hyperion Series A Dynamic Investor Deck',
+    desc:'High-conversion venture pitch deck with live ARR trajectory calculator and interactive architecture',
+    badge:'2 pages',
+    badgeType:'media',
+    build:()=>{
+      document.getElementById('m-theme').value = 'gold';
+      applyCanvasStyles();
+      loadSpec({
+        title: 'Hyperion Quantum Series A',
+        pages: [
+          {
+            title: 'Traction & Market Opportunity',
+            blocks: [
+              { type: 'heading', level: 1, text: 'HYPERION QUANTUM PROPULSION' },
+              { type: 'paragraph', text: 'Building next-generation spatial computing and interactive document infrastructure.' },
+              { type: 'feature_grid', cards: [
+                { badge: 'TRACTION', title: '$14.2M ARR', desc: '140% YoY Net Retention' },
+                { badge: 'USERS', title: '240k+', desc: 'Active Studio Developers' }
+              ]}
+            ]
+          }
+        ]
+      });
+    }
+  },
+  {
+    name:'🤖 Vanguard-7 Autonomous Robotics Datasheet',
+    desc:'Engineering hardware datasheet featuring 3D exploded chassis CAD, live sensor telemetry, and dynamic bill of materials',
+    badge:'2 pages',
+    badgeType:'pages',
+    build:()=>{
+      document.getElementById('m-theme').value = 'minimal';
+      applyCanvasStyles();
+      loadSpec({
+        title: 'Vanguard-7 Hardware Specification',
+        pages: [
+          {
+            title: 'Chassis Geometry & Telemetry',
+            blocks: [
+              { type: 'heading', level: 1, text: 'VANGUARD-7 HARDWARE DATASHEET' },
+              { type: '3d_model', format: 'obj', mesh_template: 'polyhedron', material_mode: 'wireframe' },
+              { type: 'paragraph', text: 'Interactive multi-axis spatial inspection with embedded telemetry streams.' }
+            ]
+          }
+        ]
+      });
+    }
+  }
 ];
 
 function loadSpec(spec){
@@ -9461,6 +9489,21 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
 </div>
+
+
+// Auto-load template from URL parameter (e.g. ?template=financial)
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const tpl = params.get('template');
+  if (tpl && typeof TEMPLATES !== 'undefined') {
+    setTimeout(() => {
+      if (tpl === 'financial' && TEMPLATES[0]) TEMPLATES[0].build();
+      else if (tpl === 'quantum' && TEMPLATES[1]) TEMPLATES[1].build();
+      else if (tpl === 'pitch' && TEMPLATES[2]) TEMPLATES[2].build();
+      else if (tpl === 'robotics' && TEMPLATES[3]) TEMPLATES[3].build();
+    }, 200);
+  }
+});
 
 </body>
 </html>

@@ -3119,7 +3119,9 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 
 <!-- Native Desktop Menu Bar (Antigravity Style) -->
 <div id="desktop-menubar">
-  <div class="dmenu-brand" onclick="alert('LDOCX Living Document Studio v2.4.0 (Enterprise Reactive 3D Edition)')">
+  <a href="/models" class="dmenu-brand" style="text-decoration:none;margin-right:4px">🏛️ Models Hub</a>
+    <a href="/" class="dmenu-brand" style="text-decoration:none;margin-right:8px">🌐 Portal</a>
+    <div class="dmenu-brand" onclick="alert('LDOCX Living Document Studio v2.4.0 (Enterprise Reactive 3D Edition)')">
     <img src="ldoc_logo.png" alt="LDOC">
     <span>LDOC Studio</span>
   </div>
@@ -4961,7 +4963,7 @@ Format your answer clearly with bullet points and bold highlights where appropri
 function askAiBuildFromLinks() {
   const userPrompt = prompt(
     "Enter your project title & links (YouTube video, Stripe checkout, 3D model, etc.):\n\nExample:\nTitle: Executive Financial Briefing | Video: https://www.youtube.com/watch?v=qCkPM_f3V5c | Stripe: https://buy.stripe.com/demo",
-    "Title: GT6 Hypercar | YouTube: https://www.youtube.com/watch?v=QdBZY2fkU-0 | Stripe: https://buy.stripe.com/"
+    "Title: Executive Briefing | Video: https://www.youtube.com/watch?v=QdBZY2fkU-0 | Stripe: https://buy.stripe.com/"
   );
   if (userPrompt && userPrompt.trim()) {
     executeAiQuery(userPrompt.trim());
@@ -5648,10 +5650,10 @@ async function loadBundledCampaign(e) {
         return;
       }
     }
-    const res = await fetch('gt6-velocity-unleashed.ldocx');
+    const res = await fetch('financial-annual-report.ldocx');
     if (res.ok) {
       const blob = await res.blob();
-      const file = new File([blob], 'gt6-velocity-unleashed.ldocx', { type: 'application/octet-stream' });
+      const file = new File([blob], 'financial-annual-report.ldocx', { type: 'application/octet-stream' });
       await loadFile(file);
       return;
     }
@@ -6804,7 +6806,7 @@ function renderBlockNode(node,parent){
     case 'preorder':case 'preorder_card':case 'cta':{
       const card=document.createElement('div');card.className='preorder-card';
       const badge=(node.style&&node.style.badge)||'FOUNDER\'S EDITION DECK';
-      const title=(node.style&&node.style.title)||node.value||'PRE-ORDER GT6: VELOCITY UNLEASHED';
+      const title=(node.style&&node.style.title)||node.value||'DOWNLOAD AUDITED FINANCIAL REPORT';
       const bonuses=(node.style&&node.style.bonuses)||[
         'Unlimited Cloud Document Vault & Real-Time Collaboration',
         'VIP Season Grid Pass (All 6 DLC Districts Included)',
@@ -7249,14 +7251,14 @@ async function deleteDoc(id){
 
 const MASTER_TEMPLATES = [
   {
-    id: 'gt6-launch',
-    category: 'game',
-    title: 'GT6: Velocity Unleashed',
+    id: 'annual-report',
+    category: 'finance',
+    title: 'Financial & ESG Annual Living Report',
     desc: 'High-octane next-gen game launch interactive ad with reactive charts, audio walkthrough, in-engine video, and live dispatch.',
     icon: '🏎️',
     bg: 'linear-gradient(135deg,#0e0b1e 0%,#2d124d 50%,#00f0ff22 100%)',
     tags: ['3D Hologram', 'Synthwave Audio', '4K Video', 'Live Telemetry', '3 Pages'],
-    docFile: 'gt6-velocity-unleashed.ldocx'
+    docFile: 'financial-annual-report.ldocx'
   },
   {
     id: 'daily-prophet',
@@ -7354,18 +7356,18 @@ async function useTemplate(tplId, mode) {
 
   // Custom rich blueprints per template
   let spec = null;
-  if (tpl.id === 'gt6-launch') {
+  if (tpl.id === 'annual-report') {
     spec = {
-      title: 'GT6: Velocity Unleashed',
+      title: 'Financial & ESG Annual Living Report',
       author: 'Polyphony Velocity Studios',
       lang: 'en',
       pages: [
         {
-          title: 'The Reveal — GT6 Velocity Unleashed',
+          title: 'The Reveal — Financial & ESG Living Report',
           blocks: [
-            { type: 'heading', level: 1, text: 'GT6: VELOCITY UNLEASHED' },
+            { type: 'heading', level: 1, text: 'GLOBAL FINANCIAL ANNUAL REPORT' },
             { type: 'paragraph', text: 'HIGH-OCTANE NEXT-GEN LIVING RACING SIMULATOR \u2022 RUNTIME V2.0' },
-            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'GT6 Synthwave Adrenaline Drive (132 BPM)' },
+            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Executive Financial Walkthrough (132 BPM)' },
             { type: '3d_model', format: 'obj', mesh_template: 'polyhedron', material_mode: 'cyber_hologram' }
           ]
         },
@@ -7458,7 +7460,7 @@ async function useTemplate(tplId, mode) {
             { type: 'live_feed', title: 'MINISTRY ALERT NETWORK', sources: 'Status: ALL CLEAR | Auror Node: Active | Floo Network: Open' },
             { type: 'form', fields: [
               { label: 'Wizard / Witch Name', field_type: 'input_text', placeholder: 'Your Name' },
-              { label: 'Owl Address', field_type: 'input_email', placeholder: 'owl@hogwarts.ac.uk' }
+              { label: 'Owl Address', field_type: 'input_email', placeholder: 'research@quantum-lab.org' }
             ]},
             { type: 'button', value: 'DISPATCH OWL', action: 'submit', target: 'dispatch_owl' }
           ]
@@ -7783,7 +7785,7 @@ function edAddBlock(type) {
   else if (type === 'ai') { b.prompt = 'Explain the aerodynamic advantages of ground-effect tunnels.'; }
   else if (type === 'form') { b.fields = [{ label: 'Full Name', field_type: 'input_text', placeholder: 'Enter your name' }, { label: 'Email Address', field_type: 'input_email', placeholder: 'Enter your email' }]; }
   else if (type === 'web_image') { b.src = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80'; b.alt = 'Living Concept Poster'; }
-  else if (type === 'web_audio') { b.src = 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg'; b.label = 'GT6 Synthwave Soundtrack (132 BPM)'; }
+  else if (type === 'web_audio') { b.src = 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg'; b.label = 'Executive Audio Walkthrough (132 BPM)'; }
   else if (type === 'web_video') { b.src = 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm'; b.label = 'In-Engine Motion Physics'; b.autoplay = true; }
   else if (type === '3d_model') { b.format = 'obj'; b.mesh_template = 'polyhedron'; b.material_mode = 'cyber_hologram'; }
   else if (type === 'feature_grid') { b.cards = [{ badge: 'ENGINEERING', title: 'Ground-Effect Aero', desc: '1,450 kg downforce at 300 km/h.' }, { badge: 'NEURAL AI', title: 'Predictive Traction', desc: '1,000 Hz real-time slip adaptation.' }, { badge: 'TELEMETRY', title: 'Low-Latency Feed', desc: 'Instant bi-directional data channel.' }]; }
@@ -8007,7 +8009,7 @@ function edRenderBlocks() {
       mk('input', 'Alt description', block.alt || '', v => { block.alt = v; });
     } else if (block.type === 'web_audio') {
       mk('input', 'Audio Stream URL (https://... MP3/OGG)', block.src || '', v => { block.src = v; });
-      mk('input', 'Track Title (e.g. GT6 Synthwave Adrenaline Drive)', block.label || '', v => { block.label = v; });
+      mk('input', 'Track Title (e.g. Executive Financial Walkthrough)', block.label || '', v => { block.label = v; });
     } else if (block.type === 'web_video') {
       mk('input', 'Video URL (https://... MP4/WebM)', block.src || '', v => { block.src = v; });
       mk('input', 'Video Label', block.label || '', v => { block.label = v; });

@@ -4,6 +4,14 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/models",
+      "destination": "/models.html"
+    },
+    {
+      "source": "/templates",
+      "destination": "/models.html"
+    },
+    {
       "source": "/studio",
       "destination": "/studio.html"
     },

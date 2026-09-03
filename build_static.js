@@ -10,6 +10,7 @@ const filesToCopy = [
   'index.html',
   'creator.html',
   'studio.html',
+  'models.html',
   'jszip.min.js',
   'ldoc_logo.png',
   'ldoc_background_image.png',
