@@ -10,7 +10,7 @@ const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || '';
 async function createCheckoutSession(params) {
   const {
     title = 'LDOC Digital Pre-Order',
-    edition = 'Founder Velocity Pass',
+    edition = 'LDOC Studio Pro Pass',
     price_cents = 9999,
     currency = 'usd',
     customer_email,
@@ -22,7 +22,7 @@ async function createCheckoutSession(params) {
   const sessionSecret = crypto.randomBytes(24).toString('hex');
 
   // If live Stripe Key is present, integration calls Stripe API directly:
-  // const stripe = require('stripe')(STRIPE_SECRET_KEY);
+  // Stripe API integration
   // const session = await stripe.checkout.sessions.create({...});
 
   const checkoutUrl = `https://checkout.stripe.com/pay/${sessionId}#token=${sessionSecret}`;
@@ -69,9 +69,9 @@ function handleWebhookEvent(payload, signature) {
       license_key: licenseKey,
       allocated_to: session.customer_email || 'vip-collector@ldoc-studio.com',
       digital_assets_unlocked: [
-        'GT6_FOUNDER_EDITION_LDOCX',
-        'SPATIAL_3D_SUPERCAR_MESH',
-        'OFFLINE_INTERACTIVE_PASSPORT'
+        'LDOC_STUDIO_PRO_LICENSE',
+        'DRACO_3D_OPTIMIZER_PASS',
+        'CLOUD_VAULT_WORKSPACE'
       ],
       timestamp: new Date().toISOString()
     };
