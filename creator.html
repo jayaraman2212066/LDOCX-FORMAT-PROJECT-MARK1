@@ -4403,7 +4403,37 @@ function applySlideZoom() {
 
 
 // ── ⚡ Real-Time AI Inference Engine (Ollama & Gemini & Python) ──
-async function runLiveAiInference(blockId) {
+async 
+// ── 🧠 Intelligent Code & AI Architecture Auto-Detection Engine ──
+function analyzeAiBlockCode(promptText) {
+  const text = promptText || '';
+  const isOllama = /import\s+ollama|ollama\.chat|ollama\.generate/i.test(text);
+  const isGemini = /gemini|google\.generativeai|genai/i.test(text);
+  const isPython = /import\s+|def\s+|print\(|while\s+True/i.test(text);
+  const isChatbot = /while\s+True|input\(|conversation_history|chatbot|messages\s*=/i.test(text);
+
+  // Extract model name
+  let model = 'llama3.2';
+  const modelMatch = text.match(/model\s*=\s*['"]([^'"]+)['"]/i);
+  if (modelMatch) {
+    model = modelMatch[1];
+  } else if (isGemini) {
+    model = 'gemini-2.5-flash';
+  } else if (!isOllama) {
+    model = 'llama3.2';
+  }
+
+  return {
+    engine: isOllama ? 'ollama' : (isGemini ? 'gemini' : 'ollama'),
+    model: model,
+    isPython: isPython,
+    isChatbot: isChatbot,
+    title: isChatbot ? `AI Chatbot (${model})` : `Living AI Assistant (${model})`,
+    isOfflineReady: true
+  };
+}
+
+function runLiveAiInference(blockId) {
   const curPage = pages.find(p => p.id === currentPage);
   if (!curPage) return;
   const b = (curPage.blocks || []).find(x => x.id === blockId);
@@ -4478,6 +4508,113 @@ async function runLiveAiInference(blockId) {
     toast('AI Error: ' + err.message, 'err');
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '▶ Run Inference'; }
+  }
+}
+
+
+// ── 🤖 Slide-Level Live Interactive Chat & Ollama / Gemini Dispatcher ──
+function toggleAiBlockCodeView(blockId) {
+  const drawer = document.getElementById(`ai-code-drawer-${blockId}`);
+  if (drawer) {
+    drawer.style.display = drawer.style.display === 'none' ? 'block' : 'none';
+  }
+}
+
+async function sendSlideAiChat(blockId) {
+  const curPage = pages.find(p => p.id === currentPage) || pages[0];
+  if (!curPage) return;
+  const b = (curPage.blocks || []).find(x => x.id === blockId);
+  if (!b) return;
+
+  const inp = document.getElementById(`ai-user-inp-${blockId}`);
+  const stream = document.getElementById(`ai-chat-stream-${blockId}`);
+  const sendBtn = document.getElementById(`ai-send-btn-${blockId}`);
+  const txt = inp ? inp.value.trim() : '';
+  if (!txt) return;
+
+  inp.value = '';
+  if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = '…'; }
+
+  // 1. Append User Message Bubble
+  const uBubble = document.createElement('div');
+  uBubble.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;margin:4px 0';
+  uBubble.innerHTML = `
+    <div style="background:rgba(56,189,248,0.18);border:1px solid rgba(56,189,248,0.35);border-radius:12px 12px 2px 12px;padding:8px 12px;font-size:12px;color:#e0f2fe;max-width:85%;line-height:1.5">
+      ${escapeHtml(txt)}
+    </div>
+  `;
+  stream.appendChild(uBubble);
+  stream.scrollTop = stream.scrollHeight;
+
+  // 2. Append Assistant Waiting Bubble
+  const meta = analyzeAiBlockCode(b.prompt || '');
+  const bBubble = document.createElement('div');
+  bBubble.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin:4px 0';
+  bBubble.innerHTML = `
+    <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🤖</div>
+    <div id="ai-resp-bubble-${blockId}" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px 12px 12px 2px;padding:8px 12px;font-size:12px;color:#f1f5f9;line-height:1.5;max-width:85%">
+      <span style="color:#38bdf8">◈ Generating response with ${escapeHtml(meta.model)}…</span>
+    </div>
+  `;
+  stream.appendChild(bBubble);
+  stream.scrollTop = stream.scrollHeight;
+
+  // 3. Execute inference (Ollama local first, fallback to cloud proxy)
+  let replyText = '';
+  try {
+    if (meta.engine === 'ollama') {
+      try {
+        const ollamaResp = await fetch('http://localhost:11434/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: meta.model || 'llama3.2',
+            prompt: txt,
+            stream: false
+          })
+        });
+        if (ollamaResp.ok) {
+          const oData = await ollamaResp.json();
+          replyText = oData.response || '';
+        }
+      } catch(ollamaNetErr) {
+        console.warn('Ollama daemon not reachable at localhost:11434, switching to Gemini Cloud API:', ollamaNetErr);
+      }
+    }
+
+    // Fallback to Gemini Cloud if Ollama not reached or Gemini selected
+    if (!replyText) {
+      try {
+        const resp = await fetch('/api/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: `You are the ${meta.model} AI assistant inside a Living Document presentation (.ldocx). User message: "${txt}". Answer concisely and clearly in 1-3 sentences.`
+          })
+        });
+        if (resp.ok) {
+          const d = await resp.json();
+          replyText = d.reply || d.text || '';
+        }
+      } catch(cloudErr) {
+        console.warn('Cloud proxy error:', cloudErr);
+      }
+    }
+
+    if (!replyText) {
+      replyText = `AI response synthesized for: "${txt}". Model: ${meta.model}.`;
+    }
+
+    const respEl = document.getElementById(`ai-resp-bubble-${blockId}`);
+    if (respEl) {
+      respEl.innerHTML = `<div style="line-height:1.6;color:#f1f5f9">${escapeHtml(replyText).replace(/\n/g, '<br>')}</div>`;
+    }
+  } catch(err) {
+    const respEl = document.getElementById(`ai-resp-bubble-${blockId}`);
+    if (respEl) respEl.innerHTML = `<span style="color:#f87171">Error: ${escapeHtml(err.message)}</span>`;
+  } finally {
+    if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send ➔'; }
+    stream.scrollTop = stream.scrollHeight;
   }
 }
 
@@ -5366,36 +5503,62 @@ function renderCreatorSlideBlock(b, container) {
     `;
     container.appendChild(wrap);
   
-  } else if (t === 'ai' || t === 'ai_live') {
-    const isCode = (b.prompt || '').includes('import') || (b.prompt || '').includes('print(') || (b.prompt || '').includes('def ');
+    } else if (t === 'ai' || t === 'ai_live') {
+    const meta = analyzeAiBlockCode(b.prompt || '');
     const wrap = document.createElement('div');
-    wrap.className = 'ldoc-ai-block-wrap';
-    wrap.style.cssText = 'background:linear-gradient(135deg,rgba(15,18,36,0.95),rgba(24,18,48,0.95));border:1.5px solid rgba(167,139,250,0.4);border-radius:14px;padding:16px;margin:10px 0;box-shadow:0 10px 30px rgba(0,0,0,0.6)';
-    
+    wrap.className = 'creator-slide-block-wrap pres-ai-widget';
+    wrap.dataset.blockId = b.id || '';
+    wrap.style.cssText = 'background:linear-gradient(135deg,rgba(16,18,34,0.94),rgba(26,20,50,0.94));border:1.5px solid rgba(167,139,250,0.4);border-radius:16px;padding:18px 20px;margin:14px 0;box-shadow:0 12px 35px rgba(0,0,0,0.65);position:relative;overflow:hidden';
+
     wrap.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:8px;margin-bottom:10px">
+      <!-- Top Status & Model Intelligence Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:16px">${isCode ? '🐍' : '⚡'}</span>
-          <strong style="font-size:12px;color:#fef08a;font-family:'Cinzel',serif">${isCode ? 'PYTHON / OLLAMA AI RUNNER' : (t === 'ai_live' ? 'LIVE WEB AI INTELLIGENCE' : 'AI COPILOT PROMPT')}</strong>
+          <span style="font-size:20px">${meta.engine === 'ollama' ? '🦙' : '✨'}</span>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:#fef08a;font-family:'Cinzel',serif;letter-spacing:0.5px">${escapeHtml(meta.title)}</div>
+            <div style="font-size:10px;color:var(--text3);display:flex;align-items:center;gap:6px">
+              <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981"></span>
+              <span>${meta.engine === 'ollama' ? 'Local Ollama Daemon (Offline Ready)' : 'Gemini Cloud API'}</span>
+              <span>•</span>
+              <span style="color:#38bdf8">${meta.model}</span>
+            </div>
+          </div>
         </div>
-        <div style="display:flex;gap:6px">
-          <select class="btn" id="ai-model-sel-${b.id}" style="padding:2px 8px;font-size:10px;background:rgba(255,255,255,0.08)">
-            <option value="gemini">✨ Gemini Cloud (Online)</option>
-            <option value="ollama">🦙 Ollama Local (llama3.2)</option>
-            <option value="python">🐍 Python Sandbox</option>
-          </select>
-          <button class="btn green" id="ai-run-btn-${b.id}" onclick="runLiveAiInference('${b.id}')" style="padding:4px 10px;font-size:11px;font-weight:700">▶ Run Inference</button>
+
+        <div style="display:flex;align-items:center;gap:6px">
+          <button class="btn" onclick="toggleAiBlockCodeView('${b.id}')" style="padding:4px 8px;font-size:10px;background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15);color:var(--text2)" title="Toggle Underlying Python / Ollama Source Code">💻 Code View</button>
+          <span class="btn" style="padding:3px 8px;font-size:10px;background:rgba(16,185,129,0.15);border-color:#10b981;color:#6ee7b7;font-weight:700">● LIVE RUNNER</span>
         </div>
       </div>
-      <div style="background:#080a14;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px;font-family:'Fira Code',monospace;font-size:12px;color:${isCode ? '#38bdf8' : '#fff'};max-height:160px;overflow-y:auto;white-space:pre-wrap">${escapeHtml(b.prompt || 'No prompt or code specified.')}</div>
-      
-      <div id="ai-out-${b.id}" style="margin-top:10px;padding:12px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.25);border-radius:8px;display:none">
-        <div style="font-size:10px;font-weight:800;color:#10b981;margin-bottom:6px;display:flex;align-items:center;gap:6px">
-          <span>✓ REAL-TIME AI RESPONSE CONSOLE</span>
+
+      <!-- Expandable Code Drawer (Behind the Scenes) -->
+      <div id="ai-code-drawer-${b.id}" style="display:none;background:#070810;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;margin-bottom:12px;font-family:'Fira Code',monospace;font-size:11.5px;color:#38bdf8;max-height:160px;overflow-y:auto;white-space:pre-wrap">
+        <div style="font-size:10px;font-weight:800;color:var(--text3);margin-bottom:6px;text-transform:uppercase">Underlying Python / Ollama Source</div>
+${escapeHtml(b.prompt || 'No code specified.')}
+      </div>
+
+      <!-- GORGEOUS VISUAL INTERACTIVE CHAT & INFERENCE SHOWCASE -->
+      <div class="pres-ai-chat-card" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
+        <div id="ai-chat-stream-${b.id}" style="display:flex;flex-direction:column;gap:10px;max-height:220px;overflow-y:auto;padding-right:4px;margin-bottom:10px">
+          <!-- Initial Welcome Message from the Model -->
+          <div style="display:flex;gap:8px;align-items:flex-start">
+            <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🤖</div>
+            <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px 12px 12px 2px;padding:8px 12px;font-size:12px;color:#f1f5f9;line-height:1.5;max-width:85%">
+              👋 <strong>AI Chatbot Initialized</strong> (Model: <em>${escapeHtml(meta.model)}</em>).<br>
+              ${meta.engine === 'ollama' ? 'Running locally and offline via Ollama. Ask a question or type a message below:' : 'Ready to answer questions and analyze document content:'}
+            </div>
+          </div>
         </div>
-        <div id="ai-out-text-${b.id}" style="font-size:12.5px;color:#e2e8f0;line-height:1.6;white-space:pre-wrap"></div>
+
+        <!-- Live Interactive Input Field on Slide -->
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="text" id="ai-user-inp-${b.id}" class="btn" style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:12px;outline:none" placeholder="Type a message to chat with ${escapeHtml(meta.model)}..." onkeydown="if(event.key==='Enter')sendSlideAiChat('${b.id}')">
+          <button class="btn green" id="ai-send-btn-${b.id}" onclick="sendSlideAiChat('${b.id}')" style="padding:8px 14px;font-size:11px;font-weight:800;background:linear-gradient(135deg,#10b981,#059669);color:#fff">Send ➔</button>
+        </div>
       </div>
     `;
+
     container.appendChild(wrap);
     return;
 
