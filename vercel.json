@@ -23,33 +23,6 @@
           "value": "nosniff"
         }
       ]
-    },
-    {
-      "source": "/(.*\\.(?:ldocx|3mf|stl|obj|glb))",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/octet-stream"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/(.*\\.js)",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/javascript; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=86400"
-        }
-      ]
     }
-  ],
-  "outputDirectory": "public"
+  ]
 }
