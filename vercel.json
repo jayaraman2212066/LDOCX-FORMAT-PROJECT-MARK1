@@ -22,6 +22,34 @@
     {
       "source": "/health",
       "destination": "/api/health"
+    },
+    {
+      "source": "/api/optimize-model",
+      "destination": "/api/optimize-model"
+    },
+    {
+      "source": "/api/checkout/create-session",
+      "destination": "/api/checkout/create-session"
+    },
+    {
+      "source": "/api/checkout/webhook",
+      "destination": "/api/checkout/webhook"
+    },
+    {
+      "source": "/api/leads/capture",
+      "destination": "/api/leads/capture"
+    },
+    {
+      "source": "/api/export/pdf",
+      "destination": "/api/export/pdf"
+    },
+    {
+      "source": "/api/validate",
+      "destination": "/api/validate"
+    },
+    {
+      "source": "/api/convert",
+      "destination": "/api/convert"
     }
   ],
   "headers": [
