@@ -3,89 +3,32 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    {
-      "source": "/live-studio",
-      "destination": "/live-studio/index.html"
-    },
-    {
-      "source": "/models",
-      "destination": "/models.html"
-    },
-    {
-      "source": "/templates",
-      "destination": "/models.html"
-    },
-    {
-      "source": "/studio",
-      "destination": "/studio.html"
-    },
-    {
-      "source": "/viewer",
-      "destination": "/studio.html"
-    },
-    {
-      "source": "/creator",
-      "destination": "/creator.html"
-    },
-    {
-      "source": "/health",
-      "destination": "/api/health"
-    },
-    {
-      "source": "/documents/build",
-      "destination": "/api/build"
-    },
-    {
-      "source": "/documents",
-      "destination": "/api/documents"
-    }
+    { "source": "/health", "destination": "/api/health" },
+    { "source": "/documents", "destination": "/api/documents" },
+    { "source": "/documents/build", "destination": "/api/build" }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, OPTIONS, PUT, DELETE"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization, X-Requested-With, x-signature, stripe-signature"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        }
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS, PUT, DELETE" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-Requested-With, x-signature, stripe-signature" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
       ]
     },
     {
       "source": "/(.*\\.(?:ldocx|3mf|stl|obj|glb))",
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/octet-stream"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
+        { "key": "Content-Type", "value": "application/octet-stream" },
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
       "source": "/(.*\\.js)",
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/javascript; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=86400"
-        }
+        { "key": "Content-Type", "value": "application/javascript; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     }
   ],
