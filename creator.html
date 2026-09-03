@@ -2778,6 +2778,29 @@ body.creator-split-50-50 #creator-preview-pane {
 .license-key-pill { display: inline-block; font-family: monospace; font-size: 14px; font-weight: 800; color: #6ee7b7; background: rgba(16, 185, 129, 0.15); border: 1px dashed #10b981; padding: 8px 14px; border-radius: 8px; letter-spacing: 1.2px; margin: 10px 0; user-select: all; }
 .vip-ticket-preview { background: linear-gradient(135deg, #1c1917 0%, #292524 50%, #451a03 100%); border: 1.5px solid #f59e0b; border-radius: 12px; padding: 16px; color: #fef3c7; margin-top: 14px; box-shadow: 0 0 25px rgba(245, 158, 11, 0.25); }
 
+
+/* Permanent Paper Text Styling */
+.ldoc-ambient-text.locked .ambient-text-hud {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-5px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.ldoc-ambient-text.locked:hover .ambient-text-hud {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.ldoc-ambient-text.locked .ambient-text-body {
+  border: 1px dashed transparent;
+  cursor: text;
+}
+.ldoc-ambient-text.locked:hover .ambient-text-body {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.05);
+  border-radius: 6px;
+}
+
 </style>
   
 </head>
@@ -4624,7 +4647,7 @@ function renderCreatorFloatingTexts() {
 
   curPage.floating_texts.forEach(ft => {
     const textWrap = document.createElement('div');
-    textWrap.className = 'ldoc-ambient-text active';
+    textWrap.className = 'ldoc-ambient-text active' + (ft.locked ? ' locked' : '');
     textWrap.dataset.ftId = ft.id;
     textWrap.style.left = `${ft.left}px`;
     textWrap.style.top = `${ft.top}px`;
@@ -4653,7 +4676,9 @@ function renderCreatorFloatingTexts() {
           <span class="hud-dot" style="background:#34d399" onclick="updateFtProp('${ft.id}', 'color', '#34d399')"></span>
           <span class="hud-dot" style="background:#ffffff" onclick="updateFtProp('${ft.id}', 'color', '#ffffff')"></span>
         </div>
-        <button class="hud-btn hud-del" onclick="deleteFt('${ft.id}')">✕</button>
+        <button class="hud-btn hud-save" style="background:#10b981;color:#fff;font-weight:700;padding:3px 10px;border-radius:6px;font-size:11px;cursor:pointer;border:none;box-shadow:0 0 10px rgba(16,185,129,.4)" onclick="saveFtToPaper('${ft.id}')" title="Permanently stamp this text into slide paper and block list">💾 Save to Paper</button>
+        <button class="hud-btn hud-lock" style="background:${ft.locked ? '#f59e0b' : 'rgba(255,255,255,0.1)'};color:${ft.locked ? '#000' : '#fff'};font-weight:700;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer;border:none" onclick="lockFtPlacement('${ft.id}')" title="Lock/Unlock text placement on slide">${ft.locked ? '🔒 Locked' : '📌 Lock'}</button>
+        <button class="hud-btn hud-del" onclick="deleteFt('${ft.id}')" title="Remove annotation">✕</button>
       </div>
       <div class="ambient-text-body" contenteditable="true" spellcheck="false" 
            style="font-family:${ft.font};font-size:${ft.size};color:${ft.color};outline:none;min-width:60px">
@@ -4701,6 +4726,81 @@ function renderCreatorFloatingTexts() {
   });
 }
 
+
+// ── ✍️ Free Text Permanent Placement & Paper Baking Engine ──
+function saveFtToPaper(ftId) {
+  const curPage = pages.find(p => p.id === currentPage) || pages[0];
+  if (!curPage) return;
+  curPage.floating_texts = curPage.floating_texts || [];
+  const ft = curPage.floating_texts.find(f => f.id === ftId);
+  if (!ft) return;
+
+  const bodyEl = document.querySelector(`[data-ft-id="${ftId}"] .ambient-text-body`);
+  if (bodyEl) {
+    ft.text = bodyEl.innerText.trim() || ft.text;
+  }
+
+  if (!ft.text || ft.text === 'Click to write dynamic text...') {
+    toast('Please write your text before saving to paper', 'err');
+    return;
+  }
+
+  // 1. Mark permanently saved and locked on paper
+  ft.locked = true;
+  ft.saved = true;
+
+  // 2. Also insert as a permanent block into the page if not already added
+  if (!ft.blockId) {
+    const blockId = bid();
+    ft.blockId = blockId;
+    const newBlock = {
+      id: blockId,
+      type: 'paragraph',
+      text: ft.text,
+      font: ft.font,
+      size: ft.size,
+      color: ft.color,
+      style: {
+        fontFamily: ft.font,
+        fontSize: ft.size,
+        color: ft.color,
+        isAmbientPaperText: true,
+        left: ft.left,
+        top: ft.top
+      }
+    };
+    curPage.blocks.push(newBlock);
+    renderBlocks();
+  } else {
+    // Update existing block
+    const b = curPage.blocks.find(x => x.id === ft.blockId);
+    if (b) {
+      b.text = ft.text;
+      b.style = b.style || {};
+      b.style.fontFamily = ft.font;
+      b.style.fontSize = ft.size;
+      b.style.color = ft.color;
+      renderBlocks();
+    }
+  }
+
+  renderCreatorFloatingTexts();
+  updateCreatorLivePreview();
+  scheduleAutoSave();
+  toast('✓ Text saved permanently onto paper and document spec!', 'ok');
+}
+
+function lockFtPlacement(ftId) {
+  const curPage = pages.find(p => p.id === currentPage) || pages[0];
+  if (!curPage || !curPage.floating_texts) return;
+  const ft = curPage.floating_texts.find(f => f.id === ftId);
+  if (!ft) return;
+  ft.locked = !ft.locked;
+  renderCreatorFloatingTexts();
+  scheduleAutoSave();
+  toast(ft.locked ? '🔒 Text position locked on paper' : '🔓 Text position unlocked', 'info');
+}
+
 function updateFtProp(ftId, prop, val) {
   const curPage = pages.find(p => p.id === currentPage);
   if (!curPage || !curPage.floating_texts) return;
@@ -4726,7 +4826,7 @@ function spawnCreatorAmbientText(x, y, text = 'Click to write dynamic text...') 
   if (!body) return;
 
   const textWrap = document.createElement('div');
-  textWrap.className = 'ldoc-ambient-text active';
+  textWrap.className = 'ldoc-ambient-text active' + (ft.locked ? ' locked' : '');
   textWrap.style.left = `${Math.max(10, x - 80)}px`;
   textWrap.style.top = `${Math.max(10, y - 30)}px`;
 
@@ -6691,7 +6791,7 @@ function buildSpec(){
       guide_prompt: aiPrompt || undefined
     } : undefined,
     pages:pages.map(p=>({
-      title:p.title,
+      title:p.title, floating_texts:p.floating_texts,
       blocks:p.blocks.map(b=>{
         if(b.type==='heading')return{type:'heading',level:b.level,text:b.text};
         if(b.type==='paragraph')return{type:'paragraph',text:b.text};
