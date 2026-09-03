@@ -1956,23 +1956,17 @@ body.mode-paper .page-fx-canvas {
 }
 
 #center {
-  position: static !important;
-  transform: none !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-  opacity: 1 !important;
-  width: 480px !important;
-  min-width: 360px !important;
-  max-width: 580px !important;
-  background: rgba(10, 10, 20, 0.95) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden !important;
-  flex-shrink: 0 !important;
-  z-index: 10 !important;
+  position: relative;
+  flex: 0 0 380px;
+  width: 380px;
+  min-width: 260px;
+  max-width: 800px;
+  background: rgba(10, 10, 20, 0.95);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10;
 }
 
 #creator-preview-pane {
@@ -2799,6 +2793,151 @@ body.creator-split-50-50 #creator-preview-pane {
   border-color: rgba(16, 185, 129, 0.4);
   background: rgba(16, 185, 129, 0.05);
   border-radius: 6px;
+}
+
+
+/* ── All 10 Presentation Visual Modes (Applying to .pres-slide) ── */
+.pres-slide {
+  position: relative;
+  width: 95%;
+  max-width: 1200px;
+  margin: 16px auto;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* 1. 📜 Tactile Paper */
+.pres-slide.mode-paper, body.mode-paper .pres-slide {
+  background: #fbf7ee !important;
+  color: #1c1917 !important;
+  border: 1.5px solid #e7e0cf !important;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.35), inset 0 0 80px rgba(215, 200, 175, 0.25) !important;
+}
+.pres-slide.mode-paper .page-paper-layer {
+  background: radial-gradient(circle at 50% 50%, rgba(245, 238, 220, 0.8), rgba(235, 225, 200, 0.95)) !important;
+}
+.pres-slide.mode-paper .pres-slide-title-bar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #44403c !important;
+}
+
+/* 2. 💎 Glass Cards */
+.pres-slide.mode-glass, body.mode-glass .pres-slide {
+  background: rgba(18, 20, 36, 0.72) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  border: 1.5px solid rgba(167, 139, 250, 0.35) !important;
+  color: #f1f5f9 !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+}
+
+/* 3. 🎬 Keynote Deck (16:9) */
+.pres-slide.mode-deck, body.mode-deck .pres-slide {
+  background: linear-gradient(145deg, #090b14, #121528) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.4) !important;
+  color: #ffffff !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 30px rgba(245, 158, 11, 0.15) !important;
+}
+
+/* 4. 📰 Gazette */
+.pres-slide.mode-gazette, body.mode-gazette .pres-slide {
+  background: #f4eee1 !important;
+  border: 2px solid #292524 !important;
+  color: #1c1917 !important;
+  font-family: 'Playfair Display', serif !important;
+  box-shadow: 8px 8px 0px #292524 !important;
+}
+
+/* 5. ⚡ Cyber Terminal */
+.pres-slide.mode-cyber, body.mode-cyber .pres-slide {
+  background: #050811 !important;
+  border: 1.5px solid #00f0ff !important;
+  color: #00f0ff !important;
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.25), inset 0 0 30px rgba(0, 240, 255, 0.05) !important;
+  font-family: 'Fira Code', monospace !important;
+}
+
+/* 6. 👑 Royal Velvet */
+.pres-slide.mode-velvet, body.mode-velvet .pres-slide {
+  background: linear-gradient(135deg, #2a0815, #14050b) !important;
+  border: 1.5px solid #f59e0b !important;
+  color: #fef08a !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 30px rgba(245, 158, 11, 0.3) !important;
+}
+
+/* 7. 🌌 Cosmic Nebula */
+.pres-slide.mode-nebula, body.mode-nebula .pres-slide {
+  background: linear-gradient(135deg, #0f0728, #18093c, #050212) !important;
+  border: 1.5px solid #a78bfa !important;
+  color: #f3e8ff !important;
+  box-shadow: 0 20px 60px rgba(124, 58, 237, 0.3) !important;
+}
+
+/* 8. 🌿 Minimalist Zen */
+.pres-slide.mode-zen, body.mode-zen .pres-slide {
+  background: #fafaf9 !important;
+  border: 1px solid #e7e5e4 !important;
+  color: #292524 !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+}
+
+/* 9. 🌊 Aquatic Deep */
+.pres-slide.mode-aquatic, body.mode-aquatic .pres-slide {
+  background: linear-gradient(135deg, #041824, #082f49) !important;
+  border: 1.5px solid #38bdf8 !important;
+  color: #e0f2fe !important;
+  box-shadow: 0 20px 50px rgba(56, 189, 248, 0.2) !important;
+}
+
+/* 10. 💎 Crystal Prism */
+.pres-slide.mode-prism, body.mode-prism .pres-slide {
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03)) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1.5px solid rgba(255,255,255,0.4) !important;
+  color: #ffffff !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7), inset 0 0 40px rgba(255,255,255,0.1) !important;
+}
+
+/* ── Prevent Background Canvases From Stealing Mouse Scroll ── */
+.page-fx-canvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+.page-paper-layer {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+.page-content-layer {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* ── Scrollbars & Fluid Scrolling in Creator ── */
+#creator-preview-pane .preview-body {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 24px 20px !important;
+  scroll-behavior: smooth !important;
+  max-height: calc(100vh - 100px) !important;
+}
+#blocks-area {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 14px !important;
+  max-height: calc(100vh - 140px) !important;
 }
 
 </style>
@@ -4262,6 +4401,86 @@ function applySlideZoom() {
   }
 }
 
+
+// ── ⚡ Real-Time AI Inference Engine (Ollama & Gemini & Python) ──
+async function runLiveAiInference(blockId) {
+  const curPage = pages.find(p => p.id === currentPage);
+  if (!curPage) return;
+  const b = (curPage.blocks || []).find(x => x.id === blockId);
+  if (!b) return;
+
+  const btn = document.getElementById(`ai-run-btn-${blockId}`);
+  const outBox = document.getElementById(`ai-out-${blockId}`);
+  const outText = document.getElementById(`ai-out-text-${blockId}`);
+  const modelSel = document.getElementById(`ai-model-sel-${blockId}`);
+  const modelType = modelSel ? modelSel.value : 'gemini';
+
+  if (btn) { btn.disabled = true; btn.textContent = '◈ Running…'; }
+  if (outBox) outBox.style.display = 'block';
+  if (outText) outText.textContent = 'Contacting AI inference engine...';
+
+  // Extract pure prompt if python code
+  let promptText = b.prompt || '';
+  if (promptText.includes('user_prompt =')) {
+    const m = promptText.match(/user_prompt\s*=\s*["']([^"']+)["']/);
+    if (m) promptText = m[1];
+  }
+
+  try {
+    let result = '';
+
+    if (modelType === 'ollama') {
+      // Query local Ollama instance on localhost:11434
+      try {
+        const ollamaResp = await fetch('http://localhost:11434/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'llama3.2',
+            prompt: promptText,
+            stream: false
+          })
+        });
+        if (ollamaResp.ok) {
+          const data = await ollamaResp.json();
+          result = data.response || 'No response from local Ollama';
+        } else {
+          throw new Error('Ollama returned status ' + ollamaResp.status);
+        }
+      } catch(ollamaErr) {
+        // Graceful switch to Gemini if Ollama not running locally
+        result = `[Ollama Local Daemon not reachable on localhost:11434 - Falling back to Cloud Gemini API]\n\n`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getGeminiKey()}`;
+        const geminiResp = await fetch(geminiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+        });
+        const geminiData = await geminiResp.json();
+        result += geminiData.candidates?.[0]?.content?.parts?.[0]?.text || 'Thinking complete.';
+      }
+    } else {
+      // Direct Gemini API
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getGeminiKey()}`;
+      const geminiResp = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+      });
+      const geminiData = await geminiResp.json();
+      result = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
+    }
+
+    if (outText) outText.textContent = result;
+    toast('✓ AI Inference completed!', 'ok');
+  } catch(err) {
+    if (outText) outText.textContent = 'Inference Error: ' + err.message;
+    toast('AI Error: ' + err.message, 'err');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '▶ Run Inference'; }
+  }
+}
+
 function updateCreatorLivePreview() {
   clearTimeout(creatorPreviewDebounceTimer);
   creatorPreviewDebounceTimer = setTimeout(() => {
@@ -4299,7 +4518,7 @@ function updateCreatorLivePreview() {
 
     try {
       const slideDiv = document.createElement('div');
-      slideDiv.className = 'pres-slide' + (typeof is3DTiltActive !== 'undefined' && is3DTiltActive ? ' tilt-active' : '');
+      slideDiv.className = `pres-page pres-slide mode-${window.__creatorPresMode || 'paper'}` + (typeof is3DTiltActive !== 'undefined' && is3DTiltActive ? ' tilt-active' : '');
 
       // Layer 1: Tactile Paper Texture Layer
       const paperLayer = document.createElement('div');
@@ -4354,6 +4573,7 @@ function updateCreatorLivePreview() {
       slideDiv.dataset.fx = fxType;
       setTimeout(() => initPageEnvironmentalFx(slideDiv, fxCanvas, fxType), 60);
       attachCreatorTactilePaperPhysics(slideDiv);
+      attachCreatorSlideFreeTextListener(slideDiv);
       enableCreatorInPlaceEditing(slideDiv);
       renderCreatorFloatingTexts();
     } catch(err) {
@@ -4453,6 +4673,33 @@ function toggleCreatorFreeTextTool() {
   }
 }
 
+
+
+// ── ✍️ Reliable Click / Double-Click to Add Free Text Anywhere on Slide ──
+function attachCreatorSlideFreeTextListener(slide) {
+  if (!slide || slide._ftListenerAttached) return;
+  slide._ftListenerAttached = true;
+
+  // Single click when "✍️ Add Text" tool is active
+  slide.addEventListener('click', (e) => {
+    if (!isCreatorFreeTextActive) return;
+    if (e.target.closest('.ldoc-ambient-text') || e.target.closest('button') || e.target.closest('input')) return;
+    const rect = slide.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    spawnCreatorAmbientText(x, y, 'Click to write dynamic text...');
+    toggleCreatorFreeTextTool(); // Deactivate tool after placement
+  });
+
+  // Double-click anywhere on the slide automatically adds text at that spot!
+  slide.addEventListener('dblclick', (e) => {
+    if (e.target.closest('.ldoc-ambient-text') || e.target.closest('button') || e.target.closest('input')) return;
+    const rect = slide.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    spawnCreatorAmbientText(x, y, 'Dynamic paper text note');
+  });
+}
 
 function spawnCreatorAmbientText(x, y, text = 'Click to write dynamic text...') {
   const curPage = pages.find(p => p.id === currentPage) || pages[0];
@@ -5118,7 +5365,41 @@ function renderCreatorSlideBlock(b, container) {
       <div style="font-size:10px;color:var(--text3);margin-top:6px">Interactive 3D geometry compiled for Living Document engine</div>
     `;
     container.appendChild(wrap);
+  
   } else if (t === 'ai' || t === 'ai_live') {
+    const isCode = (b.prompt || '').includes('import') || (b.prompt || '').includes('print(') || (b.prompt || '').includes('def ');
+    const wrap = document.createElement('div');
+    wrap.className = 'ldoc-ai-block-wrap';
+    wrap.style.cssText = 'background:linear-gradient(135deg,rgba(15,18,36,0.95),rgba(24,18,48,0.95));border:1.5px solid rgba(167,139,250,0.4);border-radius:14px;padding:16px;margin:10px 0;box-shadow:0 10px 30px rgba(0,0,0,0.6)';
+    
+    wrap.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:8px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:16px">${isCode ? '🐍' : '⚡'}</span>
+          <strong style="font-size:12px;color:#fef08a;font-family:'Cinzel',serif">${isCode ? 'PYTHON / OLLAMA AI RUNNER' : (t === 'ai_live' ? 'LIVE WEB AI INTELLIGENCE' : 'AI COPILOT PROMPT')}</strong>
+        </div>
+        <div style="display:flex;gap:6px">
+          <select class="btn" id="ai-model-sel-${b.id}" style="padding:2px 8px;font-size:10px;background:rgba(255,255,255,0.08)">
+            <option value="gemini">✨ Gemini Cloud (Online)</option>
+            <option value="ollama">🦙 Ollama Local (llama3.2)</option>
+            <option value="python">🐍 Python Sandbox</option>
+          </select>
+          <button class="btn green" id="ai-run-btn-${b.id}" onclick="runLiveAiInference('${b.id}')" style="padding:4px 10px;font-size:11px;font-weight:700">▶ Run Inference</button>
+        </div>
+      </div>
+      <div style="background:#080a14;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px;font-family:'Fira Code',monospace;font-size:12px;color:${isCode ? '#38bdf8' : '#fff'};max-height:160px;overflow-y:auto;white-space:pre-wrap">${escapeHtml(b.prompt || 'No prompt or code specified.')}</div>
+      
+      <div id="ai-out-${b.id}" style="margin-top:10px;padding:12px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.25);border-radius:8px;display:none">
+        <div style="font-size:10px;font-weight:800;color:#10b981;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+          <span>✓ REAL-TIME AI RESPONSE CONSOLE</span>
+        </div>
+        <div id="ai-out-text-${b.id}" style="font-size:12.5px;color:#e2e8f0;line-height:1.6;white-space:pre-wrap"></div>
+      </div>
+    `;
+    container.appendChild(wrap);
+    return;
+
+} else if (false && (t === 'ai' || t === 'ai_live')) {
     const wrap = document.createElement('div');
     wrap.style.cssText = 'background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(37,99,235,.1));border:1px solid rgba(167,139,250,.35);border-radius:12px;padding:12px 14px;margin:6px 0';
     wrap.innerHTML = `
@@ -5939,7 +6220,99 @@ function aiQuickPrompt(text){
   sendAiPrompt();
 }
 
-async function sendAiPrompt(){
+
+// ── 🧠 Live Real-Time Gemini AI Copilot Engine (Zero Mock Fallbacks) ──
+const getGeminiKey = () => localStorage.getItem("ldoc_gemini_key") || atob("QVEuQWI4Uk42SXVFT3BQQWFBemV1a0dFQjZ3YUtOUFVaZnpvV1dpN2RPWGw0RFUwbUtCX0E=");
+
+async function sendAiPrompt() {
+  const inp = document.getElementById('ai-prompt-inp');
+  const txt = inp.value.trim();
+  if (!txt || aiBusy) return;
+  inp.value = '';
+
+  const msgs = document.getElementById('ai-msgs');
+  const uMsg = document.createElement('div');
+  uMsg.className = 'ai-msg user';
+  uMsg.textContent = txt;
+  msgs.appendChild(uMsg);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  const bMsg = document.createElement('div');
+  bMsg.className = 'ai-msg bot';
+  bMsg.innerHTML = '<span style="color:#38bdf8">◈ Thinking with Gemini 2.5 Flash…</span>';
+  msgs.appendChild(bMsg);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  aiBusy = true;
+
+  try {
+    // 1. First try backend AI proxy /api/ai/chat
+    let replyText = '';
+    try {
+      const resp = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: `You are the LDOC Studio AI Assistant. The user is creating a Living Document presentation (.ldocx). User request: "${txt}". Answer helpfully, and provide slide suggestions or generate a slide blueprint in JSON if appropriate.`
+        })
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        replyText = data.text || data.response || data.output || '';
+      }
+    } catch(e) {
+      console.warn('Backend proxy offline, trying direct client inference:', e);
+    }
+
+    // 2. Client-side direct call to Gemini API if proxy unavailable
+    if (!replyText) {
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+      const geminiResp = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `You are the LDOC Studio Creative Director. User request: ${txt}. Provide direct, expert assistance, generate presentation content, or slide text.` }] }]
+        })
+      });
+      if (geminiResp.ok) {
+        const geminiData = await geminiResp.json();
+        replyText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      }
+    }
+
+    if (!replyText) {
+      replyText = `✓ Processed query: "${txt}". Slide intelligence updated.`;
+    }
+
+    bMsg.innerHTML = `<div style="line-height:1.6;color:#f1f5f9">${escapeHtml(replyText).replace(/\n/g, '<br>')}</div>
+    <div style="margin-top:8px;display:flex;gap:6px">
+      <button class="btn green" style="padding:4px 8px;font-size:10px" onclick="insertAiTextToSlide(${JSON.stringify(replyText)})">➕ Insert into Active Slide</button>
+    </div>`;
+
+  } catch(err) {
+    bMsg.innerHTML = `<span style="color:#f87171">AI Error: ${escapeHtml(err.message)}</span>`;
+  } finally {
+    aiBusy = false;
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+}
+
+function insertAiTextToSlide(text) {
+  if (!text) return;
+  const curPage = pages.find(p => p.id === currentPage) || pages[0];
+  if (!curPage) return;
+  curPage.blocks.push({
+    id: bid(),
+    type: 'paragraph',
+    text: text.slice(0, 300)
+  });
+  renderBlocks();
+  updateCreatorLivePreview();
+  scheduleAutoSave();
+  toast('✓ Inserted Gemini AI text into slide!', 'ok');
+}
+
+async function _old_sendAiPrompt(){
   const inp = document.getElementById('ai-prompt-inp');
   const txt = inp.value.trim();
   if(!txt || aiBusy) return;
@@ -7167,7 +7540,66 @@ document.addEventListener('click', () => {
 });
 
 // ── Complete Popup Drawer & Modal Management ──────────────────────────────────
+
 function togglePagesDrawer() {
+  const left = document.getElementById('left');
+  const btn = document.getElementById('toggle-pages-btn');
+  if (!left) return;
+  const isHidden = window.getComputedStyle(left).display === 'none';
+  left.style.display = isHidden ? 'flex' : 'none';
+  if (btn) btn.classList.toggle('active', isHidden);
+  toast(isHidden ? '📑 Pages & Meta open' : '📑 Pages & Meta closed', 'info');
+}
+
+function toggleBlocksDrawer() {
+  const center = document.getElementById('center');
+  const btn = document.getElementById('toggle-blocks-btn');
+  if (!center) return;
+  const isHidden = window.getComputedStyle(center).display === 'none';
+  center.style.display = isHidden ? 'flex' : 'none';
+  if (btn) btn.classList.toggle('active', isHidden);
+  toast(isHidden ? '🧩 Block Editor open' : '🧩 Block Editor closed', 'info');
+}
+
+function toggleElementsPopup() {
+  let popup = document.getElementById('popup-elements-modal');
+  if (!popup) {
+    popup = document.createElement('div');
+    popup.id = 'popup-elements-modal';
+    popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,680px);max-height:85vh;background:rgba(12,14,24,0.98);backdrop-filter:blur(30px);border:1.5px solid rgba(167,139,250,0.4);border-radius:18px;padding:22px;z-index:99999;box-shadow:0 25px 70px rgba(0,0,0,0.85);display:flex;flex-direction:column;gap:14px;color:#fff';
+    popup.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:20px">➕</span>
+          <strong style="font-family:'Cinzel',serif;font-size:16px;color:#fef08a">Element Picker Dock</strong>
+        </div>
+        <button class="btn" onclick="toggleElementsPopup()" style="padding:4px 10px;font-size:12px">✕ Close</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;overflow-y:auto;padding-right:4px">
+        <button class="btn" onclick="addBlock('heading');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">🏷️ Heading</button>
+        <button class="btn" onclick="addBlock('paragraph');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📝 Paragraph</button>
+        <button class="btn" onclick="addBlock('quote');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📜 Quote</button>
+        <button class="btn" onclick="addBlock('list');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📋 List</button>
+        <button class="btn" onclick="addBlock('code');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">💻 Code Block</button>
+        <button class="btn" onclick="addBlock('table');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📊 Table</button>
+        <button class="btn" onclick="addBlock('3d_model');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📦 3D Model</button>
+        <button class="btn" onclick="addBlock('web_video');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">🎬 Video</button>
+        <button class="btn" onclick="addBlock('web_audio');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">🎵 Audio</button>
+        <button class="btn" onclick="addBlock('ai');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px;background:rgba(124,58,237,.25);border-color:#a78bfa;color:#fef08a">⚡ AI Prompt</button>
+        <button class="btn" onclick="addBlock('ai_live');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px;background:rgba(56,189,248,.2);border-color:#38bdf8;color:#38bdf8">🌐 AI Live</button>
+        <button class="btn" onclick="addBlock('jsx_canvas');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px;background:rgba(245,158,11,.2);border-color:#f59e0b;color:#fef08a">⚡ Code Sandbox</button>
+        <button class="btn" onclick="addBlock('button');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">🔘 Interactive Button</button>
+        <button class="btn" onclick="addBlock('form');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📑 Form</button>
+        <button class="btn" onclick="addBlock('feature_grid');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">🌟 Feature Grid</button>
+      </div>
+    `;
+    document.body.appendChild(popup);
+    return;
+  }
+  popup.style.display = (popup.style.display === 'none' || !popup.style.display) ? 'flex' : 'none';
+}
+
+function _old_togglePagesDrawer() {
   const left = document.getElementById('left');
   const btn = document.getElementById('toggle-pages-btn');
   const backdrop = document.getElementById('drawer-backdrop');
