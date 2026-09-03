@@ -1,0 +1,16 @@
+# Windows executables and large binaries
+*.exe
+app/*.exe
+app/ldoc-server.exe
+app/ldoc.exe
+
+# Local scratch and test scripts
+scratch/
+test_*.js
+*.log
+
+# Git and IDE
+.git
+.github
+.vscode
+.idea
