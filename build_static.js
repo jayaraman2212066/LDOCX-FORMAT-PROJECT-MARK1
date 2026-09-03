@@ -9,6 +9,7 @@ if (!fs.existsSync(publicDir)) {
 const filesToCopy = [
   'index.html',
   'creator.html',
+  'studio.html',
   'jszip.min.js',
   'ldoc_logo.png',
   'ldoc_background_image.png',

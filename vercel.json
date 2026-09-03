@@ -4,12 +4,16 @@
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/creator",
-      "destination": "/creator.html"
+      "source": "/studio",
+      "destination": "/studio.html"
     },
     {
       "source": "/viewer",
-      "destination": "/index.html"
+      "destination": "/studio.html"
+    },
+    {
+      "source": "/creator",
+      "destination": "/creator.html"
     },
     {
       "source": "/health",
