@@ -1,0 +1,188 @@
+// Universal Database Adapter (PostgreSQL / Supabase with Local Zero-Config Fallback)
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const DATA_DIR = path.join(__dirname, 'data');
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+
+function getTablePath(table) { return path.join(DATA_DIR, `${table}.json`); }
+function readTable(table) {
+  const p = getTablePath(table);
+  if (!fs.existsSync(p)) return [];
+  try { return JSON.parse(fs.readFileSync(p, 'utf8') || '[]'); } catch (err) { return []; }
+}
+function writeTable(table, rows) {
+  fs.writeFileSync(getTablePath(table), JSON.stringify(rows, null, 2), 'utf8');
+}
+
+function seedTemplatesIfEmpty() {
+  const tmpls = readTable('templates');
+  if (tmpls.length === 0) {
+    writeTable('templates', [
+      {
+        id: 'tmpl-gta6-launch',
+        title: 'GTA VI: Welcome to Leonida',
+        category: 'Game & Product Launch',
+        description: 'Cinematic commercial premiere with 4K motion, 3D supercar hologram, and VIP reservation.',
+        pages_count: 3,
+        is_official: true,
+        ast: {
+          schema_version: '2.5.0',
+          title: 'GTA VI: Welcome to Leonida',
+          theme: 'dark_gold',
+          pages: [
+            { id: 'p1', title: 'Leonida Premiere', fx: 'particles', blocks: [
+              { type: 'heading', level: 1, text: 'GRAND THEFT AUTO VI' },
+              { type: 'paragraph', text: 'Welcome to Leonida. Living presentation powered by LDOCX.' },
+              { type: 'web_video', src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm', label: '4K In-Engine Motion' }
+            ]},
+            { id: 'p2', title: '3D Spatial Hologram', fx: 'none', blocks: [
+              { type: 'heading', level: 2, text: 'SPATIAL TELEMETRY & CHASSIS' },
+              { type: '3d_model', format: 'obj', mesh_template: 'supercar', material_mode: 'cyber_hologram' }
+            ]}
+          ]
+        }
+      },
+      {
+        id: 'tmpl-investor-pitch',
+        title: 'Hyperion Quantum Propulsion',
+        category: 'Investor Pitch & Tech',
+        description: 'SaaS / DeepTech investor deck with live ARR trajectory chart and metrics grid.',
+        pages_count: 2,
+        is_official: true,
+        ast: {
+          schema_version: '2.5.0',
+          title: 'Hyperion Quantum Series A',
+          theme: 'cyberpunk',
+          pages: [
+            { id: 'p1', title: 'Company Overview & ARR', fx: 'particles', blocks: [
+              { type: 'heading', level: 1, text: 'HYPERION QUANTUM PROPULSION' },
+              { type: 'feature_grid', cards: [
+                { badge: 'TRACTION', title: '$14.2M ARR', desc: '140% YoY Net Retention' }
+              ]}
+            ]}
+          ]
+        }
+      }
+    ]);
+  }
+}
+seedTemplatesIfEmpty();
+
+const db = {
+  users: {
+    async findByEmail(email) {
+      return readTable('users').find(u => u.email.toLowerCase() === (email || '').toLowerCase()) || null;
+    },
+    async findById(id) {
+      return readTable('users').find(u => u.id === id) || null;
+    },
+    async create(userData) {
+      const rows = readTable('users');
+      const newUser = {
+        id: 'usr_' + crypto.randomBytes(8).toString('hex'),
+        email: userData.email.toLowerCase(),
+        name: userData.name || userData.email.split('@')[0],
+        password_hash: userData.password_hash,
+        plan: userData.plan || 'free',
+        created_at: new Date().toISOString()
+      };
+      rows.push(newUser);
+      writeTable('users', rows);
+      return newUser;
+    }
+  },
+  documents: {
+    async listByUser(userId) {
+      const rows = readTable('documents');
+      if (!userId) return rows.filter(d => d.is_public);
+      return rows.filter(d => d.user_id === userId || d.is_public);
+    },
+    async findById(id) {
+      return readTable('documents').find(d => d.id === id) || null;
+    },
+    async create(docData) {
+      const rows = readTable('documents');
+      const newDoc = {
+        id: docData.id || 'doc_' + crypto.randomBytes(8).toString('hex'),
+        user_id: docData.user_id || 'anonymous',
+        title: docData.title || 'Untitled Living Document',
+        theme: docData.theme || 'dark_gold',
+        is_public: docData.is_public ?? true,
+        ast: docData.ast || { schema_version: '2.5.0', title: docData.title, pages: [] },
+        version: 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      rows.push(newDoc);
+      writeTable('documents', rows);
+
+      await db.document_versions.create({
+        document_id: newDoc.id,
+        version_num: 1,
+        ast: newDoc.ast,
+        summary: 'Initial Creation'
+      });
+      return newDoc;
+    },
+    async update(id, updateData) {
+      const rows = readTable('documents');
+      const idx = rows.findIndex(d => d.id === id);
+      if (idx === -1) return null;
+
+      const doc = rows[idx];
+      const newVersion = (doc.version || 1) + 1;
+      doc.title = updateData.title || doc.title;
+      doc.theme = updateData.theme || doc.theme;
+      if (updateData.ast) doc.ast = updateData.ast;
+      doc.version = newVersion;
+      doc.updated_at = new Date().toISOString();
+
+      rows[idx] = doc;
+      writeTable('documents', rows);
+
+      await db.document_versions.create({
+        document_id: doc.id,
+        version_num: newVersion,
+        ast: doc.ast,
+        summary: updateData.summary || `Revision v${newVersion}`
+      });
+      return doc;
+    },
+    async delete(id) {
+      let rows = readTable('documents');
+      rows = rows.filter(d => d.id !== id);
+      writeTable('documents', rows);
+      return true;
+    }
+  },
+  document_versions: {
+    async listByDocumentId(documentId) {
+      return readTable('document_versions').filter(v => v.document_id === documentId).sort((a, b) => b.version_num - a.version_num);
+    },
+    async findById(versionId) {
+      return readTable('document_versions').find(v => v.id === versionId) || null;
+    },
+    async create(versionData) {
+      const rows = readTable('document_versions');
+      const newVer = {
+        id: 'ver_' + crypto.randomBytes(8).toString('hex'),
+        document_id: versionData.document_id,
+        version_num: versionData.version_num || 1,
+        summary: versionData.summary || 'Auto-Save Revision',
+        ast: versionData.ast,
+        created_at: new Date().toISOString()
+      };
+      rows.push(newVer);
+      writeTable('document_versions', rows);
+      return newVer;
+    }
+  },
+  templates: {
+    async listAll() { return readTable('templates'); },
+    async findById(id) { return readTable('templates').find(t => t.id === id) || null; }
+  }
+};
+
+module.exports = db;

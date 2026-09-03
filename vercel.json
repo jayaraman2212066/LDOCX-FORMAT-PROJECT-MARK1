@@ -12,6 +12,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/health",
+      "destination": "/api/health"
+    },
+    {
       "source": "/documents/build",
       "destination": "/api/build"
     },
@@ -20,8 +24,24 @@
       "destination": "/api/documents"
     },
     {
-      "source": "/health",
-      "destination": "/api/health"
+      "source": "/api/auth/register",
+      "destination": "/api/auth/register"
+    },
+    {
+      "source": "/api/auth/login",
+      "destination": "/api/auth/login"
+    },
+    {
+      "source": "/api/auth/me",
+      "destination": "/api/auth/me"
+    },
+    {
+      "source": "/api/ai/chat",
+      "destination": "/api/ai/chat"
+    },
+    {
+      "source": "/api/templates",
+      "destination": "/api/templates"
     },
     {
       "source": "/api/optimize-model",

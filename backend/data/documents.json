@@ -1,0 +1,442 @@
+[
+  {
+    "id": "doc_4b5ea5f466aa5acb",
+    "user_id": "usr_f3ecda4b232bbc6c",
+    "title": "Autonomous Spacecraft Specification v2",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "Autonomous Spacecraft Specification",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Propulsion",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Ion Drive"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 2,
+    "created_at": "2026-09-03T05:38:43.425Z",
+    "updated_at": "2026-09-03T05:38:43.429Z"
+  },
+  {
+    "id": "doc_4bace8e942048d61",
+    "user_id": "usr_f3ecda4b232bbc6c",
+    "title": "GTA VI: Welcome to Leonida (Clone)",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "GTA VI: Welcome to Leonida",
+      "theme": "dark_gold",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Leonida Premiere",
+          "fx": "particles",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 1,
+              "text": "GRAND THEFT AUTO VI"
+            },
+            {
+              "type": "paragraph",
+              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
+            },
+            {
+              "type": "web_video",
+              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
+              "label": "4K In-Engine Motion"
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "title": "3D Spatial Hologram",
+          "fx": "none",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 2,
+              "text": "SPATIAL TELEMETRY & CHASSIS"
+            },
+            {
+              "type": "3d_model",
+              "format": "obj",
+              "mesh_template": "supercar",
+              "material_mode": "cyber_hologram"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 1,
+    "created_at": "2026-09-03T05:38:43.434Z",
+    "updated_at": "2026-09-03T05:38:43.434Z"
+  },
+  {
+    "id": "doc_238af84de7ab40aa",
+    "user_id": "usr_ba651720df857276",
+    "title": "Autonomous Spacecraft Specification v2",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "Autonomous Spacecraft Specification",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Propulsion",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Ion Drive"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 2,
+    "created_at": "2026-09-03T05:38:55.135Z",
+    "updated_at": "2026-09-03T05:38:55.140Z"
+  },
+  {
+    "id": "doc_d1fea0fe9adb3879",
+    "user_id": "usr_ba651720df857276",
+    "title": "GTA VI: Welcome to Leonida (Clone)",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "GTA VI: Welcome to Leonida",
+      "theme": "dark_gold",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Leonida Premiere",
+          "fx": "particles",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 1,
+              "text": "GRAND THEFT AUTO VI"
+            },
+            {
+              "type": "paragraph",
+              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
+            },
+            {
+              "type": "web_video",
+              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
+              "label": "4K In-Engine Motion"
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "title": "3D Spatial Hologram",
+          "fx": "none",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 2,
+              "text": "SPATIAL TELEMETRY & CHASSIS"
+            },
+            {
+              "type": "3d_model",
+              "format": "obj",
+              "mesh_template": "supercar",
+              "material_mode": "cyber_hologram"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 1,
+    "created_at": "2026-09-03T05:38:55.148Z",
+    "updated_at": "2026-09-03T05:38:55.148Z"
+  },
+  {
+    "id": "doc_c52e45b2efcaf375",
+    "user_id": "usr_63929a62ae3015cc",
+    "title": "Autonomous Spacecraft Specification v2",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "Autonomous Spacecraft Specification",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Propulsion",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Ion Drive"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 2,
+    "created_at": "2026-09-03T05:39:21.204Z",
+    "updated_at": "2026-09-03T05:39:21.218Z"
+  },
+  {
+    "id": "doc_0c2bd0d19ef0d7a0",
+    "user_id": "usr_63929a62ae3015cc",
+    "title": "GTA VI: Welcome to Leonida (Clone)",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "GTA VI: Welcome to Leonida",
+      "theme": "dark_gold",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Leonida Premiere",
+          "fx": "particles",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 1,
+              "text": "GRAND THEFT AUTO VI"
+            },
+            {
+              "type": "paragraph",
+              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
+            },
+            {
+              "type": "web_video",
+              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
+              "label": "4K In-Engine Motion"
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "title": "3D Spatial Hologram",
+          "fx": "none",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 2,
+              "text": "SPATIAL TELEMETRY & CHASSIS"
+            },
+            {
+              "type": "3d_model",
+              "format": "obj",
+              "mesh_template": "supercar",
+              "material_mode": "cyber_hologram"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 1,
+    "created_at": "2026-09-03T05:39:21.251Z",
+    "updated_at": "2026-09-03T05:39:21.252Z"
+  },
+  {
+    "id": "doc_954a0a255c145aa7",
+    "user_id": "usr_5cc7f5ff72319dde",
+    "title": "Autonomous Spacecraft Specification v2",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "Autonomous Spacecraft Specification",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Propulsion",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Ion Drive"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 2,
+    "created_at": "2026-09-03T05:40:02.732Z",
+    "updated_at": "2026-09-03T05:40:02.738Z"
+  },
+  {
+    "id": "doc_429385849c12175d",
+    "user_id": "usr_5cc7f5ff72319dde",
+    "title": "GTA VI: Welcome to Leonida (Clone)",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "GTA VI: Welcome to Leonida",
+      "theme": "dark_gold",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Leonida Premiere",
+          "fx": "particles",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 1,
+              "text": "GRAND THEFT AUTO VI"
+            },
+            {
+              "type": "paragraph",
+              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
+            },
+            {
+              "type": "web_video",
+              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
+              "label": "4K In-Engine Motion"
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "title": "3D Spatial Hologram",
+          "fx": "none",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 2,
+              "text": "SPATIAL TELEMETRY & CHASSIS"
+            },
+            {
+              "type": "3d_model",
+              "format": "obj",
+              "mesh_template": "supercar",
+              "material_mode": "cyber_hologram"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 1,
+    "created_at": "2026-09-03T05:40:02.743Z",
+    "updated_at": "2026-09-03T05:40:02.743Z"
+  },
+  {
+    "id": "doc_323e054c83d59d2f",
+    "user_id": "usr_74f5bba82cd2e57b",
+    "title": "HTTP Cloud Living Document",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "HTTP Cloud Living Document",
+      "pages": []
+    },
+    "version": 1,
+    "created_at": "2026-09-03T05:40:04.862Z",
+    "updated_at": "2026-09-03T05:40:04.862Z"
+  },
+  {
+    "id": "doc_eee51e5644c1df73",
+    "user_id": "usr_55bd3a9638d6adbc",
+    "title": "Autonomous Spacecraft Specification v2",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "Autonomous Spacecraft Specification",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Propulsion",
+          "blocks": [
+            {
+              "type": "heading",
+              "text": "Ion Drive"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 2,
+    "created_at": "2026-09-03T05:42:16.820Z",
+    "updated_at": "2026-09-03T05:42:16.826Z"
+  },
+  {
+    "id": "doc_5c704678063f9630",
+    "user_id": "usr_55bd3a9638d6adbc",
+    "title": "GTA VI: Welcome to Leonida (Clone)",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "GTA VI: Welcome to Leonida",
+      "theme": "dark_gold",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Leonida Premiere",
+          "fx": "particles",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 1,
+              "text": "GRAND THEFT AUTO VI"
+            },
+            {
+              "type": "paragraph",
+              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
+            },
+            {
+              "type": "web_video",
+              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
+              "label": "4K In-Engine Motion"
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "title": "3D Spatial Hologram",
+          "fx": "none",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 2,
+              "text": "SPATIAL TELEMETRY & CHASSIS"
+            },
+            {
+              "type": "3d_model",
+              "format": "obj",
+              "mesh_template": "supercar",
+              "material_mode": "cyber_hologram"
+            }
+          ]
+        }
+      ]
+    },
+    "version": 1,
+    "created_at": "2026-09-03T05:42:16.831Z",
+    "updated_at": "2026-09-03T05:42:16.831Z"
+  },
+  {
+    "id": "doc_9603b39e6acd779c",
+    "user_id": "usr_d4ae6fb7d05aefee",
+    "title": "HTTP Cloud Living Document",
+    "theme": "dark_gold",
+    "is_public": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "HTTP Cloud Living Document",
+      "pages": []
+    },
+    "version": 1,
+    "created_at": "2026-09-03T05:42:18.944Z",
+    "updated_at": "2026-09-03T05:42:18.944Z"
+  }
+]

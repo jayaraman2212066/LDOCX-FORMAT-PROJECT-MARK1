@@ -1,0 +1,93 @@
+[
+  {
+    "id": "tmpl-gta6-launch",
+    "title": "GTA VI: Welcome to Leonida",
+    "category": "Game & Product Launch",
+    "description": "Cinematic commercial premiere with 4K motion, 3D supercar hologram, and VIP reservation.",
+    "pages_count": 3,
+    "is_official": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "GTA VI: Welcome to Leonida",
+      "theme": "dark_gold",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Leonida Premiere",
+          "fx": "particles",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 1,
+              "text": "GRAND THEFT AUTO VI"
+            },
+            {
+              "type": "paragraph",
+              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
+            },
+            {
+              "type": "web_video",
+              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
+              "label": "4K In-Engine Motion"
+            }
+          ]
+        },
+        {
+          "id": "p2",
+          "title": "3D Spatial Hologram",
+          "fx": "none",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 2,
+              "text": "SPATIAL TELEMETRY & CHASSIS"
+            },
+            {
+              "type": "3d_model",
+              "format": "obj",
+              "mesh_template": "supercar",
+              "material_mode": "cyber_hologram"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "tmpl-investor-pitch",
+    "title": "Hyperion Quantum Propulsion",
+    "category": "Investor Pitch & Tech",
+    "description": "SaaS / DeepTech investor deck with live ARR trajectory chart and metrics grid.",
+    "pages_count": 2,
+    "is_official": true,
+    "ast": {
+      "schema_version": "2.5.0",
+      "title": "Hyperion Quantum Series A",
+      "theme": "cyberpunk",
+      "pages": [
+        {
+          "id": "p1",
+          "title": "Company Overview & ARR",
+          "fx": "particles",
+          "blocks": [
+            {
+              "type": "heading",
+              "level": 1,
+              "text": "HYPERION QUANTUM PROPULSION"
+            },
+            {
+              "type": "feature_grid",
+              "cards": [
+                {
+                  "badge": "TRACTION",
+                  "title": "$14.2M ARR",
+                  "desc": "140% YoY Net Retention"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

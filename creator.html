@@ -2790,6 +2790,7 @@ body.mode-paper .page-fx-canvas {
 
 
 <div id="tb">
+  <button class="nav-btn" id="header-auth-btn" onclick="showAuthModal()" style="margin-left:auto;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#f1f5f9;padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer">👤 Sign In</button><button class="nav-btn" onclick="showShareModal()" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#f1f5f9;padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer">🔗 Share</button><button class="nav-btn" onclick="showBillingModal()" style="background:rgba(245,158,11,0.2);border:1px solid #f59e0b;color:#fef08a;font-weight:700;padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer">💎 Pro</button>
   <div style="display:inline-flex;align-items:center;gap:8px;margin-right:6px">
     <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 10px rgba(167,139,250,.45)">
     <span class="logo">LDOC</span>
@@ -8457,6 +8458,646 @@ function setMobileView(tab) {
 }
 
 </script>
+
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+<!-- 🌐 FULL-STACK ENTERPRISE MODALS & CLOUD VAULT UI                         -->
+<!-- ═════════════════════════════════════════════════════════════════════════ -->
+
+<style>
+/* Fullstack Cloud Modals Common CSS */
+.ldoc-cloud-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 100010;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.ldoc-cloud-modal-overlay.active {
+  display: flex !important;
+}
+.ldoc-cloud-modal-box {
+  background: #0d1117;
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.9), 0 0 35px rgba(245, 158, 11, 0.15);
+  border-radius: 16px;
+  width: 580px;
+  max-width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #e2e8f0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  animation: ldocModalFadeIn 0.2s ease-out;
+}
+@keyframes ldocModalFadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+.ldoc-cloud-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: #161b22;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.ldoc-cloud-modal-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ldoc-cloud-modal-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.ldoc-cloud-modal-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+.ldoc-cloud-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+.ldoc-cloud-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #090d13;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #f1f5f9;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.ldoc-cloud-input:focus { border-color: #f59e0b; }
+.ldoc-cloud-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #000;
+  font-weight: 800;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  transition: all 0.15s;
+}
+.ldoc-cloud-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.ldoc-cloud-btn.secondary {
+  background: rgba(255,255,255,0.08);
+  color: #cbd5e1;
+  box-shadow: none;
+}
+.ldoc-cloud-btn.secondary:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+/* Pricing Tier Cards */
+.pricing-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+.pricing-card {
+  background: #161b22;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.pricing-card.featured {
+  border-color: #f59e0b;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.2);
+}
+.pricing-badge {
+  position: absolute;
+  top: -10px;
+  right: 14px;
+  background: #f59e0b;
+  color: #000;
+  font-size: 9.5px;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 99px;
+  text-transform: uppercase;
+}
+.pricing-price {
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  margin: 10px 0 4px 0;
+}
+.pricing-period { font-size: 12px; color: #94a3b8; font-weight: normal; }
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #cbd5e1;
+  flex: 1;
+}
+.pricing-features li:before {
+  content: "✓ ";
+  color: #34d399;
+  font-weight: bold;
+}
+</style>
+
+<!-- 1. Authentication Modal -->
+<div id="auth-modal" class="ldoc-cloud-modal-overlay">
+  <div class="ldoc-cloud-modal-box">
+    <div class="ldoc-cloud-modal-header">
+      <div class="ldoc-cloud-modal-title"><span>👤</span> <span id="auth-modal-title">LDOC Account & Cloud Access</span></div>
+      <button class="ldoc-cloud-modal-close" onclick="closeAuthModal()">✕</button>
+    </div>
+    <div class="ldoc-cloud-modal-body">
+      <!-- Unauthenticated View -->
+      <div id="auth-forms-container">
+        <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:8px">
+          <button id="auth-tab-login" class="ldoc-cloud-btn" style="flex:1" onclick="switchAuthTab('login')">Sign In</button>
+          <button id="auth-tab-register" class="ldoc-cloud-btn secondary" style="flex:1" onclick="switchAuthTab('register')">Create Account</button>
+        </div>
+        <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+          <div id="auth-name-group" style="display:none">
+            <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">FULL NAME</label>
+            <input type="text" id="auth-name" class="ldoc-cloud-input" placeholder="e.g. Leonardo Da Vinci">
+          </div>
+          <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">EMAIL ADDRESS</label>
+          <input type="email" id="auth-email" class="ldoc-cloud-input" placeholder="creator@example.com" required>
+          <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">PASSWORD</label>
+          <input type="password" id="auth-password" class="ldoc-cloud-input" placeholder="••••••••••••" required>
+          <div id="auth-error" style="color:#f87171;font-size:12px;margin-bottom:12px;display:none"></div>
+          <button type="submit" id="auth-submit-btn" class="ldoc-cloud-btn" style="width:100%;margin-top:6px">⚡ Sign In to LDOC Cloud</button>
+        </form>
+      </div>
+
+      <!-- Authenticated Profile View -->
+      <div id="auth-profile-container" style="display:none">
+        <div style="display:flex;align-items:center;gap:14px;background:#161b22;padding:16px;border-radius:12px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.08)">
+          <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#000" id="profile-avatar">U</div>
+          <div>
+            <div style="font-size:16px;font-weight:800;color:#fff" id="profile-name">User Name</div>
+            <div style="font-size:12px;color:#94a3b8" id="profile-email">user@example.com</div>
+            <div style="margin-top:6px;display:inline-block;padding:2px 8px;background:rgba(245,158,11,0.2);border:1px solid #f59e0b;border-radius:4px;font-size:10px;font-weight:800;color:#fef08a" id="profile-plan">FREE TIER</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="ldoc-cloud-btn" style="flex:1" onclick="showBillingModal()">💎 Upgrade Plan</button>
+          <button class="ldoc-cloud-btn secondary" style="flex:1" onclick="handleLogout()">🚪 Log Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Cloud Vault / My Documents Modal -->
+<div id="cloud-vault-modal" class="ldoc-cloud-modal-overlay">
+  <div class="ldoc-cloud-modal-box" style="width:720px">
+    <div class="ldoc-cloud-modal-header">
+      <div class="ldoc-cloud-modal-title"><span>🌟</span> <span>LDOC Cloud Vault &amp; Documents</span></div>
+      <button class="ldoc-cloud-modal-close" onclick="closeCloudVaultModal()">✕</button>
+    </div>
+    <div class="ldoc-cloud-modal-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <span style="font-size:12px;color:#94a3b8">Cloud-synced living presentations and specs</span>
+        <button class="ldoc-cloud-btn" onclick="createNewCloudDoc()" style="padding:6px 12px;font-size:12px">➕ New Cloud Document</button>
+      </div>
+      <div id="cloud-vault-list" style="display:flex;flex-direction:column;gap:10px">
+        <div style="text-align:center;padding:30px;color:#94a3b8">Loading cloud documents...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Version History Drawer / Modal -->
+<div id="versions-modal" class="ldoc-cloud-modal-overlay">
+  <div class="ldoc-cloud-modal-box">
+    <div class="ldoc-cloud-modal-header">
+      <div class="ldoc-cloud-modal-title"><span>↺</span> <span>Document Version History</span></div>
+      <button class="ldoc-cloud-modal-close" onclick="closeVersionsModal()">✕</button>
+    </div>
+    <div class="ldoc-cloud-modal-body">
+      <div style="font-size:12px;color:#94a3b8;margin-bottom:14px">Chronological snapshots captured automatically on edit &amp; build</div>
+      <div id="versions-history-list" style="display:flex;flex-direction:column;gap:8px">
+        <div style="text-align:center;padding:20px;color:#94a3b8">Loading revision history...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Share Document Modal -->
+<div id="share-modal" class="ldoc-cloud-modal-overlay">
+  <div class="ldoc-cloud-modal-box">
+    <div class="ldoc-cloud-modal-header">
+      <div class="ldoc-cloud-modal-title"><span>🔗</span> <span>Share Living Document</span></div>
+      <button class="ldoc-cloud-modal-close" onclick="closeShareModal()">✕</button>
+    </div>
+    <div class="ldoc-cloud-modal-body">
+      <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">PUBLIC INTERACTIVE VIEWER LINK</label>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <input type="text" id="share-link-input" class="ldoc-cloud-input" style="margin-bottom:0" readonly>
+        <button class="ldoc-cloud-btn" onclick="copyShareLink()">📋 Copy</button>
+      </div>
+      <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">RESPONSIVE EMBED CODE (IFRAME)</label>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="share-embed-input" class="ldoc-cloud-input" style="margin-bottom:0" readonly>
+        <button class="ldoc-cloud-btn secondary" onclick="copyEmbedCode()">📋 Copy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. Stripe Billing & Pricing Modal -->
+<div id="billing-modal" class="ldoc-cloud-modal-overlay">
+  <div class="ldoc-cloud-modal-box" style="width:780px">
+    <div class="ldoc-cloud-modal-header">
+      <div class="ldoc-cloud-modal-title"><span>💎</span> <span>LDOC Studio Subscription Plans</span></div>
+      <button class="ldoc-cloud-modal-close" onclick="closeBillingModal()">✕</button>
+    </div>
+    <div class="ldoc-cloud-modal-body">
+      <div style="text-align:center;margin-bottom:18px">
+        <h3 style="font-size:18px;color:#fff;margin:0 0 6px 0">Upgrade Your Living Document Superpowers</h3>
+        <p style="font-size:12.5px;color:#94a3b8;margin:0">Free open-source SDK + viewer forever. Upgrade for cloud compilation &amp; AI orchestration.</p>
+      </div>
+      <div class="pricing-cards-grid">
+        <!-- Starter Tier -->
+        <div class="pricing-card">
+          <div style="font-size:14px;font-weight:800;color:#94a3b8">FREE STARTER</div>
+          <div class="pricing-price">$0 <span class="pricing-period">/ month</span></div>
+          <ul class="pricing-features">
+            <li>Open-Source @ldoc/sdk</li>
+            <li>Zero-Server Local .ldocx Export</li>
+            <li>Client-Side WebGL 3D Viewer</li>
+            <li>Standard Audio &amp; Video Streams</li>
+          </ul>
+          <button class="ldoc-cloud-btn secondary" style="width:100%" disabled>Current Tier</button>
+        </div>
+        <!-- Pro Creator Tier -->
+        <div class="pricing-card featured">
+          <div class="pricing-badge">POPULAR</div>
+          <div style="font-size:14px;font-weight:800;color:#f59e0b">PRO CREATOR</div>
+          <div class="pricing-price">$29 <span class="pricing-period">/ month</span></div>
+          <ul class="pricing-features">
+            <li>Everything in Free</li>
+            <li>Cloud Vault &amp; Unlimited Auto-Save</li>
+            <li>Complete Version History &amp; Rollback</li>
+            <li>Server-Side AI Copilot Proxy</li>
+            <li>3D Draco Mesh Compression</li>
+          </ul>
+          <button class="ldoc-cloud-btn" style="width:100%" onclick="initiateStripeCheckout('price_pro_creator_29')">⚡ Upgrade to Pro</button>
+        </div>
+        <!-- Enterprise Studio Tier -->
+        <div class="pricing-card">
+          <div style="font-size:14px;font-weight:800;color:#c084fc">ENTERPRISE STUDIO</div>
+          <div class="pricing-price">$99 <span class="pricing-period">/ month</span></div>
+          <ul class="pricing-features">
+            <li>Everything in Pro</li>
+            <li>VIP Lead Capture Pipeline</li>
+            <li>Headless PDF Flattening Engine</li>
+            <li>Cryptographic Package Signing</li>
+            <li>Custom Subdomain &amp; White-Label</li>
+          </ul>
+          <button class="ldoc-cloud-btn secondary" style="width:100%;background:rgba(192,132,252,0.2);color:#e9d5ff;border:1px solid #c084fc" onclick="initiateStripeCheckout('price_enterprise_99')">🚀 Contact Enterprise</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═════════════════════════════════════════════════════════════════════════════
+// 🌐 CLIENT-SIDE AUTH & FULL-STACK STATE CONTROLLER
+// ═════════════════════════════════════════════════════════════════════════════
+
+const LDocAuth = {
+  getToken() { return localStorage.getItem('ldoc_auth_token'); },
+  setToken(t) { localStorage.setItem('ldoc_auth_token', t); },
+  removeToken() { localStorage.removeItem('ldoc_auth_token'); },
+  getUser() {
+    try { return JSON.parse(localStorage.getItem('ldoc_auth_user') || 'null'); } catch (e) { return null; }
+  },
+  setUser(u) { localStorage.setItem('ldoc_auth_user', JSON.stringify(u)); },
+  removeUser() { localStorage.removeItem('ldoc_auth_user'); },
+  isAuthenticated() { return !!this.getToken(); }
+};
+
+let currentAuthTab = 'login';
+let currentActiveDocId = localStorage.getItem('ldoc_active_doc_id') || 'doc_current';
+
+function showAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (!modal) return;
+  if (LDocAuth.isAuthenticated()) {
+    const user = LDocAuth.getUser() || { name: 'Creator', email: 'user@ldoc.com', plan: 'free' };
+    document.getElementById('auth-forms-container').style.display = 'none';
+    document.getElementById('auth-profile-container').style.display = 'block';
+    document.getElementById('profile-name').textContent = user.name || 'Creator';
+    document.getElementById('profile-email').textContent = user.email || '';
+    document.getElementById('profile-avatar').textContent = (user.name || user.email || 'U')[0].toUpperCase();
+    document.getElementById('profile-plan').textContent = (user.plan || 'FREE').toUpperCase() + ' PLAN';
+  } else {
+    document.getElementById('auth-forms-container').style.display = 'block';
+    document.getElementById('auth-profile-container').style.display = 'none';
+  }
+  modal.classList.add('active');
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+function switchAuthTab(tab) {
+  currentAuthTab = tab;
+  document.getElementById('auth-name-group').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('auth-tab-login').className = tab === 'login' ? 'ldoc-cloud-btn' : 'ldoc-cloud-btn secondary';
+  document.getElementById('auth-tab-register').className = tab === 'register' ? 'ldoc-cloud-btn' : 'ldoc-cloud-btn secondary';
+  document.getElementById('auth-submit-btn').textContent = tab === 'register' ? '✨ Create Account' : '⚡ Sign In to LDOC Cloud';
+  document.getElementById('auth-error').style.display = 'none';
+}
+
+async function handleAuthSubmit(e) {
+  e.preventDefault();
+  const email = document.getElementById('auth-email').value;
+  const password = document.getElementById('auth-password').value;
+  const name = document.getElementById('auth-name').value;
+  const errEl = document.getElementById('auth-error');
+  errEl.style.display = 'none';
+
+  const endpoint = currentAuthTab === 'register' ? '/api/auth/register' : '/api/auth/login';
+  const payload = currentAuthTab === 'register' ? { email, password, name } : { email, password };
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) {
+      errEl.textContent = data.error || 'Authentication failed. Check credentials.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    LDocAuth.setToken(data.token);
+    LDocAuth.setUser(data.user);
+    updateHeaderAuthButton();
+    showAuthModal();
+  } catch (err) {
+    errEl.textContent = 'Network error: ' + err.message;
+    errEl.style.display = 'block';
+  }
+}
+
+function handleLogout() {
+  LDocAuth.removeToken();
+  LDocAuth.removeUser();
+  updateHeaderAuthButton();
+  closeAuthModal();
+}
+
+function updateHeaderAuthButton() {
+  const btn = document.getElementById('header-auth-btn');
+  if (!btn) return;
+  if (LDocAuth.isAuthenticated()) {
+    const user = LDocAuth.getUser();
+    btn.innerHTML = `👤 ${user?.name || 'Account'} <span style="background:#f59e0b;color:#000;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:900;margin-left:4px">PRO</span>`;
+  } else {
+    btn.innerHTML = `👤 Sign In`;
+  }
+}
+
+// ── CLOUD VAULT (MY DOCUMENTS) ──────────────────────────────────────────────
+async function showCloudVaultModal() {
+  const modal = document.getElementById('cloud-vault-modal');
+  if (!modal) return;
+  modal.classList.add('active');
+
+  const listEl = document.getElementById('cloud-vault-list');
+  listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8">Syncing with cloud database...</div>';
+
+  try {
+    const headers = {};
+    if (LDocAuth.getToken()) headers['Authorization'] = 'Bearer ' + LDocAuth.getToken();
+    const res = await fetch('/api/documents', { headers });
+    const docs = await res.json();
+
+    if (!Array.isArray(docs) || docs.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8">No documents yet. Click "New Cloud Document" to create one.</div>';
+      return;
+    }
+
+    listEl.innerHTML = docs.map(d => `
+      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#fff">${escapeHtml(d.title)}</div>
+          <div style="font-size:11.5px;color:#94a3b8;margin-top:2px">ID: ${d.id} • Revision v${d.version || 1} • ${new Date(d.updated_at || Date.now()).toLocaleDateString()}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="ldoc-cloud-btn" style="padding:4px 10px;font-size:11.5px" onclick="loadCloudDocument('${d.id}')">✏️ Open</button>
+          <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="showVersionsModal('${d.id}')">↺ History</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    listEl.innerHTML = '<div style="color:#f87171;padding:16px">Failed to load documents: ' + err.message + '</div>';
+  }
+}
+
+function closeCloudVaultModal() {
+  const modal = document.getElementById('cloud-vault-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+async function createNewCloudDoc() {
+  const title = prompt('Enter document title:', 'New Living Document');
+  if (!title) return;
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (LDocAuth.getToken()) headers['Authorization'] = 'Bearer ' + LDocAuth.getToken();
+    const res = await fetch('/api/documents', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ title, theme: 'dark_gold' })
+    });
+    const doc = await res.json();
+    currentActiveDocId = doc.id;
+    localStorage.setItem('ldoc_active_doc_id', doc.id);
+    showCloudVaultModal();
+  } catch (err) {
+    alert('Error creating cloud document: ' + err.message);
+  }
+}
+
+async function loadCloudDocument(docId) {
+  try {
+    const res = await fetch(`/api/documents/${docId}`);
+    const doc = await res.json();
+    currentActiveDocId = doc.id;
+    localStorage.setItem('ldoc_active_doc_id', doc.id);
+    if (doc.ast) {
+      if (typeof currentDoc !== 'undefined') {
+        currentDoc = doc.ast;
+        if (typeof renderBlocks === 'function') renderBlocks();
+        if (typeof renderPreview === 'function') renderPreview();
+      }
+      const titleEl = document.getElementById('doc-title') || document.getElementById('top-title');
+      if (titleEl) titleEl.textContent = doc.title;
+    }
+    closeCloudVaultModal();
+  } catch (err) {
+    alert('Error opening document: ' + err.message);
+  }
+}
+
+// ── VERSION HISTORY ─────────────────────────────────────────────────────────
+async function showVersionsModal(docId) {
+  docId = docId || currentActiveDocId;
+  const modal = document.getElementById('versions-modal');
+  if (!modal) return;
+  modal.classList.add('active');
+
+  const listEl = document.getElementById('versions-history-list');
+  listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">Fetching version snapshots...</div>';
+
+  try {
+    const res = await fetch(`/api/documents/${docId}/versions`);
+    const versions = await res.json();
+
+    if (!Array.isArray(versions) || versions.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">No past snapshots recorded yet.</div>';
+      return;
+    }
+
+    listEl.innerHTML = versions.map(v => `
+      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <span style="font-weight:700;color:#f59e0b;font-size:12.5px">v${v.version_num}</span>
+          <span style="color:#e2e8f0;font-size:12.5px;margin-left:8px">${escapeHtml(v.summary || 'Revision')}</span>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px">${new Date(v.created_at).toLocaleString()}</div>
+        </div>
+        <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="restoreSnapshot('${docId}', '${v.id}')">↺ Restore</button>
+      </div>
+    `).join('');
+  } catch (err) {
+    listEl.innerHTML = '<div style="color:#f87171;padding:16px">Failed to load versions: ' + err.message + '</div>';
+  }
+}
+
+function closeVersionsModal() {
+  const modal = document.getElementById('versions-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+async function restoreSnapshot(docId, versionId) {
+  if (!confirm('Are you sure you want to restore this revision snapshot?')) return;
+  try {
+    const res = await fetch(`/api/documents/${docId}/restore`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ version_id: versionId })
+    });
+    const restored = await res.json();
+    alert('Document restored to revision successfully!');
+    closeVersionsModal();
+    loadCloudDocument(docId);
+  } catch (err) {
+    alert('Error restoring revision: ' + err.message);
+  }
+}
+
+// ── SHARE MODAL ─────────────────────────────────────────────────────────────
+function showShareModal() {
+  const modal = document.getElementById('share-modal');
+  if (!modal) return;
+  const currentUrl = window.location.origin + window.location.pathname + '?doc=' + currentActiveDocId;
+  const embedCode = `<iframe src="${currentUrl}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
+  document.getElementById('share-link-input').value = currentUrl;
+  document.getElementById('share-embed-input').value = embedCode;
+  modal.classList.add('active');
+}
+
+function closeShareModal() {
+  const modal = document.getElementById('share-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+function copyShareLink() {
+  const inp = document.getElementById('share-link-input');
+  inp.select();
+  navigator.clipboard.writeText(inp.value);
+  alert('Share URL copied to clipboard!');
+}
+
+function copyEmbedCode() {
+  const inp = document.getElementById('share-embed-input');
+  inp.select();
+  navigator.clipboard.writeText(inp.value);
+  alert('Iframe embed code copied to clipboard!');
+}
+
+// ── STRIPE BILLING & PRICING MODAL ──────────────────────────────────────────
+function showBillingModal() {
+  const modal = document.getElementById('billing-modal');
+  if (modal) modal.classList.add('active');
+}
+
+function closeBillingModal() {
+  const modal = document.getElementById('billing-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+async function initiateStripeCheckout(priceId) {
+  try {
+    const res = await fetch('/api/checkout/create-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ price_id: priceId, return_url: window.location.href })
+    });
+    const session = await res.json();
+    if (session.checkout_url) {
+      window.location.href = session.checkout_url;
+    } else {
+      alert('Checkout session created: ' + (session.session_id || 'OK') + '\n(In Stripe test mode)');
+    }
+  } catch (err) {
+    alert('Billing error: ' + err.message);
+  }
+}
+
+function escapeHtml(str) {
+  return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
+}
+
+// Auto-initialize header state on load
+document.addEventListener('DOMContentLoaded', () => {
+  updateHeaderAuthButton();
+});
+</script>
+
 </body>
 </html>
 

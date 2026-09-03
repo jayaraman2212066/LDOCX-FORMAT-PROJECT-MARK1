@@ -1,0 +1,20 @@
+{
+  "name": "@ldoc/sdk",
+  "version": "2.5.0",
+  "description": "Open-Source Living Document (.ldocx) Parser, Serializer, and AST Schema SDK",
+  "main": "index.js",
+  "license": "MIT",
+  "keywords": [
+    "ldocx",
+    "living-document",
+    "parser",
+    "serializer",
+    "ast",
+    "3d",
+    "webgl"
+  ],
+  "author": "Jayaraman K",
+  "dependencies": {
+    "jszip": "^3.10.1"
+  }
+}
