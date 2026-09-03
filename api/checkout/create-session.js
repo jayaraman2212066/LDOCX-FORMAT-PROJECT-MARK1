@@ -1,17 +1,18 @@
+const { createLemonCheckoutSession } = require('../../backend/lemon_gateway');
 const { createCheckoutSession } = require('../../backend/stripe_gateway');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const payload = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const session = await createCheckoutSession(payload);
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+    const isLemon = (process.env.PAYMENT_PROVIDER || 'lemonsqueezy') === 'lemonsqueezy';
+    const session = isLemon ? await createLemonCheckoutSession(body) : await createCheckoutSession(body);
     return res.status(200).json(session);
   } catch (err) {
-    return res.status(400).json({ error: 'Checkout session creation failed: ' + err.message });
+    return res.status(400).json({ error: err.message });
   }
 };

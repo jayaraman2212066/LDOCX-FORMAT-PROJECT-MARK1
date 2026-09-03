@@ -20,6 +20,12 @@ redist/
 output/
 *.log
 
+# Environment secrets and API keys
+.env
+.env.*
+*.env
+backend/.env
+
 # OS files
 .DS_Store
 Thumbs.db

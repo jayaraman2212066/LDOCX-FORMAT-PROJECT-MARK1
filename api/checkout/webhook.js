@@ -1,18 +1,35 @@
+const { handleLemonWebhook } = require('../../backend/lemon_gateway');
 const { handleWebhookEvent } = require('../../backend/stripe_gateway');
+const { sendEmailViaGmail, ADMIN_EMAIL } = require('../../backend/lead_router');
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, stripe-signature');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-signature, stripe-signature');
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const payload = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const sig = req.headers['stripe-signature'];
-    const result = handleWebhookEvent(payload, sig);
-    return res.status(200).json(result);
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+    const lemonSig = req.headers['x-signature'];
+    const stripeSig = req.headers['stripe-signature'];
+
+    let webhookRes;
+    if (lemonSig || (process.env.PAYMENT_PROVIDER || 'lemonsqueezy') === 'lemonsqueezy') {
+      webhookRes = handleLemonWebhook(body, lemonSig);
+    } else {
+      webhookRes = handleWebhookEvent(body, stripeSig);
+    }
+
+    if (webhookRes && webhookRes.customer_email) {
+      sendEmailViaGmail({
+        to: ADMIN_EMAIL,
+        subject: `💰 [LDOC Sale / Order] ${webhookRes.license_key}`,
+        text: `New order completed!\nCustomer: ${webhookRes.customer_email}\nLicense: ${webhookRes.license_key}\nPlatform: Lemon Squeezy`
+      }).catch(() => {});
+    }
+
+    return res.status(200).json(webhookRes);
   } catch (err) {
-    return res.status(400).json({ error: 'Webhook processing failed: ' + err.message });
+    return res.status(400).json({ error: err.message });
   }
 };

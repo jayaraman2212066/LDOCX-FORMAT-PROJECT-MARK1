@@ -10,6 +10,8 @@ const { register, login, verifyToken } = require('./auth_service');
 const { executeAiChatProxy } = require('./ai_proxy');
 const { optimizeMesh } = require('./draco_optimizer');
 const { createCheckoutSession, handleWebhookEvent } = require('./stripe_gateway');
+const { createLemonCheckoutSession, verifyLemonWebhookSignature, handleLemonWebhook } = require('./lemon_gateway');
+const { sendEmailViaGmail } = require('./lead_router');
 const { captureLead, ADMIN_EMAIL } = require('./lead_router');
 const { renderHeadlessPdf } = require('./pdf_flattener');
 const { validateLdocxSpec, convertToLdocx, SCHEMA_VERSION } = require('./schema_validator');
@@ -237,15 +239,33 @@ const server = http.createServer(async (req, res) => {
 
     if (pathname === '/api/checkout/create-session' && req.method === 'POST') {
       const body = await parseJsonBody(req);
-      const session = await createCheckoutSession(body);
+      const isLemon = (process.env.PAYMENT_PROVIDER || 'lemonsqueezy') === 'lemonsqueezy';
+      const session = isLemon ? await createLemonCheckoutSession(body) : await createCheckoutSession(body);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify(session));
     }
 
     if (pathname === '/api/checkout/webhook' && req.method === 'POST') {
       const body = await parseJsonBody(req);
-      const sig = req.headers['stripe-signature'];
-      const webhookRes = handleWebhookEvent(body, sig);
+      const lemonSig = req.headers['x-signature'];
+      const stripeSig = req.headers['stripe-signature'];
+
+      let webhookRes;
+      if (lemonSig || (process.env.PAYMENT_PROVIDER || 'lemonsqueezy') === 'lemonsqueezy') {
+        webhookRes = handleLemonWebhook(body, lemonSig);
+      } else {
+        webhookRes = handleWebhookEvent(body, stripeSig);
+      }
+
+      // Dispatch real email alert to owner on purchase
+      if (webhookRes && webhookRes.customer_email) {
+        sendEmailViaGmail({
+          to: ADMIN_EMAIL,
+          subject: `💰 [LDOC Sale / Order] ${webhookRes.license_key}`,
+          text: `New order completed!\nCustomer: ${webhookRes.customer_email}\nLicense: ${webhookRes.license_key}\nPlatform: Lemon Squeezy`
+        }).catch(() => {});
+      }
+
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify(webhookRes));
     }
