@@ -40,6 +40,7 @@ for (const dir of ['samples', 'examples']) {
 
 // Create directory-based routes for 100% reliable URL matching on Vercel
 const routeDirs = [
+  { dir: 'live-studio', src: 'studio.html' },
   { dir: 'studio', src: 'studio.html' },
   { dir: 'models', src: 'models.html' },
   { dir: 'templates', src: 'models.html' },
