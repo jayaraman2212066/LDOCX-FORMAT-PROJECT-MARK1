@@ -1,743 +1,148 @@
 [
   {
-    "id": "ver_408a4e5c5f560471",
-    "document_id": "doc_4b5ea5f466aa5acb",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
+    "id": "ver_doc_annual_v1",
+    "doc_id": "financial-annual-report",
+    "version": 1,
+    "title": "Financial & ESG Annual Living Report (Initial Draft)",
+    "snapshot": {
       "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:38:43.427Z"
-  },
-  {
-    "id": "ver_f0d034297a3395cd",
-    "document_id": "doc_4b5ea5f466aa5acb",
-    "version_num": 2,
-    "summary": "Added telemetry beacon",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:38:43.431Z"
-  },
-  {
-    "id": "ver_39e226a5db291614",
-    "document_id": "doc_4bace8e942048d61",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "GTA VI: Welcome to Leonida",
+      "title": "Financial & ESG Annual Living Report",
       "theme": "dark_gold",
       "pages": [
         {
           "id": "p1",
-          "title": "Leonida Premiere",
+          "title": "Executive Financial Highlights",
           "fx": "particles",
           "blocks": [
             {
               "type": "heading",
               "level": 1,
-              "text": "GRAND THEFT AUTO VI"
+              "text": "GLOBAL ENTERPRISE ANNUAL REPORT"
             },
             {
               "type": "paragraph",
-              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
+              "text": "Interactive financial reporting powered by the open .ldocx standard. Experience reactive charts and verifiable cryptographic data."
             },
             {
-              "type": "web_video",
-              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
-              "label": "4K In-Engine Motion"
+              "type": "feature_grid",
+              "cards": [
+                {
+                  "badge": "REVENUE",
+                  "title": "$48.6M",
+                  "desc": "+64% Year-over-Year"
+                },
+                {
+                  "badge": "RETENTION",
+                  "title": "138%",
+                  "desc": "Net Revenue Retention"
+                },
+                {
+                  "badge": "CARBON",
+                  "title": "Net Zero",
+                  "desc": "Scope 1 & 2 Neutral"
+                }
+              ]
             }
           ]
         },
         {
           "id": "p2",
-          "title": "3D Spatial Hologram",
+          "title": "Interactive Financial Model",
           "fx": "none",
           "blocks": [
             {
               "type": "heading",
               "level": 2,
-              "text": "SPATIAL TELEMETRY & CHASSIS"
+              "text": "REVENUE TRAJECTORY & EBITDA"
             },
             {
-              "type": "3d_model",
-              "format": "obj",
-              "mesh_template": "supercar",
-              "material_mode": "cyber_hologram"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:38:43.438Z"
-  },
-  {
-    "id": "ver_06965f22093596f7",
-    "document_id": "doc_238af84de7ab40aa",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
+              "type": "code",
+              "language": "python",
+              "code": "import matplotlib.pyplot as plt\nquarters = ['Q1', 'Q2', 'Q3', 'Q4']\nrevenue = [8.2, 10.5, 13.8, 16.1]\nplt.plot(quarters, revenue, marker='o', color='#f59e0b')\nplt.title('2026 Quarterly Revenue ($M)')\nplt.show()"
+            },
             {
-              "type": "heading",
-              "text": "Ion Drive"
+              "type": "button",
+              "label": "DOWNLOAD AUDITED LDOCX DOSSIER",
+              "action": "export"
             }
           ]
         }
       ]
     },
-    "created_at": "2026-09-03T05:38:55.138Z"
+    "created_at": "2026-09-02T12:00:00Z",
+    "author": "Global Enterprise Research"
   },
   {
-    "id": "ver_c0f67f14028a0bbc",
-    "document_id": "doc_238af84de7ab40aa",
-    "version_num": 2,
-    "summary": "Added telemetry beacon",
-    "ast": {
+    "id": "ver_doc_annual_v2",
+    "doc_id": "financial-annual-report",
+    "version": 2,
+    "title": "Financial & ESG Annual Living Report (Audited)",
+    "snapshot": {
       "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:38:55.142Z"
-  },
-  {
-    "id": "ver_8079acc75443b890",
-    "document_id": "doc_d1fea0fe9adb3879",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "GTA VI: Welcome to Leonida",
+      "title": "Financial & ESG Annual Living Report",
       "theme": "dark_gold",
       "pages": [
         {
           "id": "p1",
-          "title": "Leonida Premiere",
+          "title": "Executive Financial Highlights",
           "fx": "particles",
           "blocks": [
             {
               "type": "heading",
               "level": 1,
-              "text": "GRAND THEFT AUTO VI"
+              "text": "GLOBAL ENTERPRISE ANNUAL REPORT"
             },
             {
               "type": "paragraph",
-              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
+              "text": "Interactive financial reporting powered by the open .ldocx standard. Experience reactive charts and verifiable cryptographic data."
             },
             {
-              "type": "web_video",
-              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
-              "label": "4K In-Engine Motion"
+              "type": "feature_grid",
+              "cards": [
+                {
+                  "badge": "REVENUE",
+                  "title": "$48.6M",
+                  "desc": "+64% Year-over-Year"
+                },
+                {
+                  "badge": "RETENTION",
+                  "title": "138%",
+                  "desc": "Net Revenue Retention"
+                },
+                {
+                  "badge": "CARBON",
+                  "title": "Net Zero",
+                  "desc": "Scope 1 & 2 Neutral"
+                }
+              ]
             }
           ]
         },
         {
           "id": "p2",
-          "title": "3D Spatial Hologram",
+          "title": "Interactive Financial Model",
           "fx": "none",
           "blocks": [
             {
               "type": "heading",
               "level": 2,
-              "text": "SPATIAL TELEMETRY & CHASSIS"
+              "text": "REVENUE TRAJECTORY & EBITDA"
             },
             {
-              "type": "3d_model",
-              "format": "obj",
-              "mesh_template": "supercar",
-              "material_mode": "cyber_hologram"
+              "type": "code",
+              "language": "python",
+              "code": "import matplotlib.pyplot as plt\nquarters = ['Q1', 'Q2', 'Q3', 'Q4']\nrevenue = [8.2, 10.5, 13.8, 16.1]\nplt.plot(quarters, revenue, marker='o', color='#f59e0b')\nplt.title('2026 Quarterly Revenue ($M)')\nplt.show()"
+            },
+            {
+              "type": "button",
+              "label": "DOWNLOAD AUDITED LDOCX DOSSIER",
+              "action": "export"
             }
           ]
         }
       ]
     },
-    "created_at": "2026-09-03T05:38:55.150Z"
-  },
-  {
-    "id": "ver_b5de75bf9bb5dca1",
-    "document_id": "doc_c52e45b2efcaf375",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:39:21.211Z"
-  },
-  {
-    "id": "ver_f2f1d58c5dae967d",
-    "document_id": "doc_c52e45b2efcaf375",
-    "version_num": 2,
-    "summary": "Added telemetry beacon",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:39:21.231Z"
-  },
-  {
-    "id": "ver_adf3102b3c5947fc",
-    "document_id": "doc_0c2bd0d19ef0d7a0",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "GTA VI: Welcome to Leonida",
-      "theme": "dark_gold",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Leonida Premiere",
-          "fx": "particles",
-          "blocks": [
-            {
-              "type": "heading",
-              "level": 1,
-              "text": "GRAND THEFT AUTO VI"
-            },
-            {
-              "type": "paragraph",
-              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
-            },
-            {
-              "type": "web_video",
-              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
-              "label": "4K In-Engine Motion"
-            }
-          ]
-        },
-        {
-          "id": "p2",
-          "title": "3D Spatial Hologram",
-          "fx": "none",
-          "blocks": [
-            {
-              "type": "heading",
-              "level": 2,
-              "text": "SPATIAL TELEMETRY & CHASSIS"
-            },
-            {
-              "type": "3d_model",
-              "format": "obj",
-              "mesh_template": "supercar",
-              "material_mode": "cyber_hologram"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:39:21.253Z"
-  },
-  {
-    "id": "ver_074e9802cf78ab8d",
-    "document_id": "doc_954a0a255c145aa7",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:40:02.734Z"
-  },
-  {
-    "id": "ver_25fdd647f16b80f1",
-    "document_id": "doc_954a0a255c145aa7",
-    "version_num": 2,
-    "summary": "Added telemetry beacon",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:40:02.740Z"
-  },
-  {
-    "id": "ver_00998d43cc2ddc5b",
-    "document_id": "doc_429385849c12175d",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "GTA VI: Welcome to Leonida",
-      "theme": "dark_gold",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Leonida Premiere",
-          "fx": "particles",
-          "blocks": [
-            {
-              "type": "heading",
-              "level": 1,
-              "text": "GRAND THEFT AUTO VI"
-            },
-            {
-              "type": "paragraph",
-              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
-            },
-            {
-              "type": "web_video",
-              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
-              "label": "4K In-Engine Motion"
-            }
-          ]
-        },
-        {
-          "id": "p2",
-          "title": "3D Spatial Hologram",
-          "fx": "none",
-          "blocks": [
-            {
-              "type": "heading",
-              "level": 2,
-              "text": "SPATIAL TELEMETRY & CHASSIS"
-            },
-            {
-              "type": "3d_model",
-              "format": "obj",
-              "mesh_template": "supercar",
-              "material_mode": "cyber_hologram"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:40:02.745Z"
-  },
-  {
-    "id": "ver_e8c1bd039f9df412",
-    "document_id": "doc_323e054c83d59d2f",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "HTTP Cloud Living Document",
-      "pages": []
-    },
-    "created_at": "2026-09-03T05:40:04.864Z"
-  },
-  {
-    "id": "ver_1c0119c3cc33cc40",
-    "document_id": "doc_eee51e5644c1df73",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:42:16.822Z"
-  },
-  {
-    "id": "ver_45d39a8e78ba0775",
-    "document_id": "doc_eee51e5644c1df73",
-    "version_num": 2,
-    "summary": "Added telemetry beacon",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:42:16.828Z"
-  },
-  {
-    "id": "ver_d2ab24946c2b18b9",
-    "document_id": "doc_5c704678063f9630",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "GTA VI: Welcome to Leonida",
-      "theme": "dark_gold",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Leonida Premiere",
-          "fx": "particles",
-          "blocks": [
-            {
-              "type": "heading",
-              "level": 1,
-              "text": "GRAND THEFT AUTO VI"
-            },
-            {
-              "type": "paragraph",
-              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
-            },
-            {
-              "type": "web_video",
-              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
-              "label": "4K In-Engine Motion"
-            }
-          ]
-        },
-        {
-          "id": "p2",
-          "title": "3D Spatial Hologram",
-          "fx": "none",
-          "blocks": [
-            {
-              "type": "heading",
-              "level": 2,
-              "text": "SPATIAL TELEMETRY & CHASSIS"
-            },
-            {
-              "type": "3d_model",
-              "format": "obj",
-              "mesh_template": "supercar",
-              "material_mode": "cyber_hologram"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T05:42:16.832Z"
-  },
-  {
-    "id": "ver_669af9217b9e5003",
-    "document_id": "doc_9603b39e6acd779c",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "HTTP Cloud Living Document",
-      "pages": []
-    },
-    "created_at": "2026-09-03T05:42:18.946Z"
-  },
-  {
-    "id": "ver_f67dcb7f8a0398e3",
-    "document_id": "doc_f3f88563f2ac51a0",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T06:42:26.264Z"
-  },
-  {
-    "id": "ver_4955194f9b78c953",
-    "document_id": "doc_f3f88563f2ac51a0",
-    "version_num": 2,
-    "summary": "Added telemetry beacon",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T06:42:26.269Z"
-  },
-  {
-    "id": "ver_2a26a6929e9e8709",
-    "document_id": "doc_4a82ddcb8e82e0f0",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "GTA VI: Welcome to Leonida",
-      "theme": "dark_gold",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Leonida Premiere",
-          "fx": "particles",
-          "blocks": [
-            {
-              "type": "heading",
-              "level": 1,
-              "text": "GRAND THEFT AUTO VI"
-            },
-            {
-              "type": "paragraph",
-              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
-            },
-            {
-              "type": "web_video",
-              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
-              "label": "4K In-Engine Motion"
-            }
-          ]
-        },
-        {
-          "id": "p2",
-          "title": "3D Spatial Hologram",
-          "fx": "none",
-          "blocks": [
-            {
-              "type": "heading",
-              "level": 2,
-              "text": "SPATIAL TELEMETRY & CHASSIS"
-            },
-            {
-              "type": "3d_model",
-              "format": "obj",
-              "mesh_template": "supercar",
-              "material_mode": "cyber_hologram"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T06:42:26.277Z"
-  },
-  {
-    "id": "ver_0179352c13f622e8",
-    "document_id": "doc_70d772e07914d916",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "HTTP Cloud Living Document",
-      "pages": []
-    },
-    "created_at": "2026-09-03T06:42:28.412Z"
-  },
-  {
-    "id": "ver_2bfb24daff0208c9",
-    "document_id": "doc_fcb7b71e9e4b2f22",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T07:11:26.623Z"
-  },
-  {
-    "id": "ver_585458a5df8742c9",
-    "document_id": "doc_fcb7b71e9e4b2f22",
-    "version_num": 2,
-    "summary": "Added telemetry beacon",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "Autonomous Spacecraft Specification",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Propulsion",
-          "blocks": [
-            {
-              "type": "heading",
-              "text": "Ion Drive"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T07:11:26.626Z"
-  },
-  {
-    "id": "ver_f6c825b840e579ac",
-    "document_id": "doc_f3175e187796c4d8",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "GTA VI: Welcome to Leonida",
-      "theme": "dark_gold",
-      "pages": [
-        {
-          "id": "p1",
-          "title": "Leonida Premiere",
-          "fx": "particles",
-          "blocks": [
-            {
-              "type": "heading",
-              "level": 1,
-              "text": "GRAND THEFT AUTO VI"
-            },
-            {
-              "type": "paragraph",
-              "text": "Welcome to Leonida. Living presentation powered by LDOCX."
-            },
-            {
-              "type": "web_video",
-              "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm",
-              "label": "4K In-Engine Motion"
-            }
-          ]
-        },
-        {
-          "id": "p2",
-          "title": "3D Spatial Hologram",
-          "fx": "none",
-          "blocks": [
-            {
-              "type": "heading",
-              "level": 2,
-              "text": "SPATIAL TELEMETRY & CHASSIS"
-            },
-            {
-              "type": "3d_model",
-              "format": "obj",
-              "mesh_template": "supercar",
-              "material_mode": "cyber_hologram"
-            }
-          ]
-        }
-      ]
-    },
-    "created_at": "2026-09-03T07:11:26.628Z"
-  },
-  {
-    "id": "ver_b8a608bdfe5ed6ca",
-    "document_id": "doc_b7f0c1037e2e383e",
-    "version_num": 1,
-    "summary": "Initial Creation",
-    "ast": {
-      "schema_version": "2.5.0",
-      "title": "HTTP Cloud Living Document",
-      "pages": []
-    },
-    "created_at": "2026-09-03T07:11:28.733Z"
+    "created_at": "2026-09-03T12:00:00Z",
+    "author": "Global Enterprise Research"
   }
 ]

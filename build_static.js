@@ -9,14 +9,12 @@ if (!fs.existsSync(publicDir)) {
 const filesToCopy = [
   'index.html',
   'creator.html',
-  'gta6_lightbox_mesh.js',
   'jszip.min.js',
   'ldoc_logo.png',
   'ldoc_background_image.png',
   'ai-brain.png',
   'app.ico',
   'manifest.json',
-  'gt6-velocity-unleashed.ldocx',
   'daily-prophet.ldocx'
 ];
 

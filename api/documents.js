@@ -16,12 +16,20 @@ module.exports = (req, res) => {
 
   const sampleDocs = [
     {
-      id: 'gt6-velocity-unleashed',
-      title: 'GTA VI: Welcome to Leonida (Master Living Document)',
-      author: 'Rockstar Games x LDOC Studio',
-      pages: 5,
+      id: 'financial-annual-report',
+      title: 'Financial & ESG Annual Living Report',
+      author: 'Global Enterprise Research',
+      pages: 3,
       created_at: '2026-09-02T12:00:00Z',
-      file: 'gt6-velocity-unleashed.ldocx'
+      file: 'financial-annual-report.ldocx'
+    },
+    {
+      id: 'hyperion-series-a',
+      title: 'Hyperion Series A Dynamic Investor Deck',
+      author: 'Hyperion Labs x LDOC Studio',
+      pages: 2,
+      created_at: '2026-09-01T15:00:00Z',
+      file: 'hyperion-series-a.ldocx'
     },
     {
       id: 'daily-prophet',

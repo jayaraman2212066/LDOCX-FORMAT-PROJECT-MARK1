@@ -84,12 +84,12 @@ async function captureLead(leadData) {
 
   const record = {
     id: leadId,
-    name: (leadData.name || leadData.fullName || 'VIP Collector').trim(),
+    name: (leadData.name || leadData.fullName || 'Enterprise Lead').trim(),
     email: (leadData.email || '').trim().toLowerCase(),
-    platform: leadData.platform || 'PS5 / Xbox Series X / PC',
-    interest_tier: leadData.tier || leadData.edition || 'Founder VIP Edition',
-    source_campaign: leadData.campaign || 'GTA 6 Welcome to Leonida',
-    message: leadData.message || 'VIP Priority Access Reservation',
+    platform: leadData.platform || 'Windows 11 / macOS / Linux',
+    interest_tier: leadData.tier || leadData.edition || 'LDOC Studio Pro Creator',
+    source_campaign: leadData.campaign || 'LDOC Studio Official Portal',
+    message: leadData.message || 'Enterprise & SDK Access Inquiry',
     routed_to: ADMIN_EMAIL,
     captured_at: timestamp
   };
@@ -112,7 +112,7 @@ async function captureLead(leadData) {
   }
 
   // 2. Dispatch real email notification via Gmail SMTP
-  const emailBody = `⚡ NEW VIP LEAD CAPTURED ON LDOC STUDIO\n\n` +
+  const emailBody = `🚀 NEW ENTERPRISE LEAD / INQUIRY ON LDOC STUDIO\n\n` +
                     `Lead ID: ${record.id}\n` +
                     `Subscriber Name: ${record.name}\n` +
                     `Subscriber Email: ${record.email}\n` +
@@ -125,7 +125,7 @@ async function captureLead(leadData) {
 
   const mailRes = await sendEmailViaGmail({
     to: ADMIN_EMAIL,
-    subject: `🔥 [LDOC VIP Lead] ${record.name} (${record.interest_tier})`,
+    subject: `🌟 [LDOC Lead] ${record.name} (${record.interest_tier})`,
     text: emailBody
   });
 

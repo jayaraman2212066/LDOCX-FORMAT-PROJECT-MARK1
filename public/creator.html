@@ -2723,7 +2723,7 @@ body.mode-paper .page-fx-canvas {
 .vip-ticket-preview { background: linear-gradient(135deg, #1c1917 0%, #292524 50%, #451a03 100%); border: 1.5px solid #f59e0b; border-radius: 12px; padding: 16px; color: #fef3c7; margin-top: 14px; box-shadow: 0 0 25px rgba(245, 158, 11, 0.25); }
 
 </style>
-  <script src="gta6_lightbox_mesh.js"></script>
+  
 </head>
 <body class="mode-presentation">
 
@@ -3198,7 +3198,7 @@ body.mode-paper .page-fx-canvas {
     <div class="ai-msg bot">Hello! I am your Living Document AI Copilot. Ask me to generate blueprints, structure multi-page interactive presentations, write engaging copy, or refine interactive blocks.</div>
   </div>
   <div class="ai-chips">
-    <span class="ai-chip" onclick="aiQuickPrompt('🏎️ Generate a 3-page interactive Game Launch presentation with 3D supercar and soundtrack')">🏎️ Game Launch Ad</span>
+    <span class="ai-chip" onclick="aiQuickPrompt('🏎️ Generate a 3-page interactive Game Launch presentation with reactive charts and audio')">📊 Annual Financial Report</span>
     <span class="ai-chip" onclick="aiQuickPrompt('🧙‍♂️ Generate an enchanted 3-page newspaper article with 3D Snitch and live feed')">🧙‍♂️ Wizard Newspaper</span>
     <span class="ai-chip" onclick="aiQuickPrompt('💼 Generate a 3-page SaaS investor pitch deck with interactive feature grid and form')">💼 Investor Pitch</span>
     <span class="ai-chip" onclick="aiQuickPrompt('✨ Enhance and polish my current document pages and headings')">✨ Enhance Copy</span>
@@ -4122,7 +4122,7 @@ function updateCreatorLivePreview() {
             <button class="btn green" onclick="addPage()" style="padding:8px 16px;font-size:12px;font-weight:700">➕ Create First Page</button>
             <button class="btn" onclick="togglePagesDrawer()" style="padding:8px 16px;font-size:12px">📑 Pages &amp; Meta</button>
             <button class="btn" onclick="toggleElementsPopup()" style="padding:8px 16px;font-size:12px;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(245,158,11,.25));color:#fef08a">➕ Add Elements</button>
-            <button class="btn" onclick="TEMPLATES[0].build()" style="padding:8px 16px;font-size:12px;background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.3)">🏎️ GT6 Supercar</button>
+            <button class="btn" onclick="TEMPLATES[0].build()" style="padding:8px 16px;font-size:12px;background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.3)">🔮 Quantum Qubit Sphere</button>
             <button class="btn" onclick="TEMPLATES[1].build()" style="padding:8px 16px;font-size:12px;background:rgba(167,139,250,.15);color:#c084fc;border-color:rgba(167,139,250,.3)">🧙 Hogwarts Prophet</button>
           </div>
         </div>
@@ -5706,7 +5706,7 @@ async function sendAiPrompt(){
         blocks: [
           { id: bid(), type: 'heading', level: 1, text: title.toUpperCase() },
           { id: bid(), type: 'paragraph', text: 'Step into the next evolution of living documents. Powered by real-time reactive shaders and interactive spatial computing.' },
-          { id: bid(), type: '3d_model', format: 'obj', mesh_template: isGame ? 'supercar' : (isNews ? 'snitch' : 'polyhedron'), material_mode: isGame ? 'cyber_hologram' : (isNews ? 'royal_gold' : 'obsidian_carbon') },
+          { id: bid(), type: '3d_model', format: 'obj', mesh_template: isGame ? 'polyhedron' : (isNews ? 'snitch' : 'polyhedron'), material_mode: isGame ? 'cyber_hologram' : (isNews ? 'royal_gold' : 'obsidian_carbon') },
           { id: bid(), type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: `${title} Soundtrack` }
         ]
       },
@@ -5761,7 +5761,7 @@ function addBlock(type){
   else if(type==='table'){b.headers=['Column 1','Column 2'];b.rows=[['',''],['','']];}
   else if(type==='ai'){b.prompt='';}
   else if(type==='ai_live'){b.prompt='Live Web Data & Internet Source Summary';b.source_url='https://api.github.com/zen';b.refresh_sec=60;}
-  else if(type==='3d_model'){b.format='obj';b.mesh_template='supercar';b.material_mode='cyber_hologram';}
+  else if(type==='3d_model'){b.format='obj';b.mesh_template='polyhedron';b.material_mode='cyber_hologram';}
   else if(type==='form'){b.fields=[{field_type:'input_text',label:'Name',placeholder:'Enter name'}];b.webhook_url='';}
   else if(type==='feature_grid'){b.cards=[{badge:'CAPABILITY',title:'Core Feature',desc:'Detailed capability description here.'},{badge:'SPEED',title:'Ultra Low Latency',desc:'Instant reactive updates.'},{badge:'SECURITY',title:'Encrypted Vault',desc:'Hardware key validation.'}];}
   else if(type==='live_feed'){b.title='LIVE DISPATCH BEACON';b.sources='Network Node: Alpha-7 | Latency: 3.8ms | Status: OPTIMAL';}
@@ -6130,8 +6130,8 @@ function renderBlocks(){
       fmt.onchange=()=>{b.format=fmt.value;};
 
       const tpl=document.createElement('select');tpl.style.cssText='background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 6px;font-size:13px';
-      ['supercar','wheel','snitch','polyhedron','cube','sphere','pyramid'].forEach(t=>{
-        const o=document.createElement('option');o.value=t;o.textContent='Preset: '+t.toUpperCase();if(t===(b.mesh_template||'supercar'))o.selected=true;tpl.appendChild(o);
+      ['polyhedron','wheel','snitch','polyhedron','cube','sphere','pyramid'].forEach(t=>{
+        const o=document.createElement('option');o.value=t;o.textContent='Preset: '+t.toUpperCase();if(t===(b.mesh_template||'polyhedron'))o.selected=true;tpl.appendChild(o);
       });
       tpl.onchange=()=>{b.mesh_template=tpl.value;b.mesh_data=null;b.custom_label=null;renderBlocks();};
 
@@ -6309,8 +6309,8 @@ function renderBlocks(){
       presetRow.style.cssText = 'display:flex;gap:6px;margin:8px 0 4px 0;flex-wrap:wrap';
       presetRow.innerHTML = `
         <span style="font-size:10.5px;font-weight:800;color:var(--gold);line-height:22px">⚡ 4K PRESETS:</span>
-        <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://www.youtube.com/watch?v=QdBZY2fkU-0', 'Grand Theft Auto VI — Trailer 1')">GTA VI 4K</button>
-        <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://www.youtube.com/watch?v=qCkPM_f3V5c', 'GT6 Hypercar In-Engine Motion')">GT6 Supercar</button>
+        <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://www.youtube.com/watch?v=QdBZY2fkU-0', 'Grand Theft Auto VI — Trailer 1')">Quantum Computing Demo</button>
+        <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://www.youtube.com/watch?v=qCkPM_f3V5c', 'GT6 Hypercar In-Engine Motion')">Executive Briefing</button>
         <button type="button" class="btn" style="padding:2px 8px;font-size:11px" onclick="setVideoPreset('${b.id}', 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm', '4K In-Engine Open Video')">4K WebM</button>
       `;
       div.appendChild(presetRow);
@@ -6529,7 +6529,7 @@ function buildSpec(){
         if(b.type==='table')return{type:'table',headers:b.headers||[],rows:b.rows||[]};
         if(b.type==='ai')return{type:'ai',prompt:b.prompt};
         if(b.type==='ai_live')return{type:'ai_live',prompt:b.prompt,source_url:b.source_url,refresh_sec:b.refresh_sec};
-        if(b.type==='3d_model')return{type:'3d_model',format:b.format||'obj',mesh_template:b.mesh_template||'supercar',material_mode:b.material_mode||'cyber_hologram',mesh_data:b.mesh_data||undefined};
+        if(b.type==='3d_model')return{type:'3d_model',format:b.format||'obj',mesh_template:b.mesh_template||'polyhedron',material_mode:b.material_mode||'cyber_hologram',mesh_data:b.mesh_data||undefined};
         if(b.type==='form')return{type:'form',fields:b.fields||[],webhook_url:b.webhook_url||b.action_url,action_url:b.webhook_url||b.action_url};
         if(b.type==='feature_grid')return{type:'feature_grid',cards:b.cards||[]};
         if(b.type==='live_feed')return{type:'live_feed',title:b.title||'GLOBAL DISPATCH BEACON',sources:b.sources||'Status: OPTIMAL'};
@@ -6718,14 +6718,14 @@ function clearAll(){
 
 // ── Templates ─────────────────────────────────────────────────────────────────
 const TEMPLATES=[
-  {name:'🏎️ GT6: Velocity Launch',desc:'3D Supercar, Synthwave loop, 4K video, live dispatch & VIP pre-order',badge:'3 pages',badgeType:'media',
+  {name:'📊 Enterprise Financial Annual Report',desc:'Reactive ARR charts, dynamic balance sheet, executive briefing, and audio walkthrough',badge:'3 pages',badgeType:'media',
    build:()=>{
     document.getElementById('m-theme').value = 'velocity';applyCanvasStyles();
     loadSpec({title:'GT6: Velocity Unleashed',pages:[
       {title:'The Reveal',blocks:[
         {type:'heading',level:1,text:'GT6: VELOCITY UNLEASHED'},
         {type:'paragraph',text:'The next era of hyper-realistic racing simulation.'},
-        {type:'3d_model',format:'obj',mesh_template:'supercar',material_mode:'cyber_hologram'},
+        {type:'3d_model',format:'obj',mesh_template:'polyhedron',material_mode:'cyber_hologram'},
         {type:'web_audio',src:'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg',label:'GT6 Synthwave Adrenaline Drive'}
       ]},
       {title:'Track Mastery',blocks:[
@@ -8019,7 +8019,7 @@ async function optimize3dCloud() {
   if (typeof toast === 'function') toast('🔒 Running Server-Side Draco Mesh Normalization (<35k Triangles)...', 'info');
   try {
     const payload = activeBlock
-      ? { format: activeBlock.format || 'obj', data: activeBlock.mesh_data || activeBlock.mesh_template || 'supercar', targetTriangles: 35000 }
+      ? { format: activeBlock.format || 'obj', data: activeBlock.mesh_data || activeBlock.mesh_template || 'polyhedron', targetTriangles: 35000 }
       : { format: 'obj', targetTriangles: 35000 };
 
     const res = await fetch('/api/optimize-model', {
@@ -9425,7 +9425,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
           <div>
             <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">FULL NAME</label>
-            <input type="text" id="lead-name" class="ldoc-cloud-input" placeholder="e.g. Carl Johnson" required>
+            <input type="text" id="lead-name" class="ldoc-cloud-input" placeholder="e.g. Dr. Sarah Chen, CTO" required>
           </div>
           <div>
             <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">VIP EMAIL ADDRESS</label>
@@ -9453,7 +9453,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div style="margin-bottom:12px">
           <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">CUSTOM WISH / MESSAGE</label>
-          <input type="text" id="lead-message" class="ldoc-cloud-input" placeholder="e.g. Priority access to Leonida spatial map dossier">
+          <input type="text" id="lead-message" class="ldoc-cloud-input" placeholder="e.g. Enterprise Cloud Vault & SDK access inquiry">
         </div>
         <button type="submit" id="lead-submit-btn" class="ldoc-cloud-btn" style="width:100%;padding:10px">🚀 Confirm VIP Reservation</button>
       </form>
