@@ -3043,7 +3043,7 @@ body.creator-split-50-50 #creator-preview-pane {
     <span class="logo">LDOC</span>
   </div>
   <a href="/live-studio" class="nav-link">Studio</a>
-  <a href="./creator.html" class="nav-link active">Creator</a>
+  <a href="/creator" class="nav-link active">Creator</a>
   <a href="/live-studio?tab=converter" class="nav-link">⚡ Converter</a>
 
   <!-- Floating Dynamic Popup Drawer Toggles -->
@@ -4433,7 +4433,7 @@ function analyzeAiBlockCode(promptText) {
   };
 }
 
-function runLiveAiInference(blockId) {
+async function runLiveAiInference(blockId) {
   const curPage = pages.find(p => p.id === currentPage);
   if (!curPage) return;
   const b = (curPage.blocks || []).find(x => x.id === blockId);
@@ -8640,54 +8640,85 @@ function initCreatorPanelSplitters() {
   const center = document.getElementById('center');
   const preview = document.getElementById('creator-preview-pane');
 
-  if (leftSplitter && left) {
+  if (rightSplitter && center && preview) {
     let isDragging = false;
-    leftSplitter.addEventListener('mousedown', () => {
-      isDragging = true;
-      leftSplitter.classList.add('dragging');
-      document.body.style.cursor = 'col-resize';
-      document.body.style.userSelect = 'none';
-    });
-    window.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      const newW = Math.max(140, Math.min(420, e.clientX));
-      left.style.width = newW + 'px';
-    });
-    window.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        leftSplitter.classList.remove('dragging');
-        document.body.style.cursor = '';
-        document.body.style.userSelect = '';
-      }
-    });
-  }
+    let startX = 0;
+    let startCenterW = 0;
 
-  if (rightSplitter && preview) {
-    let isDragging = false;
-    rightSplitter.addEventListener('mousedown', () => {
+    rightSplitter.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       isDragging = true;
+      startX = e.clientX;
+      startCenterW = center.getBoundingClientRect().width;
       rightSplitter.classList.add('dragging');
       document.body.style.cursor = 'col-resize';
       document.body.style.userSelect = 'none';
+      document.querySelectorAll('canvas, iframe').forEach(el => el.style.pointerEvents = 'none');
     });
+
     window.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
-      const newW = Math.max(280, Math.min(window.innerWidth - 380, window.innerWidth - e.clientX));
-      preview.style.width = newW + 'px';
-      if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+      const dx = e.clientX - startX;
+      const newW = Math.max(200, Math.min(window.innerWidth - 360, startCenterW + dx));
+      center.style.width = newW + 'px';
+      center.style.flex = '0 0 ' + newW + 'px';
+      preview.style.flex = '1 1 auto';
     });
+
     window.addEventListener('mouseup', () => {
       if (isDragging) {
         isDragging = false;
         rightSplitter.classList.remove('dragging');
         document.body.style.cursor = '';
         document.body.style.userSelect = '';
+        document.querySelectorAll('canvas, iframe').forEach(el => el.style.pointerEvents = '');
+      }
+    });
+
+    rightSplitter.addEventListener('dblclick', () => {
+      if (typeof toggleSlideFullscreen === 'function') toggleSlideFullscreen();
+    });
+  }
+
+  if (leftSplitter && left) {
+    let isDragging = false;
+    let startX = 0;
+    let startLeftW = 0;
+
+    leftSplitter.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      isDragging = true;
+      startX = e.clientX;
+      startLeftW = left.getBoundingClientRect().width;
+      leftSplitter.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      document.querySelectorAll('canvas, iframe').forEach(el => el.style.pointerEvents = 'none');
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const newW = Math.max(160, Math.min(450, startLeftW + dx));
+      left.style.width = newW + 'px';
+      left.style.flex = '0 0 ' + newW + 'px';
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        leftSplitter.classList.remove('dragging');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        document.querySelectorAll('canvas, iframe').forEach(el => el.style.pointerEvents = '');
       }
     });
   }
 }
 window.addEventListener('DOMContentLoaded', initCreatorPanelSplitters);
+setTimeout(initCreatorPanelSplitters, 200);
 
 function triggerTelemetryBurst(btn) {
   const card = btn.closest('.telemetry-card');
