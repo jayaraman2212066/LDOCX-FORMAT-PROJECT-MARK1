@@ -7988,6 +7988,27 @@ async function saveDoc(){
   const tab=params.get('tab');
   if(tab==='converter'||tab==='editor'||tab==='docs'||tab==='templates') switchTab(tab);
   const id=params.get('doc');
+  const load=params.get('load');
+
+  // Check if opened via Creator Build & Open transfer
+  if (load === 'transfer' || sessionStorage.getItem('ldoc_transfer_doc')) {
+    const dataUri = sessionStorage.getItem('ldoc_transfer_doc');
+    if (dataUri) {
+      sessionStorage.removeItem('ldoc_transfer_doc');
+      try {
+        const res = await fetch(dataUri);
+        const blob = await res.blob();
+        await loadLdocxFileDirect(blob);
+        showViewer();
+        if (typeof showRepairBanner === 'function') {
+          showRepairBanner('✓ Loaded living presentation from Visual Creator!', true);
+        }
+        return;
+      } catch (err) {
+        console.warn('Transfer load fallback:', err);
+      }
+    }
+  }
 
   async function attemptOpen(docId) {
     for (let attempt = 0; attempt < 8; attempt++) {

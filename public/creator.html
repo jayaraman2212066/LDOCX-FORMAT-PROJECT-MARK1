@@ -4403,7 +4403,6 @@ function applySlideZoom() {
 
 
 // ── ⚡ Real-Time AI Inference Engine (Ollama & Gemini & Python) ──
-async 
 // ── 🧠 Intelligent Code & AI Architecture Auto-Detection Engine ──
 function analyzeAiBlockCode(promptText) {
   const text = promptText || '';
@@ -6560,7 +6559,20 @@ async function _old_sendAiPrompt(){
 
 // ── Block management ──────────────────────────────────────────────────────────
 function addBlock(type){
-  const p=pages.find(p=>p.id===currentPage);if(!p){toast('Add a page first','err');return;}
+  if (!currentPage && pages.length > 0) {
+    currentPage = pages[0].id;
+  }
+  let p = pages.find(p => p.id == currentPage);
+  if (!p) {
+    if (pages.length === 0) {
+      addPage();
+      p = pages[0];
+    } else {
+      p = pages[0];
+      currentPage = p.id;
+    }
+  }
+  if (!p) { toast('Add a page first', 'err'); return; }
   const b={id:bid(),type};
   if(type==='heading'){b.level=1;b.text='';}
   else if(type==='paragraph'||type==='quote'){b.text='';}
@@ -7358,22 +7370,64 @@ function buildSpec(){
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 async function buildDoc(){
-  if(!pages.length){toast('Add at least one page','err');return;}
-  const btn=document.getElementById('build-btn');btn.disabled=true;btn.textContent='Building…';
+  if(!pages.length){
+    toast('Add at least one page to build','err');
+    const center = document.getElementById('center');
+    if (center && !center.classList.contains('open')) toggleBlocksDrawer();
+    return;
+  }
+  const btn=document.getElementById('build-btn');
+  if(btn){btn.disabled=true;btn.textContent='Building…';}
   showLoader('LDOC STUDIO', 'Compiling Living Document Architecture…');
   try{
-    const res=await fetch(`${API}/documents/build`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(buildSpec())});
-    const j=await res.json();
-    if(!j.id)throw new Error(j.error||'Build failed');
-    toast('Built! Opening in Studio…','ok');
-    setTimeout(()=>window.open(`/live-studio?doc=${j.id}`,'_blank'),600);
-  }catch(e){toast('Build failed: '+e.message,'err');}
-  finally{
+    const spec = buildSpec();
+    // 1. Try server build if online
+    let serverOk = false;
+    let docId = null;
+    try {
+      const res = await fetch(`${API}/documents/build`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(spec)
+      });
+      if (res.ok) {
+        const j = await res.json();
+        if (j.id) {
+          docId = j.id;
+          serverOk = true;
+        }
+      }
+    } catch (_) {}
+
+    if (serverOk && docId) {
+      toast('Built! Opening in Studio…','ok');
+      setTimeout(()=>window.open(`/live-studio?doc=${docId}`,'_blank'),600);
+      return;
+    }
+
+    // 2. Client-Side Zero-Server Packaging (100% Vercel & Offline Compatible)
+    const { blob, title } = await compileLdocxClientSide(spec);
+    const reader = new FileReader();
+    reader.onload = function() {
+      try {
+        sessionStorage.setItem('ldoc_transfer_doc', reader.result);
+        sessionStorage.setItem('ldoc_transfer_title', title || 'Living Document');
+      } catch (err) {
+        console.warn('Session transfer notice:', err);
+      }
+      toast('✓ Built! Launching in Studio…','ok');
+      setTimeout(() => {
+        window.location.href = '/live-studio?load=transfer';
+      }, 500);
+    };
+    reader.readAsDataURL(blob);
+  }catch(e){
+    toast('Build failed: '+e.message,'err');
+  }finally{
     hideLoader();
-    btn.disabled=false;btn.textContent='▶ Build & Open in Studio';
+    if(btn){btn.disabled=false;btn.textContent='▶ Build & Open';}
   }
 }
-
 
 // ── 📦 Client-Side Zero-Server .ldocx Compiler (100% Vercel & Offline Compatible) ──
 async function compileLdocxClientSide(spec) {
@@ -7422,29 +7476,46 @@ async function compileLdocxClientSide(spec) {
 }
 
 async function downloadDoc(){
-  if(!pages.length){toast('Add at least one page','err');return;}
-  const btn=document.getElementById('dl-btn');btn.disabled=true;btn.textContent='Building…';
+  if(!pages.length){toast('Add at least one page to download','err');return;}
+  const btn=document.getElementById('dl-btn');
+  if(btn){btn.disabled=true;btn.textContent='Packaging…';}
   showLoader('LDOC STUDIO', 'Packaging Offline Living Document Bundle…');
   try{
-    const res=await fetch(`${API}/documents/build`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(buildSpec())});
-    const j=await res.json();
-    if(!j.id)throw new Error(j.error||'Build failed');
-    // download the raw bytes
-    const dlRes=await fetch(`${API}/documents/${j.id}/download`);
-    if(dlRes.ok){
-      const blob=await dlRes.blob();
-      const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-      a.download=(document.getElementById('m-title').value||'document').replace(/\s+/g,'_')+'.ldocx';
-      a.click();toast('Downloaded!','ok');
-    } else {
-      // fallback: open in studio
-      toast('Built! Opening in Studio (download not available)','ok');
-      setTimeout(()=>window.open(`/?doc=${j.id}`,'_blank'),600);
-    }
+    const spec = buildSpec();
+    const { blob, title } = await compileLdocxClientSide(spec);
+    const safeTitle = (title || document.getElementById('m-title')?.value || 'document').replace(/[^a-z0-9_\-]/gi, '_') || 'document';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = safeTitle + '.ldocx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+    toast('✓ Downloaded ' + safeTitle + '.ldocx!','ok');
   }catch(e){toast('Failed: '+e.message,'err');}
   finally{
     hideLoader();
-    btn.disabled=false;btn.textContent='⬇ Download .ldocx';
+    if(btn){btn.disabled=false;btn.textContent='⬇ Download .ldocx';}
+  }
+}
+
+async function buildAndSave() {
+  await downloadDoc();
+}
+
+async function buildAndView() {
+  await buildDoc();
+}
+
+function switchTab(tab) {
+  if (tab === 'editor' || tab === 'blocks') {
+    const center = document.getElementById('center');
+    if (center && !center.classList.contains('open')) toggleBlocksDrawer();
+  } else if (tab === 'pages') {
+    const left = document.getElementById('left');
+    if (left && !left.classList.contains('open')) togglePagesDrawer();
+  } else if (tab === 'viewer') {
+    buildDoc();
   }
 }
 
@@ -7707,71 +7778,21 @@ document.addEventListener('click', () => {
 function togglePagesDrawer() {
   const left = document.getElementById('left');
   const btn = document.getElementById('toggle-pages-btn');
-  if (!left) return;
-  const isHidden = window.getComputedStyle(left).display === 'none';
-  left.style.display = isHidden ? 'flex' : 'none';
-  if (btn) btn.classList.toggle('active', isHidden);
-  toast(isHidden ? '📑 Pages & Meta open' : '📑 Pages & Meta closed', 'info');
-}
-
-function toggleBlocksDrawer() {
-  const center = document.getElementById('center');
-  const btn = document.getElementById('toggle-blocks-btn');
-  if (!center) return;
-  const isHidden = window.getComputedStyle(center).display === 'none';
-  center.style.display = isHidden ? 'flex' : 'none';
-  if (btn) btn.classList.toggle('active', isHidden);
-  toast(isHidden ? '🧩 Block Editor open' : '🧩 Block Editor closed', 'info');
-}
-
-function toggleElementsPopup() {
-  let popup = document.getElementById('popup-elements-modal');
-  if (!popup) {
-    popup = document.createElement('div');
-    popup.id = 'popup-elements-modal';
-    popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,680px);max-height:85vh;background:rgba(12,14,24,0.98);backdrop-filter:blur(30px);border:1.5px solid rgba(167,139,250,0.4);border-radius:18px;padding:22px;z-index:99999;box-shadow:0 25px 70px rgba(0,0,0,0.85);display:flex;flex-direction:column;gap:14px;color:#fff';
-    popup.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:20px">➕</span>
-          <strong style="font-family:'Cinzel',serif;font-size:16px;color:#fef08a">Element Picker Dock</strong>
-        </div>
-        <button class="btn" onclick="toggleElementsPopup()" style="padding:4px 10px;font-size:12px">✕ Close</button>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;overflow-y:auto;padding-right:4px">
-        <button class="btn" onclick="addBlock('heading');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">🏷️ Heading</button>
-        <button class="btn" onclick="addBlock('paragraph');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📝 Paragraph</button>
-        <button class="btn" onclick="addBlock('quote');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📜 Quote</button>
-        <button class="btn" onclick="addBlock('list');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📋 List</button>
-        <button class="btn" onclick="addBlock('code');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">💻 Code Block</button>
-        <button class="btn" onclick="addBlock('table');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📊 Table</button>
-        <button class="btn" onclick="addBlock('3d_model');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📦 3D Model</button>
-        <button class="btn" onclick="addBlock('web_video');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">🎬 Video</button>
-        <button class="btn" onclick="addBlock('web_audio');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">🎵 Audio</button>
-        <button class="btn" onclick="addBlock('ai');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px;background:rgba(124,58,237,.25);border-color:#a78bfa;color:#fef08a">⚡ AI Prompt</button>
-        <button class="btn" onclick="addBlock('ai_live');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px;background:rgba(56,189,248,.2);border-color:#38bdf8;color:#38bdf8">🌐 AI Live</button>
-        <button class="btn" onclick="addBlock('jsx_canvas');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px;background:rgba(245,158,11,.2);border-color:#f59e0b;color:#fef08a">⚡ Code Sandbox</button>
-        <button class="btn" onclick="addBlock('button');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">🔘 Interactive Button</button>
-        <button class="btn" onclick="addBlock('form');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">📑 Form</button>
-        <button class="btn" onclick="addBlock('feature_grid');toggleElementsPopup()" style="padding:10px;flex-direction:column;gap:4px">🌟 Feature Grid</button>
-      </div>
-    `;
-    document.body.appendChild(popup);
-    return;
-  }
-  popup.style.display = (popup.style.display === 'none' || !popup.style.display) ? 'flex' : 'none';
-}
-
-function _old_togglePagesDrawer() {
-  const left = document.getElementById('left');
-  const btn = document.getElementById('toggle-pages-btn');
   const backdrop = document.getElementById('drawer-backdrop');
-  const isOpen = left && left.classList.contains('open');
-  closeAllDrawers();
-  if (!isOpen && left) {
+  if (!left) return;
+  const isOpen = left.classList.contains('open');
+  if (isOpen) {
+    left.classList.remove('open');
+    if (btn) btn.classList.remove('active');
+    if (backdrop && !document.querySelector('#center.open, #right.open, #popup-elements-modal.open')) {
+      backdrop.classList.remove('active');
+    }
+    toast('📑 Pages & Meta closed', 'info');
+  } else {
     left.classList.add('open');
     if (btn) btn.classList.add('active');
     if (backdrop) backdrop.classList.add('active');
+    toast('📑 Pages & Meta open', 'info');
   }
 }
 
@@ -7779,12 +7800,20 @@ function toggleBlocksDrawer() {
   const center = document.getElementById('center');
   const btn = document.getElementById('toggle-blocks-btn');
   const backdrop = document.getElementById('drawer-backdrop');
-  const isOpen = center && center.classList.contains('open');
-  closeAllDrawers();
-  if (!isOpen && center) {
+  if (!center) return;
+  const isOpen = center.classList.contains('open');
+  if (isOpen) {
+    center.classList.remove('open');
+    if (btn) btn.classList.remove('active');
+    if (backdrop && !document.querySelector('#left.open, #right.open, #popup-elements-modal.open')) {
+      backdrop.classList.remove('active');
+    }
+    toast('🧩 Block Editor closed', 'info');
+  } else {
     center.classList.add('open');
     if (btn) btn.classList.add('active');
     if (backdrop) backdrop.classList.add('active');
+    toast('🧩 Block Editor open', 'info');
   }
 }
 
@@ -7792,9 +7821,15 @@ function toggleRightDrawer() {
   const right = document.getElementById('right');
   const btn = document.getElementById('toggle-right-btn');
   const backdrop = document.getElementById('drawer-backdrop');
-  const isOpen = right && right.classList.contains('open');
-  closeAllDrawers();
-  if (!isOpen && right) {
+  if (!right) return;
+  const isOpen = right.classList.contains('open');
+  if (isOpen) {
+    right.classList.remove('open');
+    if (btn) btn.classList.remove('active');
+    if (backdrop && !document.querySelector('#left.open, #center.open, #popup-elements-modal.open')) {
+      backdrop.classList.remove('active');
+    }
+  } else {
     right.classList.add('open');
     if (btn) btn.classList.add('active');
     if (backdrop) backdrop.classList.add('active');
@@ -7805,9 +7840,15 @@ function toggleElementsPopup() {
   const modal = document.getElementById('popup-elements-modal');
   const btn = document.getElementById('toggle-elements-btn');
   const backdrop = document.getElementById('drawer-backdrop');
-  const isOpen = modal && modal.classList.contains('open');
-  closeAllDrawers();
-  if (!isOpen && modal) {
+  if (!modal) return;
+  const isOpen = modal.classList.contains('open');
+  if (isOpen) {
+    modal.classList.remove('open');
+    if (btn) btn.classList.remove('active');
+    if (backdrop && !document.querySelector('#left.open, #center.open, #right.open')) {
+      backdrop.classList.remove('active');
+    }
+  } else {
     modal.classList.add('open');
     if (btn) btn.classList.add('active');
     if (backdrop) backdrop.classList.add('active');
