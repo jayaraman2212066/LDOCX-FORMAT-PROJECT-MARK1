@@ -27,21 +27,11 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Assemble Web Distribution
+            - name: Assemble Web Distribution
         run: |
+          node ./build_static.js
           mkdir -p _site
-          cp index.html _site/
-          cp creator.html _site/
-          cp ldoc_background_image.png _site/ || true
-          cp ldoc_logo.png _site/ || true
-          cp ai-brain.png _site/ || true
-          cp app.ico _site/ || true
-          cp gt6-velocity-unleashed.ldocx _site/ || true
-          cp daily-prophet.ldocx _site/ || true
-          if [ -d "samples" ]; then cp -r samples _site/; fi
-          cp manifest.json _site/ || true
-          cp jszip.min.js _site/ || true
-          cp gta6_lightbox_mesh.js _site/ || true
+          cp -r public/* _site/
           touch _site/.nojekyll
           echo "Web distribution assembled successfully:"
           ls -la _site

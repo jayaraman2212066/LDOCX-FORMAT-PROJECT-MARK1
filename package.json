@@ -4,8 +4,8 @@
   "description": "LDOCX \u2014 The Living Document Architecture & Studio",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve .",
-    "build": "echo Built"
+    "start": "npx serve public",
+    "build": "node ./build_static.js"
   },
   "keywords": [
     "ldocx",
