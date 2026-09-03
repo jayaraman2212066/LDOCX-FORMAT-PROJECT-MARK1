@@ -1976,16 +1976,72 @@ body.mode-paper .page-fx-canvas {
 }
 
 #creator-preview-pane {
-  position: static !important;
-  transform: none !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-  flex: 1 !important;
-  min-width: 400px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden !important;
-  background: #0a0a14 !important;
+  position: relative;
+  visibility: visible;
+  pointer-events: auto;
+  flex: 1 1 50%;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #0a0a14;
+  transition: flex 0.2s ease, width 0.2s ease;
+}
+
+#center {
+  flex: 0 0 420px;
+  min-width: 260px;
+  max-width: 800px;
+  transition: flex 0.2s ease, width 0.2s ease;
+}
+
+/* Fullscreen Slide Canvas Display Mode */
+body.creator-slide-fullscreen #left,
+body.creator-slide-fullscreen #center,
+body.creator-slide-fullscreen .creator-splitter {
+  display: none !important;
+}
+body.creator-slide-fullscreen #creator-preview-pane {
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* 50-50 Split Mode */
+body.creator-split-50-50 #left {
+  display: none !important;
+}
+body.creator-split-50-50 #center {
+  flex: 0 0 50% !important;
+  width: 50% !important;
+}
+body.creator-split-50-50 #creator-preview-pane {
+  flex: 0 0 50% !important;
+  width: 50% !important;
+}
+
+/* Interactive Slide Block Elements on Hover */
+.creator-slide-block-wrap {
+  position: relative;
+  border-radius: 8px;
+  padding: 4px 6px;
+  margin: 4px 0;
+  transition: background 0.15s ease, box-shadow 0.15s ease, outline 0.15s ease;
+  cursor: pointer;
+}
+.creator-slide-block-wrap:hover {
+  outline: 1.5px dashed rgba(167, 139, 250, 0.6);
+  background: rgba(167, 139, 250, 0.05);
+}
+.creator-slide-block-wrap.selected {
+  outline: 2px solid #a78bfa;
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.35);
+  background: rgba(167, 139, 250, 0.08);
+}
+.creator-slide-block-wrap [contenteditable="true"]:focus {
+  outline: 2px solid #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.1) !important;
+  border-radius: 4px;
 }
 
 #creator-preview-body {
@@ -2730,7 +2786,7 @@ body.mode-paper .page-fx-canvas {
 <!-- Native Desktop Menu Bar (Antigravity Style) -->
 <div id="desktop-menubar">
   <a href="/models" class="dmenu-brand" style="text-decoration:none;margin-right:4px">🏛️ Models Hub</a>
-    <a href="/" class="dmenu-brand" style="text-decoration:none;margin-right:8px">🌐 Portal</a>
+    <a href="/" class="dmenu-brand" style="text-decoration:none;margin-right:8px">🌐 Developer Portal</a>
     <div class="dmenu-brand" onclick="alert('LDOCX Document Creator v2.4.0 (Enterprise Reactive 3D Edition)')">
     <img src="ldoc_logo.png" alt="LDOC">
     <span>LDOC Creator</span>
@@ -2746,7 +2802,7 @@ body.mode-paper .page-fx-canvas {
         <div class="dmenu-entry" onclick="buildDoc()"><span>▶ Build &amp; Open in Studio</span><span class="hotkey">Ctrl+B</span></div>
         <div class="dmenu-entry" onclick="downloadDoc()"><span>⬇ Download .ldocx Package</span><span class="hotkey">Ctrl+D</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="location.href='./'"><span>🖥️ Switch to Studio Viewer</span></div>
+        <div class="dmenu-entry" onclick="location.href='/live-studio'"><span>🖥️ Switch to Studio Viewer</span></div>
         <div class="dmenu-entry" onclick="window.close()"><span>✕ Exit Creator</span><span class="hotkey">Alt+F4</span></div>
       </div>
     </div>
@@ -2801,7 +2857,7 @@ body.mode-paper .page-fx-canvas {
       <div class="dmenu-dropdown">
         <div class="dmenu-entry" onclick="location.reload()"><span>🔄 Reload Window</span><span class="hotkey">Ctrl+R</span></div>
         <div class="dmenu-entry" onclick="toggleAiHelper()"><span>🧠 AI Document Copilot</span><span class="hotkey">Ctrl+Shift+H</span></div>
-        <div class="dmenu-entry" onclick="location.href='./'"><span>🖥️ Open Studio Viewer</span></div>
+        <div class="dmenu-entry" onclick="location.href='/live-studio'"><span>🖥️ Open Studio Viewer</span></div>
       </div>
     </div>
 
@@ -2824,9 +2880,9 @@ body.mode-paper .page-fx-canvas {
     <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 10px rgba(167,139,250,.45)">
     <span class="logo">LDOC</span>
   </div>
-  <a href="./" class="nav-link">Studio</a>
+  <a href="/live-studio" class="nav-link">Studio</a>
   <a href="./creator.html" class="nav-link active">Creator</a>
-  <a href="./?tab=converter" class="nav-link">⚡ Converter</a>
+  <a href="/live-studio?tab=converter" class="nav-link">⚡ Converter</a>
 
   <!-- Floating Dynamic Popup Drawer Toggles -->
   <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);padding:3px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.12);margin-left:6px">
@@ -2995,10 +3051,25 @@ body.mode-paper .page-fx-canvas {
   <div class="creator-splitter" id="creator-splitter-right" title="Drag to resize Live Slide Presentation"></div>
   <div id="creator-preview-pane" class="open">
     <div class="preview-header">
-      <div style="display:flex;align-items:center;gap:8px">
-        <img src="ldoc_logo.png" alt="LDOC" style="width:20px;height:20px;border-radius:5px;object-fit:contain">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <img src="ldoc_logo.png" alt="LDOC" style="width:22px;height:22px;border-radius:6px;object-fit:contain">
         <span id="creator-preview-badge" style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px;background:rgba(167,139,250,.2);color:var(--accent)">Slide 1</span>
-        <span style="font-size:11px;color:var(--text3);font-weight:600">Living Canvas</span>
+        
+        <!-- Display Space & Size Controls for Mouse -->
+        <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);padding:2px 6px;border-radius:8px">
+          <button class="btn" id="btn-fullscreen-slide" onclick="toggleSlideFullscreen()" style="padding:3px 8px;font-size:11px;font-weight:700;background:linear-gradient(135deg,rgba(16,185,129,0.25),rgba(56,189,248,0.25));border-color:#10b981;color:#6ee7b7" title="Expand Slide Canvas to Occupy Entire Screen Display">↔ Full Display</button>
+          <button class="btn" id="btn-split-50" onclick="toggleSlideSplit50()" style="padding:3px 8px;font-size:11px" title="50/50 Editor and Slide Display">◫ 50/50 Split</button>
+          <button class="btn" id="btn-reset-layout" onclick="resetCreatorLayout()" style="padding:3px 8px;font-size:11px" title="Reset to standard 3-column view">📐 Standard</button>
+        </div>
+
+        <!-- Slide Zoom & Width Scaler -->
+        <div style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);padding:2px 6px;border-radius:8px">
+          <span style="font-size:10px;color:var(--text3)">Zoom:</span>
+          <button class="btn" onclick="setSlideScale(0.85)" style="padding:2px 6px;font-size:10px">85%</button>
+          <button class="btn" onclick="setSlideScale(1.0)" style="padding:2px 6px;font-size:10px;font-weight:700;color:var(--gold)">100%</button>
+          <button class="btn" onclick="setSlideScale(1.15)" style="padding:2px 6px;font-size:10px">115%</button>
+          <button class="btn" onclick="setSlideScale('fit')" style="padding:2px 6px;font-size:10px">Fit</button>
+        </div>
       </div>
 
       <!-- Presentation Mode Selector -->
@@ -4104,6 +4175,70 @@ function togglePageFxMode(btn) {
   }
 }
 
+
+// ── 🖥️ Advanced Slide Space & Display Size Controls ──
+let currentSlideScale = 1.0;
+
+function toggleSlideFullscreen() {
+  document.body.classList.toggle('creator-slide-fullscreen');
+  const btn = document.getElementById('btn-fullscreen-slide');
+  if (document.body.classList.contains('creator-slide-fullscreen')) {
+    if (btn) btn.textContent = '✕ Exit Fullscreen';
+    toast('↔ Slide canvas expanded to full display width', 'ok');
+  } else {
+    if (btn) btn.textContent = '↔ Full Display';
+    toast('📐 Standard multi-panel view restored', 'info');
+  }
+  updateCreatorLivePreview();
+}
+
+function toggleSlideSplit50() {
+  document.body.classList.remove('creator-slide-fullscreen');
+  document.body.classList.toggle('creator-split-50-50');
+  toast('◫ 50/50 Balanced Editor & Slide Layout', 'info');
+  updateCreatorLivePreview();
+}
+
+function resetCreatorLayout() {
+  document.body.classList.remove('creator-slide-fullscreen');
+  document.body.classList.remove('creator-split-50-50');
+  const center = document.getElementById('center');
+  const preview = document.getElementById('creator-preview-pane');
+  const left = document.getElementById('left');
+  if (center) { center.style.flex = '0 0 420px'; center.style.width = '420px'; }
+  if (preview) { preview.style.flex = '1 1 50%'; preview.style.width = ''; }
+  if (left) { left.style.width = ''; }
+  currentSlideScale = 1.0;
+  applySlideZoom();
+  toast('📐 Layout reset to standard 3 columns', 'ok');
+}
+
+function setSlideScale(scale) {
+  const slide = document.querySelector('.pres-slide');
+  if (!slide) return;
+  if (scale === 'fit') {
+    const container = document.getElementById('creator-preview-body');
+    if (container) {
+      const availW = container.clientWidth - 40;
+      scale = Math.min(1.2, Math.max(0.6, availW / 900));
+    } else {
+      scale = 1.0;
+    }
+  }
+  currentSlideScale = scale;
+  applySlideZoom();
+  toast(`🔍 Slide Display Zoom: ${Math.round(currentSlideScale * 100)}%`, 'info');
+}
+
+function applySlideZoom() {
+  const slide = document.querySelector('.pres-slide');
+  if (slide) {
+    slide.style.transform = currentSlideScale === 1.0 ? 'none' : `scale(${currentSlideScale})`;
+    slide.style.transformOrigin = 'top center';
+    slide.style.transition = 'transform 0.2s ease';
+  }
+}
+
 function updateCreatorLivePreview() {
   clearTimeout(creatorPreviewDebounceTimer);
   creatorPreviewDebounceTimer = setTimeout(() => {
@@ -4709,6 +4844,39 @@ function createVideoPlayerHtml(src, label = '', autoplay = false, height = '220p
       ${label ? `<div style="font-size:11px;color:var(--text2);padding:6px 12px;background:rgba(0,0,0,0.6)">🎬 ${escapeHtml(label)}</div>` : ''}
     </div>
   `;
+}
+
+
+function wrapInteractiveBlock(b, el, container) {
+  const wrap = document.createElement('div');
+  wrap.className = 'creator-slide-block-wrap';
+  wrap.dataset.blockId = b.id || '';
+  wrap.title = 'Mouse Click to Inspect & Edit this ' + (b.type || 'element');
+  wrap.onclick = (e) => {
+    e.stopPropagation();
+    document.querySelectorAll('.creator-slide-block-wrap').forEach(w => w.classList.remove('selected'));
+    wrap.classList.add('selected');
+    // Scroll and focus on the block in the block editor
+    const blockEl = document.getElementById(`block-${b.id}`) || document.querySelector(`[data-id="${b.id}"]`);
+    if (blockEl) {
+      blockEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      blockEl.style.boxShadow = '0 0 20px rgba(167, 139, 250, 0.8)';
+      setTimeout(() => blockEl.style.boxShadow = '', 1500);
+    }
+  };
+  
+  // Enable inline editing for text elements
+  if (['heading', 'paragraph', 'quote'].includes(b.type)) {
+    el.contentEditable = 'true';
+    el.title = 'Click directly to edit text with mouse';
+    el.oninput = () => {
+      b.text = el.innerText;
+      scheduleAutoSave();
+    };
+  }
+
+  wrap.appendChild(el);
+  container.appendChild(wrap);
 }
 
 function renderCreatorSlideBlock(b, container) {
@@ -6562,7 +6730,7 @@ async function buildDoc(){
     const j=await res.json();
     if(!j.id)throw new Error(j.error||'Build failed');
     toast('Built! Opening in Studio…','ok');
-    setTimeout(()=>window.open(`./?doc=${j.id}`,'_blank'),600);
+    setTimeout(()=>window.open(`/live-studio?doc=${j.id}`,'_blank'),600);
   }catch(e){toast('Build failed: '+e.message,'err');}
   finally{
     hideLoader();
