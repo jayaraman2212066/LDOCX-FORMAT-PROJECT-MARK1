@@ -3607,6 +3607,8 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>window.tailwind = { config: { corePlugins: { preflight: false } } };</script>
+<script src="https://cdn.tailwindcss.com"></script>
 <script>
   if (typeof window !== 'undefined' && window.pdfjsLib) {
     window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -10564,17 +10566,21 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
   };
 
   try {
-    const isFullHtml = /<\s*(div|span|canvas|section|form|p|h[1-6]|button|input|svg|table|style|script)\b/i.test(trimmed);
+    // Classification: Is this HTML markup with optional <script> tags, OR is it pure JavaScript / React component code?
+    const isJsModuleSyntax = /^(?:import\s|export\s|function\s+[A-Z]|class\s+[A-Z]|const\s+[A-Z]|let\s+[A-Z]|var\s+[A-Z]|(?:\/\*[\s\S]*?\*\/|\/\/[^\n]*\n)*\s*(?:import|export|function\s+[A-Z]|class\s+[A-Z]|const\s+[A-Z]))/.test(trimmed);
+    const startsWithHtmlTag = /^\s*(?:<!--[\s\S]*?-->\s*)*<\s*(?:!DOCTYPE|html|head|body|div|span|canvas|section|header|footer|nav|aside|article|main|form|p|h[1-6]|button|input|svg|table|style|script)\b/i.test(trimmed);
+    const hasScriptTag = /<\s*script\b/i.test(trimmed);
+    const hasJsxSyntax = /className=|style=\{\{|<[A-Z][A-Za-z0-9_]*|\/>/.test(trimmed);
 
-    if (isFullHtml && !trimmed.startsWith('function') && !trimmed.startsWith('class') && !trimmed.startsWith('const ') && !trimmed.startsWith('let ')) {
-      // Safely route any inline event handler document.getElementById calls to scope-local container
+    const isHtml = startsWithHtmlTag && !isJsModuleSyntax && (hasScriptTag || !hasJsxSyntax);
+
+    if (isHtml) {
+      // HTML markup with optional embedded <script> tags
       const scopedCode = trimmed.replace(/\bdocument\.getElementById\((["'])([^"'\s\)]+)\1\)/g, (m, q, id) => {
         return `((this && this.closest && this.closest('[data-scope]')) ? this.closest('[data-scope]').querySelector('#${id}') : document.getElementById('${id}'))`;
       });
-
       containerEl.innerHTML = scopedCode;
 
-      // Execute scripts if present
       const scripts = containerEl.querySelectorAll('script');
       scripts.forEach(s => {
         try {
@@ -10583,17 +10589,74 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
           if (isBabel && window.Babel) {
             sCode = window.Babel.transform(sCode, { presets: [['react', { runtime: 'classic' }]] }).code;
           }
-          const fn = new Function('container', 'scopeId', 'React', 'ReactDOM', 'THREE', 'Chart', sCode);
+          const fn = new Function('container', 'scopeId', 'React', 'ReactDOM', 'THREE', 'Chart', `var { useState, useEffect, useRef, useMemo, useCallback } = React || {};\n` + sCode);
           fn(containerEl, uid, window.React, window.ReactDOM, window.THREE, window.Chart);
         } catch (sErr) {
           renderError('Script Runtime Notice', sErr.message, sErr.stack);
         }
       });
     } else {
-      // Pure JS / React / JSX code
+      // Pure JS / React / JSX code (supports full modern components with imports, exports, hooks, and auto-mount)
       let jsCode = trimmed;
-      const needsBabel = window.Babel && (/<[A-Za-z0-9_]/.test(jsCode) || /import |export /.test(jsCode));
-      if (needsBabel) {
+      let rootComponent = null;
+
+      // Extract and strip import statements
+      jsCode = jsCode.replace(/import\s+[\s\S]*?from\s+['"][^'"]+['"];?/g, (match) => {
+        const idMatches = match.match(/\{([^}]+)\}/);
+        if (idMatches && idMatches[1]) {
+          const ids = idMatches[1].split(',').map(s => s.trim().split(/\s+as\s+/).pop()).filter(Boolean);
+          if (/lucide-react|react-icons|@heroicons/i.test(match)) {
+            return ids.map(id => `const ${id} = (props) => React.createElement('span', Object.assign({ className: 'ldoc-icon ' + (props.className||''), style: Object.assign({ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: props.size||18, height: props.size||18, verticalAlign: 'middle' }, props.style) }, props.children || '✦');`).join('\n');
+          }
+        }
+        return '';
+      });
+      jsCode = jsCode.replace(/import\s+['"][^'"]+['"];?/g, '');
+
+      // Detect export default function / class
+      const defFnMatch = jsCode.match(/export\s+default\s+(?:function|class)\s+([A-Za-z0-9_]+)/);
+      if (defFnMatch) {
+        rootComponent = defFnMatch[1];
+        jsCode = jsCode.replace(/export\s+default\s+(function|class)/, '$1');
+      } else {
+        const defIdMatch = jsCode.match(/export\s+default\s+([A-Za-z0-9_]+);?/);
+        if (defIdMatch) {
+          rootComponent = defIdMatch[1];
+          jsCode = jsCode.replace(/export\s+default\s+[A-Za-z0-9_]+;?/, '');
+        }
+      }
+
+      // Clean other export keywords
+      jsCode = jsCode.replace(/export\s+(function|class|const|let|var)\s+/g, '$1 ');
+
+      // Fallback: Find first PascalCase function or const as the component
+      if (!rootComponent) {
+        const compMatch = jsCode.match(/(?:function|class|const)\s+([A-Z][A-Za-z0-9_]*)/);
+        if (compMatch) rootComponent = compMatch[1];
+      }
+
+      // Automatically mount the component if user didn't write ReactDOM.render / createRoot
+      if (rootComponent && !jsCode.includes('ReactDOM.render') && !jsCode.includes('createRoot') && !jsCode.includes('.render(')) {
+        jsCode += `\nif (typeof ${rootComponent} !== 'undefined') {
+          try {
+            if (ReactDOM.createRoot) {
+              if (!container.__reactRoot) container.__reactRoot = ReactDOM.createRoot(container);
+              container.__reactRoot.render(React.createElement(${rootComponent}));
+            } else {
+              ReactDOM.render(React.createElement(${rootComponent}), container);
+            }
+          } catch(mountErr) {
+            console.warn('React Auto-Mount Notice:', mountErr);
+          }
+        }`;
+      }
+
+      // Inject standard React hook declarations at the top of the execution scope
+      const hookHeader = 'var { useState, useEffect, useRef, useMemo, useCallback, useReducer, useContext, createContext, forwardRef } = React || {};\n';
+      jsCode = hookHeader + jsCode;
+
+      // Compile JSX with Babel Standalone
+      if (window.Babel) {
         try {
           jsCode = window.Babel.transform(jsCode, { presets: [['react', { runtime: 'classic' }]] }).code;
         } catch (bErr) {
@@ -10601,6 +10664,8 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
           return;
         }
       }
+
+      // Execute code with all environment variables in scope
       const fn = new Function('container', 'scopeId', 'React', 'ReactDOM', 'THREE', 'Chart', jsCode);
       fn(containerEl, uid, window.React, window.ReactDOM, window.THREE, window.Chart);
     }
@@ -11177,6 +11242,18 @@ function renderBlockNode(node,parent){
       audioCard.className = 'audio-card';
       audioCard.style.cssText = 'background:rgba(20,20,38,0.94);border:1.5px solid rgba(245,158,11,0.45);border-radius:16px;padding:14px 18px;margin:16px 0;display:flex;align-items:center;gap:14px;box-shadow:0 8px 30px rgba(0,0,0,0.75);backdrop-filter:blur(10px);position:relative;z-index:10;';
 
+      if (!src) {
+        audioCard.innerHTML = `
+          <div style="width:42px;height:42px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px dashed rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:20px">🎵</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13.5px;color:var(--text2)">${escapeHtml(lbl || 'Web Audio Stream')}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">Enter an audio URL or YouTube link in the editor to stream</div>
+          </div>
+        `;
+        parent.appendChild(audioCard);
+        break;
+      }
+
       const ytMatch = (src || '').match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?.*v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_\-]{11})/i);
 
       if (ytMatch && ytMatch[1]) {
@@ -11213,13 +11290,24 @@ function renderBlockNode(node,parent){
     }
     case 'video':case 'web_video':{
       const rawSrc = (node.style && node.style.src) || node.src || assetUrl(node) || '';
-      const lbl = (node.style && node.style.label) || (node.aria && node.aria.label) || node.value || 'Grand Theft Auto VI Trailer 1 (Official 4K HDR Stream)';
+      const lbl = (node.style && node.style.label) || (node.aria && node.aria.label) || node.value || 'Video Stream';
       const card = document.createElement('div');
       card.className = 'video-card';
       card.style.cssText = 'background:rgba(15,15,28,0.92);border:1.5px solid rgba(245,158,11,0.4);border-radius:18px;padding:14px;margin:20px 0;box-shadow:0 16px 48px rgba(0,0,0,0.85);position:relative;z-index:10;';
 
-      const videoSrc = rawSrc || 'https://www.youtube-nocookie.com/embed/QdBZY2fkU-0';
-      // Robust YouTube matching: handles youtube.com, youtube-nocookie.com, youtu.be, embed, watch?v=, etc.
+      if (!rawSrc) {
+        card.innerHTML = `
+          <div style="aspect-ratio:16/9;background:rgba(0,0,0,0.45);border:1px dashed rgba(255,255,255,0.15);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);padding:24px;text-align:center">
+            <span style="font-size:36px;margin-bottom:8px">🎬</span>
+            <div style="font-size:14px;font-weight:700;color:var(--text2);margin-bottom:4px">${escapeHtml(lbl)}</div>
+            <div style="font-size:11px;color:var(--text3)">Enter a Video URL (MP4, WebM, or YouTube link) in the editor</div>
+          </div>
+        `;
+        parent.appendChild(card);
+        break;
+      }
+
+      const videoSrc = rawSrc;
       const ytMatch = videoSrc.match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?.*v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
 
       if (ytMatch && ytMatch[1]) {
@@ -11244,7 +11332,7 @@ function renderBlockNode(node,parent){
       const vl = document.createElement('div');
       vl.className = 'video-label';
       vl.style.cssText = 'display:flex;align-items:center;gap:10px;padding-top:12px;font-family:Cinzel,serif;font-size:14px;color:#fef08a;font-weight:700;';
-      vl.innerHTML = `<span style="color:var(--gold);font-size:18px">🎬</span> <span>${escapeHtml(lbl)}</span> <span style="margin-left:auto;font-size:11px;color:#38bdf8;font-family:monospace">4K 60 FPS Video Stream</span>`;
+      vl.innerHTML = `<span style="color:var(--gold);font-size:18px">🎬</span> <span>${escapeHtml(lbl)}</span>`;
       card.appendChild(vl);
       parent.appendChild(card);
       break;
@@ -11505,43 +11593,81 @@ function renderBlockNode(node,parent){
       parent.appendChild(btn);break;
     }
     case 'feature_grid':{
-      const grid=document.createElement('div');grid.className='feature-grid';
-      const items=(node.style&&node.style.items)||node.items||[];
-      items.forEach(it=>{
-        const c=document.createElement('div');c.className='feature-card';
-        c.innerHTML=`<div class="feature-card-icon">${it.icon||'🏎️'}</div><div class="feature-card-title">${it.title||'Feature'}</div><div class="feature-card-desc">${it.description||''}</div>`;
-        grid.appendChild(c);
-      });
-      parent.appendChild(grid);break;
+      const grid = document.createElement('div');
+      grid.className = 'feature-grid';
+      grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:20px 0;';
+      const rawCards = node.cards || (node.style && node.style.cards) || node.items || (node.style && node.style.items) || [];
+      const cards = Array.isArray(rawCards) ? rawCards : [];
+      if (cards.length === 0) {
+        const emptyHint = document.createElement('div');
+        emptyHint.style.cssText = 'padding:22px;text-align:center;color:var(--text3);border:1px dashed rgba(255,255,255,0.15);border-radius:12px;grid-column:1/-1;font-size:12px';
+        emptyHint.innerHTML = '<div style="font-size:16px;margin-bottom:4px">🌟</div><div style="font-weight:700;color:var(--text2)">Feature Grid</div><div style="font-size:11px;color:var(--text3)">Add custom cards in the editor</div>';
+        grid.appendChild(emptyHint);
+      } else {
+        cards.forEach(it => {
+          const c = document.createElement('div');
+          c.className = 'feature-card';
+          c.style.cssText = 'background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px 20px;backdrop-filter:blur(8px);transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;position:relative;overflow:hidden;';
+          c.onmouseenter = () => { c.style.transform = 'translateY(-4px)'; c.style.boxShadow = '0 12px 30px rgba(56,189,248,0.2)'; c.style.borderColor = 'rgba(56,189,248,0.4)'; };
+          c.onmouseleave = () => { c.style.transform = 'none'; c.style.boxShadow = 'none'; c.style.borderColor = 'rgba(255,255,255,0.08)'; };
+          const badge = it.badge ? `<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(56,189,248,0.15);color:#38bdf8;font-weight:700;letter-spacing:0.5px;margin-bottom:8px;display:inline-block">${escapeHtml(it.badge)}</span>` : '';
+          const icon = it.icon ? `<div style="font-size:24px;margin-bottom:8px">${escapeHtml(it.icon)}</div>` : '';
+          const title = it.title ? `<div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:6px;font-family:'Cinzel',serif">${escapeHtml(it.title)}</div>` : '';
+          const desc = (it.desc || it.description) ? `<div style="font-size:12px;color:var(--text3);line-height:1.5">${escapeHtml(it.desc || it.description)}</div>` : '';
+          c.innerHTML = `${badge}${icon}${title}${desc}`;
+          grid.appendChild(c);
+        });
+      }
+      parent.appendChild(grid);
+      break;
     }
-        case 'live_feed':case 'live_dispatch':{
+    case 'live_feed':case 'live_dispatch':{
       const card = document.createElement('div');
       card.className = 'telemetry-card';
       card.style.cssText = 'background:rgba(15,18,32,0.92);border:1.5px solid rgba(56,189,248,0.45);border-radius:18px;padding:18px 22px;margin:18px 0;box-shadow:0 12px 40px rgba(0,0,0,0.8);backdrop-filter:blur(12px);position:relative;z-index:10;';
+
+      const feedTitle = node.title || node.value || (node.style && node.style.title) || 'Live Data Stream';
+      const btnText = node.btn_text !== undefined ? node.btn_text : (node.style && node.style.btn_text !== undefined ? node.style.btn_text : '⚡ Scan Telemetry');
+      
+      let metrics = [];
+      if (Array.isArray(node.metrics) && node.metrics.length > 0) {
+        metrics = node.metrics;
+      } else if (Array.isArray(node.style?.metrics) && node.style.metrics.length > 0) {
+        metrics = node.style.metrics;
+      } else if (typeof (node.sources || node.text) === 'string' && (node.sources || node.text).trim()) {
+        const raw = (node.sources || node.text).trim().split('\n');
+        metrics = raw.map(line => {
+          const p = line.split('|').map(s => s.trim());
+          return { label: p[0] || 'Metric', val: p[1] || '100', sub: p[2] || '' };
+        });
+      } else {
+        metrics = [
+          { label: 'Stream Health', val: '100%', sub: 'Active' },
+          { label: 'Network Latency', val: '18 ms', sub: 'Optimal' },
+          { label: 'Sync Status', val: '99.9%', sub: 'Nominal' }
+        ];
+      }
+
+      const btnHtml = btnText ? `<button type="button" onclick="triggerTelemetryBurst(this)" style="background:linear-gradient(135deg,#38bdf8,#0284c7);border:none;color:#0a0a14;font-weight:800;font-size:10.5px;padding:4px 12px;border-radius:10px;cursor:pointer;box-shadow:0 2px 10px rgba(56,189,248,0.3)">${escapeHtml(btnText)}</button>` : '';
+
+      const metricsHtml = metrics.map(m => `
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:700">${escapeHtml(m.label || 'Metric')}</div>
+          <div class="telem-val" style="font-size:18px;font-weight:800;color:#fef08a;margin-top:2px">${escapeHtml(m.val || m.value || '—')}</div>
+          ${m.sub ? `<div style="font-size:9.5px;color:#34d399">${escapeHtml(m.sub)}</div>` : ''}
+        </div>
+      `).join('');
+
       card.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(56,189,248,0.25);padding-bottom:12px;margin-bottom:14px">
           <div style="display:flex;align-items:center;gap:10px">
             <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#10b981;box-shadow:0 0 10px #10b981;animation:pulse 1.8s infinite"></span>
-            <strong style="font-family:'Cinzel',serif;font-size:14px;color:#38bdf8;letter-spacing:1px">${escapeHtml(node.value || 'ACTIVE LIVING TELEMETRY BEACON')}</strong>
+            <strong style="font-family:'Cinzel',serif;font-size:14px;color:#38bdf8;letter-spacing:1px">${escapeHtml(feedTitle)}</strong>
           </div>
-          <button type="button" onclick="triggerTelemetryBurst(this)" style="background:linear-gradient(135deg,#38bdf8,#0284c7);border:none;color:#0a0a14;font-weight:800;font-size:10.5px;padding:4px 12px;border-radius:10px;cursor:pointer;box-shadow:0 2px 10px rgba(56,189,248,0.3)">⚡ Scan Telemetry</button>
+          ${btnHtml}
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px">
-          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
-            <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:700">Throughput</div>
-            <div class="telem-val" style="font-size:18px;font-weight:800;color:#fef08a;margin-top:2px">4.82 GB/s</div>
-            <div style="font-size:9.5px;color:#34d399">▲ +14% Living AST</div>
-          </div>
-          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
-            <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:700">Spatial Sync</div>
-            <div class="telem-val" style="font-size:18px;font-weight:800;color:#38bdf8;margin-top:2px">99.8%</div>
-            <div style="font-size:9.5px;color:#38bdf8">WebGL 3D Active</div>
-          </div>
-          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
-            <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:700">Neural Latency</div>
-            <div class="telem-val" style="font-size:18px;font-weight:800;color:#a78bfa;margin-top:2px">12.4 ms</div>
-            <div style="font-size:9.5px;color:#a78bfa">Vercel Edge Realtime</div>
-          </div>
+          ${metricsHtml}
         </div>
       `;
       parent.appendChild(card);
@@ -11604,50 +11730,6 @@ function renderBlockNode(node,parent){
               </div>
             </div>
           </div>
-          <div style="display:flex;gap:6px;align-items:center">
-            <button type="button" class="find-btn" onclick="toggleAiBlockSettings('${bid}')" style="font-size:11px;padding:4px 9px;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">⚙️ Settings</button>
-            <button type="button" class="find-btn" onclick="toggleAiBlockCodeView('${bid}')" style="font-size:11px;padding:4px 9px">💻 Prompt</button>
-          </div>
-        </div>
-
-        <div id="ai-settings-drawer-${bid}" style="display:none;background:#090d14;border:1px solid rgba(56,189,248,0.3);border-radius:10px;padding:12px;margin-bottom:12px;font-size:11.5px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-            <strong style="color:#38bdf8;font-size:12px">🔑 AI Provider &amp; API Key Configuration</strong>
-            <span style="font-size:10px;color:#94a3b8">Auto-detects Gemini, OpenAI, Claude, or Ollama</span>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-            <div>
-              <label style="display:block;color:var(--text3);font-size:10px;margin-bottom:2px">PROVIDER</label>
-              <select id="ai-cfg-provider-${bid}" onchange="onAiProviderChanged('${bid}')" style="width:100%;padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:11px">
-                <option value="gemini" ${cfg.provider==='gemini'?'selected':''}>Google Gemini (Gemini 2.5 Flash)</option>
-                <option value="openai" ${cfg.provider==='openai'?'selected':''}>OpenAI (ChatGPT / GPT-4o-mini)</option>
-                <option value="claude" ${cfg.provider==='claude'?'selected':''}>Anthropic Claude (Claude 3.5)</option>
-                <option value="ollama" ${cfg.provider==='ollama'?'selected':''}>Ollama (Local Offline Daemon)</option>
-              </select>
-            </div>
-            <div>
-              <label style="display:block;color:var(--text3);font-size:10px;margin-bottom:2px">MODEL NAME</label>
-              <input type="text" id="ai-cfg-model-${bid}" value="${escapeHtml(modelName)}" placeholder="e.g. gemini-2.5-flash" style="width:100%;padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:11px">
-            </div>
-          </div>
-          <div style="margin-bottom:8px">
-            <label style="display:block;color:var(--text3);font-size:10px;margin-bottom:2px">API KEY OR OLLAMA ENDPOINT</label>
-            <div style="display:flex;gap:6px">
-              <input type="password" id="ai-cfg-key-${bid}" value="${escapeHtml(cfg.apiKey)}" placeholder="Paste AIzaSy... / sk-... / sk-ant-... / http://localhost:11434" oninput="onAiKeyInput('${bid}')" style="flex:1;padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:11px;font-family:monospace">
-              <button class="find-btn" type="button" onclick="toggleAiKeyVisibility('${bid}')" style="padding:4px 8px;font-size:11px">👁️</button>
-              <button class="find-btn" type="button" onclick="saveAiBlockSettings('${bid}')" style="padding:4px 12px;font-size:11px;background:#10b981;color:#fff;font-weight:700">Save</button>
-            </div>
-            <div id="ai-cfg-detect-pill-${bid}" style="font-size:10.5px;color:#38bdf8;margin-top:6px;padding:4px 8px;background:rgba(56,189,248,0.1);border-radius:6px;border:1px solid rgba(56,189,248,0.25);display:${detectAiProviderFromKey(cfg.apiKey)?'block':'none'};font-weight:600">
-              ${detectAiProviderFromKey(cfg.apiKey) ? `✨ Auto-Detected: <strong style="color:#10b981">${detectAiProviderFromKey(cfg.apiKey).name}</strong> • Recommended: <code style="color:#fef08a">${detectAiProviderFromKey(cfg.apiKey).model}</code>` : ''}
-            </div>
-          </div>
-          <div style="font-size:10px;color:#64748b">
-            🔒 Key stored securely in local browser storage. Full multi-page document context is automatically fed to the AI.
-          </div>
-        </div>
-
-        <div id="ai-code-drawer-${bid}" style="display:none;background:#070810;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;margin-bottom:12px;font-family:'Fira Code',monospace;font-size:11.5px;color:#38bdf8;max-height:160px;overflow-y:auto;white-space:pre-wrap">
-${escapeHtml(rawCode || 'System Prompt: Living Document Multi-Page Assistant')}
         </div>
 
         <div class="pres-ai-chat-card" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
@@ -11656,7 +11738,7 @@ ${escapeHtml(rawCode || 'System Prompt: Living Document Multi-Page Assistant')}
               <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🤖</div>
               <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px 12px 12px 2px;padding:8px 12px;font-size:12px;color:#f1f5f9;line-height:1.5;max-width:85%">
                 👋 <strong>Living AI Assistant Initialized</strong>.<br>
-                Ask any question about this document — full multi-page content is linked to the AI prompt in real time. Click <strong>⚙️ Settings</strong> to set your API key or change model.
+                Ask any question about this document — full multi-page content is linked to the AI prompt in real time.
               </div>
             </div>
           </div>
@@ -11733,6 +11815,20 @@ ${escapeHtml(rawCode || 'System Prompt: Living Document Multi-Page Assistant')}
       const modelUrl = st.src || st.url || node.src || node.url || '';
       let modelData = node.mesh_data || st.mesh_data || (st.vertices ? st : null) || node.data || null;
       
+      // If no file/URL and no custom vertices and no procedural template was explicitly requested, show clean upload placeholder
+      if (!modelUrl && (!modelData || !Array.isArray(modelData.vertices) || modelData.vertices.length === 0) && !template) {
+        const phCard = document.createElement('div');
+        phCard.className = 'pres-3d-card';
+        phCard.style.cssText = 'background:rgba(15,15,28,0.92);border:1.5px dashed rgba(56,189,248,0.35);border-radius:18px;padding:32px 20px;margin:20px 0;text-align:center;color:var(--text3);';
+        phCard.innerHTML = `
+          <div style="font-size:36px;margin-bottom:8px">🧊</div>
+          <div style="font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:var(--text2);margin-bottom:4px">${escapeHtml(node.value || 'Custom 3D Model')}</div>
+          <div style="font-size:11px;color:var(--text3)">Upload a 3D file (.GLB, .GLTF, .OBJ, .STL) or enter a 3D model URL in the editor</div>
+        `;
+        parent.appendChild(phCard);
+        break;
+      }
+
       // Only assign procedural fallback templates if modelData has no authentic vertices
       if (!modelData || !Array.isArray(modelData.vertices) || modelData.vertices.length === 0) {
         if (template === 'qubit' || template === 'sphere' || template.includes('quantum')) {
@@ -13620,8 +13716,24 @@ function edAddBlock(type) {
   else if (type === 'web_audio') { b.src = ''; b.label = ''; }
   else if (type === 'web_video') { b.src = ''; b.label = ''; }
   else if (type === '3d_model') { b.format = 'glb'; b.src = ''; b.filename = ''; b.value = 'Custom 3D Model'; b.material_mode = 'cyber_hologram'; }
-  else if (type === 'feature_grid') { b.cards = [{ badge: 'FEATURE', title: 'Card Title 1', desc: 'Custom feature description' }, { badge: 'FEATURE', title: 'Card Title 2', desc: 'Custom feature description' }]; }
-  else if (type === 'live_feed') { b.channel = 'STREAM_01'; b.latency = '0 ms'; b.fps = '60 FPS'; }
+  else if (type === 'feature_grid') { 
+    b.cards = [
+      { badge: 'FEATURE 1', title: 'Custom Feature Title', desc: 'Custom description for this feature card.' },
+      { badge: 'FEATURE 2', title: 'Interactive Element', desc: 'Live responsive card updating with editor input.' },
+      { badge: 'FEATURE 3', title: 'Modular Design', desc: 'Fully customizable layout and styling options.' }
+    ]; 
+    b.items = b.cards; 
+  }
+  else if (type === 'live_feed') { 
+    b.title = 'Live Telemetry & Metrics'; 
+    b.btn_text = '⚡ Scan Telemetry'; 
+    b.metrics = [
+      { label: 'Stream Health', val: '100%', sub: 'Active' },
+      { label: 'Network Latency', val: '18 ms', sub: 'Optimal' },
+      { label: 'Sync Status', val: '99.9%', sub: 'Nominal' }
+    ]; 
+    b.sources = b.metrics.map(m => `${m.label} | ${m.val} | ${m.sub}`).join('\n'); 
+  }
   else if (type === 'preorder') { b.badge = 'SPECIAL ACCESS'; b.title = 'Custom Access Pass'; b.price = '$99'; b.perks = ['Feature 1', 'Feature 2']; b.button_text = '⚡ Get Access'; b.checkout_url = ''; }
   else if (type === 'button') { b.value = 'Action Button'; b.text = 'Action Button'; b.action = 'link'; b.target = ''; }
   else if (type === 'jsx_canvas' || type === 'interactive_sandbox') { 
@@ -14357,11 +14469,14 @@ function edRenderBlocks() {
 
     } else if (block.type === 'feature_grid') {
       const hl = document.createElement('div'); hl.style.cssText = 'font-size:11px;color:var(--text3);margin-bottom:4px'; hl.textContent = 'Card Grid Format: Badge | Title | Description (one card per line)'; div.appendChild(hl);
-      mk('textarea', 'Badge | Title | Description', (block.cards || []).map(c => `${c.badge} | ${c.title} | ${c.desc}`).join('\n'), v => {
+      const curText = (block.cards && block.cards.length ? block.cards : (block.items || [])).map(c => `${c.badge || ''} | ${c.title || ''} | ${c.desc || c.description || ''}`).join('\n');
+      mk('textarea', 'Badge | Title | Description', curText, v => {
         block.cards = v.split('\n').filter(s => s.trim()).map(line => {
           const p = line.split('|').map(s => s.trim());
           return { badge: p[0] || 'FEATURE', title: p[1] || 'Title', desc: p[2] || 'Description' };
         });
+        block.items = block.cards;
+        edUpdateLivePreview();
       }, { rows: 4 });
     } else if (block.type === 'button') {
       mk('input', 'Button Label', block.value || 'Action Button', v => { block.value = v; edUpdateLivePreview(); });
@@ -14441,8 +14556,20 @@ function edRenderBlocks() {
       div.appendChild(styleRow);
 
     } else if (block.type === 'live_feed') {
-      mk('input', 'Beacon Title', block.title || 'Live Data Stream', v => { block.title = v; edUpdateLivePreview(); });
-      mk('input', 'Sources / Metrics text', block.sources || '', v => { block.sources = v; edUpdateLivePreview(); });
+      mk('input', 'Beacon Title', block.title || 'Live Telemetry & Metrics', v => { block.title = v; edUpdateLivePreview(); });
+      mk('input', 'Action Button Label (leave empty to hide)', block.btn_text !== undefined ? block.btn_text : '⚡ Scan Telemetry', v => { block.btn_text = v; edUpdateLivePreview(); });
+      const hl = document.createElement('div'); hl.style.cssText = 'font-size:11px;color:var(--text3);margin-top:6px;margin-bottom:2px'; hl.textContent = 'Metrics Format: Label | Value | Subtext (one metric per line)'; div.appendChild(hl);
+      const curMetrics = Array.isArray(block.metrics) && block.metrics.length 
+        ? block.metrics.map(m => `${m.label || ''} | ${m.val || m.value || ''} | ${m.sub || ''}`).join('\n')
+        : (block.sources || 'Stream Health | 100% | Active\nNetwork Latency | 18 ms | Optimal\nSync Status | 99.9% | Nominal');
+      mk('textarea', 'Stream Health | 100% | Active', curMetrics, v => {
+        block.sources = v;
+        block.metrics = v.split('\n').filter(s => s.trim()).map(line => {
+          const p = line.split('|').map(s => s.trim());
+          return { label: p[0] || 'Metric', val: p[1] || '100', sub: p[2] || '' };
+        });
+        edUpdateLivePreview();
+      }, { rows: 4 });
     } else if (block.type === 'preorder') {
       mk('input', 'Tier / Badge (e.g. SPECIAL OFFER)', block.badge || block.tier || 'SPECIAL OFFER', v => { block.badge = block.tier = v; edUpdateLivePreview(); });
       mk('input', 'Card Headline / Title', block.title || block.value || 'Custom Offer', v => { block.title = block.value = v; edUpdateLivePreview(); });
@@ -14466,6 +14593,7 @@ function edRenderBlocks() {
       libBar.innerHTML = `
         <span style="font-size:9.5px;color:var(--text3);font-weight:700;margin-right:2px">INTEGRATED LIBS:</span>
         <span style="font-size:9.5px;background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);padding:2px 6px;border-radius:4px">⚛️ React 18</span>
+        <span style="font-size:9.5px;background:rgba(14,165,233,0.15);color:#38bdf8;border:1px solid rgba(14,165,233,0.3);padding:2px 6px;border-radius:4px">🌊 Tailwind CSS</span>
         <span style="font-size:9.5px;background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.3);padding:2px 6px;border-radius:4px">📜 Babel Standalone</span>
         <span style="font-size:9.5px;background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:2px 6px;border-radius:4px">📊 Chart.js</span>
         <span style="font-size:9.5px;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);padding:2px 6px;border-radius:4px">🧊 Three.js</span>
