@@ -1,8 +1,7 @@
 {
   "name": "ldocx-living-document-studio",
   "version": "1.0.0",
-  "description": "LDOCX \u2014 The Living Document Architecture & Studio",
-  "main": "index.html",
+  "description": "LDOCX — The Living Document Architecture & Studio",
   "scripts": {
     "start": "npx serve public",
     "build": "node ./build_static.js"
