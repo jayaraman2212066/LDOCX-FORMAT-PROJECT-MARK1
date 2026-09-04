@@ -3606,15 +3606,25 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <script src="ldoc-parser.js"></script>
 <script src="ldoc-editor-core.js"></script>
 <script src="ldoc-shared-modals.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Local Offline Vendor Libraries (Zero Outsource / 100% Offline Standalone) -->
+<script src="vendor/three.min.js"></script>
+<script>if(typeof THREE==='undefined')document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
+<script src="vendor/GLTFLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.GLTFLoader)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"><\/script>')</script>
+<script src="vendor/OBJLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.OBJLoader)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"><\/script>')</script>
+<script src="vendor/STLLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.STLLoader)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"><\/script>')</script>
+<script src="vendor/pdf.min.js"></script>
+<script>if(typeof pdfjsLib==='undefined')document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"><\/script>')</script>
+<script src="vendor/react.production.min.js"></script>
+<script>if(typeof React==='undefined')document.write('<script src="https://unpkg.com/react@18/umd/react.production.min.js"><\/script>')</script>
+<script src="vendor/react-dom.production.min.js"></script>
+<script>if(typeof ReactDOM==='undefined')document.write('<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"><\/script>')</script>
+<script src="vendor/babel.min.js"></script>
+<script>if(typeof Babel==='undefined')document.write('<script src="https://unpkg.com/@babel/standalone/babel.min.js"><\/script>')</script>
+<script src="vendor/chart.min.js"></script>
+<script>if(typeof Chart==='undefined')document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>')</script>
 <script>window.tailwind = { config: { corePlugins: { preflight: false } } };</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
