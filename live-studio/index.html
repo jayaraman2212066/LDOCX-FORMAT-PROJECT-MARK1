@@ -5179,11 +5179,15 @@ function parseMarkdownToSpec(text, filename) {
         codeLines.push(lines[i]);
         i++;
       }
+      const rawCode = codeLines.join('\n');
       curBlocks.push({
         id: 'b_' + Math.random().toString(36).slice(2, 8),
         type: 'code',
         language: lang,
-        code: codeLines.join('\n')
+        code: rawCode,
+        value: rawCode,
+        text: rawCode,
+        style: { language: lang }
       });
       i++;
       continue;
@@ -5206,7 +5210,8 @@ function parseMarkdownToSpec(text, filename) {
         id: 'b_' + Math.random().toString(36).slice(2, 8),
         type: 'heading',
         level: level,
-        text: hText
+        text: hText,
+        value: hText
       });
       i++;
       continue;
@@ -5219,10 +5224,12 @@ function parseMarkdownToSpec(text, filename) {
         quoteLines.push(lines[i].trim().replace(/^>\s*/, ''));
         i++;
       }
+      const qText = quoteLines.join(' ');
       curBlocks.push({
         id: 'b_' + Math.random().toString(36).slice(2, 8),
         type: 'quote',
-        text: quoteLines.join(' ')
+        text: qText,
+        value: qText
       });
       continue;
     }
@@ -5241,11 +5248,23 @@ function parseMarkdownToSpec(text, filename) {
       if (tableRows.length > 0) {
         const headers = tableRows[0];
         const rows = tableRows.slice(1);
+        const children = [];
+        children.push({
+          type: 'table_row',
+          children: headers.map(h => ({ type: 'table_cell', value: h, text: h }))
+        });
+        rows.forEach(r => {
+          children.push({
+            type: 'table_row',
+            children: r.map(c => ({ type: 'table_cell', value: c, text: c }))
+          });
+        });
         curBlocks.push({
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'table',
           headers: headers,
-          rows: rows.length > 0 ? rows : [headers.map(() => '-')]
+          rows: rows.length > 0 ? rows : [headers.map(() => '-')],
+          children: children
         });
       }
       continue;
@@ -5258,10 +5277,16 @@ function parseMarkdownToSpec(text, filename) {
         items.push(lines[i].trim().replace(/^(\-|\*|\d+\.)\s+/, ''));
         i++;
       }
+      const listChildren = items.map(it => ({
+        type: 'list_item',
+        value: it,
+        text: it
+      }));
       curBlocks.push({
         id: 'b_' + Math.random().toString(36).slice(2, 8),
         type: 'list',
-        items: items
+        items: items,
+        children: listChildren
       });
       continue;
     }
@@ -5273,7 +5298,9 @@ function parseMarkdownToSpec(text, filename) {
         id: 'b_' + Math.random().toString(36).slice(2, 8),
         type: 'web_image',
         src: imgMatch[2],
-        alt: imgMatch[1] || 'Image'
+        alt: imgMatch[1] || 'Image',
+        value: imgMatch[1] || 'Image',
+        style: { src: imgMatch[2], alt: imgMatch[1] || 'Image' }
       });
       i++;
       continue;
@@ -5283,7 +5310,8 @@ function parseMarkdownToSpec(text, filename) {
     curBlocks.push({
       id: 'b_' + Math.random().toString(36).slice(2, 8),
       type: 'paragraph',
-      text: line
+      text: line,
+      value: line
     });
     i++;
   }
@@ -5404,38 +5432,45 @@ async function parseDocxToSpec(arrayBuffer, filename) {
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'heading',
           level: 1,
-          text: pText
+          text: pText,
+          value: pText
         });
       } else if (/Heading2/i.test(styleVal) || styleVal === '2') {
         curBlocks.push({
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'heading',
           level: 2,
-          text: pText
+          text: pText,
+          value: pText
         });
       } else if (/Heading3/i.test(styleVal) || styleVal === '3') {
         curBlocks.push({
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'heading',
           level: 3,
-          text: pText
+          text: pText,
+          value: pText
         });
       } else if (numPr || /List/i.test(styleVal)) {
         const lastBlock = curBlocks[curBlocks.length - 1];
         if (lastBlock && lastBlock.type === 'list') {
           lastBlock.items.push(pText);
+          if (!lastBlock.children) lastBlock.children = [];
+          lastBlock.children.push({ type: 'list_item', value: pText, text: pText });
         } else {
           curBlocks.push({
             id: 'b_' + Math.random().toString(36).slice(2, 8),
             type: 'list',
-            items: [pText]
+            items: [pText],
+            children: [{ type: 'list_item', value: pText, text: pText }]
           });
         }
       } else {
         curBlocks.push({
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'paragraph',
-          text: pText
+          text: pText,
+          value: pText
         });
       }
     }
@@ -5457,11 +5492,23 @@ async function parseDocxToSpec(arrayBuffer, filename) {
       if (tableData.length > 0) {
         const headers = tableData[0];
         const rows = tableData.slice(1);
+        const children = [];
+        children.push({
+          type: 'table_row',
+          children: headers.map(h => ({ type: 'table_cell', value: h, text: h }))
+        });
+        rows.forEach(r => {
+          children.push({
+            type: 'table_row',
+            children: r.map(c => ({ type: 'table_cell', value: c, text: c }))
+          });
+        });
         curBlocks.push({
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'table',
           headers: headers,
-          rows: rows.length > 0 ? rows : [headers.map(() => '-')]
+          rows: rows.length > 0 ? rows : [headers.map(() => '-')],
+          children: children
         });
       }
     }
@@ -5520,7 +5567,8 @@ function parseHtmlToSpec(htmlText, filename) {
         id: 'b_' + Math.random().toString(36).slice(2, 8),
         type: 'heading',
         level: level,
-        text: text
+        text: text,
+        value: text
       });
     } else if (tag === 'p') {
       const text = el.textContent.trim();
@@ -5528,31 +5576,41 @@ function parseHtmlToSpec(htmlText, filename) {
         curBlocks.push({
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'paragraph',
-          text: text
+          text: text,
+          value: text
         });
       }
     } else if (tag === 'blockquote') {
+      const qText = el.textContent.trim();
       curBlocks.push({
         id: 'b_' + Math.random().toString(36).slice(2, 8),
         type: 'quote',
-        text: el.textContent.trim()
+        text: qText,
+        value: qText
       });
     } else if (tag === 'pre') {
       const codeEl = el.querySelector('code');
       const lang = (codeEl && codeEl.className.replace(/language-/, '')) || 'text';
+      const cText = el.textContent.trim();
       curBlocks.push({
         id: 'b_' + Math.random().toString(36).slice(2, 8),
         type: 'code',
         language: lang,
-        code: el.textContent.trim()
+        code: cText,
+        value: cText,
+        text: cText,
+        style: { language: lang }
       });
     } else if (tag === 'ul' || tag === 'ol') {
       const items = Array.from(el.querySelectorAll('li')).map(li => li.textContent.trim()).filter(Boolean);
       if (items.length > 0) {
+        const listChildren = items.map(it => ({ type: 'list_item', value: it, text: it }));
         curBlocks.push({
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'list',
-          items: items
+          ordered: tag === 'ol',
+          items: items,
+          children: listChildren
         });
       }
     } else if (tag === 'table') {
@@ -5561,11 +5619,23 @@ function parseHtmlToSpec(htmlText, filename) {
       if (tableData.length > 0) {
         const headers = tableData[0];
         const rows = tableData.slice(1);
+        const children = [];
+        children.push({
+          type: 'table_row',
+          children: headers.map(h => ({ type: 'table_cell', value: h, text: h }))
+        });
+        rows.forEach(r => {
+          children.push({
+            type: 'table_row',
+            children: r.map(c => ({ type: 'table_cell', value: c, text: c }))
+          });
+        });
         curBlocks.push({
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'table',
           headers: headers,
-          rows: rows.length > 0 ? rows : [headers.map(() => '-')]
+          rows: rows.length > 0 ? rows : [headers.map(() => '-')],
+          children: children
         });
       }
     } else if (tag === 'img' && el.getAttribute('src')) {
@@ -5573,7 +5643,9 @@ function parseHtmlToSpec(htmlText, filename) {
         id: 'b_' + Math.random().toString(36).slice(2, 8),
         type: 'web_image',
         src: el.getAttribute('src'),
-        alt: el.getAttribute('alt') || 'Image'
+        alt: el.getAttribute('alt') || 'Image',
+        value: el.getAttribute('alt') || 'Image',
+        style: { src: el.getAttribute('src'), alt: el.getAttribute('alt') || 'Image' }
       });
     } else if (tag === 'audio' && el.getAttribute('src')) {
       curBlocks.push({
@@ -5627,33 +5699,49 @@ function parseJsonToSpec(jsonText, filename) {
       id: 'b_' + Math.random().toString(36).slice(2, 8),
       type: 'heading',
       level: 1,
-      text: docTitle
+      text: docTitle,
+      value: docTitle
     });
     blocks.push({
       id: 'b_' + Math.random().toString(36).slice(2, 8),
       type: 'paragraph',
-      text: `Structured JSON dataset containing ${parsed.length} records.`
+      text: `Structured JSON dataset containing ${parsed.length} records.`,
+      value: `Structured JSON dataset containing ${parsed.length} records.`
     });
 
     const headers = Object.keys(parsed[0]);
     const rows = parsed.slice(0, 50).map(item => headers.map(k => String(item[k] !== undefined ? item[k] : '')));
+    const children = [];
+    children.push({
+      type: 'table_row',
+      children: headers.map(h => ({ type: 'table_cell', value: h, text: h }))
+    });
+    rows.forEach(r => {
+      children.push({
+        type: 'table_row',
+        children: r.map(c => ({ type: 'table_cell', value: c, text: c }))
+      });
+    });
     blocks.push({
       id: 'b_' + Math.random().toString(36).slice(2, 8),
       type: 'table',
       headers: headers,
-      rows: rows
+      rows: rows,
+      children: children
     });
   } else {
     blocks.push({
       id: 'b_' + Math.random().toString(36).slice(2, 8),
       type: 'heading',
       level: 1,
-      text: docTitle
+      text: docTitle,
+      value: docTitle
     });
     blocks.push({
       id: 'b_' + Math.random().toString(36).slice(2, 8),
       type: 'paragraph',
-      text: 'Parsed JSON document data payload.'
+      text: 'Parsed JSON document data payload.',
+      value: 'Parsed JSON document data payload.'
     });
 
     if (typeof parsed === 'object' && parsed !== null) {
@@ -5662,19 +5750,35 @@ function parseJsonToSpec(jsonText, filename) {
         String(k),
         typeof v === 'object' ? JSON.stringify(v) : String(v)
       ]);
+      const children = [];
+      children.push({
+        type: 'table_row',
+        children: headers.map(h => ({ type: 'table_cell', value: h, text: h }))
+      });
+      rows.forEach(r => {
+        children.push({
+          type: 'table_row',
+          children: r.map(c => ({ type: 'table_cell', value: c, text: c }))
+        });
+      });
       blocks.push({
         id: 'b_' + Math.random().toString(36).slice(2, 8),
         type: 'table',
         headers: headers,
-        rows: rows
+        rows: rows,
+        children: children
       });
     }
 
+    const codeStr = JSON.stringify(parsed, null, 2).slice(0, 3000);
     blocks.push({
       id: 'b_' + Math.random().toString(36).slice(2, 8),
       type: 'code',
       language: 'json',
-      code: JSON.stringify(parsed, null, 2).slice(0, 3000)
+      code: codeStr,
+      value: codeStr,
+      text: codeStr,
+      style: { language: 'json' }
     });
   }
 
@@ -5719,11 +5823,12 @@ async function parse3DModelToSpec(file) {
       id: 'page_1',
       title: `${title} 3D Spatial Model`,
       blocks: [
-        { id: 'b_1', type: 'heading', level: 1, text: `${title} 3D Model` },
+        { id: 'b_1', type: 'heading', level: 1, text: `${title} 3D Model`, value: `${title} 3D Model` },
         { 
           id: 'b_2', 
           type: 'paragraph', 
-          text: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.` 
+          text: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.`,
+          value: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.`
         },
         { 
           id: 'b_3', 
@@ -5756,16 +5861,16 @@ async function parseMediaToSpec(file) {
   const isImage = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext);
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: title },
-    { id: 'b_2', type: 'paragraph', text: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).` }
+    { id: 'b_1', type: 'heading', level: 1, text: title, value: title },
+    { id: 'b_2', type: 'paragraph', text: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).`, value: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).` }
   ];
 
   if (isAudio) {
-    blocks.push({ id: 'b_3', type: 'web_audio', src: dataUrl, label: title });
+    blocks.push({ id: 'b_3', type: 'web_audio', src: dataUrl, label: title, value: title, style: { src: dataUrl } });
   } else if (isVideo) {
-    blocks.push({ id: 'b_3', type: 'web_video', src: dataUrl, label: title });
+    blocks.push({ id: 'b_3', type: 'web_video', src: dataUrl, label: title, value: title, style: { src: dataUrl } });
   } else if (isImage) {
-    blocks.push({ id: 'b_3', type: 'web_image', src: dataUrl, alt: title });
+    blocks.push({ id: 'b_3', type: 'web_image', src: dataUrl, alt: title, value: title, style: { src: dataUrl, alt: title } });
   }
 
   return {
@@ -5791,106 +5896,152 @@ async function parsePdfToSpec(file) {
       for (let pNum = 1; pNum <= pdf.numPages; pNum++) {
         const page = await pdf.getPage(pNum);
         const textContent = await page.getTextContent();
+        const items = (textContent.items || []).map(it => ({
+          str: it.str,
+          x: it.transform[4],
+          y: it.transform[5],
+          w: it.width,
+          h: Math.hypot(it.transform[0], it.transform[1])
+        })).filter(it => it.str && it.str.trim().length > 0);
 
-        // Render high-res visual snapshot canvas
-        let pageImgData = null;
-        try {
-          const viewport = page.getViewport({ scale: 1.4 });
-          const canvas = document.createElement('canvas');
-          canvas.width = viewport.width;
-          canvas.height = viewport.height;
-          const ctx = canvas.getContext('2d');
-          await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-          pageImgData = canvas.toDataURL('image/jpeg', 0.82);
-        } catch (renderErr) {
-          console.warn('Page canvas render warning:', renderErr);
-        }
+        // Sort items top-to-bottom, then left-to-right
+        items.sort((a, b) => {
+          if (Math.abs(a.y - b.y) <= 4) return a.x - b.x;
+          return b.y - a.y;
+        });
 
-        // Group text items into lines based on transform Y coordinate
-        const lineMap = new Map();
-        const items = textContent.items || [];
-        for (const item of items) {
-          if (!item.str || !item.str.trim()) continue;
-          const y = Math.round(item.transform[5]);
-          const fontSize = Math.hypot(item.transform[0], item.transform[1]);
-          if (!lineMap.has(y)) {
-            lineMap.set(y, { y, fontSize, text: item.str });
+        // Cluster lines within vertical tolerance
+        const lines = [];
+        let curLine = [];
+        let curY = null;
+        for (const it of items) {
+          if (curY === null || Math.abs(it.y - curY) <= 4) {
+            curLine.push(it);
+            curY = (curY === null) ? it.y : (curY * 0.5 + it.y * 0.5);
           } else {
-            const entry = lineMap.get(y);
-            entry.text += ' ' + item.str;
-            entry.fontSize = Math.max(entry.fontSize, fontSize);
+            curLine.sort((a, b) => a.x - b.x);
+            lines.push(curLine);
+            curLine = [it];
+            curY = it.y;
           }
         }
+        if (curLine.length) {
+          curLine.sort((a, b) => a.x - b.x);
+          lines.push(curLine);
+        }
 
-        // Sort lines from top of page to bottom (descending Y in PDF coordinates)
-        const sortedLines = Array.from(lineMap.values()).sort((a, b) => b.y - a.y);
+        const textLines = lines.map(lineItems => {
+          let txt = '';
+          let lastX = null;
+          let lastW = null;
+          let maxH = 0;
+          for (const it of lineItems) {
+            maxH = Math.max(maxH, it.h);
+            if (lastX !== null && it.x > (lastX + lastW + 2)) {
+              txt += ' ';
+            }
+            txt += it.str;
+            lastX = it.x;
+            lastW = it.w;
+          }
+          return { text: txt.trim(), fontSize: maxH, y: lineItems[0].y };
+        }).filter(l => l.text.length > 0);
+
+        // Convert lines into structured blocks
         const blocks = [];
-        let detectedPageTitle = '';
-
-        // First, check if top line is a heading
-        let lineIdx = 0;
-        if (sortedLines.length > 0 && sortedLines[0].fontSize >= 14) {
-          detectedPageTitle = sortedLines[0].text.trim();
-          blocks.push({ id: `b_${pNum}_h1`, type: 'heading', level: 1, text: detectedPageTitle, value: detectedPageTitle });
-          lineIdx = 1;
-        } else {
-          detectedPageTitle = `Page ${pNum}: ${docTitle}`;
-          blocks.push({ id: `b_${pNum}_h1`, type: 'heading', level: 2, text: detectedPageTitle, value: detectedPageTitle });
-        }
-
-        // Add page image snapshot banner if available
-        if (pageImgData) {
-          blocks.push({
-            id: `b_${pNum}_snap`,
-            type: 'web_image',
-            src: pageImgData,
-            alt: `Page ${pNum} visual snapshot`,
-            value: `Page ${pNum} Visual Capture`,
-            style: { src: pageImgData, alt: `Page ${pNum} visual snapshot`, maxHeight: '440px', borderRadius: '12px', margin: '14px 0', border: '1px solid rgba(255,255,255,0.1)' }
-          });
-        }
-
-        // Aggregate consecutive body lines into paragraphs and subheadings
+        let pageTitle = '';
         let currentPara = [];
-        for (let i = lineIdx; i < sortedLines.length; i++) {
-          const l = sortedLines[i];
-          const txt = l.text.trim();
-          if (!txt) continue;
+        let currentCode = [];
 
-          if (l.fontSize >= 15) {
-            // Heading 2
-            if (currentPara.length) {
-              const pText = currentPara.join(' ');
-              blocks.push({ id: `b_${pNum}_p_${blocks.length}`, type: 'paragraph', text: pText, value: pText });
-              currentPara = [];
-            }
-            blocks.push({ id: `b_${pNum}_h2_${blocks.length}`, type: 'heading', level: 2, text: txt, value: txt });
-          } else if (l.fontSize >= 13 && txt.length < 90) {
-            // Heading 3
-            if (currentPara.length) {
-              const pText = currentPara.join(' ');
-              blocks.push({ id: `b_${pNum}_p_${blocks.length}`, type: 'paragraph', text: pText, value: pText });
-              currentPara = [];
-            }
-            blocks.push({ id: `b_${pNum}_h3_${blocks.length}`, type: 'heading', level: 3, text: txt, value: txt });
-          } else {
-            // Paragraph line
-            currentPara.push(txt);
-            if (txt.endsWith('.') || txt.endsWith('!') || txt.endsWith(':') || currentPara.length >= 4) {
-              const pText = currentPara.join(' ');
-              blocks.push({ id: `b_${pNum}_p_${blocks.length}`, type: 'paragraph', text: pText, value: pText });
-              currentPara = [];
-            }
+        function flushPara() {
+          if (currentPara.length > 0) {
+            const pText = currentPara.join(' ');
+            blocks.push({
+              id: 'b_' + pNum + '_p_' + blocks.length,
+              type: 'paragraph',
+              text: pText,
+              value: pText
+            });
+            currentPara = [];
           }
         }
-        if (currentPara.length) {
-          const pText = currentPara.join(' ');
-          blocks.push({ id: `b_${pNum}_p_${blocks.length}`, type: 'paragraph', text: pText, value: pText });
+
+        function flushCode() {
+          if (currentCode.length > 0) {
+            const cText = currentCode.join('\n');
+            blocks.push({
+              id: 'b_' + pNum + '_code_' + blocks.length,
+              type: 'code',
+              language: 'text',
+              code: cText,
+              value: cText,
+              text: cText,
+              style: { language: 'text' }
+            });
+            currentCode = [];
+          }
         }
+
+        for (let i = 0; i < textLines.length; i++) {
+          const l = textLines[i];
+          const txt = l.text;
+
+          // Detect ASCII art / architecture diagrams / code syntax
+          const isCodeLine = /^[+|\-\s]{4,}/.test(txt) || /^(\+[-=]+|\|\s+|-{3,}|\|--|├──|└──)/.test(txt) ||
+            /^(function|class|const|let|var|import|interface|export|return)\s+/.test(txt) ||
+            (currentCode.length > 0 && (/^\|/.test(txt) || /\|$/.test(txt) || /^[}\];]/.test(txt)));
+
+          if (isCodeLine) {
+            flushPara();
+            currentCode.push(txt);
+            continue;
+          } else {
+            flushCode();
+          }
+
+          // Detect Headings
+          const isH1 = (l.fontSize >= 18) || (i === 0 && l.fontSize >= 14 && txt.length < 80);
+          const isH2 = (l.fontSize >= 13 && l.fontSize < 18) || /^(\d+(\.\d+)*)\s+[A-Z]/.test(txt);
+
+          if (isH1) {
+            flushPara();
+            if (!pageTitle) pageTitle = txt;
+            blocks.push({
+              id: 'b_' + pNum + '_h1_' + blocks.length,
+              type: 'heading',
+              level: 1,
+              text: txt,
+              value: txt
+            });
+            continue;
+          }
+
+          if (isH2) {
+            flushPara();
+            blocks.push({
+              id: 'b_' + pNum + '_h2_' + blocks.length,
+              type: 'heading',
+              level: 2,
+              text: txt,
+              value: txt
+            });
+            continue;
+          }
+
+          // Normal paragraph text flow
+          currentPara.push(txt);
+          const nextL = textLines[i + 1];
+          if (nextL && (l.y - nextL.y > (l.fontSize * 2.2))) {
+            flushPara();
+          }
+        }
+
+        flushPara();
+        flushCode();
 
         pages.push({
           id: `page_${pNum}`,
-          title: detectedPageTitle || `Page ${pNum}`,
+          title: pageTitle || `Page ${pNum}`,
           blocks: blocks.length ? blocks : [{ id: `b_${pNum}_empty`, type: 'paragraph', text: `Page ${pNum} content preserved.`, value: `Page ${pNum} content preserved.` }]
         });
       }
@@ -5932,22 +6083,25 @@ function parsePdfFallback(file, docTitle, arrayBuffer) {
   }
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: docTitle },
-    { id: 'b_2', type: 'paragraph', text: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).` }
+    { id: 'b_1', type: 'heading', level: 1, text: docTitle, value: docTitle },
+    { id: 'b_2', type: 'paragraph', text: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).`, value: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).` }
   ];
 
   if (extractedText && extractedText.trim().length > 20) {
     const paras = extractedText.trim().split(/\s{3,}|\.\s+/);
     paras.slice(0, 20).forEach((p, idx) => {
       if (p.trim()) {
-        blocks.push({ id: 'b_p_' + idx, type: 'paragraph', text: p.trim() + '.' });
+        const pTxt = p.trim() + '.';
+        blocks.push({ id: 'b_p_' + idx, type: 'paragraph', text: pTxt, value: pTxt });
       }
     });
   } else {
+    const nTxt = 'PDF document structure preserved with layout metadata. You can customize interactive components, add 3D elements, or embed audio in Studio.';
     blocks.push({
       id: 'b_notice',
       type: 'paragraph',
-      text: 'PDF document structure preserved with layout metadata. You can customize interactive components, add 3D elements, or embed audio in Studio.'
+      text: nTxt,
+      value: nTxt
     });
   }
 
@@ -8963,8 +9117,13 @@ function renderBlockNode(node,parent){
     }
     case 'paragraph':{const p=document.createElement('p');p.textContent=text||node.value||'';parent.appendChild(p);break;}
     case 'list':{
-      const ul=document.createElement('ul');
-      (node.children||[]).forEach(item=>{const li=document.createElement('li');li.textContent=nodeText(item)||item.value||'';ul.appendChild(li);});
+      const ul=document.createElement(node.ordered ? 'ol' : 'ul');
+      const items = Array.isArray(node.items) ? node.items : (node.children || []);
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = typeof item === 'string' ? item : (nodeText(item) || item.value || item.text || '');
+        ul.appendChild(li);
+      });
       parent.appendChild(ul);break;
     }
     case 'list_item':{const li=document.createElement('li');li.textContent=text||node.value||'';parent.appendChild(li);break;}
@@ -9026,14 +9185,43 @@ function renderBlockNode(node,parent){
     }
     case 'table':{
       const tbl=document.createElement('table');tbl.className='pres-table';
-      (node.children||[]).forEach((row,ri)=>{
-        const tr=document.createElement('tr');
-        (row.children||[]).forEach(cell=>{
-          const td=document.createElement(ri===0?'th':'td');
-          td.textContent=nodeText(cell)||cell.value||'';tr.appendChild(td);
+      if ((node.headers && node.headers.length) || (node.rows && node.rows.length)) {
+        if (node.headers && node.headers.length) {
+          const thead = document.createElement('thead');
+          const tr = document.createElement('tr');
+          node.headers.forEach(h => {
+            const th = document.createElement('th');
+            th.textContent = typeof h === 'string' ? h : (nodeText(h) || h.value || h.text || '');
+            tr.appendChild(th);
+          });
+          thead.appendChild(tr);
+          tbl.appendChild(thead);
+        }
+        if (node.rows && node.rows.length) {
+          const tbody = document.createElement('tbody');
+          node.rows.forEach(row => {
+            const tr = document.createElement('tr');
+            const cells = Array.isArray(row) ? row : (row.children || [row]);
+            cells.forEach(cell => {
+              const td = document.createElement('td');
+              td.textContent = typeof cell === 'string' ? cell : (nodeText(cell) || cell.value || cell.text || '');
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          tbl.appendChild(tbody);
+        }
+      } else if (node.children && node.children.length) {
+        (node.children||[]).forEach((row,ri)=>{
+          const tr=document.createElement('tr');
+          (row.children||[]).forEach(cell=>{
+            const td=document.createElement(ri===0?'th':'td');
+            td.textContent=typeof cell === 'string' ? cell : (nodeText(cell)||cell.value||cell.text||'');
+            tr.appendChild(td);
+          });
+          tbl.appendChild(tr);
         });
-        tbl.appendChild(tr);
-      });
+      }
       parent.appendChild(tbl);break;
     }
     case 'image':{
@@ -9464,16 +9652,9 @@ ${escapeHtml(rawCode)}
       const modelUrl = st.src || st.url || node.src || node.url || '';
       let modelData = node.mesh_data || st.mesh_data || (st.vertices ? st : null) || node.data || null;
       
-      // If modelData is missing or generic 8-vert placeholder cube, use authentic null
-      if (!modelData || !modelData.vertices || modelData.vertices.length <= 12 || template.includes('qubit') || template.includes('quantum')) {
-        if (false) {
-          modelData = null;
-        }
-        } else if (template.includes('lucia') || template.includes('girl') || template.includes('female')) {
-          modelData = false ? null : null;
-        } else if (template.includes('jason') || template.includes('guy') || template.includes('male')) {
-          modelData = false ? null : null;
-        } else if (template === 'qubit' || template === 'sphere') {
+      // Only assign procedural fallback templates if modelData has no authentic vertices
+      if (!modelData || !Array.isArray(modelData.vertices) || modelData.vertices.length === 0) {
+        if (template === 'qubit' || template === 'sphere' || template.includes('quantum')) {
           modelData = {
             vertices: [
               [-1.0,-0.4, 3.2], [ 1.0,-0.4, 3.2], [-1.2,-0.2, 2.4], [ 1.2,-0.2, 2.4],
@@ -9536,6 +9717,7 @@ ${escapeHtml(rawCode)}
             ]
           };
         }
+      }
       
       const container=document.createElement('div');
       container.className='pres-3d-card';
