@@ -2861,10 +2861,11 @@ body.creator-split-50-50 #creator-preview-pane {
 
 <!-- Native Desktop Menu Bar (Antigravity Style) -->
 <div id="desktop-menubar">
-  <a href="/models" class="dmenu-brand" style="text-decoration:none;margin-right:4px">🏛️ Models Hub</a>
-    <a href="/" class="dmenu-brand" style="text-decoration:none;margin-right:8px">🌐 Developer Portal</a>
-    <div class="dmenu-brand" onclick="toast('LDOCX Document Creator v2.4.0 (Enterprise Reactive 3D Edition)', 'info')">
+  <div class="dmenu-brand" onclick="location.href='live-studio.html'" title="Return to LDOC Studio Workspace" style="background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.4);cursor:pointer">
     <img src="ldoc_logo.png" alt="LDOC">
+    <span style="color:#fef08a;font-weight:700">← Back to Studio</span>
+  </div>
+  <div class="dmenu-brand" onclick="toast('LDOC Living Document Creator v2.5.0', 'info')">
     <span>LDOC Creator</span>
   </div>
   <div class="dmenu-items">
@@ -2878,7 +2879,7 @@ body.creator-split-50-50 #creator-preview-pane {
         <div class="dmenu-entry" onclick="buildDoc()"><span>▶ Build &amp; Open in Studio</span><span class="hotkey">Ctrl+B</span></div>
         <div class="dmenu-entry" onclick="downloadDoc()"><span>⬇ Download .ldocx Package</span><span class="hotkey">Ctrl+D</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="location.href='/live-studio'"><span>🖥️ Switch to Studio Viewer</span></div>
+        <div class="dmenu-entry" onclick="location.href='live-studio.html'"><span>🖥️ Switch to Studio</span></div>
         <div class="dmenu-entry" onclick="window.close()"><span>✕ Exit Creator</span><span class="hotkey">Alt+F4</span></div>
       </div>
     </div>

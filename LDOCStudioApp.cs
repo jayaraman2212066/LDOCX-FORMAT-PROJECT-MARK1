@@ -31,15 +31,19 @@ namespace LDOCStudio
             {
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
                 
-                // Locate Editor HTML
-                string editorPath = Path.Combine(baseDir, "packages", "ldoc-editor", "index.html");
+                // Locate Studio Fullstack HTML (matches Screenshot 1 and Screenshot 2)
+                string editorPath = Path.Combine(baseDir, "live-studio.html");
                 if (!File.Exists(editorPath))
                 {
                     editorPath = Path.Combine(baseDir, "studio.html");
                 }
                 if (!File.Exists(editorPath))
                 {
-                    editorPath = Path.Combine(baseDir, "live-studio.html");
+                    editorPath = Path.Combine(baseDir, "app", "viewer", "live-studio.html");
+                }
+                if (!File.Exists(editorPath))
+                {
+                    editorPath = Path.Combine(baseDir, "packages", "ldoc-editor", "index.html");
                 }
 
                 if (!File.Exists(editorPath))
