@@ -162,10 +162,8 @@ body::before{
   position:fixed;
   top:0;left:0;right:0;bottom:0;
   background:radial-gradient(circle at 50% 15%,rgba(10,10,24,0.60) 0%,rgba(4,4,10,0.85) 100%);
-  backdrop-filter:blur(14px) saturate(140%);
-  -webkit-backdrop-filter:blur(14px) saturate(140%);
   pointer-events:none;
-  z-index:0;
+  z-index:-1;
 }
 
 /* ── Top Navigation Toolbar ─────────────────────────────────────────────────── */
@@ -3108,6 +3106,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 .price-period { font-size: 13px; color: #64748b; font-weight: 600; }
 .price-desc { font-size: 12.5px; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
 .price-features { list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #cbd5e1; }
+</style>
 
 <script src="jszip.min.js"></script>
 <script src="ldoc-config.js"></script>

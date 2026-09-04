@@ -149,46 +149,6 @@
   z-index: 10;
 }
 
-/* Pop-up Drawers for Pages (#left) and Blocks Editor (#center) */
-body.mode-presentation #left {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 320px;
-  z-index: 90;
-  background: rgba(12, 14, 24, 0.95);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border-right: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 12px 0 50px rgba(0, 0, 0, 0.85);
-  transform: translateX(-100%);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-body.mode-presentation #left.open {
-  transform: translateX(0);
-}
-
-body.mode-presentation #center {
-  position: absolute;
-  top: 0;
-  left: 320px;
-  bottom: 0;
-  width: 480px;
-  max-width: calc(100vw - 320px);
-  z-index: 85;
-  background: rgba(14, 16, 28, 0.96);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border-right: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 12px 0 50px rgba(0, 0, 0, 0.85);
-  transform: translateX(-120%);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-body.mode-presentation #center.open {
-  transform: translateX(0);
-}
-
 /* Close buttons inside drawers */
 .drawer-close-btn {
   background: rgba(255, 255, 255, 0.08);
@@ -228,9 +188,9 @@ body.mode-presentation #center.open {
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 #popup-elements-modal.open {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-  pointer-events: auto;
+  transform: translateX(-50%) translateY(0) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 .elements-grid-category {
   margin-bottom: 12px;
@@ -311,10 +271,8 @@ body::before{
   position:fixed;
   top:0;left:0;right:0;bottom:0;
   background:radial-gradient(circle at 50% 15%,rgba(10,10,24,0.60) 0%,rgba(4,4,10,0.85) 100%);
-  backdrop-filter:blur(14px) saturate(140%);
-  -webkit-backdrop-filter:blur(14px) saturate(140%);
   pointer-events:none;
-  z-index:0;
+  z-index:-1;
 }
 
 /* toolbar */
@@ -395,7 +353,7 @@ body::before{
   background: rgba(4, 4, 10, 0.6);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 900;
+  z-index: 1040;
   display: none;
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -411,21 +369,21 @@ body::before{
   top: 84px !important;
   left: 0 !important;
   bottom: 0 !important;
-  width: 340px !important;
+  width: 360px !important;
   max-width: 90vw !important;
   background: rgba(12, 14, 24, 0.97) !important;
   backdrop-filter: blur(32px) !important;
   -webkit-backdrop-filter: blur(32px) !important;
   border-right: 1.5px solid rgba(167, 139, 250, 0.35) !important;
   box-shadow: 16px 0 60px rgba(0, 0, 0, 0.92) !important;
-  z-index: 1000 !important;
+  z-index: 1050 !important;
   display: flex !important;
   flex-direction: column !important;
-  overflow: hidden !important;
+  overflow-y: auto !important;
   transform: translateX(-105%) !important;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  visibility: hidden;
-  pointer-events: none;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 #left.open {
   transform: translateX(0) !important;
@@ -495,32 +453,35 @@ body::before{
 /* ── Dynamic Pop-up Drawer 2: #center (Block Editor & Inspector) ────────────── */
 #center {
   position: fixed !important;
-  top: 96px !important;
-  left: 30px !important;
-  bottom: 24px !important;
-  width: 520px !important;
-  max-width: calc(100vw - 60px) !important;
+  top: 84px !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 560px !important;
+  max-width: 95vw !important;
   background: rgba(14, 16, 28, 0.98) !important;
   backdrop-filter: blur(32px) !important;
   -webkit-backdrop-filter: blur(32px) !important;
-  border: 1.5px solid rgba(167, 139, 250, 0.35) !important;
-  border-radius: 18px !important;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.92), 0 0 30px rgba(124, 58, 237, 0.25) !important;
-  z-index: 1020 !important;
+  border-right: 1.5px solid rgba(167, 139, 250, 0.35) !important;
+  box-shadow: 16px 0 60px rgba(0, 0, 0, 0.92) !important;
+  z-index: 1060 !important;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
-  transform: translateY(24px) scale(0.96) !important;
+  transform: translateX(-105%) !important;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
   opacity: 0 !important;
   pointer-events: none !important;
   visibility: hidden !important;
-  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 #center.open {
-  transform: translateY(0) scale(1) !important;
+  transform: translateX(0) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
   visibility: visible !important;
+}
+#left.open ~ #center.open {
+  left: 360px !important;
+  max-width: calc(100vw - 360px) !important;
 }
 #center-panel-header {
   padding: 12px 18px;
@@ -562,14 +523,14 @@ body::before{
   -webkit-backdrop-filter: blur(32px) !important;
   border-left: 1.5px solid rgba(245, 158, 11, 0.35) !important;
   box-shadow: -16px 0 60px rgba(0, 0, 0, 0.92) !important;
-  z-index: 1000 !important;
+  z-index: 1050 !important;
   display: flex !important;
   flex-direction: column !important;
   overflow-y: auto !important;
   transform: translateX(105%) !important;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  visibility: hidden;
-  pointer-events: none;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 #right.open {
   transform: translateX(0) !important;
@@ -610,9 +571,6 @@ body::before{
 #add-bar span{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-right:4px}
 .add-btn{background:var(--s2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;transition:all .12s}
 .add-btn:hover{background:rgba(167,139,250,.1);border-color:var(--accent);color:var(--accent)}
-
-/* right panel - preview + actions */
-#right{width:280px;background:var(--s1);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
 #actions{padding:14px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--border)}
 #actions .btn{justify-content:center;width:100%}
 #doc-stats{padding:12px 14px;border-bottom:1px solid var(--border)}
@@ -1927,67 +1885,6 @@ body.mode-paper .page-fx-canvas {
   filter: brightness(1.15) !important;
 }
 
-
-/* ── Unified 3-Column Split View for Creator Studio (Mirroring Editor) ── */
-#main {
-  display: flex !important;
-  flex-direction: row !important;
-  height: calc(100vh - 78px) !important;
-  overflow: hidden !important;
-  position: relative !important;
-  background: #080811 !important;
-}
-
-#left {
-  position: static !important;
-  transform: none !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-  width: 220px !important;
-  min-width: 200px !important;
-  max-width: 260px !important;
-  background: rgba(14, 16, 28, 0.98) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow-y: auto !important;
-  flex-shrink: 0 !important;
-  z-index: 10 !important;
-}
-
-#center {
-  position: relative;
-  flex: 0 0 380px;
-  width: 380px;
-  min-width: 260px;
-  max-width: 800px;
-  background: rgba(10, 10, 20, 0.95);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  z-index: 10;
-}
-
-#creator-preview-pane {
-  position: relative;
-  visibility: visible;
-  pointer-events: auto;
-  flex: 1 1 50%;
-  min-width: 320px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: #0a0a14;
-  transition: flex 0.2s ease, width 0.2s ease;
-}
-
-#center {
-  flex: 0 0 420px;
-  min-width: 260px;
-  max-width: 800px;
-  transition: flex 0.2s ease, width 0.2s ease;
-}
 
 /* Fullscreen Slide Canvas Display Mode */
 body.creator-slide-fullscreen #left,
@@ -7320,10 +7217,7 @@ function buildSpec(){
 // ── Actions ───────────────────────────────────────────────────────────────────
 async function buildDoc(){
   if(!pages.length){
-    toast('Add at least one page to build','err');
-    const center = document.getElementById('center');
-    if (center && !center.classList.contains('open')) toggleBlocksDrawer();
-    return;
+    addPage();
   }
   const btn=document.getElementById('build-btn');
   if(btn){btn.disabled=true;btn.textContent='Building…';}
@@ -7741,6 +7635,7 @@ document.addEventListener('click', () => {
 // ── Complete Popup Drawer & Modal Management ──────────────────────────────────
 
 function togglePagesDrawer() {
+  if (!pages.length) addPage();
   const left = document.getElementById('left');
   const btn = document.getElementById('toggle-pages-btn');
   const backdrop = document.getElementById('drawer-backdrop');
@@ -7762,6 +7657,12 @@ function togglePagesDrawer() {
 }
 
 function toggleBlocksDrawer() {
+  if (!pages.length) {
+    addPage();
+  } else {
+    const area = document.getElementById('blocks-area');
+    if (area && !area.innerHTML.trim()) renderBlocks();
+  }
   const center = document.getElementById('center');
   const btn = document.getElementById('toggle-blocks-btn');
   const backdrop = document.getElementById('drawer-backdrop');
@@ -8744,11 +8645,9 @@ function triggerTelemetryBurst(btn) {
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof initFormatPopover === 'function') initFormatPopover();
   setCreatorPresentationMode('paper');
-  // Clean user-driven initialization: No dummy Page 1
+  // Auto-initialize Page 1 on startup so blocks area, quick-add bar, and builder are immediately active
   if (pages.length === 0) {
-    renderPageList();
-    showNoPage();
-    if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+    addPage();
   }
 });
 </script>
