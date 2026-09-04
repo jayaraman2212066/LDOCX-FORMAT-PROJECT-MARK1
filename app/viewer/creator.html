@@ -7635,6 +7635,20 @@ renderTemplates();
 showNoPage();
 updateCreatorLivePreview();
 
+// Check for converted document from Universal Converter
+try {
+  const convertedSpecStr = sessionStorage.getItem('ldoc_converted_spec');
+  if (convertedSpecStr) {
+    sessionStorage.removeItem('ldoc_converted_spec');
+    const parsedSpec = JSON.parse(convertedSpecStr);
+    loadSpec(parsedSpec);
+    toast('✓ Converted Living Document loaded into Creator!', 'ok');
+  }
+} catch (e) {
+  console.warn('Notice loading converted spec into Creator:', e);
+}
+
+
 
 // ── Desktop Menu Bar Dropdown Engine ──────────────────────────────────────────
 
