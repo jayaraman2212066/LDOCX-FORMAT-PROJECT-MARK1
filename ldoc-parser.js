@@ -117,6 +117,8 @@
           id: pageData.id || `page_${String(i + 1).padStart(3, '0')}`,
           num: pageData.page_number || (i + 1),
           title: pageData.title || `Page ${i + 1}`,
+          fx: pageData.fx || null,
+          theme: pageData.theme || null,
           blocks: safeBlocks,
           floating_texts: Array.isArray(pageData.floating_texts) ? pageData.floating_texts : []
         });
@@ -148,6 +150,8 @@
                 id: p.id || `page_${idx + 1}`,
                 num: idx + 1,
                 title: p.title || `Page ${idx + 1}`,
+                fx: p.fx || null,
+                theme: p.theme || null,
                 blocks: sBlocks,
                 floating_texts: p.floating_texts || []
               });
@@ -219,6 +223,8 @@
         id: p.id || `page_${pageNum}`,
         page_number: idx + 1,
         title: p.title || `Page ${idx + 1}`,
+        fx: p.fx || null,
+        theme: p.theme || null,
         blocks: p.blocks || [],
         floating_texts: p.floating_texts || []
       };

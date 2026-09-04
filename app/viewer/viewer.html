@@ -4388,6 +4388,8 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
         <label>Author</label><input id="ed-author" value="Author" style="width:130px">
         <label>Lang</label><input id="ed-lang" value="en" style="width:44px">
         <div style="flex:1"></div>
+        <button class="toolbar-btn" id="ed-undo-btn" onclick="edUndo()" title="Undo (Ctrl+Z)">↩ Undo</button>
+        <button class="toolbar-btn" id="ed-redo-btn" onclick="edRedo()" title="Redo (Ctrl+Y)">↪ Redo</button>
         <button class="ed-preview-toggle active" id="ed-preview-btn" onclick="edToggleLivePreview()" title="Toggle Real-Time Page Presentation Preview">👁️ Live Preview: ON</button>
         <button class="toolbar-btn" onclick="toggleFxWizard()" style="background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(124,58,237,.25));border-color:var(--gold);color:#fef08a;font-weight:700;font-size:11px;padding:4px 10px">⚜ FX Wizard</button>
       </div>
@@ -4408,20 +4410,17 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
         <button class="ed-add-btn" onclick="edAddBlock('web_audio')">🎵 Soundtrack</button>
         <button class="ed-add-btn" onclick="edAddBlock('web_video')">🎬 Video</button>
         <button class="ed-add-btn" onclick="edAddBlock('3d_model')">📦 3D Model</button>
-        <button class="ed-add-btn" onclick="edAddBlock('ai')">⚡ AI Insight</button>
+        <button class="ed-add-btn" onclick="edAddBlock('ai')">⚡ AI Copilot</button>
         <button class="ed-add-btn" onclick="edAddBlock('form')">📑 Form</button>
         <button class="ed-add-btn" onclick="edAddBlock('feature_grid')">🌟 Feature Grid</button>
         <button class="ed-add-btn" onclick="edAddBlock('live_feed')">📡 Live Dispatch</button>
         <button class="ed-add-btn" onclick="edAddBlock('preorder')">💎 Pre-Order</button>
-        <button class="ed-add-btn" onclick="edAddBlock('button')">🔘 Button</button>
+        <button class="ed-add-btn" onclick="edAddBlock('button')">🔘 Smart Action</button>
         <button class="ed-add-btn" onclick="edAddBlock('throttle_dyno')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🏎️ Throttle Dyno</button>
-        <button class="ed-add-btn" onclick="edAddBlock('spell_matrix')" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4)">🪄 Spell Matrix</button>
         <button class="ed-add-btn" onclick="edAddBlock('orbit_sim')" style="background:rgba(167,139,250,.15);color:#a78bfa;border-color:rgba(167,139,250,.4)">🛰️ Orbit Sim</button>
         <button class="ed-add-btn" onclick="edAddBlock('arr_projector')" style="background:rgba(16,185,129,.15);color:#10b981;border-color:rgba(16,185,129,.4)">📈 ARR Projector</button>
         <button class="ed-add-btn" onclick="edAddBlock('tilt_card')" style="background:rgba(244,63,94,.15);color:#f43f5e;border-color:rgba(244,63,94,.4)">📐 3D Tilt Card</button>
         <button class="ed-add-btn" onclick="edAddBlock('jsx_canvas')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">⚡ Live Sandbox</button>
-        <button class="ed-add-btn" onclick="edAddBlock('particles')" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4)">✨ Particle FX</button>
-        <button class="ed-add-btn" onclick="edAddBlock('water_effect')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🌊 Water Ripples</button>
       </div>
     </div>
 
@@ -4547,21 +4546,21 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
   <div class="fx-wiz-body" id="fx-wiz-body">
     <!-- Section 1: Fluid Temporal Waves -->
     <div class="fx-wiz-section">
-      <div class="fx-wiz-section-title">🌊 Fluid Temporal Dynamics</div>
+      <div class="fx-wiz-section-title">🌊 Fluid Page Background Dynamic Shaders</div>
       <div class="fx-wiz-card">
-        <div class="fx-wiz-title">Interactive Surface Water Waves</div>
-        <div class="fx-wiz-desc">Hydrodynamic wave simulation with cursor refraction ripples &amp; temporal decay.</div>
+        <div class="fx-wiz-title">Living Surface Water Waves</div>
+        <div class="fx-wiz-desc">Hydrodynamic paper background shader with gentle ambient fluid wave motion and oceanic caustics.</div>
         <canvas id="wiz-canvas-water" width="320" height="100"></canvas>
         <div class="fx-wiz-actions">
-          <button class="fx-wiz-btn primary" onclick="applyWizardFx('bg_water')">🌊 Apply Background</button>
-          <button class="fx-wiz-btn" onclick="applyWizardFx('insert_water')">➕ Insert Ripple Block</button>
+          <button class="fx-wiz-btn primary" onclick="applyWizardFx('bg_water')">🌊 Apply Page Background</button>
+          <button class="fx-wiz-btn" onclick="applyWizardFx('bg_none')">🚫 Clear Background</button>
         </div>
       </div>
     </div>
 
     <!-- Section 2: Particle Physics Engine -->
     <div class="fx-wiz-section">
-      <div class="fx-wiz-section-title">✨ Particle Physics &amp; Constellations</div>
+      <div class="fx-wiz-section-title">✨ Living Environmental Particle Shaders</div>
       <div class="fx-wiz-card">
         <div style="display:flex;align-items:center;justify-content:space-between">
           <div class="fx-wiz-title">Cosmic Stardust &amp; Warp</div>
@@ -4572,18 +4571,18 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
             <option value="shards">💎 Crystal Shards</option>
           </select>
         </div>
-        <div class="fx-wiz-desc">Autonomous multi-body particle physics with mouse gravitational force-field.</div>
+        <div class="fx-wiz-desc">Autonomous multi-body particle physics shader rendered behind active slide content.</div>
         <canvas id="wiz-canvas-particles" width="320" height="100"></canvas>
         <div class="fx-wiz-actions">
-          <button class="fx-wiz-btn primary" onclick="applyWizardFx('bg_particles')">✨ Apply Background</button>
-          <button class="fx-wiz-btn" onclick="applyWizardFx('insert_particles')">➕ Insert Particle Block</button>
+          <button class="fx-wiz-btn primary" onclick="applyWizardFx('bg_particles')">✨ Apply Page Background</button>
+          <button class="fx-wiz-btn" onclick="applyWizardFx('bg_none')">🚫 Clear Background</button>
         </div>
       </div>
     </div>
 
     <!-- Section 3: Interactive Reactive Sandboxes -->
     <div class="fx-wiz-section">
-      <div class="fx-wiz-section-title">⚡ Interactive Reactive Sandboxes</div>
+      <div class="fx-wiz-section-title">⚡ Interactive Enterprise &amp; Scientific Living Elements</div>
       <div class="fx-wiz-grid">
         <!-- Dyno Speedometer -->
         <div class="fx-wiz-card">
@@ -4612,28 +4611,6 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
           </div>
           <div class="fx-wiz-actions">
             <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_dyno')">➕ Insert Dyno Sandbox</button>
-          </div>
-        </div>
-
-        <!-- Wand Spell Cast Matrix -->
-        <div class="fx-wiz-card">
-          <div class="fx-wiz-title">🪄 Wand Spell Cast Matrix</div>
-          <div class="fx-wiz-desc">Arcane spellboard with real-time Lumos, Patronus, Expelliarmus &amp; shockwave canvas blasts.</div>
-          <div style="margin:8px 0">
-            <label class="wiz-label">Wand / Matrix Title</label>
-            <input id="wiz-wand-name" value="Elder Wand (Phoenix Core)" placeholder="Wand Name" class="wiz-input">
-            <label class="wiz-label">Active Spells (Comma-Separated)</label>
-            <input id="wiz-wand-spells" value="Lumos, Expecto Patronus, Expelliarmus, Incendio, Starlight Shield" placeholder="Spell list" class="wiz-input">
-            <label class="wiz-label">Aura Resonance</label>
-            <select id="wiz-wand-aura" class="wiz-input">
-              <option value="gold">✨ Golden Sunfire</option>
-              <option value="cyan">Celestial Cyan</option>
-              <option value="violet">🔮 Violet Void</option>
-              <option value="emerald">🟢 Emerald Spark</option>
-            </select>
-          </div>
-          <div class="fx-wiz-actions">
-            <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_wand')">➕ Insert Spell Matrix</button>
           </div>
         </div>
 
@@ -4993,11 +4970,222 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// ── 🌊 Environmental Living FX Engine (Whole-Page Shaders) ──────────────────
+function ensurePageFxCanvas(pageEl) {
+  if (!pageEl) return null;
+  let cvs = pageEl.querySelector('.page-fx-canvas, .page-living-canvas');
+  if (!cvs) {
+    cvs = document.createElement('canvas');
+    cvs.className = 'page-fx-canvas';
+    cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;border-radius:inherit;';
+    pageEl.insertBefore(cvs, pageEl.firstChild);
+  }
+  return cvs;
+}
+
+function initWholePageLivingFx(container, canvas, fxType) {
+  if (!canvas) return;
+  if (!fxType || fxType === 'none') {
+    if (canvas._animId) { cancelAnimationFrame(canvas._animId); canvas._animId = null; }
+    canvas.style.display = 'none';
+    return;
+  }
+  canvas.style.display = 'block';
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  if (canvas._animId) {
+    cancelAnimationFrame(canvas._animId);
+    canvas._animId = null;
+  }
+
+  function resize() {
+    const rect = container.getBoundingClientRect();
+    const w = Math.max(300, Math.floor(rect.width || container.clientWidth || 800));
+    const h = Math.max(200, Math.floor(rect.height || container.clientHeight || 500));
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+    }
+  }
+  resize();
+
+  let t = 0;
+  const isWater = (fxType === 'water' || fxType === 'fluid' || fxType === 'fluid_waves');
+  const isParticles = (fxType === 'particles' || fxType === 'stardust');
+  const isEmbers = (fxType === 'embers');
+  const isWarp = (fxType === 'warp');
+  const isShards = (fxType === 'shards');
+
+  const pCount = isWater ? 0 : 36;
+  const particles = [];
+  for (let i = 0; i < pCount; i++) {
+    particles.push({
+      x: Math.random() * (canvas.width || 800),
+      y: Math.random() * (canvas.height || 500),
+      vx: (Math.random() - 0.5) * 0.7,
+      vy: isEmbers ? -(Math.random() * 0.8 + 0.3) : (Math.random() - 0.5) * 0.7,
+      size: Math.random() * 2.4 + 1.2,
+      alpha: Math.random() * 0.6 + 0.25,
+      rot: Math.random() * Math.PI * 2,
+      vrot: (Math.random() - 0.5) * 0.03
+    });
+  }
+
+  function frame() {
+    t += 0.02;
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    if (isWater) {
+      // Gentle, oceanic hydrodynamic wave motion
+      const grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, 'rgba(8, 25, 45, 0.45)');
+      grad.addColorStop(0.5, 'rgba(12, 40, 75, 0.35)');
+      grad.addColorStop(1, 'rgba(6, 18, 36, 0.5)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      for (let waveIdx = 0; waveIdx < 3; waveIdx++) {
+        ctx.beginPath();
+        const baseH = h * (0.45 + waveIdx * 0.2);
+        const freq = 0.008 + waveIdx * 0.004;
+        const speed = t * (0.8 + waveIdx * 0.5);
+        const amp = 14 + waveIdx * 8;
+        ctx.moveTo(0, h);
+        for (let x = 0; x <= w; x += 15) {
+          const y = baseH + Math.sin(x * freq + speed) * amp + Math.cos(x * freq * 0.5 - speed * 0.7) * (amp * 0.5);
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(w, h);
+        ctx.closePath();
+        ctx.fillStyle = waveIdx === 0 ? 'rgba(56, 189, 248, 0.08)' : (waveIdx === 1 ? 'rgba(37, 99, 235, 0.06)' : 'rgba(14, 165, 233, 0.09)');
+        ctx.fill();
+      }
+
+      for (let s = 0; s < 12; s++) {
+        const sx = (Math.sin(s * 1.7 + t * 0.6) * 0.5 + 0.5) * w;
+        const sy = (Math.cos(s * 2.3 + t * 0.4) * 0.5 + 0.5) * h;
+        const r = 30 + Math.sin(t + s) * 15;
+        const cGrad = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
+        cGrad.addColorStop(0, 'rgba(56, 189, 248, 0.12)');
+        cGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = cGrad;
+        ctx.beginPath();
+        ctx.arc(sx, sy, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (isParticles) {
+      // Cosmic Stardust Nodes & Constellations
+      particles.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
+
+        p.alpha += Math.sin(t * 2 + i) * 0.005;
+        const curAlpha = Math.max(0.15, Math.min(0.85, p.alpha));
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(167, 139, 250, ${curAlpha})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#a78bfa';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 85) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(147, 197, 253, ${0.15 * (1 - dist / 85)})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      });
+    } else if (isEmbers) {
+      particles.forEach((p, i) => {
+        p.y += p.vy;
+        p.x += Math.sin(t + i) * 0.5;
+        if (p.y < 0) { p.y = h; p.x = Math.random() * w; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(245, 158, 11, ${p.alpha})`;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#f59e0b';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+    } else if (isWarp) {
+      const cx = w / 2, cy = h / 2;
+      particles.forEach((p) => {
+        const dx = p.x - cx, dy = p.y - cy;
+        p.x += dx * 0.03;
+        p.y += dy * 0.03;
+        if (p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
+          p.x = cx + (Math.random() - 0.5) * 80;
+          p.y = cy + (Math.random() - 0.5) * 80;
+        }
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x + dx * 0.08, p.y + dy * 0.08);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      });
+    } else if (isShards) {
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vrot;
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.beginPath();
+        ctx.moveTo(0, -p.size * 3);
+        ctx.lineTo(p.size * 2, 0);
+        ctx.lineTo(0, p.size * 3);
+        ctx.lineTo(-p.size * 2, 0);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha * 0.5})`;
+        ctx.strokeStyle = `rgba(167, 139, 250, ${p.alpha})`;
+        ctx.lineWidth = 1;
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
+
+    canvas._animId = requestAnimationFrame(frame);
+  }
+
+  canvas._animId = requestAnimationFrame(frame);
+}
+
+function renderPageEnvironmentalFx(pageEl, fxType) {
+  if (!pageEl) return;
+  pageEl.dataset.fx = fxType || 'none';
+  const cvs = ensurePageFxCanvas(pageEl);
+  if (!cvs) return;
+  initWholePageLivingFx(pageEl, cvs, fxType);
+}
+
 function setVisualFx(fx, el) {
   window.__currentFx = fx;
   const fxNames = {
     'water': 'Fluid Water Waves',
     'stardust': 'Cyber Stardust',
+    'particles': 'Cyber Stardust',
     'warp': 'Hyperspace Warp',
     'embers': 'Golden Magick Embers',
     'shards': 'Crystal Diamond Shards',
@@ -5012,14 +5200,20 @@ function setVisualFx(fx, el) {
   const menu = document.getElementById('fx-dropdown-menu');
   if (menu) menu.style.display = 'none';
 
-  const activePageEl = document.getElementById(`pres-page-${currentPage}`) || document.querySelector('.pres-page');
-  if (activePageEl) {
-    activePageEl.dataset.fx = fx;
-    if (typeof initWholePageLivingFx === 'function') {
-      const cvs = activePageEl.querySelector('.page-living-canvas');
-      if (cvs) initWholePageLivingFx(activePageEl, cvs, fx);
+  // If in editor, apply to current page data and trigger live preview
+  if (typeof edPages !== 'undefined' && edPages.length > 0) {
+    const curEdPage = edPages.find(p => p.id === edCurrentPage) || edPages[0];
+    if (curEdPage) {
+      curEdPage.fx = fx;
+      if (typeof edPushUndo === 'function') edPushUndo();
     }
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
   }
+
+  // Apply to active presentation slide / viewer page
+  document.querySelectorAll('.pres-page, #page-canvas .pres-page, #ed-preview-body .pres-page').forEach(pageEl => {
+    renderPageEnvironmentalFx(pageEl, fx);
+  });
 }
 
 function updateWizTiltSettings() {
@@ -5341,20 +5535,24 @@ function applyWizardFx(action) {
     if (!curEdPage) return;
     curEdPage.blocks = curEdPage.blocks || [];
 
-    if (action === 'bg_water') {
+    if (action === 'bg_water' || action === 'water') {
       curEdPage.fx = 'water';
       setVisualFx('water');
+      if (typeof edPushUndo === 'function') edPushUndo();
+      if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
       showToast('🌊 Applied Fluid Water Waves background to active page!', 'ok');
-    } else if (action === 'bg_particles') {
+    } else if (action === 'bg_particles' || action === 'particles' || action === 'stardust') {
       curEdPage.fx = 'particles';
       setVisualFx('stardust');
+      if (typeof edPushUndo === 'function') edPushUndo();
+      if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
       showToast('✨ Applied Cyber Stardust background to active page!', 'ok');
-    } else if (action === 'insert_water') {
-      curEdPage.blocks.push({ id: bId, type: 'water_effect', title: 'Volumetric Water Waves' });
-      showToast('🌊 Inserted Volumetric Water Waves block into active page!', 'ok');
-    } else if (action === 'insert_particles') {
-      curEdPage.blocks.push({ id: bId, type: 'particles', value: 'stardust', text: 'Cyber Stardust Particles' });
-      showToast('✨ Inserted Particle FX block into active page!', 'ok');
+    } else if (action === 'bg_none' || action === 'none') {
+      curEdPage.fx = 'none';
+      setVisualFx('none');
+      if (typeof edPushUndo === 'function') edPushUndo();
+      if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+      showToast('🚫 Environmental background cleared for active page!', 'info');
     } else if (action === 'insert_dyno') {
       const dyno = getWizardDynoConfig();
       curEdPage.blocks.push({
@@ -5366,18 +5564,8 @@ function applyWizardFx(action) {
         theme: dyno.theme,
         title: dyno.vehicle_name + ' Telemetry Dyno'
       });
+      if (typeof edPushUndo === 'function') edPushUndo();
       showToast(`🏎️ Inserted Throttle Dyno (${dyno.vehicle_name}) into active page!`, 'ok');
-    } else if (action === 'insert_wand') {
-      const wand = getWizardWandConfig();
-      curEdPage.blocks.push({
-        id: bId,
-        type: 'spell_matrix',
-        wand_name: wand.wand_name,
-        spells: wand.spells,
-        aura: wand.aura,
-        title: wand.wand_name + ' Arcane Matrix'
-      });
-      showToast(`🪄 Inserted Spell Matrix (${wand.wand_name}) into active page!`, 'ok');
     } else if (action === 'insert_orbit') {
       const orbit = getWizardOrbitConfig();
       curEdPage.blocks.push({
@@ -5388,6 +5576,7 @@ function applyWizardFx(action) {
         altitude: orbit.altitude,
         title: orbit.craft_name + ' Orbital Sim'
       });
+      if (typeof edPushUndo === 'function') edPushUndo();
       showToast(`🛰️ Inserted Orbital Simulator (${orbit.craft_name}) into active page!`, 'ok');
     } else if (action === 'insert_arr') {
       const arr = getWizardArrConfig();
@@ -5400,6 +5589,7 @@ function applyWizardFx(action) {
         multiple: arr.multiple,
         title: arr.saas_name + ' ARR & Valuation Projector'
       });
+      if (typeof edPushUndo === 'function') edPushUndo();
       showToast(`📈 Inserted ARR Projector (${arr.saas_name}) into active page!`, 'ok');
     } else if (action === 'insert_tilt_card') {
       const tilt = getWizardTiltConfig();
@@ -5412,6 +5602,7 @@ function applyWizardFx(action) {
         sheen: tilt.sheen,
         text: 'Dynamic tactile 3D perspective with cursor-tracked holographic glare.'
       });
+      if (typeof edPushUndo === 'function') edPushUndo();
       showToast('📐 Inserted 3D Tilt Card into active page!', 'ok');
     } else if (action === 'insert_stripe_button') {
       const btn = getWizardButtonConfig();
@@ -5428,6 +5619,7 @@ function applyWizardFx(action) {
           new_tab: btn.target === '_blank'
         }
       });
+      if (typeof edPushUndo === 'function') edPushUndo();
       showToast(`💳 Inserted Custom Button (${btn.label}) into active page!`, 'ok');
     } else if (action === 'insert_smart_form') {
       const formCfg = getWizardFormConfig();
@@ -5448,6 +5640,7 @@ function applyWizardFx(action) {
           options: f.options
         }))
       });
+      if (typeof edPushUndo === 'function') edPushUndo();
       showToast(`📑 Inserted Webhook Form (${formCfg.title}) into active page!`, 'ok');
     }
 
@@ -5467,10 +5660,9 @@ function applyWizardFx(action) {
   } else if (action === 'bg_particles') {
     curPage.fx = 'particles';
     setVisualFx('stardust');
-  } else if (action === 'insert_water') {
-    curPage.blocks.push({ id: bId, type: 'water_effect', title: 'Volumetric Water Waves' });
-  } else if (action === 'insert_particles') {
-    curPage.blocks.push({ id: bId, type: 'particles', value: 'stardust', text: 'Cyber Stardust Block' });
+  } else if (action === 'bg_none') {
+    curPage.fx = 'none';
+    setVisualFx('none');
   } else if (action === 'insert_dyno') {
     const dyno = getWizardDynoConfig();
     curPage.blocks.push({
@@ -5481,16 +5673,6 @@ function applyWizardFx(action) {
       max_rpm: dyno.max_rpm,
       theme: dyno.theme,
       title: dyno.vehicle_name + ' Telemetry Dyno'
-    });
-  } else if (action === 'insert_wand') {
-    const wand = getWizardWandConfig();
-    curPage.blocks.push({
-      id: bId,
-      type: 'spell_matrix',
-      wand_name: wand.wand_name,
-      spells: wand.spells,
-      aura: wand.aura,
-      title: wand.wand_name + ' Arcane Matrix'
     });
   } else if (action === 'insert_orbit') {
     const orbit = getWizardOrbitConfig();
@@ -7595,6 +7777,96 @@ function spawnAmbientText(x = 60, y = 80, text = 'Type freely here...', ftObj = 
   window.addEventListener('mousemove', onResizeMove);
   window.addEventListener('mouseup', onResizeUp);
 
+  function applyBoxBg(isActive) {
+    const mode = bgModes[curBgIdx] || 'none';
+    if (!isActive) {
+      if (mode === 'glass' || mode === 'none') {
+        el.style.background = 'transparent';
+        el.style.border = '1px solid transparent';
+        el.style.boxShadow = 'none';
+        el.style.backdropFilter = 'none';
+        el.style.webkitBackdropFilter = 'none';
+      } else if (mode === 'paper') {
+        el.style.background = '#ffffff';
+        el.style.border = '1px solid #e2e8f0';
+        el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+      } else if (mode === 'gold') {
+        el.style.background = 'rgba(245,158,11,0.1)';
+        el.style.border = '1px solid rgba(245,158,11,0.3)';
+        el.style.boxShadow = 'none';
+      }
+    } else {
+      if (mode === 'glass') {
+        el.style.background = 'rgba(18,22,38,0.96)';
+        el.style.border = '1.5px solid var(--gold,#f59e0b)';
+        el.style.boxShadow = '0 10px 32px rgba(0,0,0,0.65)';
+        el.style.backdropFilter = 'blur(14px)';
+        el.style.webkitBackdropFilter = 'blur(14px)';
+      } else if (mode === 'none') {
+        el.style.background = 'rgba(15,23,42,0.85)';
+        el.style.border = '1px dashed rgba(245,158,11,0.8)';
+        el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.5)';
+      } else if (mode === 'paper') {
+        el.style.background = '#ffffff';
+        el.style.border = '1.5px solid #cbd5e1';
+        el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.25)';
+      } else if (mode === 'gold') {
+        el.style.background = 'rgba(245,158,11,0.22)';
+        el.style.border = '1.5px solid var(--gold)';
+        el.style.boxShadow = '0 0 24px rgba(245,158,11,0.4)';
+      }
+    }
+  }
+
+  function setActive(active) {
+    if (active) {
+      document.querySelectorAll('.ldoc-ambient-text.is-active').forEach(item => {
+        if (item !== el && typeof item._setInactive === 'function') item._setInactive();
+      });
+      el.classList.add('is-active');
+      if (hud) hud.style.display = 'flex';
+      if (resizer) resizer.style.display = 'flex';
+      applyBoxBg(true);
+    } else {
+      el.classList.remove('is-active');
+      if (hud) hud.style.display = 'none';
+      if (resizer) resizer.style.display = 'none';
+      applyBoxBg(false);
+      if (typeof saveState === 'function') saveState();
+    }
+  }
+  el._setInactive = () => setActive(false);
+
+  el.addEventListener('mouseenter', () => {
+    if (!el.classList.contains('is-active')) {
+      el.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+      el.style.borderStyle = 'dashed';
+    }
+  });
+  el.addEventListener('mouseleave', () => {
+    if (!el.classList.contains('is-active')) {
+      el.style.borderColor = 'transparent';
+      el.style.borderStyle = 'solid';
+    }
+  });
+  el.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setActive(true);
+  });
+
+  const onOutsideClick = (e) => {
+    if (!el.contains(e.target)) {
+      setActive(false);
+    }
+  };
+  document.addEventListener('mousedown', onOutsideClick);
+  document.addEventListener('click', onOutsideClick);
+  editor.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (!el.contains(document.activeElement)) setActive(false);
+    }, 100);
+  });
+
   function saveState() {
     if (typeof edPages !== 'undefined') {
       const curP = edPages.find(p => p.id === edCurrentPage);
@@ -7619,11 +7891,16 @@ function spawnAmbientText(x = 60, y = 80, text = 'Type freely here...', ftObj = 
     }
   }
 
-  editor.addEventListener('input', saveState);
+  editor.addEventListener('input', () => {
+    saveState();
+    if (typeof edPushUndo === 'function') edPushUndo();
+  });
 
   target.appendChild(el);
+  saveState();
 
   if (!ftObj) {
+    setActive(true);
     setTimeout(() => {
       editor.focus();
       const range = document.createRange();
@@ -7632,7 +7909,9 @@ function spawnAmbientText(x = 60, y = 80, text = 'Type freely here...', ftObj = 
       sel.removeAllRanges();
       sel.addRange(range);
     }, 40);
-    if (typeof showToast === 'function') showToast('✍️ Free text box inserted! Drag, resize, choose fonts & colors.', 'ok');
+    if (typeof showToast === 'function') showToast('✍️ Free text box inserted! Type freely. Click outside when done.', 'ok');
+  } else {
+    setActive(false);
   }
 }
 
@@ -8284,11 +8563,35 @@ function synthesizeLivingAd(s) {
   `;
 }
 
-// ── Client-Side Direct Gemini / OpenAI API Caller ───────────────────────────
+// ── Universal Client-Side AI API Dispatcher (Gemini, Claude, OpenAI, Ollama) ─
+function detectAiProviderFromKey(key) {
+  const k = (key || '').trim();
+  if (k.startsWith('AIzaSy')) return { provider: 'gemini', model: 'gemini-2.5-flash', name: 'Google Gemini' };
+  if (k.startsWith('sk-ant')) return { provider: 'claude', model: 'claude-3-5-sonnet-latest', name: 'Anthropic Claude' };
+  if (k.startsWith('sk-')) return { provider: 'openai', model: 'gpt-4o-mini', name: 'OpenAI' };
+  if (k.startsWith('http') || k.includes('localhost') || k.includes('11434')) return { provider: 'ollama', model: 'llama3.2', name: 'Local Ollama' };
+  return null;
+}
+
 async function callClientSideLlm(prompt, system, context, cfg) {
-  if (cfg.provider === 'gemini') {
-    const model = cfg.model || 'gemini-2.5-flash';
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cfg.apiKey}`;
+  let provider = (cfg.provider || 'gemini').toLowerCase();
+  let apiKey = (cfg.apiKey || '').trim();
+  let model = (cfg.model || '').trim();
+
+  // If user selected auto or key reveals provider, adjust
+  if (provider === 'auto' || (!provider && apiKey)) {
+    const detected = detectAiProviderFromKey(apiKey);
+    if (detected) {
+      provider = detected.provider;
+      if (!model) model = detected.model;
+    } else {
+      provider = 'gemini';
+    }
+  }
+
+  if (provider === 'gemini') {
+    const m = model || 'gemini-2.5-flash';
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -8297,7 +8600,7 @@ async function callClientSideLlm(prompt, system, context, cfg) {
           {
             role: 'user',
             parts: [
-              { text: `${system}\n\nContext:\n${context}\n\nUser Prompt:\n${prompt}` }
+              { text: `${system}\n\n=== FULL DOCUMENT CONTEXT ===\n${context}\n=============================\n\nUser Question:\n${prompt}` }
             ]
           }
         ]
@@ -8306,19 +8609,19 @@ async function callClientSideLlm(prompt, system, context, cfg) {
     const j = await res.json();
     if (j.error) throw new Error(j.error.message || 'Gemini API Error');
     return j.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
-  } else if (cfg.provider === 'openai') {
-    const model = cfg.model || 'gpt-4o-mini';
+  } else if (provider === 'openai') {
+    const m = model || 'gpt-4o-mini';
     const url = 'https://api.openai.com/v1/chat/completions';
     const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cfg.apiKey}`
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: model,
+        model: m,
         messages: [
-          { role: 'system', content: `${system}\n\nContext:\n${context}` },
+          { role: 'system', content: `${system}\n\n=== FULL DOCUMENT CONTEXT ===\n${context}\n=============================` },
           { role: 'user', content: prompt }
         ]
       })
@@ -8326,8 +8629,45 @@ async function callClientSideLlm(prompt, system, context, cfg) {
     const j = await res.json();
     if (j.error) throw new Error(j.error.message || 'OpenAI API Error');
     return j.choices?.[0]?.message?.content || 'No response generated.';
+  } else if (provider === 'claude') {
+    const m = model || 'claude-3-5-sonnet-latest';
+    const url = 'https://api.anthropic.com/v1/messages';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'dangerously-allow-browser': 'true'
+      },
+      body: JSON.stringify({
+        model: m,
+        max_tokens: 1024,
+        system: `${system}\n\n=== FULL DOCUMENT CONTEXT ===\n${context}\n=============================`,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const j = await res.json();
+    if (j.error) throw new Error(j.error.message || 'Claude API Error');
+    return j.content?.[0]?.text || 'No response generated.';
+  } else if (provider === 'ollama') {
+    const endpoint = (cfg.endpoint || apiKey || 'http://localhost:11434').replace(/\/$/, '');
+    const m = model || 'llama3.2';
+    const url = `${endpoint}/api/generate`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: m,
+        prompt: `${system}\n\n=== FULL DOCUMENT CONTEXT ===\n${context}\n=============================\n\nUser Question: ${prompt}`,
+        stream: false
+      })
+    });
+    if (!res.ok) throw new Error(`Ollama daemon returned status ${res.status}`);
+    const j = await res.json();
+    return j.response || 'No response generated.';
   }
-  throw new Error('Unsupported client-side provider');
+  throw new Error(`Unsupported AI provider: ${provider}`);
 }
 
 
@@ -8338,8 +8678,23 @@ function generateInteractiveChartSvg(codeStr, lang = 'python') {
   if (arrayMatch && arrayMatch[1]) {
     values = arrayMatch[1].split(',').map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
   }
+  
+  // User freedom: zero fake numbers fallback!
   if (!values.length) {
-    values = [14, 38, 72, 120, 185, 240];
+    return `
+      <div style="padding:16px;background:rgba(5,7,12,0.95);border-radius:10px;border:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-family:monospace;font-size:11.5px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-weight:700;color:#38bdf8;text-transform:uppercase">▶ ${escapeHtml(lang)} Sandbox Console</span>
+          <span style="color:#10b981;font-size:10px">● Ready</span>
+        </div>
+        <div style="color:#cbd5e1;line-height:1.6;margin-bottom:8px">
+          Source code ready. Click <strong>▶ Run</strong> to execute live in-browser or visualize numeric data array.
+        </div>
+        <div style="color:#64748b;font-size:10px">
+          Zero external plugins required • Secure Client Sandbox
+        </div>
+      </div>
+    `;
   }
 
   const isBar = /bar|histogram|col/i.test(codeStr || '');
@@ -8443,33 +8798,102 @@ function rerunCodeVisualization(cardId) {
   if (!card) return;
   const codeEl = card.querySelector('code');
   const visPane = card.querySelector('.vis-pane');
-  if (codeEl && visPane) {
-    visPane.innerHTML = generateInteractiveChartSvg(codeEl.textContent);
-    if (typeof toast === 'function') toast('✓ Code re-evaluated & visualization updated!', 'ok');
+  const lang = (card.getAttribute('data-lang') || 'python').toLowerCase();
+  const rawCode = codeEl ? codeEl.textContent : '';
+  if (!visPane) return;
+
+  // If code is JS, try live execution with console interception
+  if (lang === 'javascript' || lang === 'js') {
+    let logs = [];
+    try {
+      const customConsole = {
+        log: (...args) => logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ')),
+        warn: (...args) => logs.push('⚠️ ' + args.join(' ')),
+        error: (...args) => logs.push('❌ ' + args.join(' '))
+      };
+      const runner = new Function('console', rawCode);
+      const res = runner(customConsole);
+      if (res !== undefined) logs.push('➔ ' + (typeof res === 'object' ? JSON.stringify(res) : String(res)));
+    } catch(err) {
+      logs.push('❌ ' + err.message);
+    }
+    visPane.innerHTML = `
+      <div style="padding:14px;background:#05070a;border-radius:8px;border:1px solid rgba(56,189,248,0.25);color:#f1f5f9;font-family:monospace;font-size:11.5px">
+        <div style="display:flex;justify-content:space-between;color:#38bdf8;margin-bottom:6px;font-weight:700">
+          <span>⚡ Live JS Execution Output</span>
+          <span style="color:#10b981">✓ Executed</span>
+        </div>
+        <pre style="margin:0;white-space:pre-wrap;color:#e2e8f0;line-height:1.5">${escapeHtml(logs.length ? logs.join('\n') : '(Execution completed with no output)')}</pre>
+      </div>
+    `;
+    toggleCodeCardMode(cardId, 'vis');
+    if (typeof showToast === 'function') showToast('⚡ JavaScript code executed successfully!', 'ok');
+    return;
   }
+
+  // If Python / data visualization
+  visPane.innerHTML = generateInteractiveChartSvg(rawCode, lang);
+  toggleCodeCardMode(cardId, 'vis');
+  if (typeof showToast === 'function') showToast('✓ Code evaluated & output updated!', 'ok');
 }
 
 function collectDocumentContext(){
-  const title=document.getElementById('doc-title')?.textContent||'Untitled Document';
-  const canvas=document.getElementById('page-canvas');
-  let activePageText='';
-  const activeAnchor=document.getElementById(`page-anchor-${currentPage}`);
-  if(activeAnchor){
-    let curr=activeAnchor.nextElementSibling;
-    while(curr && curr.className!=='page-divider' && !curr.id?.startsWith('page-anchor-')){
-      activePageText+=' '+(curr.innerText||'');
-      curr=curr.nextElementSibling;
+  const title = document.getElementById('doc-title')?.textContent?.trim() || 
+                (typeof meta !== 'undefined' && meta.title) || 
+                'LDOCX Presentation';
+  
+  const allPages = (typeof edPages !== 'undefined' && edPages && edPages.length > 0) ? edPages : (pages || []);
+  let pageSections = [];
+
+  allPages.forEach((p, idx) => {
+    const pNum = p.page_number || (idx + 1);
+    const pTitle = p.title || `Page ${pNum}`;
+    let pLines = [];
+
+    (p.blocks || []).forEach(b => {
+      const bType = (b.type || '').toLowerCase();
+      if (bType === 'heading') {
+        pLines.push(`[Heading] ${b.text || b.value || ''}`);
+      } else if (bType === 'paragraph' || bType === 'text' || bType === 'quote') {
+        if (b.text || b.value) pLines.push(`${b.text || b.value}`);
+      } else if (bType === 'list' || bType === 'bullet_list') {
+        const items = b.items || (b.text ? b.text.split('\n') : []);
+        items.forEach(it => pLines.push(`• ${typeof it === 'string' ? it : (it.text || it.value || '')}`));
+      } else if (bType === 'code' || bType === 'code_block') {
+        pLines.push(`[Code (${b.language || 'code'})]:\n${b.code || b.value || b.text || ''}`);
+      } else if (bType === 'table') {
+        if (b.headers && b.headers.length) pLines.push(`[Table Headers]: ${b.headers.join(' | ')}`);
+        if (b.rows && b.rows.length) {
+          pLines.push(`[Table Rows]:\n` + b.rows.map(r => Array.isArray(r) ? r.join(' | ') : String(r)).join('\n'));
+        }
+      } else if (bType === 'form') {
+        pLines.push(`[Form]: "${b.title || ''}" - Fields: ${(b.fields || []).map(f => `${f.label} (${f.field_type})`).join(', ')}`);
+      } else if (bType === 'ai') {
+        if (b.prompt) pLines.push(`[AI Prompt Context]: ${b.prompt}`);
+      } else if (b.text || b.value) {
+        pLines.push(`[${bType}]: ${b.text || b.value}`);
+      }
+    });
+
+    (p.floating_texts || []).forEach(ft => {
+      if (ft.text && ft.text.trim()) {
+        pLines.push(`[Note/Annotation]: "${ft.text.trim()}"`);
+      }
+    });
+
+    if (pLines.length > 0) {
+      pageSections.push(`--- PAGE ${pNum}: ${pTitle} ---\n${pLines.join('\n')}`);
+    }
+  });
+
+  if (pageSections.length === 0) {
+    const canvas = document.getElementById('page-canvas') || document.getElementById('ed-preview-pane');
+    if (canvas) {
+      pageSections.push((canvas.innerText || '').slice(0, 5000));
     }
   }
-  const fullText=(canvas?.innerText||'').slice(0,4000).replace(/\s+/g,' ').trim();
-  return `Document Title: ${title}
-Total Pages: ${pages.length}
-Current Active Page: Page ${currentPage}
-Current Visible Page Content:
-${activePageText.slice(0,1800).replace(/\s+/g,' ').trim()}
 
-Document Full Content Excerpt:
-${fullText}`;
+  return `DOCUMENT TITLE: ${title}\nTOTAL PAGES: ${allPages.length}\n\n` + pageSections.join('\n\n');
 }
 
 async function executeAiQuery(prompt){
@@ -10083,7 +10507,7 @@ function runAiBlock(el){
 }
 </script>
 <script>
-function nodeText(n){if(!n)return '';if(n.value!==undefined)return String(n.value);if(n.text!==undefined)return String(n.text);if(n.children)for(const c of n.children)if(c.type==='text'&&(c.value!==undefined||c.text!==undefined))return String(c.value!==undefined?c.value:c.text);return '';}
+function nodeText(n){if(!n)return '';if(n.text!==undefined&&n.text!=='')return String(n.text);if(n.value!==undefined&&n.value!=='')return String(n.value);if(n.children)for(const c of n.children)if(c.type==='text'&&(c.text!==undefined||c.value!==undefined))return String(c.text!==undefined&&c.text!==''?c.text:c.value);return '';}
 function nodeLabel(n){return(n.aria&&n.aria.label)||n.value||n.text||nodeText(n)||'';}
 function nodePH(n){return(n.aria&&n.aria.placeholder)||'';}
 function assetUrl(n){return n.asset_id?`${API}/documents/${docId}/assets/${n.asset_id}`:'';;}
@@ -10172,37 +10596,55 @@ function make3DImageCard(src,alt,parent){
 }
 
 
-// ── 🧠 Intelligent Code & AI Architecture Auto-Detection Engine ──
+// ── 🧠 Universal AI Architecture & Model Auto-Detection Engine ──
 function analyzeAiBlockCode(promptText) {
   const text = promptText || '';
-  const isOllama = /import\s+ollama|ollama\.chat|ollama\.generate/i.test(text);
-  const isGemini = /gemini|google\.generativeai|genai/i.test(text);
+  const isOllama = /import\s+ollama|ollama\.chat|ollama\.generate|localhost:11434/i.test(text);
+  const isGemini = /gemini|google\.generativeai|genai|AIzaSy/i.test(text);
+  const isClaude = /claude|anthropic|sk-ant/i.test(text);
+  const isOpenAi = /openai|gpt|sk-/i.test(text);
   const isPython = /import\s+|def\s+|print\(|while\s+True/i.test(text);
   const isChatbot = /while\s+True|input\(|conversation_history|chatbot|messages\s*=/i.test(text);
 
-  // Extract model name
-  let model = 'llama3.2';
+  let model = '';
   const modelMatch = text.match(/model\s*=\s*['"]([^'"]+)['"]/i);
   if (modelMatch) {
     model = modelMatch[1];
   } else if (isGemini) {
     model = 'gemini-2.5-flash';
-  } else if (!isOllama) {
+  } else if (isClaude) {
+    model = 'claude-3-5-sonnet-latest';
+  } else if (isOpenAi) {
+    model = 'gpt-4o-mini';
+  } else if (isOllama) {
     model = 'llama3.2';
+  } else {
+    const cfg = getAiConfig();
+    model = cfg.model || 'gemini-2.5-flash';
+  }
+
+  let engine = 'gemini';
+  if (isOllama) engine = 'ollama';
+  else if (isClaude) engine = 'claude';
+  else if (isOpenAi) engine = 'openai';
+  else if (isGemini) engine = 'gemini';
+  else {
+    const cfg = getAiConfig();
+    engine = cfg.provider || 'gemini';
   }
 
   return {
-    engine: isOllama ? 'ollama' : (isGemini ? 'gemini' : 'ollama'),
+    engine: engine,
     model: model,
     isPython: isPython,
     isChatbot: isChatbot,
     title: isChatbot ? `AI Chatbot (${model})` : `Living AI Assistant (${model})`,
-    isOfflineReady: true
+    isOfflineReady: engine === 'ollama'
   };
 }
 
 
-// ── 🤖 Slide-Level Live Interactive Chat & Ollama / Gemini Dispatcher ──
+// ── 🤖 Slide-Level Live Interactive Chat & Universal Multi-Model Dispatcher ──
 function toggleAiBlockCodeView(blockId) {
   const drawer = document.getElementById(`ai-code-drawer-${blockId}`);
   if (drawer) {
@@ -10210,12 +10652,105 @@ function toggleAiBlockCodeView(blockId) {
   }
 }
 
-async function sendSlideAiChat(blockId) {
-  const curPage = pages.find(p => p.id === currentPage) || pages[0];
-  if (!curPage) return;
-  const b = (curPage.blocks || []).find(x => x.id === blockId);
-  if (!b) return;
+function toggleAiBlockSettings(bid) {
+  const drawer = document.getElementById(`ai-settings-drawer-${bid}`);
+  if (!drawer) return;
+  const isHidden = drawer.style.display === 'none' || !drawer.style.display;
+  drawer.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    const cfg = getAiConfig();
+    const sel = document.getElementById(`ai-cfg-provider-${bid}`);
+    const keyInp = document.getElementById(`ai-cfg-key-${bid}`);
+    const modelInp = document.getElementById(`ai-cfg-model-${bid}`);
+    if (sel) sel.value = cfg.provider || 'gemini';
+    if (keyInp) keyInp.value = cfg.apiKey || '';
+    if (modelInp) modelInp.value = cfg.model || '';
+  }
+}
 
+function onAiProviderChanged(bid) {
+  const sel = document.getElementById(`ai-cfg-provider-${bid}`);
+  const keyInp = document.getElementById(`ai-cfg-key-${bid}`);
+  const modelInp = document.getElementById(`ai-cfg-model-${bid}`);
+  if (!sel || !modelInp) return;
+  const p = sel.value;
+  if (p === 'gemini') {
+    if (keyInp) keyInp.placeholder = 'AIzaSy... (Gemini API Key)';
+    modelInp.placeholder = 'gemini-2.5-flash';
+    if (!modelInp.value || modelInp.value.includes('gpt') || modelInp.value.includes('llama') || modelInp.value.includes('claude')) modelInp.value = 'gemini-2.5-flash';
+  } else if (p === 'openai') {
+    if (keyInp) keyInp.placeholder = 'sk-... (OpenAI API Key)';
+    modelInp.placeholder = 'gpt-4o-mini';
+    if (!modelInp.value || modelInp.value.includes('gemini') || modelInp.value.includes('llama') || modelInp.value.includes('claude')) modelInp.value = 'gpt-4o-mini';
+  } else if (p === 'claude') {
+    if (keyInp) keyInp.placeholder = 'sk-ant-... (Anthropic API Key)';
+    modelInp.placeholder = 'claude-3-5-sonnet-latest';
+    if (!modelInp.value || modelInp.value.includes('gemini') || modelInp.value.includes('gpt') || modelInp.value.includes('llama')) modelInp.value = 'claude-3-5-sonnet-latest';
+  } else if (p === 'ollama') {
+    if (keyInp) keyInp.placeholder = 'http://localhost:11434 (Endpoint URL)';
+    modelInp.placeholder = 'llama3.2';
+    if (!modelInp.value || modelInp.value.includes('gemini') || modelInp.value.includes('gpt') || modelInp.value.includes('claude')) modelInp.value = 'llama3.2';
+  }
+}
+
+function onAiKeyInput(bid) {
+  const keyInp = document.getElementById(`ai-cfg-key-${bid}`);
+  const sel = document.getElementById(`ai-cfg-provider-${bid}`);
+  const modelInp = document.getElementById(`ai-cfg-model-${bid}`);
+  if (!keyInp || !sel) return;
+  const detected = detectAiProviderFromKey(keyInp.value);
+  if (detected) {
+    sel.value = detected.provider;
+    if (modelInp && (!modelInp.value || modelInp.value.includes('gemini') || modelInp.value.includes('gpt') || modelInp.value.includes('llama') || modelInp.value.includes('claude'))) {
+      modelInp.value = detected.model;
+    }
+  }
+}
+
+function toggleAiKeyVisibility(bid) {
+  const keyInp = document.getElementById(`ai-cfg-key-${bid}`);
+  if (!keyInp) return;
+  keyInp.type = keyInp.type === 'password' ? 'text' : 'password';
+}
+
+function saveAiBlockSettings(bid) {
+  const sel = document.getElementById(`ai-cfg-provider-${bid}`);
+  const keyInp = document.getElementById(`ai-cfg-key-${bid}`);
+  const modelInp = document.getElementById(`ai-cfg-model-${bid}`);
+  if (!sel) return;
+  let p = sel.value;
+  let k = keyInp ? keyInp.value.trim() : '';
+  let m = modelInp ? modelInp.value.trim() : '';
+
+  if (p === 'auto') {
+    const det = detectAiProviderFromKey(k);
+    p = det ? det.provider : 'gemini';
+    if (!m && det) m = det.model;
+  }
+  if (!m) {
+    m = p === 'gemini' ? 'gemini-2.5-flash' : (p === 'openai' ? 'gpt-4o-mini' : (p === 'claude' ? 'claude-3-5-sonnet-latest' : 'llama3.2'));
+  }
+
+  localStorage.setItem('ldoc_ai_provider', p);
+  localStorage.setItem('ldoc_ai_api_key', k);
+  localStorage.setItem('ldoc_ai_model', m);
+
+  // Update UI badges
+  const pBadge = document.getElementById(`ai-provider-badge-${bid}`);
+  const mBadge = document.getElementById(`ai-model-badge-${bid}`);
+  const userInp = document.getElementById(`ai-user-inp-${bid}`);
+  const pName = p === 'gemini' ? 'Google Gemini' : (p === 'openai' ? 'OpenAI' : (p === 'claude' ? 'Anthropic Claude' : 'Local Ollama'));
+  if (pBadge) pBadge.textContent = pName;
+  if (mBadge) mBadge.textContent = m;
+  if (userInp) userInp.placeholder = `Type a message to chat with ${m}...`;
+
+  const drawer = document.getElementById(`ai-settings-drawer-${bid}`);
+  if (drawer) drawer.style.display = 'none';
+
+  if (typeof showToast === 'function') showToast(`✓ AI Settings saved (${pName} • ${m})`, 'ok');
+}
+
+async function sendSlideAiChat(blockId) {
   const inp = document.getElementById(`ai-user-inp-${blockId}`);
   const stream = document.getElementById(`ai-chat-stream-${blockId}`);
   const sendBtn = document.getElementById(`ai-send-btn-${blockId}`);
@@ -10227,81 +10762,70 @@ async function sendSlideAiChat(blockId) {
 
   // 1. Append User Message Bubble
   const uBubble = document.createElement('div');
-  uBubble.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;margin:4px 0';
+  uBubble.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;margin:6px 0';
   uBubble.innerHTML = `
-    <div style="background:rgba(56,189,248,0.18);border:1px solid rgba(56,189,248,0.35);border-radius:12px 12px 2px 12px;padding:8px 12px;font-size:12px;color:#e0f2fe;max-width:85%;line-height:1.5">
+    <div style="background:rgba(56,189,248,0.22);border:1px solid rgba(56,189,248,0.4);border-radius:12px 12px 2px 12px;padding:8px 12px;font-size:12px;color:#e0f2fe;max-width:85%;line-height:1.5">
       ${escapeHtml(txt)}
     </div>
   `;
   stream.appendChild(uBubble);
   stream.scrollTop = stream.scrollHeight;
 
-  // 2. Append Assistant Waiting Bubble
-  const meta = analyzeAiBlockCode(b.prompt || '');
+  // 2. Read Configuration
+  const cfg = getAiConfig();
+  let providerName = cfg.provider === 'gemini' ? 'Google Gemini' : (cfg.provider === 'openai' ? 'OpenAI' : (cfg.provider === 'claude' ? 'Anthropic Claude' : 'Local Ollama'));
+  let modelName = cfg.model || (cfg.provider === 'gemini' ? 'gemini-2.5-flash' : (cfg.provider === 'openai' ? 'gpt-4o-mini' : (cfg.provider === 'claude' ? 'claude-3-5-sonnet-latest' : 'llama3.2')));
+
+  // 3. Append Assistant Waiting Bubble
+  const respId = 'ai-resp-' + Math.random().toString(36).slice(2, 8);
   const bBubble = document.createElement('div');
-  bBubble.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin:4px 0';
+  bBubble.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin:6px 0';
   bBubble.innerHTML = `
     <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🤖</div>
-    <div id="ai-resp-bubble-${blockId}" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px 12px 12px 2px;padding:8px 12px;font-size:12px;color:#f1f5f9;line-height:1.5;max-width:85%">
-      <span style="color:#38bdf8">◈ Generating response with ${escapeHtml(meta.model)}…</span>
+    <div id="${respId}" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px 12px 12px 2px;padding:8px 12px;font-size:12px;color:#f1f5f9;line-height:1.5;max-width:85%">
+      <span style="color:#38bdf8">◈ Consulting ${escapeHtml(providerName)} (${escapeHtml(modelName)}) with full document context…</span>
     </div>
   `;
   stream.appendChild(bBubble);
   stream.scrollTop = stream.scrollHeight;
 
-  // 3. Execute inference (Ollama local first, fallback to cloud proxy)
-  let replyText = '';
-  try {
-    if (meta.engine === 'ollama') {
-      try {
-        const ollamaResp = await fetch('http://localhost:11434/api/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: meta.model || 'llama3.2',
-            prompt: txt,
-            stream: false
-          })
-        });
-        if (ollamaResp.ok) {
-          const oData = await ollamaResp.json();
-          replyText = oData.response || '';
-        }
-      } catch(ollamaNetErr) {
-        console.warn('Ollama daemon not reachable at localhost:11434, switching to Gemini Cloud API:', ollamaNetErr);
-      }
-    }
-
-    // Fallback to Gemini Cloud if Ollama not reached or Gemini selected
-    if (!replyText) {
-      try {
-        const resp = await fetch('/api/ai/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prompt: `You are the ${meta.model} AI assistant inside a Living Document presentation (.ldocx). User message: "${txt}". Answer concisely and clearly in 1-3 sentences.`
-          })
-        });
-        if (resp.ok) {
-          const d = await resp.json();
-          replyText = d.reply || d.text || '';
-        }
-      } catch(cloudErr) {
-        console.warn('Cloud proxy error:', cloudErr);
-      }
-    }
-
-    if (!replyText) {
-      replyText = `AI response synthesized for: "${txt}". Model: ${meta.model}.`;
-    }
-
-    const respEl = document.getElementById(`ai-resp-bubble-${blockId}`);
+  // 4. Check API Key / Ollama availability
+  if (!cfg.apiKey && cfg.provider !== 'ollama') {
+    const respEl = document.getElementById(respId);
     if (respEl) {
-      respEl.innerHTML = `<div style="line-height:1.6;color:#f1f5f9">${escapeHtml(replyText).replace(/\n/g, '<br>')}</div>`;
+      respEl.innerHTML = `
+        <div style="color:#fbbf24;line-height:1.6">
+          <strong>⚠️ API Key Required</strong><br>
+          Please click <strong>⚙️ Settings</strong> above to enter your Google Gemini, OpenAI, Claude API key, or switch to Ollama (offline local daemon).
+        </div>
+      `;
+    }
+    if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send ➔'; }
+    stream.scrollTop = stream.scrollHeight;
+    return;
+  }
+
+  // 5. Gather Full Document Context & Call LLM
+  const docContext = collectDocumentContext();
+  const systemPrompt = `You are a helpful Living Document AI Assistant embedded inside an active LDOCX document.
+Answer questions accurately based on the live document content provided below. If the answer is in the document, quote or cite the relevant section or page. Be clear, concise, and helpful.`;
+
+  try {
+    const replyText = await callClientSideLlm(txt, systemPrompt, docContext, cfg);
+    const respEl = document.getElementById(respId);
+    if (respEl) {
+      respEl.innerHTML = `<div style="line-height:1.6;color:#f1f5f9">${formatAiText(replyText)}</div>`;
     }
   } catch(err) {
-    const respEl = document.getElementById(`ai-resp-bubble-${blockId}`);
-    if (respEl) respEl.innerHTML = `<span style="color:#f87171">Error: ${escapeHtml(err.message)}</span>`;
+    const respEl = document.getElementById(respId);
+    if (respEl) {
+      respEl.innerHTML = `
+        <div style="color:#f87171;line-height:1.5">
+          <strong>❌ Inference Error:</strong> ${escapeHtml(err.message)}<br>
+          <span style="font-size:11px;color:#94a3b8">Check your API key in ⚙️ Settings or ensure the model endpoint is accessible.</span>
+        </div>
+      `;
+    }
   } finally {
     if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send ➔'; }
     stream.scrollTop = stream.scrollHeight;
@@ -10411,6 +10935,7 @@ function renderBlockNode(node,parent){
       const codeCard = document.createElement('div');
       codeCard.className = 'interactive-code-card';
       codeCard.id = cardId;
+      codeCard.setAttribute('data-lang', lang);
       codeCard.style.cssText = 'background:#0d1117;border:1.5px solid rgba(56,189,248,0.35);border-radius:14px;margin:18px 0;box-shadow:0 12px 36px rgba(0,0,0,0.8);overflow:hidden;position:relative;z-index:10;';
 
       // Interactive Header with Mode Toggle
@@ -10419,21 +10944,21 @@ function renderBlockNode(node,parent){
       header.innerHTML = `
         <div style="display:flex;align-items:center;gap:8px">
           <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981"></span>
-          <span style="font-family:monospace;font-size:11.5px;font-weight:700;color:#38bdf8;text-transform:uppercase">${escapeHtml(lang)} (Live Sandbox)</span>
+          <span style="font-family:monospace;font-size:11.5px;font-weight:700;color:#38bdf8;text-transform:uppercase">${escapeHtml(lang)} (Interactive Code)</span>
         </div>
         <div style="display:flex;align-items:center;gap:4px">
+          <button type="button" class="find-btn" onclick="toggleCodeCardMode('${cardId}', 'code')" style="font-size:10.5px;padding:3px 8px;background:rgba(56,189,248,0.2);color:#38bdf8">💻 Code</button>
+          <button type="button" class="find-btn" onclick="toggleCodeCardMode('${cardId}', 'vis')" style="font-size:10.5px;padding:3px 8px">📊 Output</button>
           <button type="button" class="find-btn" onclick="toggleCodeCardMode('${cardId}', 'split')" style="font-size:10.5px;padding:3px 8px">⬡ Split</button>
-          <button type="button" class="find-btn" onclick="toggleCodeCardMode('${cardId}', 'vis')" style="font-size:10.5px;padding:3px 8px;background:rgba(245,158,11,0.2);color:#fef08a">📊 Output</button>
-          <button type="button" class="find-btn" onclick="toggleCodeCardMode('${cardId}', 'code')" style="font-size:10.5px;padding:3px 8px">💻 Code</button>
           <button type="button" class="find-btn" onclick="rerunCodeVisualization('${cardId}')" style="font-size:10.5px;padding:3px 8px;background:#238636;color:#fff;font-weight:700">▶ Run</button>
         </div>
       `;
       codeCard.appendChild(header);
 
-      // Body Wrapper (Split or Tabbed)
+      // Body Wrapper (Defaults to single-column clean Code view)
       const bodyWrap = document.createElement('div');
       bodyWrap.className = 'code-card-body';
-      bodyWrap.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:0;background:#090d13;';
+      bodyWrap.style.cssText = 'display:grid;grid-template-columns:1fr;gap:0;background:#090d13;';
 
       // Left: Source Code View
       const codePane = document.createElement('div');
@@ -10442,15 +10967,15 @@ function renderBlockNode(node,parent){
       const pre = document.createElement('pre');
       pre.style.cssText = 'margin:0;font-family:monospace;font-size:12.5px;line-height:1.5;color:#c9d1d9;';
       const codeEl = document.createElement('code');
-      codeEl.textContent = rawCode || '# Enter Python or JavaScript to visualize live\nimport matplotlib.pyplot as plt\n\ndata = [12, 34, 68, 115, 172, 240]\nplt.plot(data)\nplt.show()';
+      codeEl.textContent = rawCode || '// Enter code or script...';
       pre.appendChild(codeEl);
       codePane.appendChild(pre);
       bodyWrap.appendChild(codePane);
 
-      // Right: Live Visual Sandbox Output
+      // Right: Live Visual Sandbox Output (hidden by default until Run / Output clicked)
       const visPane = document.createElement('div');
       visPane.className = 'vis-pane';
-      visPane.style.cssText = 'padding:14px;display:flex;flex-direction:column;justify-content:center;background:rgba(15,18,32,0.95);';
+      visPane.style.cssText = 'padding:14px;display:none;flex-direction:column;justify-content:center;background:rgba(15,18,32,0.95);';
       visPane.innerHTML = generateInteractiveChartSvg(rawCode || codeEl.textContent, lang);
       bodyWrap.appendChild(visPane);
 
@@ -10904,8 +11429,12 @@ function renderBlockNode(node,parent){
     }
     case 'ai':case 'ai_live_data':case 'ai_live':{
       const rawCode = node.value || (node.style && node.style.prompt) || text || '';
-      const meta = analyzeAiBlockCode(rawCode);
-      const bid = 'st-ai-' + Math.random().toString(36).slice(2, 8);
+      const cfg = getAiConfig();
+      const bid = node.id || ('st-ai-' + Math.random().toString(36).slice(2, 8));
+      const providerName = cfg.provider === 'gemini' ? 'Google Gemini' : (cfg.provider === 'openai' ? 'OpenAI' : (cfg.provider === 'claude' ? 'Anthropic Claude' : 'Local Ollama'));
+      const modelName = cfg.model || (cfg.provider === 'gemini' ? 'gemini-2.5-flash' : (cfg.provider === 'openai' ? 'gpt-4o-mini' : (cfg.provider === 'claude' ? 'claude-3-5-sonnet-latest' : 'llama3.2')));
+      const providerIcon = cfg.provider === 'gemini' ? '✨' : (cfg.provider === 'openai' ? '🟢' : (cfg.provider === 'claude' ? '🔮' : '🦙'));
+
       const card = document.createElement('div');
       card.className = 'pres-live-card pres-ai-widget';
       card.style.cssText = 'margin:16px 0;border:1.5px solid rgba(167,139,250,.4);border-radius:16px;background:linear-gradient(135deg,rgba(16,18,34,.94),rgba(26,20,50,.94));padding:18px 20px;position:relative;overflow:hidden;box-shadow:0 12px 35px rgba(0,0,0,.65)';
@@ -10913,22 +11442,58 @@ function renderBlockNode(node,parent){
       card.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px">
           <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:20px">${meta.engine === 'ollama' ? '🦙' : '✨'}</span>
+            <span style="font-size:20px">${providerIcon}</span>
             <div>
-              <div style="font-size:13px;font-weight:800;color:#fef08a;font-family:'Cinzel',serif;letter-spacing:0.5px">${escapeHtml(meta.title)}</div>
+              <div style="font-size:13px;font-weight:800;color:#fef08a;font-family:'Cinzel',serif;letter-spacing:0.5px">Living Document AI Assistant</div>
               <div style="font-size:10px;color:var(--text3);display:flex;align-items:center;gap:6px">
                 <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981"></span>
-                <span>${meta.engine === 'ollama' ? 'Local Ollama Daemon (Offline Ready)' : 'Gemini Cloud API'}</span>
+                <span id="ai-provider-badge-${bid}">${escapeHtml(providerName)}</span>
                 <span>•</span>
-                <span style="color:#38bdf8">${meta.model}</span>
+                <span style="color:#38bdf8" id="ai-model-badge-${bid}">${escapeHtml(modelName)}</span>
               </div>
             </div>
           </div>
-          <button class="btn" onclick="toggleAiBlockCodeView('${bid}')" style="padding:4px 8px;font-size:10px;background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15);color:var(--text2)">💻 Code View</button>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button type="button" class="find-btn" onclick="toggleAiBlockSettings('${bid}')" style="font-size:11px;padding:4px 9px;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff">⚙️ Settings</button>
+            <button type="button" class="find-btn" onclick="toggleAiBlockCodeView('${bid}')" style="font-size:11px;padding:4px 9px">💻 Prompt</button>
+          </div>
+        </div>
+
+        <div id="ai-settings-drawer-${bid}" style="display:none;background:#090d14;border:1px solid rgba(56,189,248,0.3);border-radius:10px;padding:12px;margin-bottom:12px;font-size:11.5px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <strong style="color:#38bdf8;font-size:12px">🔑 AI Provider &amp; API Key Configuration</strong>
+            <span style="font-size:10px;color:#94a3b8">Auto-detects Gemini, OpenAI, Claude, or Ollama</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div>
+              <label style="display:block;color:var(--text3);font-size:10px;margin-bottom:2px">PROVIDER</label>
+              <select id="ai-cfg-provider-${bid}" onchange="onAiProviderChanged('${bid}')" style="width:100%;padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:11px">
+                <option value="gemini" ${cfg.provider==='gemini'?'selected':''}>Google Gemini (Gemini 2.5 Flash)</option>
+                <option value="openai" ${cfg.provider==='openai'?'selected':''}>OpenAI (ChatGPT / GPT-4o-mini)</option>
+                <option value="claude" ${cfg.provider==='claude'?'selected':''}>Anthropic Claude (Claude 3.5)</option>
+                <option value="ollama" ${cfg.provider==='ollama'?'selected':''}>Ollama (Local Offline Daemon)</option>
+              </select>
+            </div>
+            <div>
+              <label style="display:block;color:var(--text3);font-size:10px;margin-bottom:2px">MODEL NAME</label>
+              <input type="text" id="ai-cfg-model-${bid}" value="${escapeHtml(modelName)}" placeholder="e.g. gemini-2.5-flash" style="width:100%;padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:11px">
+            </div>
+          </div>
+          <div style="margin-bottom:8px">
+            <label style="display:block;color:var(--text3);font-size:10px;margin-bottom:2px">API KEY OR OLLAMA ENDPOINT</label>
+            <div style="display:flex;gap:6px">
+              <input type="password" id="ai-cfg-key-${bid}" value="${escapeHtml(cfg.apiKey)}" placeholder="Paste AIzaSy... / sk-... / sk-ant-... / http://localhost:11434" oninput="onAiKeyInput('${bid}')" style="flex:1;padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:11px;font-family:monospace">
+              <button class="find-btn" type="button" onclick="toggleAiKeyVisibility('${bid}')" style="padding:4px 8px;font-size:11px">👁️</button>
+              <button class="find-btn" type="button" onclick="saveAiBlockSettings('${bid}')" style="padding:4px 12px;font-size:11px;background:#10b981;color:#fff;font-weight:700">Save</button>
+            </div>
+          </div>
+          <div style="font-size:10px;color:#64748b">
+            🔒 Key stored securely in local browser storage. Full multi-page document context is automatically fed to the AI.
+          </div>
         </div>
 
         <div id="ai-code-drawer-${bid}" style="display:none;background:#070810;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;margin-bottom:12px;font-family:'Fira Code',monospace;font-size:11.5px;color:#38bdf8;max-height:160px;overflow-y:auto;white-space:pre-wrap">
-${escapeHtml(rawCode)}
+${escapeHtml(rawCode || 'System Prompt: Living Document Multi-Page Assistant')}
         </div>
 
         <div class="pres-ai-chat-card" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px">
@@ -10936,13 +11501,13 @@ ${escapeHtml(rawCode)}
             <div style="display:flex;gap:8px;align-items:flex-start">
               <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🤖</div>
               <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px 12px 12px 2px;padding:8px 12px;font-size:12px;color:#f1f5f9;line-height:1.5;max-width:85%">
-                👋 <strong>AI Chatbot Initialized</strong> (Model: <em>${escapeHtml(meta.model)}</em>).<br>
-                ${meta.engine === 'ollama' ? 'Running locally and offline via Ollama. Ask a question or type a message below:' : 'Ready to answer questions and analyze document content:'}
+                👋 <strong>Living AI Assistant Initialized</strong>.<br>
+                Ask any question about this document — full multi-page content is linked to the AI prompt in real time. Click <strong>⚙️ Settings</strong> to set your API key or change model.
               </div>
             </div>
           </div>
           <div style="display:flex;gap:8px;align-items:center">
-            <input type="text" id="ai-user-inp-${bid}" class="btn" style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:12px;outline:none" placeholder="Type a message to chat with ${escapeHtml(meta.model)}..." onkeydown="if(event.key==='Enter')sendSlideAiChat('${bid}')">
+            <input type="text" id="ai-user-inp-${bid}" class="btn" style="flex:1;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:12px;outline:none" placeholder="Type a message to chat with ${escapeHtml(modelName)}..." onkeydown="if(event.key==='Enter')sendSlideAiChat('${bid}')">
             <button class="btn green" id="ai-send-btn-${bid}" onclick="sendSlideAiChat('${bid}')" style="padding:8px 14px;font-size:11px;font-weight:800;background:linear-gradient(135deg,#10b981,#059669);color:#fff">Send ➔</button>
           </div>
         </div>
@@ -12745,15 +13310,107 @@ function edUpdateLivePreview() {
     }
 
     body.appendChild(slideDiv);
+
+    // Render Page Environmental Background FX Shader behind slide content
+    const pageFx = curPage.fx || window.__currentFx || 'none';
+    if (pageFx && pageFx !== 'none') {
+      renderPageEnvironmentalFx(slideDiv, pageFx);
+    }
   }, 40);
 }
 
 let edPages = [], edCurrentPage = null, edBSeq = 0, edPSeq = 0;
 const edPId = () => ++edPSeq, edBId = () => ++edBSeq;
 
+let edUndoStack = [];
+let edRedoStack = [];
+const ED_MAX_UNDO = 40;
+
+function edPushUndo() {
+  if (typeof edPages === 'undefined' || !Array.isArray(edPages)) return;
+  const snapshot = JSON.stringify({
+    edPages: edPages,
+    edCurrentPage: edCurrentPage,
+    title: document.getElementById('ed-title')?.value || '',
+    author: document.getElementById('ed-author')?.value || '',
+    lang: document.getElementById('ed-lang')?.value || 'en'
+  });
+  if (edUndoStack.length > 0 && edUndoStack[edUndoStack.length - 1] === snapshot) return;
+  edUndoStack.push(snapshot);
+  if (edUndoStack.length > ED_MAX_UNDO) edUndoStack.shift();
+  edRedoStack = [];
+  edUpdateUndoButtons();
+}
+
+function edUndo() {
+  if (edUndoStack.length <= 1) {
+    if (typeof showToast === 'function') showToast('Nothing to undo', 'info', 1200);
+    return;
+  }
+  const current = edUndoStack.pop();
+  edRedoStack.push(current);
+  const prevSnapshot = JSON.parse(edUndoStack[edUndoStack.length - 1]);
+  edPages = prevSnapshot.edPages || [];
+  edCurrentPage = prevSnapshot.edCurrentPage;
+  if (document.getElementById('ed-title') && prevSnapshot.title !== undefined) {
+    document.getElementById('ed-title').value = prevSnapshot.title;
+  }
+  if (document.getElementById('ed-author') && prevSnapshot.author !== undefined) {
+    document.getElementById('ed-author').value = prevSnapshot.author;
+  }
+  edRenderPageList();
+  if (edCurrentPage && edPages.find(p => p.id === edCurrentPage)) {
+    edSelectPage(edCurrentPage);
+  } else if (edPages.length) {
+    edSelectPage(edPages[0].id);
+  } else {
+    edRenderBlocks();
+  }
+  edUpdateLivePreview();
+  edUpdateUndoButtons();
+  if (typeof showToast === 'function') showToast('↩ Undo', 'ok', 1200);
+}
+
+function edRedo() {
+  if (!edRedoStack.length) {
+    if (typeof showToast === 'function') showToast('Nothing to redo', 'info', 1200);
+    return;
+  }
+  const nextJson = edRedoStack.pop();
+  edUndoStack.push(nextJson);
+  const nextSnapshot = JSON.parse(nextJson);
+  edPages = nextSnapshot.edPages || [];
+  edCurrentPage = nextSnapshot.edCurrentPage;
+  if (document.getElementById('ed-title') && nextSnapshot.title !== undefined) {
+    document.getElementById('ed-title').value = nextSnapshot.title;
+  }
+  if (document.getElementById('ed-author') && nextSnapshot.author !== undefined) {
+    document.getElementById('ed-author').value = nextSnapshot.author;
+  }
+  edRenderPageList();
+  if (edCurrentPage && edPages.find(p => p.id === edCurrentPage)) {
+    edSelectPage(edCurrentPage);
+  } else if (edPages.length) {
+    edSelectPage(edPages[0].id);
+  } else {
+    edRenderBlocks();
+  }
+  edUpdateLivePreview();
+  edUpdateUndoButtons();
+  if (typeof showToast === 'function') showToast('↪ Redo', 'ok', 1200);
+}
+
+function edUpdateUndoButtons() {
+  const uBtn = document.getElementById('ed-undo-btn');
+  const rBtn = document.getElementById('ed-redo-btn');
+  if (uBtn) uBtn.disabled = edUndoStack.length <= 1;
+  if (rBtn) rBtn.disabled = edRedoStack.length === 0;
+}
+
 function edAddPage() {
   const p = { id: edPId(), title: `Page ${edPages.length + 1}`, blocks: [] };
   edPages.push(p);
+  edPushUndo();
   edRenderPageList();
   edSelectPage(p.id);
 }
@@ -12761,6 +13418,7 @@ function edAddPage() {
 function edDeletePage(id) {
   edPages = edPages.filter(p => p.id !== id);
   if (edCurrentPage === id) edCurrentPage = null;
+  edPushUndo();
   edRenderPageList();
   if (edPages.length) edSelectPage(edPages[edPages.length - 1].id);
   else edShowEmpty();
@@ -12797,12 +13455,12 @@ function edAddBlock(type) {
   if (!page) { showToast('Add a page first.'); return; }
   const b = { id: edBId(), type };
 
-  if (type === 'heading') { b.level = 1; b.text = ''; }
-  else if (type === 'paragraph' || type === 'quote') { b.text = ''; }
+  if (type === 'heading') { b.level = 1; b.text = ''; b.value = ''; }
+  else if (type === 'paragraph' || type === 'quote') { b.text = ''; b.value = ''; }
   else if (type === 'list') { b.items = ['']; }
-  else if (type === 'code') { b.language = 'text'; b.code = ''; }
+  else if (type === 'code') { b.language = 'javascript'; b.code = 'console.log("Living Document Active");'; }
   else if (type === 'table') { b.headers = ['Feature', 'Specification']; b.rows = [['Chassis', 'Carbon Monocoque'], ['Power', '1,020 HP']]; }
-  else if (type === 'ai') { b.prompt = 'Explain the aerodynamic advantages of ground-effect tunnels.'; }
+  else if (type === 'ai') { b.prompt = 'Answer questions about this document presentation.'; }
   else if (type === 'form') { b.fields = [{ label: 'Full Name', field_type: 'input_text', placeholder: 'Enter your name' }, { label: 'Email Address', field_type: 'input_email', placeholder: 'Enter your email' }]; }
   else if (type === 'web_image') { b.src = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80'; b.alt = 'Living Concept Poster'; }
   else if (type === 'web_audio') { b.src = 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg'; b.label = 'Executive Audio Walkthrough (132 BPM)'; }
@@ -12811,17 +13469,15 @@ function edAddBlock(type) {
   else if (type === 'feature_grid') { b.cards = [{ badge: 'ENGINEERING', title: 'Ground-Effect Aero', desc: '1,450 kg downforce at 300 km/h.' }, { badge: 'NEURAL AI', title: 'Predictive Traction', desc: '1,000 Hz real-time slip adaptation.' }, { badge: 'TELEMETRY', title: 'Low-Latency Feed', desc: 'Instant bi-directional data channel.' }]; }
   else if (type === 'live_feed') { b.channel = 'TELEMETRY_MAIN'; b.latency = '1.8 ms'; b.fps = '120 FPS'; }
   else if (type === 'preorder') { b.edition = 'Founder Relic Edition'; b.price = '$149'; b.perks = 'Early Access, VIP Livery, 3D Hologram Badge'; }
-  else if (type === 'button') { b.value = 'CLAIM ACCESS & LAUNCH'; b.action = 'submit'; b.target = 'vip_submit'; }
+  else if (type === 'button') { b.value = 'CLAIM ACCESS & LAUNCH'; b.text = 'CLAIM ACCESS & LAUNCH'; b.action = 'submit'; b.target = 'vip_submit'; }
   else if (type === 'jsx_canvas') { b.value = 'Interactive Reactive Sandbox'; b.style = { code: '<div style="padding:16px;color:#fff"><div style="display:flex;justify-content:space-between"><span>⚡ Dynamic Output</span><span id="dyno-val" style="color:#00f0ff;font-weight:bold">50%</span></div><input type="range" min="0" max="100" value="50" style="width:100%;accent-color:#00f0ff" oninput="document.getElementById(\'dyno-val\').textContent=this.value+\'%\'"></div>' }; }
-  else if (type === 'particles') { b.value = 'stardust'; }
-  else if (type === 'water_effect') { b.value = 'Interactive Fluid Canvas'; }
   else if (type === 'throttle_dyno' || type === 'dyno_sandbox') { b.type = 'throttle_dyno'; b.vehicle_name = 'Quantum GT Hypercar'; b.bhp = 1400; b.max_rpm = 9000; b.theme = 'cyan'; }
-  else if (type === 'spell_matrix') { b.wand_name = 'Elder Wand (Phoenix Core)'; b.spells = ['Lumos', 'Expecto Patronus', 'Expelliarmus', 'Incendio', 'Starlight Shield']; b.aura = 'gold'; }
   else if (type === 'orbit_sim') { b.body = 'earth'; b.craft_name = 'Orbital Recon Sat-IV'; b.altitude = 400; }
   else if (type === 'arr_projector') { b.saas_name = 'CloudScale AI Enterprise'; b.start_arr = 1200000; b.growth_rate = 8; b.multiple = 18; }
   else if (type === 'tilt_card') { b.title = 'Living 3D Depth Field'; b.angle = 15; b.depth = 1000; b.sheen = 'gold'; b.text = 'Dynamic tactile 3D perspective with cursor-tracked holographic glare.'; }
 
   page.blocks.push(b);
+  edPushUndo();
   edRenderBlocks();
   edUpdateLivePreview();
 }
@@ -12834,6 +13490,7 @@ function edDuplicateBlock(id) {
   const clone = JSON.parse(JSON.stringify(p.blocks[idx]));
   clone.id = edBId();
   p.blocks.splice(idx + 1, 0, clone);
+  edPushUndo();
   edRenderBlocks();
   edUpdateLivePreview();
 }
@@ -12842,6 +13499,7 @@ function edDeleteBlock(id) {
   const p = edPages.find(p => p.id === edCurrentPage);
   if (!p) return;
   p.blocks = p.blocks.filter(b => b.id !== id);
+  edPushUndo();
   edRenderBlocks();
   edUpdateLivePreview();
 }
@@ -12852,6 +13510,7 @@ function edMoveBlock(id, dir) {
   const i = p.blocks.findIndex(b => b.id === id), j = i + dir;
   if (j < 0 || j >= p.blocks.length) return;
   [p.blocks[i], p.blocks[j]] = [p.blocks[j], p.blocks[i]];
+  edPushUndo();
   edRenderBlocks();
   edUpdateLivePreview();
 }
@@ -12927,12 +13586,15 @@ async function edOpenLdocxFile(e) {
     edPages = loadedPages.map((p, idx) => ({
       id: edPId(),
       title: p.title || `Page ${idx + 1}`,
+      fx: p.fx || null,
+      theme: p.theme || null,
       blocks: (p.blocks || []).map(b => ({
         id: edBId(),
         ...b,
-        text: b.text || b.value || ''
+        text: b.text || b.value || '',
+        value: b.value || b.text || ''
       })),
-      floating_texts: Array.isArray(p.floating_texts) ? p.floating_texts : []
+      floating_texts: Array.isArray(p.floating_texts) ? p.floating_texts.map(ft => Object.assign({}, ft)) : []
     }));
 
     edRenderPageList();
@@ -13026,12 +13688,10 @@ function edRenderBlocks() {
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('table')">📊 + Table</button>
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('quote')">📜 + Quote</button>
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('throttle_dyno')">🏎️ + Dyno</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(245,158,11,.4);color:#f59e0b" onclick="edAddBlock('spell_matrix')">🪄 + Spell Matrix</button>
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(167,139,250,.4);color:#a78bfa" onclick="edAddBlock('orbit_sim')">🛰️ + Orbit Sim</button>
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(16,185,129,.4);color:#10b981" onclick="edAddBlock('arr_projector')">📈 + ARR</button>
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(244,63,94,.4);color:#f43f5e" onclick="edAddBlock('tilt_card')">📐 + 3D Tilt</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('water_effect')">🌊 + Water Waves</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(245,158,11,.4);color:#f59e0b" onclick="edAddBlock('particles')">✨ + Particles</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('jsx_canvas')">⚡ + Live Sandbox</button>
       </div>
     `;
     panel.appendChild(e);
@@ -13098,22 +13758,62 @@ function edRenderBlocks() {
     } else if (block.type === 'list') {
       mk('textarea', 'One list item per line', (block.items || []).join('\n'), v => { block.items = v.split('\n').filter(s => s.trim()); }, { rows: 4 });
     } else if (block.type === 'code') {
-      const li = document.createElement('input'); li.placeholder = 'Language (python, js, rust)'; li.value = block.language || 'python'; li.style.cssText = 'width:150px;margin-top:4px'; li.oninput = () => { block.language = li.value; edUpdateLivePreview(); }; div.appendChild(li);
+      const li = document.createElement('input'); li.placeholder = 'Language (js, python, rust)'; li.value = block.language || 'javascript'; li.style.cssText = 'width:150px;margin-top:4px'; li.oninput = () => { block.language = li.value; edUpdateLivePreview(); }; div.appendChild(li);
 
       const sampleRow = document.createElement('div');
       sampleRow.style.cssText = 'display:flex;gap:6px;margin:6px 0;flex-wrap:wrap';
-      sampleRow.innerHTML = `
-        <button type="button" class="find-btn" onclick="this.closest('.ed-block').querySelector('textarea').value = 'import matplotlib.pyplot as plt\n\n# Telemetry Velocity Curve (km/h)\ndata = [12, 45, 98, 155, 210, 240]\nplt.plot(data)\nplt.title(\'Velocity Curve\')\nplt.show()'; this.closest('.ed-block').querySelector('textarea').dispatchEvent(new Event('input'))" style="font-size:10.5px">📈 Python Plot</button>
-        <button type="button" class="find-btn" onclick="this.closest('.ed-block').querySelector('textarea').value = 'import matplotlib.pyplot as plt\n\n# Quarter Metrics Comparison\nmetrics = [35, 65, 85, 120, 150]\nplt.bar(range(5), metrics)\nplt.show()'; this.closest('.ed-block').querySelector('textarea').dispatchEvent(new Event('input'))" style="font-size:10.5px">📊 Bar Chart</button>
-      `;
+
+      const btnJs = document.createElement('button');
+      btnJs.type = 'button';
+      btnJs.className = 'find-btn';
+      btnJs.style.fontSize = '10.5px';
+      btnJs.textContent = '⚡ JS Run';
+      btnJs.onclick = () => {
+        block.language = 'javascript';
+        li.value = 'javascript';
+        block.code = 'console.log("⚡ Interactive Execution Output");\\nconst nums = [12, 24, 48, 96];\\nconsole.log("Items:", nums.length);\\nconsole.log("Sum:", nums.reduce((a, b) => a + b, 0));';
+        const ta = div.querySelector('textarea');
+        if (ta) ta.value = block.code;
+        edUpdateLivePreview();
+      };
+      sampleRow.appendChild(btnJs);
+
+      const btnPy = document.createElement('button');
+      btnPy.type = 'button';
+      btnPy.className = 'find-btn';
+      btnPy.style.fontSize = '10.5px';
+      btnPy.textContent = '📈 Python Plot';
+      btnPy.onclick = () => {
+        block.language = 'python';
+        li.value = 'python';
+        block.code = 'import matplotlib.pyplot as plt\\n\\n# Telemetry Velocity Curve\\ndata = [12, 45, 98, 155, 210, 240]\\nplt.plot(data)\\nplt.title("Velocity Curve")\\nplt.show()';
+        const ta = div.querySelector('textarea');
+        if (ta) ta.value = block.code;
+        edUpdateLivePreview();
+      };
+      sampleRow.appendChild(btnPy);
+
+      const btnClr = document.createElement('button');
+      btnClr.type = 'button';
+      btnClr.className = 'find-btn';
+      btnClr.style.fontSize = '10.5px';
+      btnClr.textContent = '🗑️ Clear';
+      btnClr.onclick = () => {
+        block.code = '';
+        const ta = div.querySelector('textarea');
+        if (ta) ta.value = '';
+        edUpdateLivePreview();
+      };
+      sampleRow.appendChild(btnClr);
+
       div.appendChild(sampleRow);
 
-      mk('textarea', 'Enter Python or JavaScript code...', block.code || 'import matplotlib.pyplot as plt\n\n# Telemetry Velocity Curve\ndata = [12, 45, 98, 155, 210, 240]\nplt.plot(data)\nplt.show()', v => { block.code = v; edUpdateLivePreview(); }, { rows: 5 });
+      mk('textarea', 'Enter code or script...', block.code !== undefined ? block.code : 'console.log("Hello from LDOCX!");', v => { block.code = v; edUpdateLivePreview(); }, { rows: 5 });
     } else if (block.type === 'table') {
       const hi = document.createElement('input'); hi.placeholder = 'Col 1, Col 2'; hi.value = (block.headers || []).join(', '); hi.style.marginTop = '4px'; hi.oninput = () => { block.headers = hi.value.split(',').map(s => s.trim()); }; div.appendChild(hi);
       mk('textarea', 'Row values (comma separated)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => { block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim())); }, { rows: 4 });
     } else if (block.type === 'ai') {
-      mk('textarea', 'AI prompt or context...', block.prompt || '', v => { block.prompt = v; }, { rows: 3 });
+      mk('textarea', 'AI prompt or context (document multi-page contents are also fed automatically)...', block.prompt || '', v => { block.prompt = v; }, { rows: 3 });
     } else if (block.type === 'form') {
       mk('input', 'Form Title / Header', block.title || '⚡ VIP Priority Early Access', v => { block.title = v; edUpdateLivePreview(); });
       mk('input', 'Webhook Destination URL', block.webhook_url || '', v => { block.webhook_url = v; edUpdateLivePreview(); });
@@ -13461,6 +14161,25 @@ async function compileLdocxClientSide(spec) {
   }
   const zip = new JSZip();
 
+  if (!spec) {
+    const docTitle = document.getElementById('ed-title')?.value || document.getElementById('doc-title')?.textContent || 'Living Document';
+    const author = document.getElementById('ed-author')?.value || 'Living Document Creator';
+    const curPages = (typeof edPages !== 'undefined' && edPages.length > 0) ? edPages : (pages || []);
+    spec = {
+      title: docTitle,
+      author: author,
+      pages: curPages.map((p, idx) => ({
+        id: p.id || `page_${idx+1}`,
+        page_number: p.page_number || (idx + 1),
+        title: p.title || `Page ${idx + 1}`,
+        fx: p.fx || null,
+        theme: p.theme || null,
+        floating_texts: p.floating_texts || [],
+        blocks: p.blocks || []
+      }))
+    };
+  }
+
   const docId = 'doc_' + Math.random().toString(36).slice(2, 11);
   const title = spec.title || 'Living Document';
   const manifest = {
@@ -13485,8 +14204,10 @@ async function compileLdocxClientSide(spec) {
       id: p.id || `page_${pageNum}`,
       page_number: idx + 1,
       title: p.title || `Page ${idx + 1}`,
+      fx: p.fx || null,
+      theme: p.theme || null,
       blocks: p.blocks || [],
-      floating_texts: p.floating_texts || []
+      floating_texts: Array.isArray(p.floating_texts) ? p.floating_texts : []
     };
     pagesFolder.file(`page_${pageNum}.json`, JSON.stringify(pData, null, 2));
   });
@@ -13514,7 +14235,12 @@ async function buildAndSave() {
       author: document.getElementById('ed-author')?.value || 'Unknown',
       lang: document.getElementById('ed-lang')?.value || 'en',
       pages: edPages.map(p => ({
+        id: p.id,
+        page_number: p.page_number || p.num,
         title: p.title,
+        fx: p.fx || null,
+        theme: p.theme || null,
+        floating_texts: Array.isArray(p.floating_texts) ? p.floating_texts.map(ft => Object.assign({}, ft)) : [],
         blocks: (p.blocks || []).map(b => Object.assign({}, b))
       }))
     };
@@ -15106,7 +15832,7 @@ async function downloadCurrentDocument() {
 
 window.initFormatPopover();
 
-// ── ⌨️ Global Viewer Shortcuts ─────────────────────────────
+// ── ⌨️ Global Studio & Viewer Shortcuts ─────────────────────────────
 window.addEventListener('keydown', (e) => {
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const cmd = isMac ? e.metaKey : e.ctrlKey;
@@ -15119,6 +15845,22 @@ window.addEventListener('keydown', (e) => {
     e.preventDefault();
     if (typeof saveDoc === 'function') saveDoc();
     return;
+  }
+  if (cmd && !e.shiftKey && (e.key === 'Z' || e.key === 'z')) {
+    const tag = document.activeElement ? document.activeElement.tagName : '';
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+      e.preventDefault();
+      if (typeof edUndo === 'function') edUndo();
+      return;
+    }
+  }
+  if ((cmd && (e.key === 'Y' || e.key === 'y')) || (cmd && e.shiftKey && (e.key === 'Z' || e.key === 'z'))) {
+    const tag = document.activeElement ? document.activeElement.tagName : '';
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+      e.preventDefault();
+      if (typeof edRedo === 'function') edRedo();
+      return;
+    }
   }
 });
 </script>
@@ -15311,7 +16053,6 @@ const LDOC_COMMANDS = [
   { id: 'ins_telem', cat: 'Insert', name: 'Live Interactive Telemetry Beacon', run: () => (typeof edAddBlock === 'function' ? edAddBlock('live_feed') : addBlock('live_feed')) },
   { id: 'ins_form', cat: 'Insert', name: 'Smart Dispatch Form & Webhook', run: () => (typeof edAddBlock === 'function' ? edAddBlock('form') : addBlock('form')) },
   { id: 'ins_dyno', cat: 'Insert', name: 'Throttle Dyno Speedometer Telemetry', run: () => (typeof edAddBlock === 'function' ? edAddBlock('throttle_dyno') : applyWizardFx('insert_dyno')) },
-  { id: 'ins_wand', cat: 'Insert', name: 'Arcane Wand Spell Cast Matrix', run: () => (typeof edAddBlock === 'function' ? edAddBlock('spell_matrix') : applyWizardFx('insert_wand')) },
   { id: 'ins_orbit', cat: 'Insert', name: 'Orbital Mechanics Trajectory Simulator', run: () => (typeof edAddBlock === 'function' ? edAddBlock('orbit_sim') : applyWizardFx('insert_orbit')) },
   { id: 'ins_arr', cat: 'Insert', name: 'Enterprise ARR & Valuation Projector', run: () => (typeof edAddBlock === 'function' ? edAddBlock('arr_projector') : applyWizardFx('insert_arr')) },
   { id: 'ins_tilt', cat: 'Insert', name: '3D Holographic Perspective Tilt Card', run: () => (typeof edAddBlock === 'function' ? edAddBlock('tilt_card') : applyWizardFx('insert_tilt_card')) },

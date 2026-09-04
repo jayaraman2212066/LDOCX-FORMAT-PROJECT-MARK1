@@ -198,15 +198,38 @@
         pages: this.state.pages || []
       };
 
-      // If creator global state exists
-      if (typeof global.pages !== 'undefined' && Array.isArray(global.pages) && global.pages.length > 0) {
+      // If studio editor active or edPages populated with user-edited content, prioritize edPages
+      const edPanel = typeof document !== 'undefined' ? (document.getElementById('panel-editor') || document.getElementById('editor-panel')) : null;
+      const isEditorTab = edPanel && (edPanel.classList.contains('active') || (edPanel.style && edPanel.style.display !== 'none') || (global.__activeTab === 'editor'));
+
+      if ((isEditorTab || (typeof global.pages === 'undefined' || !global.pages || !global.pages.length)) && typeof global.edPages !== 'undefined' && Array.isArray(global.edPages) && global.edPages.length > 0) {
+        spec.pages = global.edPages.map(p => ({
+          id: p.id,
+          page_number: p.page_number || p.num,
+          title: p.title,
+          fx: p.fx || null,
+          theme: p.theme || null,
+          floating_texts: Array.isArray(p.floating_texts) ? p.floating_texts.map(ft => Object.assign({}, ft)) : [],
+          blocks: (p.blocks || []).map(b => Object.assign({}, b))
+        }));
+        const edTitle = document.getElementById('ed-title');
+        if (edTitle && edTitle.value) spec.title = edTitle.value;
+      } else if (typeof global.edPages !== 'undefined' && Array.isArray(global.edPages) && global.edPages.length > 0) {
+        spec.pages = global.edPages.map(p => ({
+          id: p.id,
+          page_number: p.page_number || p.num,
+          title: p.title,
+          fx: p.fx || null,
+          theme: p.theme || null,
+          floating_texts: Array.isArray(p.floating_texts) ? p.floating_texts.map(ft => Object.assign({}, ft)) : [],
+          blocks: (p.blocks || []).map(b => Object.assign({}, b))
+        }));
+        const edTitle = document.getElementById('ed-title');
+        if (edTitle && edTitle.value) spec.title = edTitle.value;
+      } else if (typeof global.pages !== 'undefined' && Array.isArray(global.pages) && global.pages.length > 0) {
         spec.pages = global.pages;
         const titleEl = document.getElementById('top-title') || document.getElementById('doc-title');
         if (titleEl && titleEl.value) spec.title = titleEl.value;
-      } else if (typeof global.edPages !== 'undefined' && Array.isArray(global.edPages) && global.edPages.length > 0) {
-        spec.pages = global.edPages;
-        const edTitle = document.getElementById('ed-title');
-        if (edTitle && edTitle.value) spec.title = edTitle.value;
       } else if (typeof global.currentDoc !== 'undefined' && global.currentDoc && global.currentDoc.pages) {
         spec = global.currentDoc;
       }
