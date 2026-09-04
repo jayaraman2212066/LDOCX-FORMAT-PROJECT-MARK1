@@ -1,4 +1,11 @@
-// @ldoc/sdk — Decoupled Living Document (.ldocx) Parser & Serializer
+/**
+ * @ldoc/sdk — Decoupled Living Document (.ldocx) Parser & Serializer
+ * Copyright (c) 2026 Jayaraman K. All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+ * Trademarks "LDOC", "LDOCX", and "Living Document Format" are proprietary to Jayaraman K.
+ */
 const crypto = require('crypto');
 
 let JSZip = null;

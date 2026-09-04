@@ -5,8 +5,20 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+
+[assembly: AssemblyTitle("LDOC Living Studio")]
+[assembly: AssemblyDescription("LDOC Freemium Living Document (.ldocx) Authoring Studio IDE")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Jayaraman K")]
+[assembly: AssemblyProduct("LDOC Living Document Suite")]
+[assembly: AssemblyCopyright("Copyright © 2026 Jayaraman K. All Rights Reserved.")]
+[assembly: AssemblyTrademark("LDOC™ and LDOCX™ are proprietary trademarks of Jayaraman K.")]
+[assembly: AssemblyCulture("")]
+[assembly: AssemblyVersion("2.5.0.0")]
+[assembly: AssemblyFileVersion("2.5.0.0")]
 
 namespace LDOCStudio
 {
