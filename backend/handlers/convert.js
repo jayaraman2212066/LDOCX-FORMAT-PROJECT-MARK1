@@ -1,4 +1,4 @@
-const { convertToLdocx } = require('../backend/schema_validator');
+const { convertToLdocx } = require('../schema_validator');
 
 module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

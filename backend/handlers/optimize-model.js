@@ -1,4 +1,4 @@
-const { renderHeadlessPdf } = require('../../backend/pdf_flattener');
+const { optimizeMesh } = require('../draco_optimizer');
 
 module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -9,11 +9,9 @@ module.exports = (req, res) => {
 
   try {
     const payload = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const pdfBuf = renderHeadlessPdf(payload);
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${(payload.title || 'document').replace(/[^a-zA-Z0-9_-]/g, '_')}.pdf"`);
-    return res.status(200).send(pdfBuf);
+    const result = optimizeMesh(payload);
+    return res.status(200).json(result);
   } catch (err) {
-    return res.status(400).json({ error: 'PDF export failed: ' + err.message });
+    return res.status(400).json({ error: 'Optimization failed: ' + err.message });
   }
 };

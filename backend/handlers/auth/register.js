@@ -1,4 +1,4 @@
-const { register } = require('../../backend/auth_service');
+const { register } = require('../../auth_service');
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');

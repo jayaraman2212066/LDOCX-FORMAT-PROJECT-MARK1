@@ -4,6 +4,8 @@
   "trailingSlash": false,
   "outputDirectory": "public",
   "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.js?route=$1" },
+    { "source": "/api", "destination": "/api/index.js" },
     { "source": "/creator", "destination": "/creator.html" },
     { "source": "/live-studio", "destination": "/live-studio.html" },
     { "source": "/studio", "destination": "/studio.html" },

@@ -1,5 +1,5 @@
-const { createLemonCheckoutSession } = require('../../backend/lemon_gateway');
-const { createCheckoutSession } = require('../../backend/stripe_gateway');
+const { createLemonCheckoutSession } = require('../../lemon_gateway');
+const { createCheckoutSession } = require('../../stripe_gateway');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

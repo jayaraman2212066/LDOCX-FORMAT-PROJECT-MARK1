@@ -1,4 +1,4 @@
-const { verifyToken } = require('../../backend/auth_service');
+const { verifyToken } = require('../../auth_service');
 
 module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

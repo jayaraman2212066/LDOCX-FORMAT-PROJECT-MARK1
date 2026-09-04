@@ -1,4 +1,4 @@
-const { optimizeMesh } = require('../backend/draco_optimizer');
+const { validateLdocxSpec } = require('../schema_validator');
 
 module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -9,9 +9,9 @@ module.exports = (req, res) => {
 
   try {
     const payload = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const result = optimizeMesh(payload);
+    const result = validateLdocxSpec(payload);
     return res.status(200).json(result);
   } catch (err) {
-    return res.status(400).json({ error: 'Optimization failed: ' + err.message });
+    return res.status(400).json({ error: 'Validation failed: ' + err.message });
   }
 };

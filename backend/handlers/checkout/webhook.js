@@ -1,6 +1,6 @@
-const { handleLemonWebhook } = require('../../backend/lemon_gateway');
-const { handleWebhookEvent } = require('../../backend/stripe_gateway');
-const { sendEmailViaGmail, ADMIN_EMAIL } = require('../../backend/lead_router');
+const { handleLemonWebhook } = require('../../lemon_gateway');
+const { handleWebhookEvent } = require('../../stripe_gateway');
+const { sendEmailViaGmail, ADMIN_EMAIL } = require('../../lead_router');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

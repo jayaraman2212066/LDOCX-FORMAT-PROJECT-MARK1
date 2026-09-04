@@ -1,6 +1,6 @@
-const { validateLdocxSpec } = require('../backend/schema_validator');
+const { captureLead } = require('../../lead_router');
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -9,9 +9,9 @@ module.exports = (req, res) => {
 
   try {
     const payload = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const result = validateLdocxSpec(payload);
+    const result = await captureLead(payload);
     return res.status(200).json(result);
   } catch (err) {
-    return res.status(400).json({ error: 'Validation failed: ' + err.message });
+    return res.status(400).json({ error: err.message });
   }
 };
