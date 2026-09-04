@@ -708,6 +708,101 @@ body.mode-paper .page-paper-layer {
 .pres-btn.secondary{background:var(--surface2);border:1px solid var(--border);color:var(--text);box-shadow:none}
 .pres-btn.secondary:hover{border-color:var(--gold);color:var(--gold)}
 
+/* ── Rich Button Visual Effects & Themes ──────────────────────────────────── */
+.pres-btn.style-neon-cyan {
+  background: linear-gradient(135deg, #0284c7, #06b6d4) !important;
+  color: #f0fdf4 !important;
+  border: 1.5px solid #38bdf8 !important;
+  box-shadow: 0 0 20px rgba(56,189,248,0.5), inset 0 0 10px rgba(56,189,248,0.3) !important;
+  text-shadow: 0 0 8px rgba(56,189,248,0.8);
+}
+.pres-btn.style-neon-cyan:hover {
+  box-shadow: 0 0 32px rgba(56,189,248,0.85), inset 0 0 16px rgba(56,189,248,0.5) !important;
+  transform: translateY(-3px) scale(1.02);
+}
+.pres-btn.style-royal-gold {
+  background: linear-gradient(135deg, #d97706, #f59e0b, #fbbf24) !important;
+  color: #1e1b4b !important;
+  border: 1.5px solid #fde047 !important;
+  box-shadow: 0 4px 22px rgba(245,158,11,0.55) !important;
+  font-weight: 800;
+}
+.pres-btn.style-royal-gold:hover {
+  box-shadow: 0 6px 32px rgba(245,158,11,0.8) !important;
+  transform: translateY(-3px) scale(1.02);
+}
+.pres-btn.style-purple-nebula {
+  background: linear-gradient(135deg, #6d28d9, #9333ea, #c084fc) !important;
+  color: #ffffff !important;
+  border: 1.5px solid #e9d5ff !important;
+  box-shadow: 0 4px 24px rgba(147,51,234,0.55) !important;
+}
+.pres-btn.style-purple-nebula:hover {
+  box-shadow: 0 6px 36px rgba(192,132,252,0.8) !important;
+  transform: translateY(-3px) scale(1.02);
+}
+.pres-btn.style-glass-hologram {
+  background: rgba(255,255,255,0.08) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(255,255,255,0.35) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.37) !important;
+}
+.pres-btn.style-glass-hologram:hover {
+  background: rgba(255,255,255,0.18) !important;
+  border-color: rgba(255,255,255,0.7) !important;
+  transform: translateY(-3px);
+}
+.pres-btn.style-tactile-3d {
+  background: linear-gradient(180deg, #ea580c, #c2410c) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 5px 0 #7c2d12, 0 8px 18px rgba(0,0,0,0.45) !important;
+  transform: translateY(0);
+}
+.pres-btn.style-tactile-3d:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 0 #7c2d12, 0 10px 22px rgba(0,0,0,0.5) !important;
+}
+.pres-btn.style-tactile-3d:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #7c2d12, 0 3px 8px rgba(0,0,0,0.4) !important;
+}
+.pres-btn.style-fluid-ripple {
+  background: linear-gradient(135deg, #0d9488, #14b8a6) !important;
+  color: #f0fdfa !important;
+  border: 1.5px solid #5eead4 !important;
+  box-shadow: 0 0 20px rgba(20,184,166,0.5) !important;
+}
+.pres-btn.style-fluid-ripple:hover {
+  box-shadow: 0 0 32px rgba(45,212,191,0.8) !important;
+  transform: translateY(-3px);
+}
+
+/* ── FX Wizard Configurator Form Inputs ─────────────────────────────────── */
+.wiz-input{
+  width:100%;background:rgba(18,18,32,0.9);border:1px solid rgba(255,255,255,0.12);
+  color:var(--text);border-radius:8px;padding:6px 10px;font-size:11.5px;margin:3px 0 6px;
+  outline:none;transition:border-color .15s,box-shadow .15s;box-sizing:border-box;font-family:inherit;
+}
+.wiz-input:focus{border-color:var(--gold);box-shadow:0 0 10px rgba(245,158,11,0.3)}
+.wiz-row{display:flex;gap:6px;align-items:center}
+.wiz-label{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-top:4px}
+
+/* ── Reactive Sandbox Containers ── */
+.dyno-sandbox-card, .spell-matrix-card, .orbit-sim-card, .arr-projector-card {
+  background: rgba(14, 16, 30, 0.95);
+  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin: 16px 0;
+  box-shadow: 0 14px 44px rgba(0,0,0,0.7);
+  position: relative;
+  z-index: 5;
+  backdrop-filter: blur(14px);
+}
+
 /* ── Living Document Typography ────────────────────────────────────────── */
 .neon-title{
   font-family:'Cinzel Decorative','Cinzel',sans-serif;font-size:3.6em;font-weight:900;
@@ -4319,6 +4414,11 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
         <button class="ed-add-btn" onclick="edAddBlock('live_feed')">📡 Live Dispatch</button>
         <button class="ed-add-btn" onclick="edAddBlock('preorder')">💎 Pre-Order</button>
         <button class="ed-add-btn" onclick="edAddBlock('button')">🔘 Button</button>
+        <button class="ed-add-btn" onclick="edAddBlock('throttle_dyno')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🏎️ Throttle Dyno</button>
+        <button class="ed-add-btn" onclick="edAddBlock('spell_matrix')" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4)">🪄 Spell Matrix</button>
+        <button class="ed-add-btn" onclick="edAddBlock('orbit_sim')" style="background:rgba(167,139,250,.15);color:#a78bfa;border-color:rgba(167,139,250,.4)">🛰️ Orbit Sim</button>
+        <button class="ed-add-btn" onclick="edAddBlock('arr_projector')" style="background:rgba(16,185,129,.15);color:#10b981;border-color:rgba(16,185,129,.4)">📈 ARR Projector</button>
+        <button class="ed-add-btn" onclick="edAddBlock('tilt_card')" style="background:rgba(244,63,94,.15);color:#f43f5e;border-color:rgba(244,63,94,.4)">📐 3D Tilt Card</button>
         <button class="ed-add-btn" onclick="edAddBlock('jsx_canvas')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">⚡ Live Sandbox</button>
         <button class="ed-add-btn" onclick="edAddBlock('particles')" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4)">✨ Particle FX</button>
         <button class="ed-add-btn" onclick="edAddBlock('water_effect')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🌊 Water Ripples</button>
@@ -4485,30 +4585,109 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
     <div class="fx-wiz-section">
       <div class="fx-wiz-section-title">⚡ Interactive Reactive Sandboxes</div>
       <div class="fx-wiz-grid">
+        <!-- Dyno Speedometer -->
         <div class="fx-wiz-card">
           <div class="fx-wiz-title">🏎️ Throttle Dyno Speedometer</div>
-          <div class="fx-wiz-desc">Live reactive HTML5 telemetry dyno with slider torque calculator.</div>
+          <div class="fx-wiz-desc">Live reactive HTML5 telemetry dyno with real-time torque, needle animation &amp; gear shifting.</div>
+          <div style="margin:8px 0">
+            <label class="wiz-label">Vehicle / Craft Name</label>
+            <input id="wiz-dyno-name" value="Quantum GT Hypercar" placeholder="e.g. Koenigsegg Jesko" class="wiz-input">
+            <div class="wiz-row">
+              <div style="flex:1">
+                <label class="wiz-label">Max Power (BHP)</label>
+                <input id="wiz-dyno-bhp" type="number" value="1400" class="wiz-input">
+              </div>
+              <div style="flex:1">
+                <label class="wiz-label">Max RPM</label>
+                <input id="wiz-dyno-rpm" type="number" value="9000" class="wiz-input">
+              </div>
+            </div>
+            <label class="wiz-label">Color Theme</label>
+            <select id="wiz-dyno-theme" class="wiz-input">
+              <option value="cyan">⚡ Cyber Neon Cyan</option>
+              <option value="gold">✨ Imperial Amber Gold</option>
+              <option value="crimson">🏎️ Crimson Turbo Red</option>
+              <option value="emerald">🟢 Emerald Hybrid</option>
+            </select>
+          </div>
           <div class="fx-wiz-actions">
             <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_dyno')">➕ Insert Dyno Sandbox</button>
           </div>
         </div>
+
+        <!-- Wand Spell Cast Matrix -->
         <div class="fx-wiz-card">
           <div class="fx-wiz-title">🪄 Wand Spell Cast Matrix</div>
-          <div class="fx-wiz-desc">Arcane spellboard with real-time Lumos, Patronus, and Expelliarmus effects.</div>
+          <div class="fx-wiz-desc">Arcane spellboard with real-time Lumos, Patronus, Expelliarmus &amp; shockwave canvas blasts.</div>
+          <div style="margin:8px 0">
+            <label class="wiz-label">Wand / Matrix Title</label>
+            <input id="wiz-wand-name" value="Elder Wand (Phoenix Core)" placeholder="Wand Name" class="wiz-input">
+            <label class="wiz-label">Active Spells (Comma-Separated)</label>
+            <input id="wiz-wand-spells" value="Lumos, Expecto Patronus, Expelliarmus, Incendio, Starlight Shield" placeholder="Spell list" class="wiz-input">
+            <label class="wiz-label">Aura Resonance</label>
+            <select id="wiz-wand-aura" class="wiz-input">
+              <option value="gold">✨ Golden Sunfire</option>
+              <option value="cyan">Celestial Cyan</option>
+              <option value="violet">🔮 Violet Void</option>
+              <option value="emerald">🟢 Emerald Spark</option>
+            </select>
+          </div>
           <div class="fx-wiz-actions">
             <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_wand')">➕ Insert Spell Matrix</button>
           </div>
         </div>
+
+        <!-- Orbital Trajectory Simulator -->
         <div class="fx-wiz-card">
           <div class="fx-wiz-title">🛰️ Orbital Trajectory Simulator</div>
-          <div class="fx-wiz-desc">Orbital mechanics altitude calculator with dynamic escape velocity math.</div>
+          <div class="fx-wiz-desc">Orbital mechanics altitude calculator with dynamic escape velocity math &amp; live satellite path.</div>
+          <div style="margin:8px 0">
+            <label class="wiz-label">Primary Celestial Body</label>
+            <select id="wiz-orbit-body" class="wiz-input">
+              <option value="earth">🌍 Earth (r: 6,371 km | μ: 3.98e5)</option>
+              <option value="mars">🔴 Mars (r: 3,390 km | μ: 4.28e4)</option>
+              <option value="moon">⚪ Moon (r: 1,737 km | μ: 4.90e3)</option>
+              <option value="jupiter">🪐 Jupiter (r: 69,911 km | μ: 1.27e8)</option>
+              <option value="blackhole">🕳️ Black Hole Event Horizon</option>
+            </select>
+            <div class="wiz-row">
+              <div style="flex:1.2">
+                <label class="wiz-label">Craft Name</label>
+                <input id="wiz-orbit-craft" value="Orbital Recon Sat-IV" class="wiz-input">
+              </div>
+              <div style="flex:0.8">
+                <label class="wiz-label">Altitude (km)</label>
+                <input id="wiz-orbit-alt" type="number" value="400" class="wiz-input">
+              </div>
+            </div>
+          </div>
           <div class="fx-wiz-actions">
             <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_orbit')">➕ Insert Orbit Sim</button>
           </div>
         </div>
+
+        <!-- ARR & Valuation Projector -->
         <div class="fx-wiz-card">
           <div class="fx-wiz-title">📈 ARR &amp; Valuation Projector</div>
-          <div class="fx-wiz-desc">Enterprise SaaS metrics calculator with live revenue multiple scaling.</div>
+          <div class="fx-wiz-desc">Enterprise SaaS metrics modeler with live growth sliders, multiple scaling &amp; bar chart curves.</div>
+          <div style="margin:8px 0">
+            <label class="wiz-label">SaaS Venture Name</label>
+            <input id="wiz-arr-name" value="CloudScale AI Enterprise" class="wiz-input">
+            <div class="wiz-row">
+              <div style="flex:1">
+                <label class="wiz-label">Starting ARR ($)</label>
+                <input id="wiz-arr-start" type="number" value="1200000" class="wiz-input">
+              </div>
+              <div style="flex:0.8">
+                <label class="wiz-label">MoM Growth %</label>
+                <input id="wiz-arr-growth" type="number" value="8" class="wiz-input">
+              </div>
+              <div style="flex:0.8">
+                <label class="wiz-label">Multiple (x)</label>
+                <input id="wiz-arr-multiple" type="number" value="18" class="wiz-input">
+              </div>
+            </div>
+          </div>
           <div class="fx-wiz-actions">
             <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_arr')">➕ Insert ARR Projector</button>
           </div>
@@ -4519,12 +4698,37 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
     <!-- Section 4: 3D Holographic Perspective Tilt -->
     <div class="fx-wiz-section">
       <div class="fx-wiz-section-title">📐 3D Holographic Perspective Tilt</div>
-      <div class="fx-wiz-card" id="wiz-tilt-card" style="transition:transform .15s ease;transform-style:preserve-3d;padding:16px;text-align:center">
+      <div class="fx-wiz-card" id="wiz-tilt-card" style="transition:transform .12s cubic-bezier(0.2,0.8,0.2,1);transform-style:preserve-3d;padding:18px;text-align:center;position:relative;overflow:hidden;border:1px solid rgba(245,158,11,0.3)">
+        <div id="wiz-tilt-glare" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15), transparent 70%);opacity:0.6;transition:opacity 0.2s"></div>
         <div style="font-size:32px;margin-bottom:6px">📐</div>
         <div class="fx-wiz-title" style="justify-content:center">Living 3D Depth Field</div>
-        <div class="fx-wiz-desc">Hover over this card to preview real-time perspective tilt dynamics.</div>
-        <div class="fx-wiz-actions" style="justify-content:center;margin-top:12px">
+        <div class="fx-wiz-desc">Move your cursor over this card to preview dynamic tactile tilt &amp; holographic glare.</div>
+        
+        <div style="margin:12px 0 6px;text-align:left">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <label class="wiz-label">Tilt Max Angle</label>
+            <span id="wiz-tilt-angle-val" style="font-size:11px;font-weight:700;color:var(--gold)">15°</span>
+          </div>
+          <input id="wiz-tilt-angle" type="range" min="5" max="35" value="15" oninput="updateWizTiltSettings()" style="width:100%;accent-color:var(--gold)">
+          
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+            <label class="wiz-label">Perspective Depth</label>
+            <span id="wiz-tilt-depth-val" style="font-size:11px;font-weight:700;color:var(--gold)">1000px</span>
+          </div>
+          <input id="wiz-tilt-depth" type="range" min="500" max="2000" value="1000" oninput="updateWizTiltSettings()" style="width:100%;accent-color:var(--gold)">
+
+          <label class="wiz-label" style="margin-top:6px">Holographic Sheen Color</label>
+          <select id="wiz-tilt-sheen" onchange="updateWizTiltSettings()" class="wiz-input">
+            <option value="gold">✨ Golden Sun Sheen</option>
+            <option value="cyan">⚡ Cyber Neon Cyan</option>
+            <option value="violet">🔮 Violet Iridescent</option>
+            <option value="rainbow">🌈 Prismatic Rainbow</option>
+          </select>
+        </div>
+
+        <div class="fx-wiz-actions" style="justify-content:center;margin-top:12px;gap:8px">
           <button class="fx-wiz-btn primary" onclick="toggle3DPerspectiveTilt()" id="wiz-tilt-toggle-btn">📐 Toggle 3D Tilt: ON</button>
+          <button class="fx-wiz-btn" onclick="applyWizardFx('insert_tilt_card')">➕ Insert 3D Tilt Card</button>
         </div>
       </div>
     </div>
@@ -4533,16 +4737,67 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
     <div class="fx-wiz-section">
       <div class="fx-wiz-section-title">💳 Smart Action, Payment &amp; Links</div>
       <div class="fx-wiz-grid">
+        <!-- Stripe / Custom Link Button -->
         <div class="fx-wiz-card">
           <div class="fx-wiz-title">💳 Stripe Payment / Registration Link</div>
-          <div class="fx-wiz-desc">Direct Stripe checkout button or registration portal link with custom CTA.</div>
+          <div class="fx-wiz-desc">Connect any Stripe checkout, registration portal, Calendly, or custom link with rich visual effects.</div>
+          <div style="margin:8px 0">
+            <label class="wiz-label">Button CTA Label</label>
+            <input id="wiz-btn-label" value="💳 Pay with Stripe ($49)" placeholder="e.g. Register VIP Access" class="wiz-input">
+            
+            <label class="wiz-label">Target Link / URL</label>
+            <input id="wiz-btn-url" value="https://buy.stripe.com/demo_checkout" placeholder="https://buy.stripe.com/... or https://..." class="wiz-input">
+
+            <label class="wiz-label">Button Visual Effect</label>
+            <select id="wiz-btn-effect" class="wiz-input">
+              <option value="royal_gold">✨ Royal Gold Shimmer (Imperial Amber)</option>
+              <option value="neon_cyan">⚡ Cyber Neon Cyan (Electric Pulse)</option>
+              <option value="purple_nebula">🔮 Purple Nebula (Cosmic Plasma)</option>
+              <option value="glass_hologram">💎 Frosted Glass Hologram (Glassmorphism)</option>
+              <option value="tactile_3d">🏎️ 3D Tactile Push (Beveled Press)</option>
+              <option value="fluid_ripple">🌊 Fluid Ocean Ripple (Aqua Ring)</option>
+            </select>
+
+            <label class="wiz-label">Target Window</label>
+            <select id="wiz-btn-target" class="wiz-input">
+              <option value="_blank">🔗 Open in New Tab (_blank)</option>
+              <option value="_self">➡️ Same Window (_self)</option>
+            </select>
+          </div>
           <div class="fx-wiz-actions">
             <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_stripe_button')">➕ Insert Stripe Button</button>
           </div>
         </div>
+
+        <!-- Webhook Form Submission -->
         <div class="fx-wiz-card">
           <div class="fx-wiz-title">📑 Webhook Form Submission</div>
-          <div class="fx-wiz-desc">Interactive lead-capture form posting directly to your webhook or CRM.</div>
+          <div class="fx-wiz-desc">Interactive lead-capture form posting directly to your custom webhook, Discord, Zapier, or CRM.</div>
+          <div style="margin:8px 0">
+            <label class="wiz-label">Form Title / Header</label>
+            <input id="wiz-form-title" value="⚡ VIP Priority Early Access" placeholder="Form Title" class="wiz-input">
+
+            <label class="wiz-label">Webhook Destination URL</label>
+            <input id="wiz-form-webhook" value="https://api.ldocx.internal/leads/webhook" placeholder="https://hook.make.com/... or https://..." class="wiz-input">
+
+            <label class="wiz-label">Fields Configuration</label>
+            <select id="wiz-form-preset" class="wiz-input">
+              <option value="standard">Standard (Full Name + Email + Interest Tier)</option>
+              <option value="enterprise">Enterprise (Name + Work Email + Company + Phone + Note)</option>
+              <option value="rsvp">VIP RSVP (Name + Guest Count + Preference)</option>
+              <option value="simple">Quick (Email Address Only)</option>
+            </select>
+
+            <label class="wiz-label">Submit Button Visual Style</label>
+            <select id="wiz-form-btn-style" class="wiz-input">
+              <option value="royal_gold">✨ Royal Gold Shimmer (Imperial Amber)</option>
+              <option value="neon_cyan">⚡ Cyber Neon Cyan (Electric Pulse)</option>
+              <option value="purple_nebula">🔮 Purple Nebula (Cosmic Plasma)</option>
+              <option value="glass_hologram">💎 Frosted Glass Hologram (Glassmorphism)</option>
+              <option value="tactile_3d">🏎️ 3D Tactile Push (Beveled Press)</option>
+              <option value="fluid_ripple">🌊 Fluid Ocean Ripple (Aqua Ring)</option>
+            </select>
+          </div>
           <div class="fx-wiz-actions">
             <button class="fx-wiz-btn primary" onclick="applyWizardFx('insert_smart_form')">➕ Insert Lead Form</button>
           </div>
@@ -4767,6 +5022,80 @@ function setVisualFx(fx, el) {
   }
 }
 
+function updateWizTiltSettings() {
+  const angleEl = document.getElementById('wiz-tilt-angle');
+  const depthEl = document.getElementById('wiz-tilt-depth');
+  const sheenEl = document.getElementById('wiz-tilt-sheen');
+  const angleVal = angleEl ? parseInt(angleEl.value, 10) : 15;
+  const depthVal = depthEl ? parseInt(depthEl.value, 10) : 1000;
+  const sheenVal = sheenEl ? sheenEl.value : 'gold';
+
+  const aValEl = document.getElementById('wiz-tilt-angle-val');
+  if (aValEl) aValEl.textContent = angleVal + '°';
+  const dValEl = document.getElementById('wiz-tilt-depth-val');
+  if (dValEl) dValEl.textContent = depthVal + 'px';
+
+  window.__wizTiltMaxAngle = angleVal;
+  window.__wizTiltDepth = depthVal;
+  window.__wizTiltSheen = sheenVal;
+
+  const wizTiltCard = document.getElementById('wiz-tilt-card');
+  if (wizTiltCard) {
+    setupTiltCardInteractive(wizTiltCard, angleVal, depthVal, sheenVal);
+  }
+
+  if (window.__pageTiltEnabled) {
+    document.querySelectorAll('.pres-page, .page-card').forEach(card => {
+      setupTiltCardInteractive(card, angleVal, depthVal, sheenVal);
+    });
+  }
+}
+
+function setupTiltCardInteractive(card, maxAngle = 15, depth = 1000, sheen = 'gold') {
+  if (!card) return;
+  card.style.transformStyle = 'preserve-3d';
+  card.style.perspective = depth + 'px';
+  card.style.transition = 'transform 0.1s ease-out, box-shadow 0.2s';
+  
+  let glare = card.querySelector('.tilt-card-glare, #wiz-tilt-glare');
+  if (!glare) {
+    glare = document.createElement('div');
+    glare.className = 'tilt-card-glare';
+    glare.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;opacity:0;transition:opacity 0.25s;border-radius:inherit;z-index:20';
+    card.appendChild(glare);
+  }
+
+  const sheenGradients = {
+    gold: 'radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(245,158,11,0.35), transparent 70%)',
+    cyan: 'radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(56,189,248,0.35), transparent 70%)',
+    violet: 'radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(168,85,247,0.35), transparent 70%)',
+    rainbow: 'radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(244,63,94,0.3), rgba(56,189,248,0.3), rgba(245,158,11,0.2), transparent 70%)'
+  };
+
+  card.onmousemove = (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const pctX = (x / rect.width) * 2 - 1;
+    const pctY = (y / rect.height) * 2 - 1;
+
+    const rotX = -pctY * maxAngle;
+    const rotY = pctX * maxAngle;
+
+    card.style.transform = `perspective(${depth}px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+    glare.style.opacity = '0.7';
+    glare.style.background = sheenGradients[sheen] || sheenGradients.gold;
+    glare.style.setProperty('--gx', `${(x / rect.width * 100).toFixed(1)}%`);
+    glare.style.setProperty('--gy', `${(y / rect.height * 100).toFixed(1)}%`);
+  };
+
+  card.onmouseleave = () => {
+    card.style.transform = `perspective(${depth}px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    card.style.transition = 'transform 0.4s cubic-bezier(0.2,0.8,0.2,1)';
+    glare.style.opacity = '0';
+  };
+}
+
 function toggle3DPerspectiveTilt() {
   window.__pageTiltEnabled = !window.__pageTiltEnabled;
   const status = window.__pageTiltEnabled ? 'ON' : 'OFF';
@@ -4775,14 +5104,26 @@ function toggle3DPerspectiveTilt() {
   const wizBtn = document.getElementById('wiz-tilt-toggle-btn');
   if (wizBtn) wizBtn.textContent = `📐 Toggle 3D Tilt: ${status}`;
 
+  const angle = window.__wizTiltMaxAngle || 15;
+  const depth = window.__wizTiltDepth || 1000;
+  const sheen = window.__wizTiltSheen || 'gold';
+
   document.querySelectorAll('.pres-page, .page-card').forEach(card => {
     if (window.__pageTiltEnabled) {
-      card.style.transform = 'perspective(1200px) rotateX(4deg)';
+      setupTiltCardInteractive(card, angle, depth, sheen);
+      card.style.transform = `perspective(${depth}px) rotateX(3deg)`;
       card.style.transition = 'transform 0.3s cubic-bezier(0.2,0.8,0.2,1)';
     } else {
       card.style.transform = 'none';
+      card.onmousemove = null;
+      card.onmouseleave = null;
+      const gl = card.querySelector('.tilt-card-glare');
+      if (gl) gl.style.opacity = '0';
     }
   });
+  if (typeof showToast === 'function') {
+    showToast(`📐 3D Perspective Tilt toggled ${status}!`, 'ok');
+  }
 }
 
 // 4. In-Page Particle & Water Canvas Simulators
@@ -4907,8 +5248,90 @@ function switchWizParticleMode(mode) {
   initInPageParticleCanvas('wiz-canvas-particles', mode);
 }
 
+function getWizardDynoConfig() {
+  const name = document.getElementById('wiz-dyno-name')?.value?.trim() || 'Quantum GT Hypercar';
+  const bhp = parseInt(document.getElementById('wiz-dyno-bhp')?.value, 10) || 1400;
+  const rpm = parseInt(document.getElementById('wiz-dyno-rpm')?.value, 10) || 9000;
+  const theme = document.getElementById('wiz-dyno-theme')?.value || 'cyan';
+  return { vehicle_name: name, bhp, max_rpm: rpm, theme };
+}
+
+function getWizardWandConfig() {
+  const name = document.getElementById('wiz-wand-name')?.value?.trim() || 'Elder Wand (Phoenix Core)';
+  const spellsStr = document.getElementById('wiz-wand-spells')?.value?.trim() || 'Lumos, Expecto Patronus, Expelliarmus, Incendio, Starlight Shield';
+  const spells = spellsStr.split(',').map(s => s.trim()).filter(Boolean);
+  const aura = document.getElementById('wiz-wand-aura')?.value || 'gold';
+  return { wand_name: name, spells: spells.length ? spells : ['Lumos', 'Expecto Patronus', 'Expelliarmus'], aura };
+}
+
+function getWizardOrbitConfig() {
+  const body = document.getElementById('wiz-orbit-body')?.value || 'earth';
+  const craft = document.getElementById('wiz-orbit-craft')?.value?.trim() || 'Orbital Recon Sat-IV';
+  const alt = parseInt(document.getElementById('wiz-orbit-alt')?.value, 10) || 400;
+  return { body, craft_name: craft, altitude: alt };
+}
+
+function getWizardArrConfig() {
+  const name = document.getElementById('wiz-arr-name')?.value?.trim() || 'CloudScale AI Enterprise';
+  const start = parseInt(document.getElementById('wiz-arr-start')?.value, 10) || 1200000;
+  const growth = parseFloat(document.getElementById('wiz-arr-growth')?.value) || 8;
+  const multiple = parseFloat(document.getElementById('wiz-arr-multiple')?.value) || 18;
+  return { saas_name: name, start_arr: start, growth_rate: growth, multiple };
+}
+
+function getWizardTiltConfig() {
+  const angle = parseInt(document.getElementById('wiz-tilt-angle')?.value, 10) || 15;
+  const depth = parseInt(document.getElementById('wiz-tilt-depth')?.value, 10) || 1000;
+  const sheen = document.getElementById('wiz-tilt-sheen')?.value || 'gold';
+  return { angle, depth, sheen };
+}
+
+function getWizardButtonConfig() {
+  const label = document.getElementById('wiz-btn-label')?.value?.trim() || '💳 Pay with Stripe ($49)';
+  const url = document.getElementById('wiz-btn-url')?.value?.trim() || 'https://buy.stripe.com/demo_checkout';
+  const effect = document.getElementById('wiz-btn-effect')?.value || 'royal_gold';
+  const target = document.getElementById('wiz-btn-target')?.value || '_blank';
+  return { label, url, effect, target };
+}
+
+function getWizardFormConfig() {
+  const title = document.getElementById('wiz-form-title')?.value?.trim() || '⚡ VIP Priority Early Access';
+  const webhook = document.getElementById('wiz-form-webhook')?.value?.trim() || 'https://api.ldocx.internal/leads/webhook';
+  const preset = document.getElementById('wiz-form-preset')?.value || 'standard';
+  const btnStyle = document.getElementById('wiz-form-btn-style')?.value || 'royal_gold';
+  return { title, webhook, preset, btnStyle };
+}
+
+function getFormPresetFields(preset) {
+  if (preset === 'enterprise') {
+    return [
+      { label: 'Executive Name', field_type: 'input_text', placeholder: 'Your Name' },
+      { label: 'Corporate Email', field_type: 'input_email', placeholder: 'executive@enterprise.com' },
+      { label: 'Company / Organization', field_type: 'input_text', placeholder: 'Acme Corp' },
+      { label: 'Direct Phone', field_type: 'input_text', placeholder: '+1 (555) 019-2831' },
+      { label: 'Deployment Scope', field_type: 'input_text', placeholder: 'Seats / Fleet Nodes / Timeline' }
+    ];
+  } else if (preset === 'rsvp') {
+    return [
+      { label: 'Guest Name', field_type: 'input_text', placeholder: 'Attendee Full Name' },
+      { label: 'Guest Count', field_type: 'input_select', placeholder: 'Select party size...', options: ['1 Attendee', '2 Guests (+1 VIP)', '4+ Executive Delegation'] },
+      { label: 'Special Requests & Preferences', field_type: 'input_text', placeholder: 'Dietary, seating, or special clearance' }
+    ];
+  } else if (preset === 'simple') {
+    return [
+      { label: 'Email Address', field_type: 'input_email', placeholder: 'Enter email for instant notification' }
+    ];
+  }
+  return [
+    { label: 'Full Name', field_type: 'input_text', placeholder: 'Enter your full name' },
+    { label: 'Email Address', field_type: 'input_email', placeholder: 'you@company.com' },
+    { label: 'Interest Tier', field_type: 'input_select', placeholder: 'Select tier...', options: ['VIP Investor Pass', 'Developer Early Access', 'Enterprise Fleet License'] }
+  ];
+}
+
 function applyWizardFx(action) {
   const isEditor = (document.getElementById('editor-panel')?.style.display !== 'none') || (window.__activeTab === 'editor');
+  const bId = (typeof edBId === 'function') ? edBId() : ('b_' + Date.now() + Math.random().toString(36).substr(2, 5));
 
   if (isEditor) {
     if (!edPages || edPages.length === 0) {
@@ -4921,53 +5344,111 @@ function applyWizardFx(action) {
     if (action === 'bg_water') {
       curEdPage.fx = 'water';
       setVisualFx('water');
-      showToast('🌊 Applied Fluid Water Waves background to active page!');
+      showToast('🌊 Applied Fluid Water Waves background to active page!', 'ok');
     } else if (action === 'bg_particles') {
       curEdPage.fx = 'particles';
       setVisualFx('stardust');
-      showToast('✨ Applied Cyber Stardust background to active page!');
+      showToast('✨ Applied Cyber Stardust background to active page!', 'ok');
     } else if (action === 'insert_water') {
-      curEdPage.blocks.push({ id: edBId(), type: 'water_effect', title: 'Volumetric Water Waves' });
+      curEdPage.blocks.push({ id: bId, type: 'water_effect', title: 'Volumetric Water Waves' });
       showToast('🌊 Inserted Volumetric Water Waves block into active page!', 'ok');
     } else if (action === 'insert_particles') {
-      curEdPage.blocks.push({ id: edBId(), type: 'particles', value: 'stardust', text: 'Cyber Stardust Particles' });
+      curEdPage.blocks.push({ id: bId, type: 'particles', value: 'stardust', text: 'Cyber Stardust Particles' });
       showToast('✨ Inserted Particle FX block into active page!', 'ok');
     } else if (action === 'insert_dyno') {
+      const dyno = getWizardDynoConfig();
       curEdPage.blocks.push({
-        id: edBId(),
-        type: 'jsx_canvas',
-        title: 'Interactive Simulator Sandbox',
-        code: 'function Widget(){\n  const [val, setVal] = useState(65);\n  return <div style={{padding:16,background:"#0a0f1d",borderRadius:8,color:"#38bdf8",border:"1px solid rgba(56,189,248,0.3)"}}><h4>⚡ Reactive Sandbox</h4><input type="range" min="1" max="100" value={val} onChange={e=>setVal(e.target.value)} style={{width:"100%"}} /><p>Telemetry Output: {val}%</p></div>;\n}'
+        id: bId,
+        type: 'throttle_dyno',
+        vehicle_name: dyno.vehicle_name,
+        bhp: dyno.bhp,
+        max_rpm: dyno.max_rpm,
+        theme: dyno.theme,
+        title: dyno.vehicle_name + ' Telemetry Dyno'
       });
-      showToast('⚡ Inserted Interactive Simulator Sandbox into active page!', 'ok');
-    } else if (action === 'insert_wand' || action === 'insert_orbit' || action === 'insert_arr') {
+      showToast(`🏎️ Inserted Throttle Dyno (${dyno.vehicle_name}) into active page!`, 'ok');
+    } else if (action === 'insert_wand') {
+      const wand = getWizardWandConfig();
       curEdPage.blocks.push({
-        id: edBId(),
-        type: '3d_model',
-        mesh_template: action === 'insert_orbit' ? 'satellite' : 'supercar',
-        material_mode: 'cyber_hologram'
+        id: bId,
+        type: 'spell_matrix',
+        wand_name: wand.wand_name,
+        spells: wand.spells,
+        aura: wand.aura,
+        title: wand.wand_name + ' Arcane Matrix'
       });
-      showToast('📦 Inserted 3D Spatial Hologram Model into active page!', 'ok');
+      showToast(`🪄 Inserted Spell Matrix (${wand.wand_name}) into active page!`, 'ok');
+    } else if (action === 'insert_orbit') {
+      const orbit = getWizardOrbitConfig();
+      curEdPage.blocks.push({
+        id: bId,
+        type: 'orbit_sim',
+        body: orbit.body,
+        craft_name: orbit.craft_name,
+        altitude: orbit.altitude,
+        title: orbit.craft_name + ' Orbital Sim'
+      });
+      showToast(`🛰️ Inserted Orbital Simulator (${orbit.craft_name}) into active page!`, 'ok');
+    } else if (action === 'insert_arr') {
+      const arr = getWizardArrConfig();
+      curEdPage.blocks.push({
+        id: bId,
+        type: 'arr_projector',
+        saas_name: arr.saas_name,
+        start_arr: arr.start_arr,
+        growth_rate: arr.growth_rate,
+        multiple: arr.multiple,
+        title: arr.saas_name + ' ARR & Valuation Projector'
+      });
+      showToast(`📈 Inserted ARR Projector (${arr.saas_name}) into active page!`, 'ok');
+    } else if (action === 'insert_tilt_card') {
+      const tilt = getWizardTiltConfig();
+      curEdPage.blocks.push({
+        id: bId,
+        type: 'tilt_card',
+        title: 'Living 3D Depth Field',
+        angle: tilt.angle,
+        depth: tilt.depth,
+        sheen: tilt.sheen,
+        text: 'Dynamic tactile 3D perspective with cursor-tracked holographic glare.'
+      });
+      showToast('📐 Inserted 3D Tilt Card into active page!', 'ok');
     } else if (action === 'insert_stripe_button') {
+      const btn = getWizardButtonConfig();
       curEdPage.blocks.push({
-        id: edBId(),
+        id: bId,
         type: 'button',
-        value: 'Unlock Living License ($29)',
-        action: 'submit',
-        target: 'checkout'
+        value: btn.label,
+        target: btn.url,
+        target_window: btn.target,
+        style: {
+          action: 'link',
+          target: btn.url,
+          btn_style: btn.effect,
+          new_tab: btn.target === '_blank'
+        }
       });
-      showToast('💎 Inserted Living Checkout Button into active page!', 'ok');
+      showToast(`💳 Inserted Custom Button (${btn.label}) into active page!`, 'ok');
     } else if (action === 'insert_smart_form') {
+      const formCfg = getWizardFormConfig();
+      const fields = getFormPresetFields(formCfg.preset);
       curEdPage.blocks.push({
-        id: edBId(),
+        id: bId,
         type: 'form',
-        title: 'Interactive Feedback Form',
-        fields: [
-          { label: 'Full Name', field_type: 'input_text', placeholder: 'Enter your name' },
-          { label: 'Email Address', field_type: 'input_text', placeholder: 'name@company.com' }
-        ]
+        title: formCfg.title,
+        webhook_url: formCfg.webhook,
+        btn_style: formCfg.btnStyle,
+        preset: formCfg.preset,
+        fields: fields,
+        children: fields.map(f => ({
+          id: (typeof edBId === 'function') ? edBId() : ('f_' + Math.random().toString(36).substr(2, 5)),
+          type: f.field_type,
+          label: f.label,
+          placeholder: f.placeholder,
+          options: f.options
+        }))
       });
-      showToast('📑 Inserted Lead Form into active page!', 'ok');
+      showToast(`📑 Inserted Webhook Form (${formCfg.title}) into active page!`, 'ok');
     }
 
     if (typeof edRenderBlocks === 'function') edRenderBlocks();
@@ -4978,6 +5459,7 @@ function applyWizardFx(action) {
   // Viewer mode fallback
   const curPage = pages.find(p => p.number === currentPage || p.id === currentPage) || pages[0];
   if (!curPage) return;
+  curPage.blocks = curPage.blocks || [];
 
   if (action === 'bg_water') {
     curPage.fx = 'water';
@@ -4986,31 +5468,99 @@ function applyWizardFx(action) {
     curPage.fx = 'particles';
     setVisualFx('stardust');
   } else if (action === 'insert_water') {
-    curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'water_effect', title: 'Volumetric Water Waves' });
-    if (typeof renderPages === 'function') renderPages();
+    curPage.blocks.push({ id: bId, type: 'water_effect', title: 'Volumetric Water Waves' });
   } else if (action === 'insert_particles') {
-    curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'particles', value: 'stardust', text: 'Cyber Stardust Block' });
-    if (typeof renderPages === 'function') renderPages();
+    curPage.blocks.push({ id: bId, type: 'particles', value: 'stardust', text: 'Cyber Stardust Block' });
   } else if (action === 'insert_dyno') {
-    curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'jsx_canvas', title: 'Interactive Simulator', code: 'function Widget(){\n  return <div style={{padding:12,color:"#38bdf8"}}>⚡ Live Reactive Sandbox</div>;\n}' });
-    if (typeof renderPages === 'function') renderPages();
-  } else if (action === 'insert_wand' || action === 'insert_orbit' || action === 'insert_arr') {
-    curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: '3d_model', mesh_template: 'supercar', material_mode: 'cyber_hologram' });
-    if (typeof renderPages === 'function') renderPages();
+    const dyno = getWizardDynoConfig();
+    curPage.blocks.push({
+      id: bId,
+      type: 'throttle_dyno',
+      vehicle_name: dyno.vehicle_name,
+      bhp: dyno.bhp,
+      max_rpm: dyno.max_rpm,
+      theme: dyno.theme,
+      title: dyno.vehicle_name + ' Telemetry Dyno'
+    });
+  } else if (action === 'insert_wand') {
+    const wand = getWizardWandConfig();
+    curPage.blocks.push({
+      id: bId,
+      type: 'spell_matrix',
+      wand_name: wand.wand_name,
+      spells: wand.spells,
+      aura: wand.aura,
+      title: wand.wand_name + ' Arcane Matrix'
+    });
+  } else if (action === 'insert_orbit') {
+    const orbit = getWizardOrbitConfig();
+    curPage.blocks.push({
+      id: bId,
+      type: 'orbit_sim',
+      body: orbit.body,
+      craft_name: orbit.craft_name,
+      altitude: orbit.altitude,
+      title: orbit.craft_name + ' Orbital Sim'
+    });
+  } else if (action === 'insert_arr') {
+    const arr = getWizardArrConfig();
+    curPage.blocks.push({
+      id: bId,
+      type: 'arr_projector',
+      saas_name: arr.saas_name,
+      start_arr: arr.start_arr,
+      growth_rate: arr.growth_rate,
+      multiple: arr.multiple,
+      title: arr.saas_name + ' ARR & Valuation Projector'
+    });
+  } else if (action === 'insert_tilt_card') {
+    const tilt = getWizardTiltConfig();
+    curPage.blocks.push({
+      id: bId,
+      type: 'tilt_card',
+      title: 'Living 3D Depth Field',
+      angle: tilt.angle,
+      depth: tilt.depth,
+      sheen: tilt.sheen,
+      text: 'Dynamic tactile 3D perspective with cursor-tracked holographic glare.'
+    });
   } else if (action === 'insert_stripe_button') {
-    curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'button', value: 'Unlock Living License ($29)', action: 'submit' });
-    if (typeof renderPages === 'function') renderPages();
+    const btn = getWizardButtonConfig();
+    curPage.blocks.push({
+      id: bId,
+      type: 'button',
+      value: btn.label,
+      target: btn.url,
+      target_window: btn.target,
+      style: {
+        action: 'link',
+        target: btn.url,
+        btn_style: btn.effect,
+        new_tab: btn.target === '_blank'
+      }
+    });
   } else if (action === 'insert_smart_form') {
-    curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'form', title: 'Interactive Feedback & Lead Form' });
-    if (typeof renderPages === 'function') renderPages();
+    const formCfg = getWizardFormConfig();
+    const fields = getFormPresetFields(formCfg.preset);
+    curPage.blocks.push({
+      id: bId,
+      type: 'form',
+      title: formCfg.title,
+      webhook_url: formCfg.webhook,
+      btn_style: formCfg.btnStyle,
+      preset: formCfg.preset,
+      fields: fields,
+      children: fields.map(f => ({
+        id: 'f_' + Date.now() + Math.random().toString(36).substr(2, 5),
+        type: f.field_type,
+        label: f.label,
+        placeholder: f.placeholder,
+        options: f.options
+      }))
+    });
   }
 
+  if (typeof renderPages === 'function') renderPages();
   showToast(`Applied ${action.replace(/_/g, ' ').toUpperCase()} to active slide!`);
 }
 
@@ -10081,11 +10631,21 @@ function renderBlockNode(node,parent){
       const form=document.createElement('form');form.className='pres-form';
       const formId=node.id||('form-'+Math.random().toString(36).slice(2));
       form.dataset.formId=formId;
-            form.onsubmit = async e => {
+      const webhookUrl = node.webhook_url || (node.style && node.style.webhook_url) || '';
+
+      if (node.title) {
+        const hdr = document.createElement('div');
+        hdr.className = 'pres-form-title';
+        hdr.style.cssText = 'font-family:Cinzel,serif;font-size:15px;font-weight:800;color:var(--gold);margin-bottom:14px;letter-spacing:.5px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px';
+        hdr.innerHTML = `<span>${escapeHtml(node.title)}</span>${webhookUrl ? `<span style="font-size:10px;font-family:monospace;color:#34d399;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);padding:2px 8px;border-radius:6px">Webhook Linked</span>` : ''}`;
+        form.appendChild(hdr);
+      }
+
+      form.onsubmit = async e => {
         e.preventDefault();
         const data = {};
         form.querySelectorAll('input,select,textarea').forEach(el => {
-          const key = el.name || el.placeholder || el.id || 'field';
+          const key = el.name || el.dataset.label || el.placeholder || el.id || 'field';
           data[key] = el.type === 'checkbox' ? el.checked : el.value;
         });
 
@@ -10094,8 +10654,29 @@ function renderBlockNode(node,parent){
         if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; }
 
         try {
+          let dispatched = false;
+          // 1. Direct Webhook Dispatch
+          if (webhookUrl && (webhookUrl.startsWith('http://') || webhookUrl.startsWith('https://'))) {
+            try {
+              await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  timestamp: new Date().toISOString(),
+                  form_id: formId,
+                  form_title: node.title || 'Webhook Form',
+                  data: data
+                }),
+                mode: 'no-cors'
+              });
+              dispatched = true;
+            } catch (wErr) {
+              console.warn('Webhook dispatch attempt:', wErr);
+            }
+          }
+
           let j = null;
-          // 1. Try local daemon endpoint if available
+          // 2. Try local daemon endpoint if available
           if (typeof docId !== 'undefined' && docId) {
             try {
               const res = await fetch(`${API}/documents/${docId}/forms/${formId}/submit`, {
@@ -10103,46 +10684,63 @@ function renderBlockNode(node,parent){
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
               });
-              if (res.ok) j = await res.json();
+              if (res.ok) { j = await res.json(); dispatched = true; }
             } catch (err) { j = null; }
           }
 
-          // 2. Dispatch to Enterprise VIP Lead Capture & Routing Engine
-          if (!j || !j.ok) {
-            const leadPayload = {
-              name: data.name || data.Name || data['Full Name'] || data['Your Name'] || 'VIP Collector',
-              email: data.email || data.Email || data['Email Address'] || data['Your Email'] || '',
-              tier: data.tier || data.Tier || data['Interest Tier'] || 'Founder VIP Reservation',
-              platform: data.platform || data.Platform || 'Windows 11 / macOS / Linux / Web',
-              message: JSON.stringify(data)
-            };
-            const leadRes = await fetch('/api/leads/capture', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(leadPayload)
-            });
-            j = await leadRes.json();
+          // 3. Fallback to lead capture
+          if (!dispatched && (!j || !j.ok)) {
+            try {
+              const leadPayload = {
+                name: data.name || data.Name || data['Full Name'] || data['Your Name'] || data['Executive Name'] || 'Lead Submitter',
+                email: data.email || data.Email || data['Email Address'] || data['Corporate Email'] || '',
+                tier: data.tier || data.Tier || data['Interest Tier'] || 'VIP Early Access',
+                platform: 'Windows 11 / Web Living Studio',
+                message: JSON.stringify(data)
+              };
+              const leadRes = await fetch('/api/leads/capture', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(leadPayload)
+              });
+              j = await leadRes.json();
+            } catch (lErr) {}
           }
 
-          if (j && (j.ok || j.status === 'captured_and_routed')) {
-            const ok = document.createElement('div');
-            ok.style.cssText = 'color:#34d399;font-size:13px;font-weight:700;padding:8px 0';
-            ok.textContent = '✓ ' + (j.confirmation_message || j.message || 'VIP Priority Reservation Confirmed!');
-            form.appendChild(ok);
-            setTimeout(() => ok.remove(), 4000);
-          } else {
-            showToast('Submission notice: ' + ((j && j.error) || 'Submission processed!'));
-          }
+          const ok = document.createElement('div');
+          ok.className = 'pres-form-success';
+          ok.style.cssText = 'color:#34d399;font-size:12.5px;font-weight:700;padding:10px 14px;margin-top:10px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);border-radius:8px;text-align:center';
+          ok.textContent = webhookUrl 
+            ? `✓ Dispatched directly to webhook (${webhookUrl.length > 35 ? webhookUrl.slice(0, 35) + '…' : webhookUrl})!`
+            : '✓ Form Submitted Successfully!';
+          form.appendChild(ok);
+          setTimeout(() => ok.remove(), 4500);
         } catch (err) {
           showToast('Submission error: ' + err.message, 'err');
         } finally {
           if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origText; }
         }
       };
-      (node.children||[]).forEach(field=>renderBlockNode(field,form));
-      // Add submit button if none present
+
+      const fList = (node.children && node.children.length) ? node.children : (node.fields || []);
+      fList.forEach(field => renderBlockNode(field, form));
+
       const hasbtn=form.querySelector('.pres-btn');
-      if(!hasbtn){const btn=document.createElement('button');btn.type='submit';btn.className='pres-btn';btn.textContent='Submit';form.appendChild(btn);}
+      if(!hasbtn){
+        const btn=document.createElement('button');
+        btn.type='submit';
+        const st = node.btn_style || 'royal_gold';
+        let styleClass = ' style-royal-gold';
+        if (st === 'neon_cyan') styleClass = ' style-neon-cyan';
+        else if (st === 'purple_nebula') styleClass = ' style-purple-nebula';
+        else if (st === 'glass_hologram') styleClass = ' style-glass-hologram';
+        else if (st === 'tactile_3d') styleClass = ' style-tactile-3d';
+        else if (st === 'fluid_ripple') styleClass = ' style-fluid-ripple';
+        btn.className='pres-btn' + styleClass;
+        btn.style.marginTop = '12px';
+        btn.textContent='⚡ Submit';
+        form.appendChild(btn);
+      }
       parent.appendChild(form);break;
     }
     case 'input_text':{
@@ -10174,6 +10772,13 @@ function renderBlockNode(node,parent){
       const l=document.createElement('label');l.textContent=nodeLabel(node);
       const s=document.createElement('select');
       const ph=nodePH(node);if(ph){const o=document.createElement('option');o.textContent=ph;o.disabled=true;o.selected=true;s.appendChild(o);}
+      const opts = node.options || (node.style && node.style.options) || [];
+      opts.forEach(opt => {
+        const o = document.createElement('option');
+        o.value = typeof opt === 'string' ? opt : (opt.value || opt.label);
+        o.textContent = typeof opt === 'string' ? opt : (opt.label || opt.value);
+        s.appendChild(o);
+      });
       w.appendChild(l);w.appendChild(s);parent.appendChild(w);break;
     }
     case 'input_date':{
@@ -10191,10 +10796,14 @@ function renderBlockNode(node,parent){
     case 'button':{
       const btn=document.createElement('button');
       const st=node.style||{};
+      const effect = st.btn_style || node.btn_style || node.effect || '';
       let styleClass = '';
-      if(st.btn_style==='neon_cyan') styleClass=' style-neon-cyan';
-      else if(st.btn_style==='royal_gold') styleClass=' style-royal-gold';
-      else if(st.btn_style==='purple_nebula') styleClass=' style-purple-nebula';
+      if(effect==='neon_cyan') styleClass=' style-neon-cyan';
+      else if(effect==='royal_gold') styleClass=' style-royal-gold';
+      else if(effect==='purple_nebula') styleClass=' style-purple-nebula';
+      else if(effect==='glass_hologram') styleClass=' style-glass-hologram';
+      else if(effect==='tactile_3d') styleClass=' style-tactile-3d';
+      else if(effect==='fluid_ripple') styleClass=' style-fluid-ripple';
       else if(st.action==='navigate') styleClass=' secondary';
       
       btn.className='pres-btn'+styleClass;
@@ -10202,14 +10811,15 @@ function renderBlockNode(node,parent){
       
       // Smart action execution (Links, Stripe Payment, Webhooks, Navigation)
       btn.onclick=()=>{
-        const target = (st.target||'').trim();
-        const isUrl = target.startsWith('http://') || target.startsWith('https://');
+        const target = (node.target || st.target || node.url || st.url || '').trim();
+        const isUrl = target.startsWith('http://') || target.startsWith('https://') || target.startsWith('//');
+        const targetWindow = node.target_window || (st.new_tab === false ? '_self' : '_blank');
         
         if (st.action==='link' || st.action==='external_url' || isUrl) {
           if (isUrl) {
-            window.open(target, st.new_tab !== false ? '_blank' : '_self');
+            window.open(target, targetWindow);
           } else {
-            showToast('🔗 External Link: ' + (target || 'No target configured'));
+            showToast('🔗 Action Link: ' + (target || 'No target configured'));
           }
         } else if(st.action==='navigate'){
           const idx=pages.findIndex(p=>p.number===currentPage);
@@ -10222,7 +10832,7 @@ function renderBlockNode(node,parent){
           if(form) form.requestSubmit();
           else showToast('✓ Action Executed Successfully', 'ok');
         } else {
-          if (isUrl) window.open(target, '_blank');
+          if (isUrl) window.open(target, targetWindow);
           else showToast('⚡ Action: ' + (node.value || 'Clicked'));
         }
       };
@@ -10633,8 +11243,795 @@ ${escapeHtml(rawCode)}
       setTimeout(() => initInPageParticleCanvas(cid, mode), 60);
       break;
     }
+    case 'throttle_dyno':case 'dyno_sandbox':{
+      renderThrottleDyno(node, parent);
+      break;
+    }
+    case 'spell_matrix':{
+      renderSpellMatrix(node, parent);
+      break;
+    }
+    case 'orbit_sim':{
+      renderOrbitSim(node, parent);
+      break;
+    }
+    case 'arr_projector':{
+      renderArrProjector(node, parent);
+      break;
+    }
+    case 'tilt_card':{
+      renderTiltCard(node, parent);
+      break;
+    }
     default:{if(node.children&&node.children.length)(node.children||[]).forEach(c=>renderBlockNode(c,parent));break;}
   }
+}
+
+// ── Interactive Reactive Sandbox Renderers ──
+function renderThrottleDyno(node, parent) {
+  const vName = node.vehicle_name || node.title || 'Quantum GT Hypercar';
+  const bhp = parseInt(node.bhp, 10) || 1400;
+  const maxRpm = parseInt(node.max_rpm, 10) || 9000;
+  const theme = node.theme || 'cyan';
+  const uid = 'dyno-' + Math.random().toString(36).substr(2, 8);
+
+  const themeColors = {
+    cyan: { text: '#38bdf8', hex: '#0284c7', glow: 'rgba(56,189,248,0.5)', grad: 'linear-gradient(135deg, #38bdf8, #0284c7)' },
+    gold: { text: '#f59e0b', hex: '#d97706', glow: 'rgba(245,158,11,0.5)', grad: 'linear-gradient(135deg, #f59e0b, #d97706)' },
+    crimson: { text: '#ef4444', hex: '#dc2626', glow: 'rgba(239,68,68,0.5)', grad: 'linear-gradient(135deg, #ef4444, #dc2626)' },
+    emerald: { text: '#10b981', hex: '#059669', glow: 'rgba(16,185,129,0.5)', grad: 'linear-gradient(135deg, #10b981, #059669)' }
+  };
+  const th = themeColors[theme] || themeColors.cyan;
+
+  const card = document.createElement('div');
+  card.className = 'telemetry-card dyno-sandbox-card';
+  card.id = uid;
+  card.style.cssText = `border-color: ${th.glow};`;
+
+  card.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="dyno-status-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#10b981;box-shadow:0 0 10px #10b981;animation:beaconPulse 1.2s infinite"></span>
+        <strong style="font-family:'Cinzel',serif;font-size:15px;color:${th.text};letter-spacing:1px">🏎️ ${escapeHtml(vName)}</strong>
+        <span class="dyno-gear-badge" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:2px 8px;border-radius:6px;font-family:monospace;font-size:11px;font-weight:700;color:#fef08a">GEAR 1</span>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button type="button" class="dyno-btn-rev find-btn" style="padding:4px 10px;font-size:11px">🏎️ Rev</button>
+        <button type="button" class="dyno-btn-launch find-btn" style="padding:4px 12px;font-size:11px;font-weight:800;background:${th.grad};color:#000;border:none">⚡ Launch</button>
+      </div>
+    </div>
+    <div style="position:relative;display:flex;justify-content:center;margin:6px 0">
+      <canvas class="dyno-canvas" width="340" height="200" style="width:340px;height:200px;display:block"></canvas>
+      <div style="position:absolute;bottom:14px;text-align:center">
+        <div class="dyno-val-speed" style="font-size:32px;font-weight:900;font-family:monospace;color:#fff;line-height:1">0</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase">KM / H</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px;margin:10px 0">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">RPM</div>
+        <div class="dyno-val-rpm" style="font-size:15px;font-weight:800;color:${th.text};font-family:monospace">950</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Torque</div>
+        <div class="dyno-val-torque" style="font-size:15px;font-weight:800;color:#fef08a;font-family:monospace">0 ft-lb</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Power</div>
+        <div class="dyno-val-hp" style="font-size:15px;font-weight:800;color:#34d399;font-family:monospace">0 HP</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">G-Force</div>
+        <div class="dyno-val-gforce" style="font-size:15px;font-weight:800;color:#f43f5e;font-family:monospace">0.05G</div>
+      </div>
+    </div>
+    <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:11px;font-weight:700;color:var(--text2)">⚡ Throttle Actuator Position</span>
+        <span class="dyno-throttle-val" style="font-size:12px;font-weight:800;color:${th.text};font-family:monospace">25%</span>
+      </div>
+      <input type="range" class="dyno-throttle-slider" min="0" max="100" value="25" style="width:100%;accent-color:${th.text};cursor:pointer">
+    </div>
+  `;
+  parent.appendChild(card);
+  setTimeout(() => initDynoWidget(card, { vName, bhp, maxRpm, th }), 50);
+}
+
+function initDynoWidget(card, cfg) {
+  if (!card) return;
+  const canvas = card.querySelector('.dyno-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const maxRpm = cfg.maxRpm || 9000;
+  const bhp = cfg.bhp || 1400;
+  const th = cfg.th;
+
+  let currentThrottle = 25;
+  let targetThrottle = 25;
+  let rpm = 950;
+  let speed = 0;
+  let gear = 1;
+  let isLaunching = false;
+
+  const slider = card.querySelector('.dyno-throttle-slider');
+  const throttleValEl = card.querySelector('.dyno-throttle-val');
+  const speedEl = card.querySelector('.dyno-val-speed');
+  const rpmEl = card.querySelector('.dyno-val-rpm');
+  const torqueEl = card.querySelector('.dyno-val-torque');
+  const hpEl = card.querySelector('.dyno-val-hp');
+  const gforceEl = card.querySelector('.dyno-val-gforce');
+  const gearBadge = card.querySelector('.dyno-gear-badge');
+  const statusDot = card.querySelector('.dyno-status-dot');
+
+  if (slider) {
+    slider.oninput = () => {
+      targetThrottle = parseInt(slider.value, 10);
+      if (throttleValEl) throttleValEl.textContent = targetThrottle + '%';
+    };
+  }
+
+  const revBtn = card.querySelector('.dyno-btn-rev');
+  if (revBtn) {
+    revBtn.onclick = () => {
+      targetThrottle = 95;
+      if (slider) slider.value = 95;
+      if (throttleValEl) throttleValEl.textContent = '95%';
+      setTimeout(() => {
+        targetThrottle = 25;
+        if (slider) slider.value = 25;
+        if (throttleValEl) throttleValEl.textContent = '25%';
+      }, 750);
+    };
+  }
+
+  const launchBtn = card.querySelector('.dyno-btn-launch');
+  if (launchBtn) {
+    launchBtn.onclick = () => {
+      isLaunching = true;
+      targetThrottle = 100;
+      if (slider) slider.value = 100;
+      if (throttleValEl) throttleValEl.textContent = '100% (LAUNCH)';
+      if (statusDot) { statusDot.style.background = '#ef4444'; statusDot.style.boxShadow = '0 0 14px #ef4444'; }
+      setTimeout(() => {
+        isLaunching = false;
+        targetThrottle = 35;
+        if (slider) slider.value = 35;
+        if (throttleValEl) throttleValEl.textContent = '35%';
+        if (statusDot) { statusDot.style.background = '#10b981'; statusDot.style.boxShadow = '0 0 10px #10b981'; }
+      }, 3500);
+    };
+  }
+
+  function loop() {
+    if (!document.body.contains(card)) return;
+
+    currentThrottle += (targetThrottle - currentThrottle) * 0.12;
+    const idleRpm = 950;
+    const targetRpm = idleRpm + (maxRpm - idleRpm) * (currentThrottle / 100);
+    rpm += (targetRpm - rpm) * 0.08;
+
+    const topSpeed = Math.round((bhp / 1400) * 440);
+    const targetSpeed = Math.round(topSpeed * (currentThrottle / 100));
+    speed += (targetSpeed - speed) * 0.04;
+
+    if (speed < 40) gear = 1;
+    else if (speed < 90) gear = 2;
+    else if (speed < 155) gear = 3;
+    else if (speed < 225) gear = 4;
+    else if (speed < 305) gear = 5;
+    else if (speed < 380) gear = 6;
+    else gear = 7;
+
+    const torque = Math.round((bhp * 5252) / Math.max(rpm, 1200));
+    const currentHp = Math.round((torque * rpm) / 5252);
+    const gForce = (0.05 + (currentThrottle / 100) * (isLaunching ? 2.4 : 1.65)).toFixed(2);
+
+    if (speedEl) speedEl.textContent = Math.round(speed);
+    if (rpmEl) rpmEl.textContent = Math.round(rpm);
+    if (torqueEl) torqueEl.textContent = torque + ' ft-lb';
+    if (hpEl) hpEl.textContent = currentHp + ' HP';
+    if (gforceEl) gforceEl.textContent = gForce + 'G';
+    if (gearBadge) gearBadge.textContent = 'GEAR ' + gear;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const cx = canvas.width / 2;
+    const cy = 160;
+    const r = 110;
+    const startAngle = Math.PI * 0.75;
+    const endAngle = Math.PI * 2.25;
+    const totalSweep = endAngle - startAngle;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, startAngle, endAngle);
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 14;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, startAngle + totalSweep * 0.8, endAngle);
+    ctx.strokeStyle = 'rgba(239,68,68,0.3)';
+    ctx.lineWidth = 14;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    const pct = Math.min(Math.max((rpm - idleRpm) / (maxRpm - idleRpm), 0), 1);
+    const currentSweepAngle = startAngle + totalSweep * pct;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, startAngle, currentSweepAngle);
+    ctx.strokeStyle = pct > 0.8 ? '#ef4444' : th.hex;
+    ctx.lineWidth = 14;
+    ctx.lineCap = 'round';
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = pct > 0.8 ? '#ef4444' : th.glow;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    const needleLen = r - 15;
+    const nx = cx + Math.cos(currentSweepAngle) * needleLen;
+    const ny = cy + Math.sin(currentSweepAngle) * needleLen;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(nx, ny);
+    ctx.strokeStyle = pct > 0.8 ? '#fca5a5' : '#ffffff';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+    ctx.fillStyle = pct > 0.8 ? '#ef4444' : th.hex;
+    ctx.fill();
+
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+function renderSpellMatrix(node, parent) {
+  const wName = node.wand_name || node.title || 'Elder Wand (Phoenix Core)';
+  const spells = Array.isArray(node.spells) ? node.spells : (typeof node.spells === 'string' ? node.spells.split(',').map(s => s.trim()).filter(Boolean) : ['Lumos', 'Expecto Patronus', 'Expelliarmus', 'Incendio', 'Starlight Shield']);
+  const aura = node.aura || 'gold';
+  const uid = 'spell-' + Math.random().toString(36).substr(2, 8);
+
+  const auraThemes = {
+    gold: { text: '#f59e0b', hex: '#d97706', glow: 'rgba(245,158,11,0.5)', particle: '#fde047' },
+    cyan: { text: '#38bdf8', hex: '#0284c7', glow: 'rgba(56,189,248,0.5)', particle: '#7dd3fc' },
+    violet: { text: '#a855f7', hex: '#7c3aed', glow: 'rgba(168,85,247,0.5)', particle: '#e9d5ff' },
+    emerald: { text: '#10b981', hex: '#059669', glow: 'rgba(16,185,129,0.5)', particle: '#6ee7b7' }
+  };
+  const ath = auraThemes[aura] || auraThemes.gold;
+
+  const card = document.createElement('div');
+  card.className = 'telemetry-card spell-matrix-card';
+  card.id = uid;
+  card.style.cssText = `border-color: ${ath.glow};`;
+
+  card.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">🪄</span>
+        <strong style="font-family:'Cinzel',serif;font-size:15px;color:${ath.text};letter-spacing:1px">${escapeHtml(wName)}</strong>
+        <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px">Arcane Matrix</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:var(--text3);font-family:monospace">MANA:</span>
+        <div style="width:100px;height:10px;background:rgba(255,255,255,0.08);border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,0.15)">
+          <div class="spell-mana-bar" style="width:100%;height:100%;background:linear-gradient(90deg, ${ath.hex}, ${ath.text});transition:width 0.3s"></div>
+        </div>
+        <span class="spell-mana-text" style="font-size:11px;font-weight:800;color:${ath.text};font-family:monospace">100 / 100</span>
+      </div>
+    </div>
+    <div style="position:relative;margin:10px 0">
+      <canvas class="spell-canvas" width="400" height="150" style="width:100%;max-width:400px;height:150px;display:block;margin:0 auto;border-radius:10px;background:radial-gradient(circle at 50% 50%, #0d0f1f, #05060c)"></canvas>
+    </div>
+    <div style="margin:12px 0">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Select Arcane Incantation to Cast:</div>
+      <div class="spell-buttons-grid" style="display:flex;flex-wrap:wrap;gap:8px">
+        ${spells.map(s => `
+          <button type="button" class="find-btn spell-cast-btn" data-spell="${escapeHtml(s)}" style="padding:6px 14px;font-size:11.5px;font-weight:700;border-color:${ath.glow};color:#fff;background:rgba(255,255,255,0.05);border-radius:8px;cursor:pointer">
+            ✨ ${escapeHtml(s)}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 12px;font-family:monospace;font-size:11px">
+      <span style="color:var(--text3)">AURA RESONANCE LOG:</span>
+      <div class="spell-log-text" style="color:${ath.text};margin-top:2px">Wand attuned. Core harmonic resonance ready for invocation.</div>
+    </div>
+  `;
+  parent.appendChild(card);
+  setTimeout(() => initSpellMatrixWidget(card, { wName, spells, ath }), 50);
+}
+
+function initSpellMatrixWidget(card, cfg) {
+  if (!card) return;
+  const canvas = card.querySelector('.spell-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const ath = cfg.ath;
+  let mana = 100;
+  const maxMana = 100;
+  const particles = [];
+  let ringRotation = 0;
+
+  const manaBar = card.querySelector('.spell-mana-bar');
+  const manaText = card.querySelector('.spell-mana-text');
+  const logText = card.querySelector('.spell-log-text');
+
+  card.querySelectorAll('.spell-cast-btn').forEach(btn => {
+    btn.onclick = () => {
+      const spellName = btn.dataset.spell || btn.textContent.trim();
+      const manaCost = 15 + Math.floor(Math.random() * 15);
+      if (mana < manaCost) {
+        if (logText) logText.innerHTML = `<span style="color:#ef4444">⚠️ Insufficient Mana to invoke ${escapeHtml(spellName)} (Requires ${manaCost} MP). Regenerating...</span>`;
+        return;
+      }
+      mana = Math.max(0, mana - manaCost);
+      if (manaBar) manaBar.style.width = (mana / maxMana * 100) + '%';
+      if (manaText) manaText.textContent = `${Math.round(mana)} / ${maxMana}`;
+
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      for (let i = 0; i < 45; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const spd = Math.random() * 5 + 2;
+        particles.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * spd,
+          vy: Math.sin(angle) * spd,
+          radius: Math.random() * 3 + 1.5,
+          color: ath.particle,
+          alpha: 1,
+          life: 1
+        });
+      }
+
+      particles.push({
+        x: cx,
+        y: cy,
+        isRing: true,
+        r: 5,
+        maxR: 90,
+        alpha: 1,
+        color: ath.text
+      });
+
+      if (logText) {
+        logText.innerHTML = `⚡ <strong>${escapeHtml(spellName)}</strong> invoked! Consumed <span style="color:#fef08a">${manaCost} MP</span>. Arcane particle harmonic resonance: <span style="color:${ath.text}">${(Math.random() * 400 + 400).toFixed(1)} THz</span>.`;
+      }
+    };
+  });
+
+  let lastTime = performance.now();
+  function loop(now) {
+    if (!document.body.contains(card)) return;
+    const dt = (now - lastTime) / 1000;
+    lastTime = now;
+
+    if (mana < maxMana) {
+      mana = Math.min(maxMana, mana + dt * 5);
+      if (manaBar) manaBar.style.width = (mana / maxMana * 100) + '%';
+      if (manaText) manaText.textContent = `${Math.round(mana)} / ${maxMana}`;
+    }
+
+    ctx.fillStyle = 'rgba(5, 6, 12, 0.25)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    ringRotation += 0.015;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(ringRotation);
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 48, 0, Math.PI * 2);
+    ctx.strokeStyle = ath.glow;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 36, 0, Math.PI * 2);
+    ctx.setLineDash([4, 6]);
+    ctx.strokeStyle = ath.text;
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const a = (i * Math.PI) / 3;
+      const x = Math.cos(a) * 36;
+      const y = Math.sin(a) * 36;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.stroke();
+    ctx.restore();
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      if (p.isRing) {
+        p.r += 3.5;
+        p.alpha -= 0.04;
+        if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = 2.5;
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      } else {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.025;
+        if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+
+function renderOrbitSim(node, parent) {
+  const craftName = node.craft_name || node.title || 'Orbital Recon Sat-IV';
+  const bodyKey = node.body || 'earth';
+  const alt = parseInt(node.altitude, 10) || 400;
+  const uid = 'orbit-' + Math.random().toString(36).substr(2, 8);
+
+  const bodies = {
+    earth: { name: 'Earth', r: 6371, mu: 398600.44, color: '#38bdf8', glow: 'rgba(56,189,248,0.5)', icon: '🌍' },
+    mars: { name: 'Mars', r: 3390, mu: 42828, color: '#ef4444', glow: 'rgba(239,68,68,0.5)', icon: '🔴' },
+    moon: { name: 'Moon', r: 1737, mu: 4902.8, color: '#cbd5e1', glow: 'rgba(203,213,225,0.3)', icon: '⚪' },
+    jupiter: { name: 'Jupiter', r: 69911, mu: 126686534, color: '#f59e0b', glow: 'rgba(245,158,11,0.5)', icon: '🪐' },
+    blackhole: { name: 'Singularity X-1', r: 3000, mu: 85000000, color: '#a855f7', glow: 'rgba(168,85,247,0.7)', icon: '🕳️' }
+  };
+  const bd = bodies[bodyKey] || bodies.earth;
+
+  const card = document.createElement('div');
+  card.className = 'telemetry-card orbit-sim-card';
+  card.id = uid;
+  card.style.cssText = `border-color: ${bd.glow};`;
+
+  card.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">🛰️</span>
+        <strong style="font-family:'Cinzel',serif;font-size:15px;color:${bd.color};letter-spacing:1px">${escapeHtml(craftName)}</strong>
+        <span style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:2px 8px;border-radius:6px;font-family:monospace;font-size:11px;color:#fef08a">${bd.icon} ${bd.name} Orbit</span>
+      </div>
+      <div style="font-size:11px;font-family:monospace;color:#34d399">● ORBITAL TELEMETRY SYNCED</div>
+    </div>
+    <div style="position:relative;margin:10px 0;text-align:center">
+      <canvas class="orbit-canvas" width="360" height="220" style="width:100%;max-width:360px;height:220px;display:block;margin:0 auto;border-radius:12px;background:#03050c"></canvas>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px;margin:12px 0">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Velocity (v)</div>
+        <div class="orbit-val-vel" style="font-size:14px;font-weight:800;color:${bd.color};font-family:monospace">7.67 km/s</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Escape (vesc)</div>
+        <div class="orbit-val-esc" style="font-size:14px;font-weight:800;color:#fef08a;font-family:monospace">10.85 km/s</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Period (T)</div>
+        <div class="orbit-val-period" style="font-size:14px;font-weight:800;color:#34d399;font-family:monospace">92.4 min</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Gravity (g)</div>
+        <div class="orbit-val-g" style="font-size:14px;font-weight:800;color:#f43f5e;font-family:monospace">8.69 m/s²</div>
+      </div>
+    </div>
+    <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:11px;font-weight:700;color:var(--text2)">🛰️ Orbital Altitude (h)</span>
+        <span class="orbit-alt-val" style="font-size:12px;font-weight:800;color:${bd.color};font-family:monospace">${alt} km</span>
+      </div>
+      <input type="range" class="orbit-alt-slider" min="100" max="40000" value="${alt}" style="width:100%;accent-color:${bd.color};cursor:pointer">
+    </div>
+  `;
+  parent.appendChild(card);
+  setTimeout(() => initOrbitSimWidget(card, { craftName, bd, alt, bodyKey }), 50);
+}
+
+function initOrbitSimWidget(card, cfg) {
+  if (!card) return;
+  const canvas = card.querySelector('.orbit-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const bd = cfg.bd;
+  let alt = cfg.alt || 400;
+  let angle = 0;
+
+  const slider = card.querySelector('.orbit-alt-slider');
+  const altValEl = card.querySelector('.orbit-alt-val');
+  const velEl = card.querySelector('.orbit-val-vel');
+  const escEl = card.querySelector('.orbit-val-esc');
+  const periodEl = card.querySelector('.orbit-val-period');
+  const gEl = card.querySelector('.orbit-val-g');
+
+  function updateMath() {
+    const r = bd.r + alt;
+    const v = Math.sqrt(bd.mu / r);
+    const vesc = Math.sqrt((2 * bd.mu) / r);
+    const Tsec = 2 * Math.PI * Math.sqrt(Math.pow(r, 3) / bd.mu);
+    const Tmin = (Tsec / 60).toFixed(1);
+    const gVal = ((bd.mu / Math.pow(r, 2)) * 1000).toFixed(2);
+
+    if (velEl) velEl.textContent = v.toFixed(2) + ' km/s';
+    if (escEl) escEl.textContent = vesc.toFixed(2) + ' km/s';
+    if (periodEl) periodEl.textContent = Tmin > 120 ? (Tmin / 60).toFixed(1) + ' hrs' : Tmin + ' min';
+    if (gEl) gEl.textContent = gVal + ' m/s²';
+    if (altValEl) altValEl.textContent = alt + ' km';
+  }
+
+  if (slider) {
+    slider.oninput = () => {
+      alt = parseInt(slider.value, 10);
+      updateMath();
+    };
+  }
+  updateMath();
+
+  function loop() {
+    if (!document.body.contains(card)) return;
+
+    ctx.fillStyle = '#03050c';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const basePlanetR = 34;
+    const orbitCanvasR = 48 + Math.log10(alt / 100) * 18;
+
+    const grad = ctx.createRadialGradient(cx, cy, 5, cx, cy, basePlanetR + 10);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.3, bd.color);
+    grad.addColorStop(0.8, bd.glow);
+    grad.addColorStop(1, 'transparent');
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, basePlanetR + 12, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, basePlanetR, 0, Math.PI * 2);
+    ctx.fillStyle = bd.color;
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = bd.color;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, orbitCanvasR, orbitCanvasR * 0.72, -0.2, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const r = bd.r + alt;
+    const v = Math.sqrt(bd.mu / r);
+    angle += (v / 8) * 0.02;
+
+    const rot = -0.2;
+    const unrotX = Math.cos(angle) * orbitCanvasR;
+    const unrotY = Math.sin(angle) * (orbitCanvasR * 0.72);
+    const satX = cx + unrotX * Math.cos(rot) - unrotY * Math.sin(rot);
+    const satY = cy + unrotX * Math.sin(rot) + unrotY * Math.cos(rot);
+
+    ctx.beginPath();
+    ctx.arc(satX, satY, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#fef08a';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#fef08a';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.beginPath();
+    ctx.moveTo(satX - 8, satY);
+    ctx.lineTo(satX + 8, satY);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+function renderArrProjector(node, parent) {
+  const saasName = node.saas_name || node.title || 'CloudScale AI Enterprise';
+  const startArr = parseInt(node.start_arr, 10) || 1200000;
+  const growth = parseFloat(node.growth_rate) || 8;
+  const multiple = parseFloat(node.multiple) || 18;
+  const uid = 'arr-' + Math.random().toString(36).substr(2, 8);
+
+  const card = document.createElement('div');
+  card.className = 'telemetry-card arr-projector-card';
+  card.id = uid;
+  card.style.cssText = 'border-color: rgba(245,158,11,0.45);';
+
+  card.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">📈</span>
+        <strong style="font-family:'Cinzel',serif;font-size:15px;color:var(--gold);letter-spacing:1px">${escapeHtml(saasName)}</strong>
+        <span class="arr-val-mult-badge" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.35);padding:2px 8px;border-radius:6px;font-family:monospace;font-size:11px;font-weight:700;color:#fef08a">${multiple}x Valuation Multiple</span>
+      </div>
+      <div style="font-size:11px;font-family:monospace;color:#34d399">● FINANCIAL MODEL LIVE</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin:12px 0">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Current ARR</div>
+        <div class="arr-stat-curr" style="font-size:16px;font-weight:800;color:#fff;font-family:monospace">$1.2M</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Year 1 Projected</div>
+        <div class="arr-stat-y1" style="font-size:16px;font-weight:800;color:#38bdf8;font-family:monospace">$3.0M</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Year 2 Projected</div>
+        <div class="arr-stat-y2" style="font-size:16px;font-weight:800;color:#34d399;font-family:monospace">$7.6M</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Valuation (Y1)</div>
+        <div class="arr-stat-val" style="font-size:16px;font-weight:800;color:#fef08a;font-family:monospace">$54.3M</div>
+      </div>
+    </div>
+    <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px 14px;margin:12px 0">
+      <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:12px">Projected Revenue Growth Curve (3-Year Horizon)</div>
+      <div class="arr-chart-bars" style="display:flex;align-items:flex-end;gap:16px;height:120px;padding-top:10px">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:4px">
+          <span style="color:var(--text2)">MoM Growth %</span>
+          <span class="arr-growth-val" style="color:#38bdf8;font-family:monospace">${growth}%</span>
+        </div>
+        <input type="range" class="arr-growth-slider" min="1" max="25" value="${growth}" style="width:100%;accent-color:#38bdf8;cursor:pointer">
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:4px">
+          <span style="color:var(--text2)">Revenue Multiple</span>
+          <span class="arr-mult-val" style="color:#fef08a;font-family:monospace">${multiple}x</span>
+        </div>
+        <input type="range" class="arr-mult-slider" min="5" max="40" value="${multiple}" style="width:100%;accent-color:#f59e0b;cursor:pointer">
+      </div>
+    </div>
+  `;
+  parent.appendChild(card);
+  setTimeout(() => initArrProjectorWidget(card, { startArr, growth, multiple }), 50);
+}
+
+function initArrProjectorWidget(card, cfg) {
+  if (!card) return;
+  let startArr = cfg.startArr || 1200000;
+  let growth = cfg.growth || 8;
+  let multiple = cfg.multiple || 18;
+
+  const growthSlider = card.querySelector('.arr-growth-slider');
+  const multSlider = card.querySelector('.arr-mult-slider');
+  const growthValEl = card.querySelector('.arr-growth-val');
+  const multValEl = card.querySelector('.arr-mult-val');
+  const multBadge = card.querySelector('.arr-val-mult-badge');
+
+  const currEl = card.querySelector('.arr-stat-curr');
+  const y1El = card.querySelector('.arr-stat-y1');
+  const y2El = card.querySelector('.arr-stat-y2');
+  const valEl = card.querySelector('.arr-stat-val');
+  const barsContainer = card.querySelector('.arr-chart-bars');
+
+  function fmtMoney(num) {
+    if (num >= 1000000000) return '$' + (num / 1000000000).toFixed(1) + 'B';
+    if (num >= 1000000) return '$' + (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return '$' + (num / 1000).toFixed(0) + 'k';
+    return '$' + Math.round(num);
+  }
+
+  function update() {
+    const monthlyRate = 1 + growth / 100;
+    const y1Arr = startArr * Math.pow(monthlyRate, 12);
+    const y2Arr = y1Arr * Math.pow(monthlyRate, 12);
+    const y3Arr = y2Arr * Math.pow(monthlyRate, 12);
+    const valuation = y1Arr * multiple;
+
+    if (currEl) currEl.textContent = fmtMoney(startArr);
+    if (y1El) y1El.textContent = fmtMoney(y1Arr);
+    if (y2El) y2El.textContent = fmtMoney(y2Arr);
+    if (valEl) valEl.textContent = fmtMoney(valuation);
+
+    if (growthValEl) growthValEl.textContent = growth + '%';
+    if (multValEl) multValEl.textContent = multiple + 'x';
+    if (multBadge) multBadge.textContent = multiple + 'x Valuation Multiple';
+
+    if (barsContainer) {
+      const items = [
+        { label: 'Current', val: startArr, color: '#94a3b8' },
+        { label: 'Year 1', val: y1Arr, color: '#38bdf8' },
+        { label: 'Year 2', val: y2Arr, color: '#34d399' },
+        { label: 'Year 3', val: y3Arr, color: '#f59e0b' }
+      ];
+      const maxVal = Math.max(y3Arr, 1);
+
+      barsContainer.innerHTML = items.map(item => {
+        const heightPct = Math.max(12, Math.round((item.val / maxVal) * 100));
+        return `
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end">
+            <span style="font-size:10px;font-weight:800;color:#fff;font-family:monospace;margin-bottom:4px">${fmtMoney(item.val)}</span>
+            <div style="width:100%;height:${heightPct}%;background:linear-gradient(180deg, ${item.color}, rgba(255,255,255,0.05));border-radius:6px 6px 0 0;box-shadow:0 0 12px ${item.color}40;transition:height 0.3s cubic-bezier(0.2,0.8,0.2,1)"></div>
+            <span style="font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-top:6px">${item.label}</span>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  if (growthSlider) {
+    growthSlider.oninput = () => {
+      growth = parseFloat(growthSlider.value);
+      update();
+    };
+  }
+  if (multSlider) {
+    multSlider.oninput = () => {
+      multiple = parseFloat(multSlider.value);
+      update();
+    };
+  }
+  update();
+}
+
+function renderTiltCard(node, parent) {
+  const title = node.title || 'Living 3D Depth Field';
+  const desc = node.text || node.description || 'Move your cursor over this card to experience tactile 3D perspective & holographic glare.';
+  const maxAngle = parseInt(node.angle, 10) || 15;
+  const depth = parseInt(node.depth, 10) || 1000;
+  const sheen = node.sheen || 'gold';
+  const uid = 'tilt-' + Math.random().toString(36).substr(2, 8);
+
+  const card = document.createElement('div');
+  card.className = 'telemetry-card tilt-interactive-card';
+  card.id = uid;
+  card.style.cssText = 'position:relative;overflow:hidden;border:1.5px solid rgba(245,158,11,0.4);border-radius:16px;padding:24px;text-align:center;background:rgba(14,16,30,0.95);cursor:pointer';
+
+  card.innerHTML = `
+    <div style="font-size:36px;margin-bottom:8px">📐</div>
+    <div style="font-family:'Cinzel',serif;font-size:17px;font-weight:800;color:var(--gold);margin-bottom:6px">${escapeHtml(title)}</div>
+    <div style="font-size:13px;color:#cbd5e1;line-height:1.6;max-width:440px;margin:0 auto">${escapeHtml(desc)}</div>
+    <div style="display:inline-flex;gap:12px;margin-top:14px;background:rgba(255,255,255,0.06);padding:6px 14px;border-radius:20px;font-size:11px;font-family:monospace;color:var(--text3)">
+      <span>Angle: <strong style="color:var(--gold)">${maxAngle}°</strong></span>
+      <span>Depth: <strong style="color:var(--gold)">${depth}px</strong></span>
+      <span>Sheen: <strong style="color:var(--gold)">${sheen.toUpperCase()}</strong></span>
+    </div>
+  `;
+  parent.appendChild(card);
+  setTimeout(() => setupTiltCardInteractive(card, maxAngle, depth, sheen), 50);
 }
 
 function showLoading(text){
@@ -11418,6 +12815,11 @@ function edAddBlock(type) {
   else if (type === 'jsx_canvas') { b.value = 'Interactive Reactive Sandbox'; b.style = { code: '<div style="padding:16px;color:#fff"><div style="display:flex;justify-content:space-between"><span>⚡ Dynamic Output</span><span id="dyno-val" style="color:#00f0ff;font-weight:bold">50%</span></div><input type="range" min="0" max="100" value="50" style="width:100%;accent-color:#00f0ff" oninput="document.getElementById(\'dyno-val\').textContent=this.value+\'%\'"></div>' }; }
   else if (type === 'particles') { b.value = 'stardust'; }
   else if (type === 'water_effect') { b.value = 'Interactive Fluid Canvas'; }
+  else if (type === 'throttle_dyno' || type === 'dyno_sandbox') { b.type = 'throttle_dyno'; b.vehicle_name = 'Quantum GT Hypercar'; b.bhp = 1400; b.max_rpm = 9000; b.theme = 'cyan'; }
+  else if (type === 'spell_matrix') { b.wand_name = 'Elder Wand (Phoenix Core)'; b.spells = ['Lumos', 'Expecto Patronus', 'Expelliarmus', 'Incendio', 'Starlight Shield']; b.aura = 'gold'; }
+  else if (type === 'orbit_sim') { b.body = 'earth'; b.craft_name = 'Orbital Recon Sat-IV'; b.altitude = 400; }
+  else if (type === 'arr_projector') { b.saas_name = 'CloudScale AI Enterprise'; b.start_arr = 1200000; b.growth_rate = 8; b.multiple = 18; }
+  else if (type === 'tilt_card') { b.title = 'Living 3D Depth Field'; b.angle = 15; b.depth = 1000; b.sheen = 'gold'; b.text = 'Dynamic tactile 3D perspective with cursor-tracked holographic glare.'; }
 
   page.blocks.push(b);
   edRenderBlocks();
@@ -11623,7 +13025,11 @@ function edRenderBlocks() {
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_image')">🖼️ + Image</button>
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('table')">📊 + Table</button>
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('quote')">📜 + Quote</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('code')">💻 + Code</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('throttle_dyno')">🏎️ + Dyno</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(245,158,11,.4);color:#f59e0b" onclick="edAddBlock('spell_matrix')">🪄 + Spell Matrix</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(167,139,250,.4);color:#a78bfa" onclick="edAddBlock('orbit_sim')">🛰️ + Orbit Sim</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(16,185,129,.4);color:#10b981" onclick="edAddBlock('arr_projector')">📈 + ARR</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(244,63,94,.4);color:#f43f5e" onclick="edAddBlock('tilt_card')">📐 + 3D Tilt</button>
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('water_effect')">🌊 + Water Waves</button>
         <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(245,158,11,.4);color:#f59e0b" onclick="edAddBlock('particles')">✨ + Particles</button>
       </div>
@@ -11637,7 +13043,9 @@ function edRenderBlocks() {
     web_image: '🖼️', web_audio: '🎵', web_video: '🎬', '3d_model': '📦', ai: '⚡',
     form: '📑', feature_grid: '🌟', live_feed: '📡', preorder: '💎', button: '🔘',
     jsx_canvas: '⚡', interactive_sandbox: '⚡', particles: '✨', particle_canvas: '✨',
-    water_effect: '🌊', fluid_canvas: '🌊'
+    water_effect: '🌊', fluid_canvas: '🌊',
+    throttle_dyno: '🏎️', dyno_sandbox: '🏎️', spell_matrix: '🪄', orbit_sim: '🛰️',
+    arr_projector: '📈', tilt_card: '📐'
   };
 
   page.blocks.forEach(block => {
@@ -11707,13 +13115,38 @@ function edRenderBlocks() {
     } else if (block.type === 'ai') {
       mk('textarea', 'AI prompt or context...', block.prompt || '', v => { block.prompt = v; }, { rows: 3 });
     } else if (block.type === 'form') {
-      const hl = document.createElement('div'); hl.style.cssText = 'font-size:11px;color:var(--text3);margin-bottom:4px'; hl.textContent = 'Fields format: Label | Type (input_text, input_email, select) | Placeholder'; div.appendChild(hl);
+      mk('input', 'Form Title / Header', block.title || '⚡ VIP Priority Early Access', v => { block.title = v; edUpdateLivePreview(); });
+      mk('input', 'Webhook Destination URL', block.webhook_url || '', v => { block.webhook_url = v; edUpdateLivePreview(); });
+      
+      const stRow = document.createElement('div');
+      stRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0;padding:6px;background:var(--surface2);border-radius:6px';
+      stRow.innerHTML = '<span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">BUTTON STYLE</span>';
+      const bSel = document.createElement('select');
+      bSel.style.cssText = 'background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:12px';
+      [['royal_gold','✨ Royal Gold Shimmer'],['neon_cyan','⚡ Cyber Neon Cyan'],['purple_nebula','🔮 Purple Nebula'],['glass_hologram','💎 Frosted Glass'],['tactile_3d','🏎️ 3D Tactile Push'],['fluid_ripple','🌊 Fluid Ripple']].forEach(st=>{
+        const o=document.createElement('option');o.value=st[0];o.textContent=st[1];
+        if(st[0]===(block.btn_style||'royal_gold')) o.selected=true;
+        bSel.appendChild(o);
+      });
+      bSel.onchange = () => { block.btn_style = bSel.value; edUpdateLivePreview(); };
+      stRow.appendChild(bSel);
+      div.appendChild(stRow);
+
+      const hl = document.createElement('div'); hl.style.cssText = 'font-size:11px;color:var(--text3);margin:6px 0 4px'; hl.textContent = 'Fields format: Label | Type (input_text, input_email, select) | Placeholder'; div.appendChild(hl);
       mk('textarea', '', (block.fields || []).map(f => `${f.label} | ${f.field_type} | ${f.placeholder || ''}`).join('\n'), v => {
         block.fields = v.split('\n').filter(s => s.trim()).map(line => {
           const p = line.split('|').map(s => s.trim());
           return { label: p[0] || '', field_type: p[1] || 'input_text', placeholder: p[2] || undefined };
         });
-      }, { rows: 5 });
+        block.children = (block.fields || []).map(f => ({
+          id: 'f_' + Math.random().toString(36).substr(2, 5),
+          type: f.field_type,
+          label: f.label,
+          placeholder: f.placeholder,
+          options: f.options
+        }));
+        edUpdateLivePreview();
+      }, { rows: 4 });
     } else if (block.type === 'web_image') {
       mk('input', 'Image URL (https://...)', block.src || '', v => { block.src = v; });
       mk('input', 'Alt description', block.alt || '', v => { block.alt = v; });
@@ -11811,7 +13244,7 @@ function edRenderBlocks() {
       
       const stSel = document.createElement('select');
       stSel.style.cssText = 'background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:12px';
-      [['royal_gold','✨ Royal Gold Glow'],['neon_cyan','⚡ Cyber Neon Cyan'],['purple_nebula','🔮 Purple Nebula'],['minimal','🔳 Obsidian Outline']].forEach(st=>{
+      [['royal_gold','✨ Royal Gold Shimmer'],['neon_cyan','⚡ Cyber Neon Cyan'],['purple_nebula','🔮 Purple Nebula'],['glass_hologram','💎 Frosted Glass'],['tactile_3d','🏎️ 3D Tactile Push'],['fluid_ripple','🌊 Fluid Ripple'],['minimal','🔳 Obsidian Outline']].forEach(st=>{
         const o=document.createElement('option');o.value=st[0];o.textContent=st[1];
         if(st[0]===((block.style&&block.style.btn_style)||'royal_gold')) o.selected=true;
         stSel.appendChild(o);
@@ -11843,12 +13276,10 @@ function edRenderBlocks() {
       mk('textarea', 'HTML/JS code for the widget', block.style?.code || '', v => { 
         if(!block.style) block.style={}; 
         block.style.code = v; 
-        // Update live preview in card
         if(codePreview) codePreview.innerHTML = v;
         edUpdateLivePreview();
       }, { rows: 5 });
 
-      // In-Editor Interactive Visual Sandbox
       const wrap = document.createElement('div');
       wrap.className = 'ed-block-interactive-wrap';
       wrap.innerHTML = '<div class="badge"><span>⚡ Live Interactive Sandbox Preview</span></div>';
@@ -11872,7 +13303,6 @@ function edRenderBlocks() {
       };
       div.appendChild(sel);
       
-      // In-Editor Live Particle Canvas
       const wrap = document.createElement('div');
       wrap.className = 'ed-block-interactive-wrap';
       wrap.innerHTML = '<div class="badge" style="color:#f59e0b"><span>✨ Live Particle Physics Sandbox</span></div>';
@@ -11886,7 +13316,6 @@ function edRenderBlocks() {
     } else if (block.type === 'water_effect' || block.type === 'fluid_canvas') {
       const hint = document.createElement('div'); hint.style.cssText = 'font-size:11px;color:#38bdf8;margin:4px 0'; hint.textContent = '🌊 Fluid dynamics ripple canvas — cursor/touch generates waves'; div.appendChild(hint);
       
-      // In-Editor Live Water Canvas
       const wrap = document.createElement('div');
       wrap.className = 'ed-block-interactive-wrap';
       wrap.innerHTML = '<div class="badge" style="color:#38bdf8"><span>🌊 Live Fluid Temporal Wave Sandbox</span></div>';
@@ -11896,6 +13325,91 @@ function edRenderBlocks() {
       wrap.appendChild(wCanvas);
       div.appendChild(wrap);
       setTimeout(() => initInPageWaterCanvas(wCanvas.id), 60);
+
+    } else if (block.type === 'throttle_dyno' || block.type === 'dyno_sandbox') {
+      mk('input', 'Vehicle / Craft Name', block.vehicle_name || 'Quantum GT Hypercar', v => { block.vehicle_name = v; edUpdateLivePreview(); });
+      const r = document.createElement('div');
+      r.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:4px';
+      const bInp = document.createElement('input'); bInp.type = 'number'; bInp.placeholder = 'BHP'; bInp.value = block.bhp || 1400;
+      bInp.oninput = () => { block.bhp = parseInt(bInp.value, 10); edUpdateLivePreview(); };
+      const rpmInp = document.createElement('input'); rpmInp.type = 'number'; rpmInp.placeholder = 'Max RPM'; rpmInp.value = block.max_rpm || 9000;
+      rpmInp.oninput = () => { block.max_rpm = parseInt(rpmInp.value, 10); edUpdateLivePreview(); };
+      const tSel = document.createElement('select');
+      tSel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px;font-size:11px';
+      [['cyan','⚡ Cyan'],['gold','✨ Gold'],['crimson','🏎️ Red'],['emerald','🟢 Green']].forEach(t => {
+        const o = document.createElement('option'); o.value = t[0]; o.textContent = t[1];
+        if (t[0] === (block.theme || 'cyan')) o.selected = true;
+        tSel.appendChild(o);
+      });
+      tSel.onchange = () => { block.theme = tSel.value; edUpdateLivePreview(); };
+      r.appendChild(bInp); r.appendChild(rpmInp); r.appendChild(tSel);
+      div.appendChild(r);
+
+    } else if (block.type === 'spell_matrix') {
+      mk('input', 'Wand / Arcane Matrix Name', block.wand_name || 'Elder Wand', v => { block.wand_name = v; edUpdateLivePreview(); });
+      mk('input', 'Active Spells (comma-separated)', Array.isArray(block.spells) ? block.spells.join(', ') : (block.spells || ''), v => {
+        block.spells = v.split(',').map(s => s.trim()).filter(Boolean);
+        edUpdateLivePreview();
+      });
+      const aSel = document.createElement('select');
+      aSel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:12px;margin-top:4px';
+      [['gold','✨ Golden Sunfire'],['cyan','Celestial Cyan'],['violet','🔮 Violet Void'],['emerald','🟢 Emerald Spark']].forEach(a => {
+        const o = document.createElement('option'); o.value = a[0]; o.textContent = a[1];
+        if (a[0] === (block.aura || 'gold')) o.selected = true;
+        aSel.appendChild(o);
+      });
+      aSel.onchange = () => { block.aura = aSel.value; edUpdateLivePreview(); };
+      div.appendChild(aSel);
+
+    } else if (block.type === 'orbit_sim') {
+      mk('input', 'Craft Name', block.craft_name || 'Orbital Recon Sat-IV', v => { block.craft_name = v; edUpdateLivePreview(); });
+      const r = document.createElement('div');
+      r.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px';
+      const bSel = document.createElement('select');
+      bSel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:12px';
+      [['earth','🌍 Earth'],['mars','🔴 Mars'],['moon','⚪ Moon'],['jupiter','🪐 Jupiter'],['blackhole','🕳️ Black Hole']].forEach(b => {
+        const o = document.createElement('option'); o.value = b[0]; o.textContent = b[1];
+        if (b[0] === (block.body || 'earth')) o.selected = true;
+        bSel.appendChild(o);
+      });
+      bSel.onchange = () => { block.body = bSel.value; edUpdateLivePreview(); };
+      const altInp = document.createElement('input'); altInp.type = 'number'; altInp.placeholder = 'Altitude (km)'; altInp.value = block.altitude || 400;
+      altInp.oninput = () => { block.altitude = parseInt(altInp.value, 10); edUpdateLivePreview(); };
+      r.appendChild(bSel); r.appendChild(altInp);
+      div.appendChild(r);
+
+    } else if (block.type === 'arr_projector') {
+      mk('input', 'SaaS Venture Name', block.saas_name || 'CloudScale AI Enterprise', v => { block.saas_name = v; edUpdateLivePreview(); });
+      const r = document.createElement('div');
+      r.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:4px';
+      const sInp = document.createElement('input'); sInp.type = 'number'; sInp.placeholder = 'Starting ARR ($)'; sInp.value = block.start_arr || 1200000;
+      sInp.oninput = () => { block.start_arr = parseInt(sInp.value, 10); edUpdateLivePreview(); };
+      const gInp = document.createElement('input'); gInp.type = 'number'; gInp.placeholder = 'MoM Growth %'; gInp.value = block.growth_rate || 8;
+      gInp.oninput = () => { block.growth_rate = parseFloat(gInp.value); edUpdateLivePreview(); };
+      const mInp = document.createElement('input'); mInp.type = 'number'; mInp.placeholder = 'Multiple (x)'; mInp.value = block.multiple || 18;
+      mInp.oninput = () => { block.multiple = parseFloat(mInp.value); edUpdateLivePreview(); };
+      r.appendChild(sInp); r.appendChild(gInp); r.appendChild(mInp);
+      div.appendChild(r);
+
+    } else if (block.type === 'tilt_card') {
+      mk('input', 'Card Title', block.title || 'Living 3D Depth Field', v => { block.title = v; edUpdateLivePreview(); });
+      mk('textarea', 'Description...', block.text || '', v => { block.text = v; edUpdateLivePreview(); }, { rows: 2 });
+      const r = document.createElement('div');
+      r.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:4px';
+      const aInp = document.createElement('input'); aInp.type = 'number'; aInp.placeholder = 'Max Angle (°)'; aInp.value = block.angle || 15;
+      aInp.oninput = () => { block.angle = parseInt(aInp.value, 10); edUpdateLivePreview(); };
+      const dInp = document.createElement('input'); dInp.type = 'number'; dInp.placeholder = 'Depth (px)'; dInp.value = block.depth || 1000;
+      dInp.oninput = () => { block.depth = parseInt(dInp.value, 10); edUpdateLivePreview(); };
+      const sSel = document.createElement('select');
+      sSel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px;font-size:11px';
+      [['gold','✨ Gold'],['cyan','⚡ Cyan'],['violet','🔮 Violet'],['rainbow','🌈 Rainbow']].forEach(s => {
+        const o = document.createElement('option'); o.value = s[0]; o.textContent = s[1];
+        if (s[0] === (block.sheen || 'gold')) o.selected = true;
+        sSel.appendChild(o);
+      });
+      sSel.onchange = () => { block.sheen = sSel.value; edUpdateLivePreview(); };
+      r.appendChild(aInp); r.appendChild(dInp); r.appendChild(sSel);
+      div.appendChild(r);
     }
 
     panel.appendChild(div);
@@ -11905,14 +13419,16 @@ function edRenderBlocks() {
 async function buildAndView() {
   if (!edPages.length) { showToast('Add at least one page.'); return; }
   const btn = document.getElementById('build-view-btn');
-  btn.textContent = 'Building...';
-  btn.disabled = true;
+  if (btn) {
+    btn.textContent = 'Building...';
+    btn.disabled = true;
+  }
 
   try {
     const spec = {
-      title: document.getElementById('ed-title').value || 'Living Document',
-      author: document.getElementById('ed-author').value || 'Unknown',
-      lang: document.getElementById('ed-lang').value || 'en',
+      title: document.getElementById('ed-title')?.value || 'Living Document',
+      author: document.getElementById('ed-author')?.value || 'Unknown',
+      lang: document.getElementById('ed-lang')?.value || 'en',
       pages: edPages.map(p => ({
         title: p.title,
         blocks: (p.blocks || []).map(b => Object.assign({}, b))
@@ -11930,8 +13446,10 @@ async function buildAndView() {
   } catch(err) {
     showToast('Build error: ' + err.message, 'err');
   } finally {
-    btn.textContent = '▶ Build & View';
-    btn.disabled = false;
+    if (btn) {
+      btn.textContent = '▶ Build & View';
+      btn.disabled = false;
+    }
   }
 }
 
@@ -11985,14 +13503,16 @@ async function compileLdocxClientSide(spec) {
 async function buildAndSave() {
   if (!edPages.length) { showToast('Add at least one page.'); return; }
   const btn = document.getElementById('build-save-btn');
-  btn.textContent = 'Saving...';
-  btn.disabled = true;
+  if (btn) {
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+  }
 
   try {
     const spec = {
-      title: document.getElementById('ed-title').value || 'Living Document',
-      author: document.getElementById('ed-author').value || 'Unknown',
-      lang: document.getElementById('ed-lang').value || 'en',
+      title: document.getElementById('ed-title')?.value || 'Living Document',
+      author: document.getElementById('ed-author')?.value || 'Unknown',
+      lang: document.getElementById('ed-lang')?.value || 'en',
       pages: edPages.map(p => ({
         title: p.title,
         blocks: (p.blocks || []).map(b => Object.assign({}, b))
@@ -12016,8 +13536,10 @@ async function buildAndSave() {
   } catch(err) {
     showToast('Save error: ' + err.message, 'err');
   } finally {
-    btn.textContent = '💾 Build & Save';
-    btn.disabled = false;
+    if (btn) {
+      btn.textContent = '💾 Build & Save';
+      btn.disabled = false;
+    }
   }
 }
 
@@ -13788,6 +15310,11 @@ const LDOC_COMMANDS = [
   { id: 'ins_grid', cat: 'Insert', name: '3-Card Feature Grid', run: () => (typeof edAddBlock === 'function' ? edAddBlock('feature_grid') : addBlock('feature_grid')) },
   { id: 'ins_telem', cat: 'Insert', name: 'Live Interactive Telemetry Beacon', run: () => (typeof edAddBlock === 'function' ? edAddBlock('live_feed') : addBlock('live_feed')) },
   { id: 'ins_form', cat: 'Insert', name: 'Smart Dispatch Form & Webhook', run: () => (typeof edAddBlock === 'function' ? edAddBlock('form') : addBlock('form')) },
+  { id: 'ins_dyno', cat: 'Insert', name: 'Throttle Dyno Speedometer Telemetry', run: () => (typeof edAddBlock === 'function' ? edAddBlock('throttle_dyno') : applyWizardFx('insert_dyno')) },
+  { id: 'ins_wand', cat: 'Insert', name: 'Arcane Wand Spell Cast Matrix', run: () => (typeof edAddBlock === 'function' ? edAddBlock('spell_matrix') : applyWizardFx('insert_wand')) },
+  { id: 'ins_orbit', cat: 'Insert', name: 'Orbital Mechanics Trajectory Simulator', run: () => (typeof edAddBlock === 'function' ? edAddBlock('orbit_sim') : applyWizardFx('insert_orbit')) },
+  { id: 'ins_arr', cat: 'Insert', name: 'Enterprise ARR & Valuation Projector', run: () => (typeof edAddBlock === 'function' ? edAddBlock('arr_projector') : applyWizardFx('insert_arr')) },
+  { id: 'ins_tilt', cat: 'Insert', name: '3D Holographic Perspective Tilt Card', run: () => (typeof edAddBlock === 'function' ? edAddBlock('tilt_card') : applyWizardFx('insert_tilt_card')) },
 
   // Environmental Living FX
   { id: 'fx_particles', cat: 'Environmental FX', name: 'Activate Cosmic Particle Constellation Field', run: () => setPageEnvironmentalMode('particles') },
