@@ -3603,6 +3603,10 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   if (typeof window !== 'undefined' && window.pdfjsLib) {
     window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -7917,14 +7921,19 @@ function spawnAmbientText(x = 60, y = 80, text = 'Type freely here...', ftObj = 
 
 // 11. Interactive Block Handlers
 function toggleJsxCode(uid) {
-  const el = document.getElementById(`jsx-code-${uid}`);
+  const el = document.getElementById(`${uid}-code`) || document.getElementById(`jsx-code-${uid}`);
   if (el) el.style.display = (el.style.display === 'none' || !el.style.display) ? 'block' : 'none';
 }
 
 function resetJsxSandbox(uid) {
-  const el = document.getElementById(`jsx-output-${uid}`);
-  if (el) {
-    el.innerHTML = '<div style="color:#34d399;font-size:12px">✓ Component state reset</div>';
+  const bodyEl = document.getElementById(`${uid}-body`) || document.getElementById(`jsx-output-${uid}`);
+  const codeEl = document.getElementById(`${uid}-code`);
+  if (bodyEl && codeEl && typeof executeCustomSandboxCode === 'function') {
+    const rawCode = codeEl.textContent || '';
+    executeCustomSandboxCode(rawCode, bodyEl, uid);
+    if (typeof showToast === 'function') showToast('🔄 Sandbox reset to initial state', 'ok');
+  } else if (bodyEl) {
+    bodyEl.innerHTML = '<div style="color:#34d399;font-size:12px">✓ Component state reset</div>';
   }
 }
 
@@ -10523,6 +10532,83 @@ function nodeLabel(n){if(!n)return '';return n.label||(n.aria&&n.aria.label)||n.
 function nodePH(n){if(!n)return '';return n.placeholder||(n.aria&&n.aria.placeholder)||'';}
 function assetUrl(n){return n.asset_id?`${API}/documents/${docId}/assets/${n.asset_id}`:'';;}
 
+function executeCustomSandboxCode(rawCode, containerEl, uid) {
+  if (!containerEl) return;
+  containerEl.innerHTML = '';
+  const trimmed = (rawCode || '').trim();
+  if (!trimmed) {
+    const hint = document.createElement('div');
+    hint.className = 'jsx-empty-hint';
+    hint.style.cssText = 'padding:22px 16px;text-align:center;color:var(--text3);border:1px dashed rgba(255,255,255,0.14);border-radius:10px;background:rgba(255,255,255,0.02)';
+    hint.innerHTML = `
+      <div style="font-size:18px;margin-bottom:4px">⚡</div>
+      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:2px">Custom Interactive Sandbox</div>
+      <div style="font-size:10.5px;color:var(--text3)">Enter custom HTML, React JSX, Chart.js, Three.js, or Canvas code</div>
+    `;
+    containerEl.appendChild(hint);
+    return;
+  }
+
+  const renderError = (errTitle, errMsg, errDetail) => {
+    const errBox = document.createElement('div');
+    errBox.className = 'jsx-error-box';
+    errBox.style.cssText = 'background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:8px;padding:10px 12px;margin:8px 0;color:#fca5a5;font-family:monospace;font-size:11.5px;line-height:1.4;text-align:left';
+    errBox.innerHTML = `
+      <div style="font-weight:700;color:#ef4444;display:flex;align-items:center;gap:6px;margin-bottom:4px">
+        <span>⚠️</span> ${escapeHtml(errTitle || 'Sandbox Notice')}
+      </div>
+      <div style="word-break:break-word">${escapeHtml(errMsg || '')}</div>
+      ${errDetail ? `<div style="font-size:10px;color:#cbd5e1;margin-top:4px;opacity:0.75;max-height:80px;overflow:auto">${escapeHtml(errDetail)}</div>` : ''}
+    `;
+    containerEl.appendChild(errBox);
+  };
+
+  try {
+    const isFullHtml = /<\s*(div|span|canvas|section|form|p|h[1-6]|button|input|svg|table|style|script)\b/i.test(trimmed);
+
+    if (isFullHtml && !trimmed.startsWith('function') && !trimmed.startsWith('class') && !trimmed.startsWith('const ') && !trimmed.startsWith('let ')) {
+      // Safely route any inline event handler document.getElementById calls to scope-local container
+      const scopedCode = trimmed.replace(/\bdocument\.getElementById\((["'])([^"'\s\)]+)\1\)/g, (m, q, id) => {
+        return `((this && this.closest && this.closest('[data-scope]')) ? this.closest('[data-scope]').querySelector('#${id}') : document.getElementById('${id}'))`;
+      });
+
+      containerEl.innerHTML = scopedCode;
+
+      // Execute scripts if present
+      const scripts = containerEl.querySelectorAll('script');
+      scripts.forEach(s => {
+        try {
+          let sCode = s.textContent;
+          const isBabel = s.type === 'text/babel' || s.type === 'text/jsx' || /<[A-Za-z0-9_]/.test(sCode);
+          if (isBabel && window.Babel) {
+            sCode = window.Babel.transform(sCode, { presets: [['react', { runtime: 'classic' }]] }).code;
+          }
+          const fn = new Function('container', 'scopeId', 'React', 'ReactDOM', 'THREE', 'Chart', sCode);
+          fn(containerEl, uid, window.React, window.ReactDOM, window.THREE, window.Chart);
+        } catch (sErr) {
+          renderError('Script Runtime Notice', sErr.message, sErr.stack);
+        }
+      });
+    } else {
+      // Pure JS / React / JSX code
+      let jsCode = trimmed;
+      const needsBabel = window.Babel && (/<[A-Za-z0-9_]/.test(jsCode) || /import |export /.test(jsCode));
+      if (needsBabel) {
+        try {
+          jsCode = window.Babel.transform(jsCode, { presets: [['react', { runtime: 'classic' }]] }).code;
+        } catch (bErr) {
+          renderError('JSX Compilation Notice', bErr.message);
+          return;
+        }
+      }
+      const fn = new Function('container', 'scopeId', 'React', 'ReactDOM', 'THREE', 'Chart', jsCode);
+      fn(containerEl, uid, window.React, window.ReactDOM, window.THREE, window.Chart);
+    }
+  } catch (err) {
+    renderError('Sandbox Runtime Notice', err.message, err.stack);
+  }
+}
+
 function collectNodes(root){
   if(!root)return[];
   if(root.type==='container'||root.type==='section'){
@@ -11812,23 +11898,12 @@ ${escapeHtml(rawCode || 'System Prompt: Living Document Multi-Page Assistant')}
     }
     case 'jsx_canvas':case 'interactive_sandbox':case 'live_sandbox':{
       const st = node.style || {};
-      const title = (st.title || node.title || node.value || 'Interactive Reactive Sandbox').toUpperCase();
-      let rawCode = st.code || node.code || `<div style="padding:16px;color:#fff;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(56,189,248,0.3)">
-  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-    <span style="font-weight:700;color:#38bdf8">⚡ Dynamic Output</span>
-    <span id="dyno-val" style="color:#00f0ff;font-weight:bold;font-size:16px">50%</span>
-  </div>
-  <input type="range" min="0" max="100" value="50" style="width:100%;accent-color:#00f0ff;cursor:pointer" oninput="document.getElementById('dyno-val').textContent=this.value+'%'">
-</div>`;
+      const title = (st.title || node.title || node.value || 'Custom Interactive Sandbox').toUpperCase();
+      let rawCode = st.code !== undefined ? st.code : (node.code !== undefined ? node.code : '');
       
       const card = document.createElement('div');
       card.className = 'jsx-canvas-card';
       const uid = 'jsx_' + Math.random().toString(36).slice(2, 9);
-
-      // Rewrite element IDs and document.getElementById to be instance-scoped, preventing collisions between Editor and Live Preview
-      const scopedCode = rawCode
-        .replace(/\bid=(["'])([^"'\s>]+)\1/g, (m, q, id) => `id=${q}${id}_${uid}${q}`)
-        .replace(/document\.getElementById\((["'])([^"'\s\)]+)\1\)/g, (m, q, id) => `document.getElementById('${id}_${uid}')`);
 
       card.innerHTML = `
         <div class="jsx-header">
@@ -11838,26 +11913,17 @@ ${escapeHtml(rawCode || 'System Prompt: Living Document Multi-Page Assistant')}
             <button class="jsx-toggle-btn" type="button" onclick="resetJsxSandbox('${uid}')">🔄 Reset</button>
           </div>
         </div>
-        <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative">
-          ${scopedCode}
-        </div>
+        <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative"></div>
         <pre class="jsx-code-view" id="${uid}-code"><code>${escapeHtml(rawCode)}</code></pre>
       `;
       parent.appendChild(card);
 
-      // Execute any inline <script> tags inside the scoped sandbox safely
       setTimeout(() => {
         const bodyEl = document.getElementById(`${uid}-body`);
         if (bodyEl) {
-          const scripts = bodyEl.querySelectorAll('script');
-          scripts.forEach(s => {
-            try {
-              const fn = new Function('container', 'scopeId', s.textContent);
-              fn(bodyEl, uid);
-            } catch(err) { console.warn('JSX Sandbox script error:', err); }
-          });
+          executeCustomSandboxCode(rawCode, bodyEl, uid);
         }
-      }, 50);
+      }, 25);
       break;
     }
     case 'water_effect':case 'fluid_canvas':{
@@ -13546,23 +13612,27 @@ function edAddBlock(type) {
   if (type === 'heading') { b.level = 1; b.text = ''; b.value = ''; }
   else if (type === 'paragraph' || type === 'quote') { b.text = ''; b.value = ''; }
   else if (type === 'list') { b.items = ['']; }
-  else if (type === 'code') { b.language = 'javascript'; b.code = 'console.log("Living Document Active");'; }
-  else if (type === 'table') { b.headers = ['Feature', 'Specification']; b.rows = [['Chassis', 'Carbon Monocoque'], ['Power', '1,020 HP']]; }
-  else if (type === 'ai') { b.prompt = 'Answer questions about this document presentation.'; }
-  else if (type === 'form') { b.fields = [{ label: 'Full Name', field_type: 'input_text', placeholder: 'Enter your name' }, { label: 'Email Address', field_type: 'input_email', placeholder: 'Enter your email' }]; }
-  else if (type === 'web_image') { b.src = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80'; b.alt = 'Living Concept Poster'; }
-  else if (type === 'web_audio') { b.src = 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg'; b.label = 'Executive Audio Walkthrough (132 BPM)'; }
-  else if (type === 'web_video') { b.src = 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm'; b.label = 'In-Engine Motion Physics'; b.autoplay = true; }
-  else if (type === '3d_model') { b.format = 'obj'; b.mesh_template = 'polyhedron'; b.material_mode = 'cyber_hologram'; }
-  else if (type === 'feature_grid') { b.cards = [{ badge: 'ENGINEERING', title: 'Ground-Effect Aero', desc: '1,450 kg downforce at 300 km/h.' }, { badge: 'NEURAL AI', title: 'Predictive Traction', desc: '1,000 Hz real-time slip adaptation.' }, { badge: 'TELEMETRY', title: 'Low-Latency Feed', desc: 'Instant bi-directional data channel.' }]; }
-  else if (type === 'live_feed') { b.channel = 'TELEMETRY_MAIN'; b.latency = '1.8 ms'; b.fps = '120 FPS'; }
-  else if (type === 'preorder') { b.edition = 'Founder Relic Edition'; b.price = '$149'; b.perks = 'Early Access, VIP Livery, 3D Hologram Badge'; }
-  else if (type === 'button') { b.value = 'CLAIM ACCESS & LAUNCH'; b.text = 'CLAIM ACCESS & LAUNCH'; b.action = 'submit'; b.target = 'vip_submit'; }
-  else if (type === 'jsx_canvas') { b.value = 'Interactive Reactive Sandbox'; b.style = { code: '<div style="padding:16px;color:#fff"><div style="display:flex;justify-content:space-between"><span>⚡ Dynamic Output</span><span id="dyno-val" style="color:#00f0ff;font-weight:bold">50%</span></div><input type="range" min="0" max="100" value="50" style="width:100%;accent-color:#00f0ff" oninput="document.getElementById(\'dyno-val\').textContent=this.value+\'%\'"></div>' }; }
-  else if (type === 'throttle_dyno' || type === 'dyno_sandbox') { b.type = 'throttle_dyno'; b.vehicle_name = 'Quantum GT Hypercar'; b.bhp = 1400; b.max_rpm = 9000; b.theme = 'cyan'; }
-  else if (type === 'orbit_sim') { b.body = 'earth'; b.craft_name = 'Orbital Recon Sat-IV'; b.altitude = 400; }
-  else if (type === 'arr_projector') { b.saas_name = 'CloudScale AI Enterprise'; b.start_arr = 1200000; b.growth_rate = 8; b.multiple = 18; }
-  else if (type === 'tilt_card') { b.title = 'Living 3D Depth Field'; b.angle = 15; b.depth = 1000; b.sheen = 'gold'; b.text = 'Dynamic tactile 3D perspective with cursor-tracked holographic glare.'; }
+  else if (type === 'code') { b.language = 'javascript'; b.code = ''; }
+  else if (type === 'table') { b.headers = ['Item', 'Description']; b.rows = [['', '']]; }
+  else if (type === 'ai') { b.prompt = ''; }
+  else if (type === 'form') { b.title = ''; b.fields = [{ label: 'Name', field_type: 'input_text', placeholder: 'Enter your name' }]; b.button_text = 'Submit'; b.destination = 'webhook'; }
+  else if (type === 'web_image') { b.src = ''; b.alt = ''; }
+  else if (type === 'web_audio') { b.src = ''; b.label = ''; }
+  else if (type === 'web_video') { b.src = ''; b.label = ''; }
+  else if (type === '3d_model') { b.format = 'glb'; b.src = ''; b.filename = ''; b.value = 'Custom 3D Model'; b.material_mode = 'cyber_hologram'; }
+  else if (type === 'feature_grid') { b.cards = [{ badge: 'FEATURE', title: 'Card Title 1', desc: 'Custom feature description' }, { badge: 'FEATURE', title: 'Card Title 2', desc: 'Custom feature description' }]; }
+  else if (type === 'live_feed') { b.channel = 'STREAM_01'; b.latency = '0 ms'; b.fps = '60 FPS'; }
+  else if (type === 'preorder') { b.badge = 'SPECIAL ACCESS'; b.title = 'Custom Access Pass'; b.price = '$99'; b.perks = ['Feature 1', 'Feature 2']; b.button_text = '⚡ Get Access'; b.checkout_url = ''; }
+  else if (type === 'button') { b.value = 'Action Button'; b.text = 'Action Button'; b.action = 'link'; b.target = ''; }
+  else if (type === 'jsx_canvas' || type === 'interactive_sandbox') { 
+    b.type = 'jsx_canvas';
+    b.value = 'Custom Interactive Sandbox'; 
+    b.style = { code: '<div style="padding:16px;color:#fff;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(56,189,248,0.25)">\n  <h4 style="margin:0 0 8px;font-size:14px;color:#38bdf8">Interactive Sandbox</h4>\n  <p style="font-size:12px;color:#94a3b8;margin:0 0 12px">Custom HTML, React JSX, Canvas, Three.js, or Chart.js.</p>\n  <button onclick="this.textContent = \'Clicked! \' + (parseInt(this.dataset.c||0)+1); this.dataset.c = (parseInt(this.dataset.c||0)+1)" style="padding:6px 14px;background:#38bdf8;color:#0a0a14;border:none;border-radius:6px;font-weight:700;cursor:pointer">Interactive Button</button>\n</div>' }; 
+  }
+  else if (type === 'throttle_dyno' || type === 'dyno_sandbox') { b.type = 'throttle_dyno'; b.vehicle_name = 'Performance Dyno'; b.bhp = 1000; b.max_rpm = 8000; b.theme = 'cyan'; }
+  else if (type === 'orbit_sim') { b.body = 'earth'; b.craft_name = 'Orbital Satellite'; b.altitude = 400; }
+  else if (type === 'arr_projector') { b.saas_name = 'ARR Revenue Model'; b.start_arr = 1000000; b.growth_rate = 10; b.multiple = 15; }
+  else if (type === 'tilt_card') { b.title = 'Interactive 3D Card'; b.angle = 15; b.depth = 1000; b.sheen = 'gold'; b.text = 'Interactive 3D perspective card.'; }
 
   page.blocks.push(b);
   edPushUndo();
@@ -13896,10 +13966,10 @@ function edRenderBlocks() {
 
       div.appendChild(sampleRow);
 
-      mk('textarea', 'Enter code or script...', block.code !== undefined ? block.code : 'console.log("Hello from LDOCX!");', v => { block.code = v; edUpdateLivePreview(); }, { rows: 5 });
+      mk('textarea', 'Enter custom code or script...', block.code !== undefined ? block.code : '', v => { block.code = v; edUpdateLivePreview(); }, { rows: 5 });
     } else if (block.type === 'table') {
       const hi = document.createElement('input'); hi.placeholder = 'Col 1, Col 2'; hi.value = (block.headers || []).join(', '); hi.style.marginTop = '4px'; hi.oninput = () => { block.headers = hi.value.split(',').map(s => s.trim()); }; div.appendChild(hi);
-      mk('textarea', 'Row values (comma separated)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => { block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim())); }, { rows: 4 });
+      mk('textarea', 'Row values (comma separated e.g. Item 1, Data 1)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => { block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim())); }, { rows: 4 });
     } else if (block.type === 'ai') {
       const cfg = getAiConfig();
       const aiHdr = document.createElement('div');
@@ -13972,7 +14042,7 @@ function edRenderBlocks() {
 
       mk('textarea', 'System / Assistant Prompt (multi-page contents are fed automatically)...', block.prompt || '', v => { block.prompt = v; edUpdateLivePreview(); }, { rows: 3 });
     } else if (block.type === 'form') {
-      mk('input', 'Form Title / Header', block.title || '⚡ VIP Priority Early Access', v => { block.title = v; edUpdateLivePreview(); });
+      mk('input', 'Form Title / Header', block.title || '', v => { block.title = v; edUpdateLivePreview(); });
       
       // Destination & Action selector
       const destRow = document.createElement('div');
@@ -14002,8 +14072,8 @@ function edRenderBlocks() {
       const btnRow = document.createElement('div');
       btnRow.style.cssText = 'display:grid;grid-template-columns:1fr 140px;gap:6px;margin:4px 0';
       const btnTxt = document.createElement('input');
-      btnTxt.placeholder = 'Button Label (e.g. ⚡ Submit Application)';
-      btnTxt.value = block.button_text || '⚡ Submit';
+      btnTxt.placeholder = 'Button Label (e.g. Submit Application)';
+      btnTxt.value = block.button_text || 'Submit';
       btnTxt.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px;font-size:11.5px';
       btnTxt.oninput = () => { block.button_text = btnTxt.value; edUpdateLivePreview(); };
 
@@ -14029,8 +14099,7 @@ function edRenderBlocks() {
 
       if (!Array.isArray(block.fields) || !block.fields.length) {
         block.fields = [
-          { label: 'Full Name', field_type: 'input_text', placeholder: 'Enter your name', required: true },
-          { label: 'Email Address', field_type: 'input_email', placeholder: 'Enter your email', required: true }
+          { label: 'Name', field_type: 'input_text', placeholder: 'Enter your name', required: true }
         ];
       }
 
@@ -14153,7 +14222,7 @@ function edRenderBlocks() {
       mk('input', 'Alt description', block.alt || '', v => { block.alt = v; });
     } else if (block.type === 'web_audio') {
       mk('input', 'Audio Stream URL (https://... MP3/OGG)', block.src || '', v => { block.src = v; });
-      mk('input', 'Track Title (e.g. Executive Financial Walkthrough)', block.label || '', v => { block.label = v; });
+      mk('input', 'Track Title', block.label || '', v => { block.label = v; });
     } else if (block.type === 'web_video') {
       mk('input', 'Video URL (https://... MP4/WebM)', block.src || '', v => { block.src = v; });
       mk('input', 'Video Label', block.label || '', v => { block.label = v; });
@@ -14161,7 +14230,7 @@ function edRenderBlocks() {
       mk('input', 'Hologram Title / Caption', block.value || '', v => { block.value = v; edUpdateLivePreview(); });
 
       // Mode Selector Tabs
-      let curMode = block.src ? (block.src.startsWith('data:') ? 'upload' : 'url') : 'preset';
+      let curMode = block.src ? (block.src.startsWith('data:') ? 'upload' : 'url') : 'upload';
       const modeBar = document.createElement('div');
       modeBar.style.cssText = 'display:flex;gap:4px;margin:4px 0;background:var(--surface2);padding:3px;border-radius:6px';
 
@@ -14287,15 +14356,15 @@ function edRenderBlocks() {
       div.appendChild(matDiv);
 
     } else if (block.type === 'feature_grid') {
-      const hl = document.createElement('div'); hl.style.cssText = 'font-size:11px;color:var(--text3);margin-bottom:4px'; hl.textContent = '3-Card Grid Format: Badge | Title | Description (one card per line)'; div.appendChild(hl);
-      mk('textarea', '', (block.cards || []).map(c => `${c.badge} | ${c.title} | ${c.desc}`).join('\n'), v => {
+      const hl = document.createElement('div'); hl.style.cssText = 'font-size:11px;color:var(--text3);margin-bottom:4px'; hl.textContent = 'Card Grid Format: Badge | Title | Description (one card per line)'; div.appendChild(hl);
+      mk('textarea', 'Badge | Title | Description', (block.cards || []).map(c => `${c.badge} | ${c.title} | ${c.desc}`).join('\n'), v => {
         block.cards = v.split('\n').filter(s => s.trim()).map(line => {
           const p = line.split('|').map(s => s.trim());
           return { badge: p[0] || 'FEATURE', title: p[1] || 'Title', desc: p[2] || 'Description' };
         });
       }, { rows: 4 });
     } else if (block.type === 'button') {
-      mk('input', 'Button Label', block.value || '⚡ Action Button', v => { block.value = v; edUpdateLivePreview(); });
+      mk('input', 'Button Label', block.value || 'Action Button', v => { block.value = v; edUpdateLivePreview(); });
       
       const actRow = document.createElement('div');
       actRow.style.cssText = 'display:grid;grid-template-columns:130px 1fr;gap:6px;margin-top:4px';
@@ -14303,7 +14372,7 @@ function edRenderBlocks() {
       const sel = document.createElement('select');
       sel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:11.5px';
       [
-        ['link', '🌐 External / Stripe Link'],
+        ['link', '🌐 External Link'],
         ['navigate', '🧭 Navigate Slide'],
         ['submit', '⚡ Submit Form / Webhook'],
         ['save_state', '💾 Save Document State']
@@ -14315,15 +14384,15 @@ function edRenderBlocks() {
 
       const ti = document.createElement('input');
       const curAction = sel.value;
-      ti.placeholder = curAction === 'link' ? 'https://buy.stripe.com/... or URL' : (curAction === 'navigate' ? 'next / prev / slide number' : 'target');
-      ti.value = block.target || (block.style&&block.style.target) || (curAction === 'link' ? 'https://buy.stripe.com/demo_checkout' : 'next');
+      ti.placeholder = curAction === 'link' ? 'https://... or URL' : (curAction === 'navigate' ? 'next / prev / slide number' : 'target');
+      ti.value = block.target || (block.style&&block.style.target) || '';
       ti.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:11.5px';
       
       sel.onchange = () => { 
         block.action = sel.value; 
         if(!block.style) block.style={};
         block.style.action = sel.value;
-        ti.placeholder = sel.value === 'link' ? 'https://buy.stripe.com/... or URL' : (sel.value === 'navigate' ? 'next / prev / slide number' : 'target');
+        ti.placeholder = sel.value === 'link' ? 'https://... or URL' : (sel.value === 'navigate' ? 'next / prev / slide number' : 'target');
         edUpdateLivePreview();
       };
       ti.oninput = () => { 
@@ -14372,141 +14441,240 @@ function edRenderBlocks() {
       div.appendChild(styleRow);
 
     } else if (block.type === 'live_feed') {
-      mk('input', 'Beacon Title', block.title || 'LIVE DISPATCH BEACON', v => { block.title = v; edUpdateLivePreview(); });
+      mk('input', 'Beacon Title', block.title || 'Live Data Stream', v => { block.title = v; edUpdateLivePreview(); });
       mk('input', 'Sources / Metrics text', block.sources || '', v => { block.sources = v; edUpdateLivePreview(); });
     } else if (block.type === 'preorder') {
-      mk('input', 'Tier / Badge (e.g. FOUNDER PASS)', block.badge || block.tier || 'FOUNDER PASS', v => { block.badge = block.tier = v; edUpdateLivePreview(); });
-      mk('input', 'Card Headline / Title', block.title || block.value || 'SPECIAL ACCESS PASS', v => { block.title = block.value = v; edUpdateLivePreview(); });
-      mk('input', 'Price Tag (e.g. $499 or $69.99)', block.price || '$499', v => { block.price = v; edUpdateLivePreview(); });
-      mk('input', 'Button Text (e.g. ⚡ PRE-ORDER NOW)', block.button_text || '', v => { block.button_text = v; edUpdateLivePreview(); });
-      mk('textarea', 'Perks & Features (one per line or comma-separated)', Array.isArray(block.perks) ? block.perks.join('\n') : (block.perks || (Array.isArray(block.bonuses) ? block.bonuses.join('\n') : (block.bonuses || 'Unlimited Cloud Collaboration\nVIP Season Pass Included'))), v => { 
+      mk('input', 'Tier / Badge (e.g. SPECIAL OFFER)', block.badge || block.tier || 'SPECIAL OFFER', v => { block.badge = block.tier = v; edUpdateLivePreview(); });
+      mk('input', 'Card Headline / Title', block.title || block.value || 'Custom Offer', v => { block.title = block.value = v; edUpdateLivePreview(); });
+      mk('input', 'Price Tag (e.g. $99)', block.price || '$99', v => { block.price = v; edUpdateLivePreview(); });
+      mk('input', 'Button Text (e.g. ⚡ Get Started)', block.button_text || '', v => { block.button_text = v; edUpdateLivePreview(); });
+      mk('textarea', 'Perks & Features (one per line)', Array.isArray(block.perks) ? block.perks.join('\n') : (block.perks || (Array.isArray(block.bonuses) ? block.bonuses.join('\n') : (block.bonuses || 'Feature 1\nFeature 2'))), v => { 
         block.perks = block.bonuses = v.split('\n').map(s => s.trim()).filter(Boolean);
         edUpdateLivePreview(); 
       }, { rows: 3 });
-      mk('input', '💳 Payment / Checkout Link', block.checkout_url || (block.style && block.style.checkout_url) || 'https://buy.stripe.com/demo_pass', v => {
+      mk('input', '💳 Payment / Checkout Link', block.checkout_url || (block.style && block.style.checkout_url) || '', v => {
         if(!block.style) block.style={};
         block.style.checkout_url = block.checkout_url = v;
         edUpdateLivePreview();
       });
     } else if (block.type === 'jsx_canvas' || block.type === 'interactive_sandbox') {
-      mk('input', 'Sandbox Title', block.value || block.title || 'Interactive Reactive Sandbox', v => { block.value = block.title = v; edUpdateLivePreview(); });
+      mk('input', 'Sandbox Title', block.value || block.title || 'Custom Interactive Sandbox', v => { block.value = block.title = v; edUpdateLivePreview(); });
 
-      // Presets Selector
-      const tplRow = document.createElement('div');
-      tplRow.style.cssText = 'display:flex;align-items:center;gap:6px;margin:6px 0';
-      tplRow.innerHTML = '<span style="font-size:10px;font-weight:700;color:#38bdf8;text-transform:uppercase">FEATURE TEMPLATES:</span>';
-      const tplSel = document.createElement('select');
-      tplSel.style.cssText = 'flex:1;background:var(--surface2);border:1px solid var(--border);color:#fff;border-radius:6px;padding:4px 8px;font-size:11px';
+      // Integrated Libraries Status Bar
+      const libBar = document.createElement('div');
+      libBar.style.cssText = 'display:flex;align-items:center;gap:4px;margin:5px 0;flex-wrap:wrap';
+      libBar.innerHTML = `
+        <span style="font-size:9.5px;color:var(--text3);font-weight:700;margin-right:2px">INTEGRATED LIBS:</span>
+        <span style="font-size:9.5px;background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);padding:2px 6px;border-radius:4px">⚛️ React 18</span>
+        <span style="font-size:9.5px;background:rgba(167,139,250,0.15);color:#a78bfa;border:1px solid rgba(167,139,250,0.3);padding:2px 6px;border-radius:4px">📜 Babel Standalone</span>
+        <span style="font-size:9.5px;background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);padding:2px 6px;border-radius:4px">📊 Chart.js</span>
+        <span style="font-size:9.5px;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);padding:2px 6px;border-radius:4px">🧊 Three.js</span>
+        <span style="font-size:9.5px;background:rgba(244,63,94,0.15);color:#f43f5e;border:1px solid rgba(244,63,94,0.3);padding:2px 6px;border-radius:4px">🎨 Canvas 2D</span>
+      `;
+      div.appendChild(libBar);
+
+      // Starter Helpers Dropdown
+      const helperRow = document.createElement('div');
+      helperRow.style.cssText = 'display:flex;align-items:center;gap:6px;margin:6px 0';
+      helperRow.innerHTML = '<span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">QUICK STARTER:</span>';
+      const helperSel = document.createElement('select');
+      helperSel.style.cssText = 'flex:1;background:var(--surface2);border:1px solid var(--border);color:#fff;border-radius:6px;padding:4px 8px;font-size:11px';
       
-      const templates = [
-        ['custom', '✏️ Custom Code...'],
-        ['slider_gauge', '🎚️ Reactive Slider & Dynamic Gauge'],
-        ['live_chart', '📊 Interactive Realtime SVG Chart'],
-        ['fluid_waves', '🌊 Fluid Ripple Canvas'],
-        ['particles_physics', '✨ Particle Physics Constellation'],
-        ['timer_stopwatch', '⏱️ Productivity Timer & Stopwatch'],
-        ['throttle_dyno', '🏎️ Throttle Dyno & BHP Meter'],
-        ['orbital_gravity', '🪐 Orbital Velocity Simulator'],
-        ['roi_calc', '🧮 Interactive ROI Calculator']
+      const starters = [
+        ['', '💡 Insert Starter Snippet (Optional)...'],
+        ['blank', '🧹 Clean Blank Container'],
+        ['react_counter', '⚛️ React 18 Dynamic State Component'],
+        ['chartjs_bar', '📊 Chart.js Dynamic Visualizer'],
+        ['threejs_cube', '🧊 Three.js 3D WebGL Mesh Scene'],
+        ['canvas2d_particles', '🎨 Canvas 2D Interactive Animation'],
+        ['slider_gauge', '🎚️ HTML5 Reactive Slider & Output']
       ];
-      templates.forEach(t => {
-        const o = document.createElement('option'); o.value = t[0]; o.textContent = t[1];
-        tplSel.appendChild(o);
+      starters.forEach(s => {
+        const o = document.createElement('option'); o.value = s[0]; o.textContent = s[1];
+        helperSel.appendChild(o);
       });
 
-      const getTemplateCode = (key) => {
+      const getStarterCode = (key) => {
         switch(key) {
+          case 'blank':
+            return `<div style="padding:16px;color:#fff;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(56,189,248,0.25)">
+  <h4 style="margin:0 0 8px;color:#38bdf8">Custom Interactive Sandbox</h4>
+  <p style="font-size:12px;color:#94a3b8">Write custom HTML, React JSX, Canvas, Three.js, or Chart.js.</p>
+</div>`;
+          case 'react_counter':
+            return `<div id="react-root" style="padding:16px;color:#fff;background:rgba(15,23,42,0.9);border-radius:12px;border:1px solid rgba(56,189,248,0.3)"></div>
+<script type="text/babel">
+  function CounterApp() {
+    const [count, setCount] = React.useState(0);
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <h4 style={{ margin: '0 0 8px', color: '#38bdf8' }}>⚛️ React 18 Interactive State</h4>
+        <div style={{ fontSize: '28px', fontWeight: '800', color: '#fef08a', margin: '8px 0' }}>{count}</div>
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+          <button onClick={() => setCount(c => c + 1)} style={{ padding: '6px 14px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>+ Increment</button>
+          <button onClick={() => setCount(c => Math.max(0, c - 1))} style={{ padding: '6px 14px', background: '#f59e0b', color: '#0a0a14', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>- Decrement</button>
+          <button onClick={() => setCount(0)} style={{ padding: '6px 14px', background: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Reset</button>
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.render(<CounterApp />, container.querySelector('#react-root') || container);
+<\/script>`;
+          case 'chartjs_bar':
+            return `<div style="padding:16px;background:rgba(15,23,42,0.9);border-radius:12px;border:1px solid rgba(56,189,248,0.3)">
+  <canvas style="max-height:160px;width:100%"></canvas>
+</div>
+<script>
+  const cv = container.querySelector('canvas');
+  if (cv && window.Chart) {
+    new Chart(cv, {
+      type: 'bar',
+      data: {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        datasets: [{ label: 'Revenue ($M)', data: [45, 78, 112, 160], backgroundColor: ['#38bdf8', '#818cf8', '#f59e0b', '#10b981'] }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#cbd5e1' } } } }
+    });
+  }
+<\/script>`;
+          case 'threejs_cube':
+            return `<div id="three-wrap" style="height:140px;width:100%;border-radius:8px;overflow:hidden;background:#050711"></div>
+<script>
+  const wrap = container.querySelector('#three-wrap');
+  if (wrap && window.THREE) {
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
+    camera.position.z = 2.5;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+    wrap.appendChild(renderer.domElement);
+    const geo = new THREE.BoxGeometry(1, 1, 1);
+    const mat = new THREE.MeshNormalMaterial({ wireframe: false });
+    const cube = new THREE.Mesh(geo, mat);
+    scene.add(cube);
+    function anim() { requestAnimationFrame(anim); cube.rotation.x += 0.015; cube.rotation.y += 0.02; renderer.render(scene, camera); }
+    anim();
+  }
+<\/script>`;
+          case 'canvas2d_particles':
+            return `<canvas style="width:100%;height:120px;display:block;border-radius:8px;background:#060813"></canvas>
+<script>
+  const cv = container.querySelector('canvas');
+  if (cv) {
+    cv.width = cv.clientWidth || 300; cv.height = 120;
+    const ctx = cv.getContext('2d');
+    let pts = Array.from({length: 25}, () => ({ x: Math.random()*cv.width, y: Math.random()*cv.height, vx: (Math.random()-0.5)*1.5, vy: (Math.random()-0.5)*1.5 }));
+    function draw() {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      pts.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > cv.width) p.vx *= -1;
+        if (p.y < 0 || p.y > cv.height) p.vy *= -1;
+        ctx.fillStyle = '#00f0ff';
+        ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI*2); ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+<\/script>`;
           case 'slider_gauge':
+          default:
             return `<div style="padding:16px;color:#fff;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(56,189,248,0.3)">
   <div style="display:flex;justify-content:space-between;margin-bottom:8px">
     <span style="font-weight:700;color:#38bdf8">⚡ Dynamic Output</span>
     <span id="dyno-val" style="color:#00f0ff;font-weight:bold;font-size:16px">50%</span>
   </div>
   <input type="range" min="0" max="100" value="50" style="width:100%;accent-color:#00f0ff;cursor:pointer" oninput="document.getElementById('dyno-val').textContent=this.value+'%'">
-  <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:4px">
-    <span>0% Idle</span><span>50% Nominal</span><span>100% Overdrive</span>
-  </div>
 </div>`;
-          case 'live_chart':
-            return `<div style="padding:16px;color:#fff;background:rgba(15,23,42,0.85);border-radius:12px;border:1px solid rgba(56,189,248,0.3)">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-    <strong style="color:#38bdf8;font-size:13px">📊 Realtime Telemetry Stream</strong>
-    <span style="font-size:10px;color:#10b981">● Connected</span>
-  </div>
-  <div style="display:flex;align-items:flex-end;gap:8px;height:90px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.1)">
-    <div style="flex:1;background:linear-gradient(180deg,#38bdf8,#0284c7);height:40%;border-radius:4px;transition:height .3s"></div>
-    <div style="flex:1;background:linear-gradient(180deg,#38bdf8,#0284c7);height:75%;border-radius:4px;transition:height .3s"></div>
-    <div style="flex:1;background:linear-gradient(180deg,#f59e0b,#d97706);height:60%;border-radius:4px;transition:height .3s"></div>
-    <div style="flex:1;background:linear-gradient(180deg,#10b981,#059669);height:95%;border-radius:4px;transition:height .3s"></div>
-    <div style="flex:1;background:linear-gradient(180deg,#a78bfa,#7c3aed);height:50%;border-radius:4px;transition:height .3s"></div>
-  </div>
-  <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:6px">
-    <span>Node 1</span><span>Node 2</span><span>Node 3</span><span>Node 4</span><span>Node 5</span>
-  </div>
-</div>`;
-          case 'timer_stopwatch':
-            return `<div style="padding:16px;text-align:center;color:#fff;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(167,139,250,0.3)">
-  <div style="font-size:10px;color:#a78bfa;font-weight:700;letter-spacing:1px;text-transform:uppercase">Session Focus Stopwatch</div>
-  <div id="sw-display" style="font-size:32px;font-weight:800;font-family:monospace;color:#fef08a;margin:8px 0">00:00.0</div>
-  <div style="display:flex;justify-content:center;gap:8px">
-    <button type="button" onclick="if(!window.__swI){var t0=Date.now()-(window.__swD||0);window.__swI=setInterval(function(){var d=Date.now()-t0;window.__swD=d;var s=Math.floor(d/1000);var m=Math.floor(s/60);var ms=Math.floor((d%1000)/100);document.getElementById('sw-display').textContent=(m<10?'0':'')+m+':'+(s%60<10?'0':'')+(s%60)+'.'+ms;},100);}" style="padding:5px 14px;background:#10b981;border:none;border-radius:6px;color:#fff;font-weight:700;cursor:pointer">Start</button>
-    <button type="button" onclick="clearInterval(window.__swI);window.__swI=null;" style="padding:5px 14px;background:#f59e0b;border:none;border-radius:6px;color:#0a0a14;font-weight:700;cursor:pointer">Pause</button>
-    <button type="button" onclick="clearInterval(window.__swI);window.__swI=null;window.__swD=0;document.getElementById('sw-display').textContent='00:00.0';" style="padding:5px 14px;background:rgba(255,255,255,0.1);border:none;border-radius:6px;color:#fff;cursor:pointer">Reset</button>
-  </div>
-</div>`;
-          case 'throttle_dyno':
-            return `<div style="padding:16px;color:#fff;background:rgba(10,12,22,0.9);border-radius:12px;border:1px solid rgba(245,158,11,0.3)">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-    <span style="color:#f59e0b;font-weight:700;font-size:12px">🏎️ Quantum Throttle Dynamometer</span>
-    <span id="dyno-hp" style="font-size:16px;font-weight:800;color:#fef08a">1,400 BHP</span>
-  </div>
-  <input type="range" min="300" max="2500" value="1400" style="width:100%;accent-color:#f59e0b;cursor:pointer" oninput="document.getElementById('dyno-hp').textContent=Number(this.value).toLocaleString()+' BHP';document.getElementById('dyno-bar').style.width=(this.value/25)+'%'">
-  <div style="background:rgba(255,255,255,0.1);height:8px;border-radius:4px;overflow:hidden;margin-top:8px">
-    <div id="dyno-bar" style="height:100%;width:56%;background:linear-gradient(90deg,#10b981,#f59e0b,#ef4444);transition:width .1s"></div>
-  </div>
-</div>`;
-          case 'roi_calc':
-            return `<div style="padding:16px;color:#fff;background:rgba(16,24,39,0.9);border-radius:12px;border:1px solid rgba(16,185,129,0.3)">
-  <div style="display:flex;justify-content:space-between;margin-bottom:10px">
-    <strong style="color:#34d399;font-size:12px">🧮 Interactive ROI Calculator</strong>
-    <span id="roi-out" style="font-size:16px;font-weight:800;color:#fef08a">$24,500</span>
-  </div>
-  <div style="font-size:10px;color:#94a3b8;margin-bottom:3px">Principal Investment ($)</div>
-  <input type="range" min="1000" max="50000" step="500" value="10000" style="width:100%;accent-color:#10b981;cursor:pointer" oninput="window.__roiP=Number(this.value);var ret=(window.__roiP||10000)*(1+((window.__roiR||24)/100)*(window.__roiY||5));document.getElementById('roi-out').textContent='$'+Math.round(ret).toLocaleString();">
-  <div style="font-size:10px;color:#94a3b8;margin:8px 0 3px">Annual Return: 24% APY • 5-Year Horizon</div>
-</div>`;
-          default:
-            return `<div style="padding:16px;color:#fff"><div style="display:flex;justify-content:space-between"><span>⚡ Dynamic Output</span><span id="dyno-val" style="color:#00f0ff;font-weight:bold">50%</span></div><input type="range" min="0" max="100" value="50" style="width:100%;accent-color:#00f0ff" oninput="document.getElementById('dyno-val').textContent=this.value+'%'"></div>`;
         }
       };
 
-      tplSel.onchange = () => {
-        if (tplSel.value !== 'custom') {
-          const newCode = getTemplateCode(tplSel.value);
+      helperSel.onchange = () => {
+        if (helperSel.value) {
+          const newCode = getStarterCode(helperSel.value);
           if (!block.style) block.style = {};
           block.style.code = newCode;
           ta.value = newCode;
-          if (codePreview) codePreview.innerHTML = newCode;
+          runMini();
           edUpdateLivePreview();
         }
       };
-      tplRow.appendChild(tplSel);
-      div.appendChild(tplRow);
+      helperRow.appendChild(helperSel);
+      div.appendChild(helperRow);
 
-      const ta = mk('textarea', 'HTML/JS code for the interactive widget', (block.style && block.style.code) || getTemplateCode('slider_gauge'), v => { 
-        if(!block.style) block.style={}; 
-        block.style.code = v; 
-        if(codePreview) codePreview.innerHTML = v;
+      // Code Editor Textarea
+      const ta = document.createElement('textarea');
+      ta.style.cssText = 'width:100%;font-family:"JetBrains Mono",monospace;font-size:11px;padding:8px;background:#050711;border:1px solid var(--border);border-radius:6px;color:#f8fafc;line-height:1.45;resize:vertical';
+      ta.rows = 7;
+      ta.placeholder = 'Enter custom HTML, React JSX, Chart.js, Three.js, or Canvas code...';
+      ta.value = (block.style && block.style.code !== undefined) ? block.style.code : (block.code !== undefined ? block.code : getStarterCode('slider_gauge'));
+      ta.oninput = () => {
+        if (!block.style) block.style = {};
+        block.style.code = ta.value;
+        runMini();
         edUpdateLivePreview();
-      }, { rows: 5 });
+      };
+      div.appendChild(ta);
 
+      // Code Editor Actions
+      const actRow = document.createElement('div');
+      actRow.style.cssText = 'display:flex;gap:6px;margin:4px 0 8px;justify-content:flex-end';
+      
+      const btnCopy = document.createElement('button');
+      btnCopy.type = 'button';
+      btnCopy.className = 'find-btn';
+      btnCopy.style.fontSize = '10.5px';
+      btnCopy.textContent = '📋 Copy Code';
+      btnCopy.onclick = () => {
+        navigator.clipboard.writeText(ta.value).then(() => {
+          if (typeof showToast === 'function') showToast('✓ Code copied to clipboard', 'ok');
+        });
+      };
+
+      const btnClear = document.createElement('button');
+      btnClear.type = 'button';
+      btnClear.className = 'find-btn';
+      btnClear.style.fontSize = '10.5px';
+      btnClear.textContent = '🧹 Clear';
+      btnClear.onclick = () => {
+        ta.value = '';
+        if (!block.style) block.style = {};
+        block.style.code = '';
+        runMini();
+        edUpdateLivePreview();
+      };
+
+      const btnRerun = document.createElement('button');
+      btnRerun.type = 'button';
+      btnRerun.className = 'find-btn';
+      btnRerun.style.fontSize = '10.5px';
+      btnRerun.textContent = '🔄 Re-run';
+      btnRerun.onclick = () => {
+        runMini();
+        edUpdateLivePreview();
+        if (typeof showToast === 'function') showToast('🔄 Sandbox re-executed', 'ok');
+      };
+
+      actRow.appendChild(btnCopy);
+      actRow.appendChild(btnClear);
+      actRow.appendChild(btnRerun);
+      div.appendChild(actRow);
+
+      // Live Mini Preview
       const wrap = document.createElement('div');
       wrap.className = 'ed-block-interactive-wrap';
       wrap.innerHTML = '<div class="badge"><span>⚡ Live Interactive Sandbox Preview</span></div>';
-      const codePreview = document.createElement('div');
-      codePreview.innerHTML = (block.style && block.style.code) || getTemplateCode('slider_gauge');
-      wrap.appendChild(codePreview);
+      const miniPreview = document.createElement('div');
+      miniPreview.id = 'mini-sandbox-' + block.id;
+      miniPreview.setAttribute('data-scope', 'mini_' + block.id);
+      wrap.appendChild(miniPreview);
       div.appendChild(wrap);
+
+      const runMini = () => {
+        executeCustomSandboxCode(ta.value, miniPreview, 'mini_' + block.id);
+      };
+      setTimeout(runMini, 40);
 
     } else if (block.type === 'particles' || block.type === 'particle_canvas') {
       const sel = document.createElement('select');
