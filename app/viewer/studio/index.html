@@ -9827,7 +9827,7 @@ async function loadLdocxFileDirect(file) {
 
     // 2. Extract Manifest
     let manifest = {
-      title: file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' '),
+      title: (file.name || 'Living Document').replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' '),
       author: 'Living Document Studio',
       page_count: 1,
       lang: 'en'
@@ -11482,49 +11482,49 @@ function renderBlockNode(node,parent){
     case 'input_text':{
       const w=document.createElement('div');w.className='pres-field';
       const l=document.createElement('label');l.textContent=nodeLabel(node);
-      const i=document.createElement('input');i.type='text';i.placeholder=nodePH(node);
+      const i=document.createElement('input');i.type='text';i.className='pres-form-input';i.placeholder=nodePH(node);
       w.appendChild(l);w.appendChild(i);parent.appendChild(w);break;
     }
     case 'input_number':{
       const w=document.createElement('div');w.className='pres-field';
       const l=document.createElement('label');l.textContent=nodeLabel(node);
-      const i=document.createElement('input');i.type='number';i.placeholder=nodePH(node);
+      const i=document.createElement('input');i.type='number';i.className='pres-form-input';i.placeholder=nodePH(node);
       w.appendChild(l);w.appendChild(i);parent.appendChild(w);break;
     }
     case 'input_tel':{
       const w=document.createElement('div');w.className='pres-field';
       const l=document.createElement('label');l.textContent=nodeLabel(node);
-      const i=document.createElement('input');i.type='tel';i.placeholder=nodePH(node);
+      const i=document.createElement('input');i.type='tel';i.className='pres-form-input';i.placeholder=nodePH(node);
       w.appendChild(l);w.appendChild(i);parent.appendChild(w);break;
     }
     case 'textarea':{
       const w=document.createElement('div');w.className='pres-field';
       const l=document.createElement('label');l.textContent=nodeLabel(node);
-      const t=document.createElement('textarea');t.placeholder=nodePH(node);t.rows=3;
+      const t=document.createElement('textarea');t.className='pres-form-input';t.placeholder=nodePH(node);t.rows=3;
       w.appendChild(l);w.appendChild(t);parent.appendChild(w);break;
     }
     case 'input_email':{
       const w=document.createElement('div');w.className='pres-field';
       const l=document.createElement('label');l.textContent=nodeLabel(node);
-      const i=document.createElement('input');i.type='email';i.placeholder=nodePH(node);
+      const i=document.createElement('input');i.type='email';i.className='pres-form-input';i.placeholder=nodePH(node);
       w.appendChild(l);w.appendChild(i);parent.appendChild(w);break;
     }
     case 'input_checkbox':{
       const w=document.createElement('div');w.className='pres-field pres-field-row';
-      const i=document.createElement('input');i.type='checkbox';
+      const i=document.createElement('input');i.type='checkbox';i.className='pres-form-input';
       const l=document.createElement('label');l.textContent=nodeLabel(node);l.style.cssText='color:var(--text2);font-size:14px;font-weight:400;text-transform:none;letter-spacing:0';
       w.appendChild(i);w.appendChild(l);parent.appendChild(w);break;
     }
     case 'input_radio':{
       const w=document.createElement('div');w.className='pres-field pres-field-row';
-      const i=document.createElement('input');i.type='radio';i.name='ldoc-radio';
+      const i=document.createElement('input');i.type='radio';i.name='ldoc-radio';i.className='pres-form-input';
       const l=document.createElement('label');l.textContent=nodeLabel(node);l.style.cssText='color:var(--text2);font-size:14px;font-weight:400;text-transform:none;letter-spacing:0';
       w.appendChild(i);w.appendChild(l);parent.appendChild(w);break;
     }
     case 'input_select':{
       const w=document.createElement('div');w.className='pres-field';
       const l=document.createElement('label');l.textContent=nodeLabel(node);
-      const s=document.createElement('select');
+      const s=document.createElement('select');s.className='pres-form-input';
       const ph=nodePH(node);if(ph){const o=document.createElement('option');o.textContent=ph;o.disabled=true;o.selected=true;s.appendChild(o);}
       const opts = node.options || (node.style && node.style.options) || [];
       opts.forEach(opt => {
@@ -11538,13 +11538,13 @@ function renderBlockNode(node,parent){
     case 'input_date':{
       const w=document.createElement('div');w.className='pres-field';
       const l=document.createElement('label');l.textContent=nodeLabel(node);
-      const i=document.createElement('input');i.type='date';
+      const i=document.createElement('input');i.type='date';i.className='pres-form-input';
       w.appendChild(l);w.appendChild(i);parent.appendChild(w);break;
     }
     case 'input_file':{
       const w=document.createElement('div');w.className='pres-field';
       const l=document.createElement('label');l.textContent=nodeLabel(node);
-      const i=document.createElement('input');i.type='file';i.style.color='var(--text2)';
+      const i=document.createElement('input');i.type='file';i.className='pres-form-input';i.style.color='var(--text2)';
       w.appendChild(l);w.appendChild(i);parent.appendChild(w);break;
     }
     case 'button':{
@@ -11831,7 +11831,125 @@ function renderBlockNode(node,parent){
 
       // Only assign procedural fallback templates if modelData has no authentic vertices
       if (!modelData || !Array.isArray(modelData.vertices) || modelData.vertices.length === 0) {
-        if (template === 'qubit' || template === 'sphere' || template.includes('quantum')) {
+        if (template === 'atomic_lattice' || template === 'lattice' || template === 'crystal') {
+          // Face-Centered Cubic (FCC) Atomic Unit Cell with 15 nodes and octahedral bonds
+          modelData = {
+            vertices: [
+              [-1.2,-1.2,-1.2], [ 1.2,-1.2,-1.2], [ 1.2, 1.2,-1.2], [-1.2, 1.2,-1.2],
+              [-1.2,-1.2, 1.2], [ 1.2,-1.2, 1.2], [ 1.2, 1.2, 1.2], [-1.2, 1.2, 1.2],
+              [ 0.0, 0.0,-1.2], [ 0.0, 0.0, 1.2], [ 0.0,-1.2, 0.0], [ 0.0, 1.2, 0.0],
+              [-1.2, 0.0, 0.0], [ 1.2, 0.0, 0.0], [ 0.0, 0.0, 0.0]
+            ],
+            faces: [
+              [0,1,8], [1,2,8], [2,3,8], [3,0,8],
+              [4,5,9], [5,6,9], [6,7,9], [7,4,9],
+              [0,1,10], [1,5,10], [5,4,10], [4,0,10],
+              [3,2,11], [2,6,11], [6,7,11], [7,3,11],
+              [0,3,12], [3,7,12], [7,4,12], [4,0,12],
+              [1,2,13], [2,6,13], [6,5,13], [5,1,13],
+              [8,10,14], [10,13,14], [13,11,14], [11,8,14],
+              [8,12,14], [12,10,14], [9,10,14], [9,13,14],
+              [9,11,14], [9,12,14], [11,12,14], [12,8,14]
+            ]
+          };
+        } else if (template === 'snitch') {
+          // Golden Snitch: Central sphere core + curved aerodynamic feathered wing blades
+          modelData = {
+            vertices: [
+              [0.0, 0.8, 0.0], [0.0,-0.8, 0.0],
+              [ 0.7, 0.2, 0.0], [-0.7, 0.2, 0.0],
+              [ 0.0, 0.2, 0.7], [ 0.0, 0.2,-0.7],
+              [ 0.5,-0.3, 0.5], [-0.5,-0.3, 0.5],
+              [ 0.5,-0.3,-0.5], [-0.5,-0.3,-0.5],
+              [-0.8, 0.3, 0.1], [-1.6, 0.7, 0.3], [-2.5, 1.1, 0.5], [-3.4, 1.6, 0.6],
+              [-1.4, 0.1, 0.0], [-2.3, 0.4, 0.1], [-3.1, 0.8, 0.2],
+              [ 0.8, 0.3, 0.1], [ 1.6, 0.7, 0.3], [ 2.5, 1.1, 0.5], [ 3.4, 1.6, 0.6],
+              [ 1.4, 0.1, 0.0], [ 2.3, 0.4, 0.1], [ 3.1, 0.8, 0.2]
+            ],
+            faces: [
+              [0,2,4], [0,4,3], [0,3,5], [0,5,2],
+              [2,6,4], [4,7,3], [3,9,5], [5,8,2],
+              [1,6,4], [1,7,3], [1,9,5], [1,8,2],
+              [1,6,8], [1,7,9],
+              [10,11,14], [11,15,14], [11,12,15], [12,16,15], [12,13,16],
+              [17,18,21], [18,22,21], [18,19,22], [19,23,22], [19,20,23]
+            ]
+          };
+        } else if (template === 'satellite') {
+          // Deep Space Vanguard Satellite Bus + High Gain Dish + Dual Solar Wings
+          modelData = {
+            vertices: [
+              [-0.5,-0.5,-0.9], [ 0.5,-0.5,-0.9], [ 0.5, 0.5,-0.9], [-0.5, 0.5,-0.9],
+              [-0.5,-0.5, 0.9], [ 0.5,-0.5, 0.9], [ 0.5, 0.5, 0.9], [-0.5, 0.5, 0.9],
+              [ 0.0, 0.8, 1.4], [-0.4, 0.8, 1.0], [ 0.4, 0.8, 1.0], [ 0.0, 1.3, 1.0],
+              [-0.6, 0.0, 0.0], [-1.3, 0.0, 0.0],
+              [-1.3,-0.7,-0.3], [-1.3, 0.7,-0.3], [-3.1, 0.7,-0.3], [-3.1,-0.7,-0.3],
+              [ 0.6, 0.0, 0.0], [ 1.3, 0.0, 0.0],
+              [ 1.3,-0.7,-0.3], [ 1.3, 0.7,-0.3], [ 3.1, 0.7,-0.3], [ 3.1,-0.7,-0.3]
+            ],
+            faces: [
+              [0,1,2], [0,2,3], [4,6,5], [4,7,6],
+              [0,4,5], [0,5,1], [2,6,7], [2,7,3],
+              [0,3,7], [0,7,4], [1,5,6], [1,6,2],
+              [8,9,11], [8,11,10], [8,10,9], [9,10,11],
+              [14,15,16], [14,16,17], [3,12,7], [12,13,14], [12,14,15],
+              [20,21,22], [20,22,23], [2,18,6], [18,19,20], [18,20,21]
+            ]
+          };
+        } else if (template === 'car') {
+          // Aerodynamic GT Sports Car Chassis + Splitter + Hood + Cockpit + Diffuser + GT Wing
+          modelData = {
+            vertices: [
+              [-0.85,-0.35, 2.3], [ 0.85,-0.35, 2.3], [ 0.0,-0.3, 2.5], [ 0.0, 0.05, 2.1],
+              [-0.85, 0.0, 1.3], [ 0.85, 0.0, 1.3], [-0.75, 0.2, 1.1], [ 0.75, 0.2, 1.1],
+              [-0.65, 0.58, 0.2], [ 0.65, 0.58, 0.2], [-0.6, 0.58,-0.6], [ 0.6, 0.58,-0.6],
+              [-0.7, 0.22,-1.4], [ 0.7, 0.22,-1.4], [-0.85, 0.05,-2.2], [ 0.85, 0.05,-2.2],
+              [-0.85,-0.35,-2.3], [ 0.85,-0.35,-2.3], [ 0.0,-0.32,-2.4], [ 0.0, 0.0,-2.3],
+              [-0.95, 0.48,-2.0], [ 0.95, 0.48,-2.0], [-0.95, 0.48,-2.3], [ 0.95, 0.48,-2.3]
+            ],
+            faces: [
+              [0,1,2], [0,2,3], [1,3,2], [0,3,4], [1,5,3], [4,3,6], [5,7,3], [6,3,7],
+              [6,7,9], [6,9,8],
+              [8,9,11], [8,11,10],
+              [10,11,13], [10,13,12], [12,13,15], [12,15,14],
+              [14,15,19], [16,17,18], [14,19,16], [15,17,19],
+              [20,21,23], [20,23,22],
+              [12,20,22], [13,21,23]
+            ]
+          };
+        } else if (template === 'tourbillon' || template === 'wheel' || template === 'wheel_rim' || template === 'rim' || template === 'watch') {
+          // Haute Horlogerie Tourbillon Escapement: 16-segment bezel ring + 3-arm bridge + center jewels
+          const verts = [];
+          const faces = [];
+          const segs = 16;
+          for (let i = 0; i < segs; i++) {
+            const th = (i / segs) * Math.PI * 2;
+            const c = Math.cos(th), s = Math.sin(th);
+            verts.push([c * 2.2, s * 2.2, 0.25]);
+            verts.push([c * 2.2, s * 2.2,-0.25]);
+            verts.push([c * 1.8, s * 1.8, 0.2]);
+            verts.push([c * 1.8, s * 1.8,-0.2]);
+          }
+          for (let i = 0; i < segs; i++) {
+            const n = (i + 1) % segs;
+            const b = i * 4, nb = n * 4;
+            faces.push([b, b + 1, nb + 1]);
+            faces.push([b, nb + 1, nb]);
+            faces.push([b + 2, nb + 2, nb + 3]);
+            faces.push([b + 2, nb + 3, b + 3]);
+            faces.push([b, nb, nb + 2]);
+            faces.push([b, nb + 2, b + 2]);
+          }
+          const cIdx = verts.length;
+          verts.push([0, 0, 0.45]);
+          verts.push([0, 0,-0.45]);
+          for (let k = 0; k < 3; k++) {
+            const a = Math.floor((k / 3) * segs) * 4 + 2;
+            faces.push([cIdx, a, (a + 4) % (segs * 4)]);
+            faces.push([cIdx + 1, (a + 4) % (segs * 4) + 1, a + 1]);
+          }
+          modelData = { vertices: verts, faces: faces };
+        } else if (template === 'neural_node' || template === 'qubit' || template === 'sphere' || template.includes('quantum')) {
           modelData = {
             vertices: [
               [-1.0,-0.4, 3.2], [ 1.0,-0.4, 3.2], [-1.2,-0.2, 2.4], [ 1.2,-0.2, 2.4],
@@ -11851,31 +11969,6 @@ function renderBlockNode(node,parent){
               [0,2,22], [1,23,3], [16,22,14], [17,15,23]
             ]
           };
-        } else if (template === 'wheel' || template === 'wheel_rim' || template === 'rim') {
-          const verts = [];
-          const faces = [];
-          const spokes = 10;
-          for (let a = 0; a < spokes; a++) {
-            const rad = (a / spokes) * Math.PI * 2;
-            const cos = Math.cos(rad);
-            const sin = Math.sin(rad);
-            verts.push([cos * 2.0, sin * 2.0,  0.4]);
-            verts.push([cos * 2.0, sin * 2.0, -0.4]);
-            verts.push([cos * 0.6, sin * 0.6,  0.5]);
-            verts.push([cos * 0.6, sin * 0.6, -0.2]);
-          }
-          verts.push([0, 0,  0.6]);
-          const cf = verts.length - 1;
-          for (let a = 0; a < spokes; a++) {
-            const next = (a + 1) % spokes;
-            const base = a * 4;
-            const nbase = next * 4;
-            faces.push([base, base + 1, nbase + 1]);
-            faces.push([base, nbase + 1, nbase]);
-            faces.push([base + 2, cf, nbase + 2]);
-            faces.push([base, base + 2, nbase]);
-          }
-          modelData = { vertices: verts, faces: faces };
         } else {
           modelData = {
             vertices: [
@@ -12067,6 +12160,18 @@ function renderBlockNode(node,parent){
     }
     case 'arr_projector':{
       renderArrProjector(node, parent);
+      break;
+    }
+    case 'spell_matrix':{
+      renderSpellMatrix(node, parent);
+      break;
+    }
+    case 'quantum_sim':{
+      renderQuantumSim(node, parent);
+      break;
+    }
+    case 'balance_tuner':case 'horology_tuner':{
+      renderBalanceTuner(node, parent);
       break;
     }
     case 'tilt_card':{
@@ -12844,6 +12949,319 @@ function renderTiltCard(node, parent) {
   setTimeout(() => setupTiltCardInteractive(card, maxAngle, depth, sheen), 50);
 }
 
+function renderQuantumSim(node, parent) {
+  const title = node.title || node.value || 'Quantum Schrödinger Wavefunction Simulator';
+  let initN = parseInt(node.quantum_number, 10) || 3;
+  let initV = parseFloat(node.barrier_v) || 4.2;
+  const uid = 'qsim-' + Math.random().toString(36).substr(2, 8);
+
+  const card = document.createElement('div');
+  card.className = 'telemetry-card quantum-sim-card';
+  card.id = uid;
+  card.style.cssText = 'border-color: rgba(168,85,247,0.5);';
+
+  card.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">⚛️</span>
+        <strong style="font-family:'Cinzel',serif;font-size:15px;color:#c084fc;letter-spacing:1px">${escapeHtml(title)}</strong>
+        <span class="qm-eigen-badge" style="background:rgba(168,85,247,0.2);border:1px solid rgba(168,85,247,0.4);padding:2px 8px;border-radius:6px;font-family:monospace;font-size:11px;font-weight:700;color:#e9d5ff">Harmonic Well</span>
+      </div>
+      <div style="font-size:11px;font-family:monospace;color:#34d399">● BORN RULE PROBABILITY DENSITY LIVE</div>
+    </div>
+    <div style="position:relative;margin:10px 0;text-align:center">
+      <canvas class="qm-canvas" width="480" height="170" style="width:100%;max-width:480px;height:170px;display:block;margin:0 auto;border-radius:12px;background:#06040d;border:1px solid rgba(168,85,247,0.2)"></canvas>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin:12px 0">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Eigenstate (n)</div>
+        <div class="qm-stat-n" style="font-size:15px;font-weight:800;color:#c084fc;font-family:monospace">n = ${initN}</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Eigenenergy (E)</div>
+        <div class="qm-stat-e" style="font-size:15px;font-weight:800;color:#fef08a;font-family:monospace">${(initN - 0.5).toFixed(1)} ℏω</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Tunneling %</div>
+        <div class="qm-stat-tunnel" style="font-size:15px;font-weight:800;color:#34d399;font-family:monospace">18.4%</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Nodal Points</div>
+        <div class="qm-stat-nodes" style="font-size:15px;font-weight:800;color:#38bdf8;font-family:monospace">${initN - 1}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:4px">
+          <span style="color:var(--text2)">Energy Level (n)</span>
+          <span class="qm-val-n" style="color:#c084fc;font-family:monospace">n = ${initN}</span>
+        </div>
+        <input type="range" class="qm-slider-n" min="1" max="5" value="${initN}" style="width:100%;accent-color:#a855f7;cursor:pointer">
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:4px">
+          <span style="color:var(--text2)">Barrier Potential V₀</span>
+          <span class="qm-val-v" style="color:#38bdf8;font-family:monospace">${initV.toFixed(1)} eV</span>
+        </div>
+        <input type="range" class="qm-slider-v" min="1" max="10" step="0.5" value="${initV}" style="width:100%;accent-color:#38bdf8;cursor:pointer">
+      </div>
+    </div>
+  `;
+  parent.appendChild(card);
+  setTimeout(() => initQuantumSimWidget(card, { initN, initV }), 50);
+}
+
+function initQuantumSimWidget(card, cfg) {
+  if (!card) return;
+  const canvas = card.querySelector('.qm-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let n = cfg.initN || 3;
+  let v = cfg.initV || 4.2;
+  let t = 0;
+
+  const nSlider = card.querySelector('.qm-slider-n');
+  const vSlider = card.querySelector('.qm-slider-v');
+  const badgeEl = card.querySelector('.qm-eigen-badge');
+  const statN = card.querySelector('.qm-stat-n');
+  const statE = card.querySelector('.qm-stat-e');
+  const statTunnel = card.querySelector('.qm-stat-tunnel');
+  const statNodes = card.querySelector('.qm-stat-nodes');
+  const valN = card.querySelector('.qm-val-n');
+  const valV = card.querySelector('.qm-val-v');
+
+  function update() {
+    if (badgeEl) badgeEl.textContent = `n = ${n} (Eigenstate)`;
+    if (statN) statN.textContent = `n = ${n}`;
+    if (statE) statE.textContent = `${(n - 0.5).toFixed(1)} ℏω`;
+    const prob = Math.max(1, Math.min(99, Math.exp(-0.35 * (v / n)) * 100));
+    if (statTunnel) statTunnel.textContent = prob.toFixed(1) + '%';
+    if (statNodes) statNodes.textContent = (n - 1);
+    if (valN) valN.textContent = `n = ${n}`;
+    if (valV) valV.textContent = `${v.toFixed(1)} eV`;
+  }
+
+  if (nSlider) {
+    nSlider.oninput = () => {
+      n = parseInt(nSlider.value, 10);
+      update();
+    };
+  }
+  if (vSlider) {
+    vSlider.oninput = () => {
+      v = parseFloat(vSlider.value);
+      update();
+    };
+  }
+  update();
+
+  function draw() {
+    if (!document.body.contains(card)) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const W = canvas.width, H = canvas.height, midY = H / 2;
+
+    // Ground axis
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, midY); ctx.lineTo(W, midY);
+    ctx.stroke();
+
+    // Potential well barriers
+    const pad = 40;
+    ctx.strokeStyle = 'rgba(56,189,248,0.5)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(pad, 15); ctx.lineTo(pad, H - 15);
+    ctx.moveTo(W - pad, 15); ctx.lineTo(W - pad, H - 15);
+    ctx.stroke();
+
+    // Standing wavefunction ψ_n(x, t)
+    ctx.strokeStyle = '#c084fc';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    const amp = 48;
+    for (let x = pad; x <= W - pad; x++) {
+      const u = (x - pad) / (W - pad * 2);
+      const val = Math.sin(n * Math.PI * u) * Math.cos(t * 0.04 * n);
+      const y = midY - val * amp;
+      if (x === pad) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Shaded Born Probability density |ψ_n(x)|²
+    ctx.fillStyle = 'rgba(168,85,247,0.2)';
+    ctx.beginPath();
+    ctx.moveTo(pad, midY);
+    for (let x = pad; x <= W - pad; x++) {
+      const u = (x - pad) / (W - pad * 2);
+      const psi = Math.sin(n * Math.PI * u);
+      const prob = psi * psi;
+      const y = midY - prob * amp;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(W - pad, midY);
+    ctx.closePath();
+    ctx.fill();
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+}
+
+function renderBalanceTuner(node, parent) {
+  const title = node.title || node.value || 'Chrono-Master Calibre 9400 Frequency Tuner';
+  let initVph = parseInt(node.vph, 10) || 28800;
+  const uid = 'btune-' + Math.random().toString(36).substr(2, 8);
+
+  const card = document.createElement('div');
+  card.className = 'telemetry-card balance-tuner-card';
+  card.id = uid;
+  card.style.cssText = 'border-color: rgba(245,158,11,0.5);';
+
+  card.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">⏱️</span>
+        <strong style="font-family:'Cinzel',serif;font-size:15px;color:var(--gold);letter-spacing:1px">${escapeHtml(title)}</strong>
+        <span class="btune-badge" style="background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.35);padding:2px 8px;border-radius:6px;font-family:monospace;font-size:11px;font-weight:700;color:#fef08a">Geneva Seal</span>
+      </div>
+      <div style="font-size:11px;font-family:monospace;color:#34d399">● CHRONOMETRIC RESONANCE NOMINAL</div>
+    </div>
+    <div style="position:relative;margin:10px 0;text-align:center">
+      <canvas class="btune-canvas" width="340" height="200" style="width:100%;max-width:340px;height:200px;display:block;margin:0 auto;border-radius:12px;background:#0a0a0f;border:1px solid rgba(245,158,11,0.2)"></canvas>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px;margin:12px 0">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Frequency</div>
+        <div class="btune-stat-freq" style="font-size:15px;font-weight:800;color:var(--gold);font-family:monospace">4.0 Hz</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Vibrations / Hr</div>
+        <div class="btune-stat-vph" style="font-size:15px;font-weight:800;color:#fff;font-family:monospace">28,800</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Beat Error</div>
+        <div class="btune-stat-err" style="font-size:15px;font-weight:800;color:#34d399;font-family:monospace">0.1 ms</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:8px 4px;text-align:center">
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase">Rate Accuracy</div>
+        <div class="btune-stat-rate" style="font-size:15px;font-weight:800;color:#38bdf8;font-family:monospace">±0.5 s/d</div>
+      </div>
+    </div>
+    <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px;margin-top:10px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:4px">
+        <span style="color:var(--text2)">Escapement Frequency Calibration</span>
+        <span class="btune-val-label" style="color:var(--gold);font-family:monospace">28,800 VPH (Modern Standard)</span>
+      </div>
+      <input type="range" class="btune-slider" min="18000" max="36000" step="3600" value="${initVph}" style="width:100%;accent-color:#f59e0b;cursor:pointer">
+    </div>
+  `;
+  parent.appendChild(card);
+  setTimeout(() => initBalanceTunerWidget(card, { initVph }), 50);
+}
+
+function initBalanceTunerWidget(card, cfg) {
+  if (!card) return;
+  const canvas = card.querySelector('.btune-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let vph = cfg.initVph || 28800;
+  const slider = card.querySelector('.btune-slider');
+  const freqEl = card.querySelector('.btune-stat-freq');
+  const vphEl = card.querySelector('.btune-stat-vph');
+  const rateEl = card.querySelector('.btune-stat-rate');
+  const labelEl = card.querySelector('.btune-val-label');
+
+  function update() {
+    const hz = (vph / 7200).toFixed(1);
+    if (freqEl) freqEl.textContent = `${hz} Hz`;
+    if (vphEl) vphEl.textContent = vph.toLocaleString();
+    if (rateEl) rateEl.textContent = vph >= 36000 ? '±0.2 s/d' : (vph >= 28800 ? '±0.5 s/d' : '±1.2 s/d');
+    if (labelEl) {
+      const type = vph >= 36000 ? 'Hi-Beat Precision' : (vph >= 28800 ? 'Modern Standard' : 'Vintage Classic');
+      labelEl.textContent = `${vph.toLocaleString()} VPH (${type})`;
+    }
+  }
+
+  if (slider) {
+    slider.oninput = () => {
+      vph = parseInt(slider.value, 10);
+      update();
+    };
+  }
+  update();
+
+  let angle = 0;
+  let t = 0;
+  function draw() {
+    if (!document.body.contains(card)) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const cx = canvas.width / 2, cy = canvas.height / 2;
+    const r = 70;
+
+    const speed = (vph / 7200) * 0.15;
+    angle = Math.sin(t * speed) * 1.2;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+
+    // Balance wheel rim
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.strokeStyle = '#d97706';
+    ctx.lineWidth = 6;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(245,158,11,0.5)';
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // 3 arms
+    for (let i = 0; i < 3; i++) {
+      const a = (i * Math.PI * 2) / 3;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    // Hairspring spiral
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(245,158,11,0.4)';
+    ctx.lineWidth = 1.5;
+    for (let th = 0; th < Math.PI * 8; th += 0.1) {
+      const sr = (th / (Math.PI * 8)) * (r * 0.65);
+      const sx = Math.cos(th - angle * 0.5) * sr;
+      const sy = Math.sin(th - angle * 0.5) * sr;
+      if (th === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+    }
+    ctx.stroke();
+
+    // Center ruby jewel
+    ctx.beginPath();
+    ctx.arc(0, 0, 9, 0, Math.PI * 2);
+    ctx.fillStyle = '#ef4444';
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = '#ef4444';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.restore();
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+}
+
 function showLoading(text){
   document.getElementById('drop-zone').style.display='none';
   const sub = document.getElementById('ldoc-loading-subtext');
@@ -12897,12 +13315,17 @@ async function saveDoc(){
     if (dataUri) {
       sessionStorage.removeItem('ldoc_transfer_doc');
       try {
+        switchTab('viewer');
+        showLoading('Loading presentation from Visual Creator…');
         const res = await fetch(dataUri);
         const blob = await res.blob();
         await loadLdocxFileDirect(blob);
         showViewer();
         if (typeof showRepairBanner === 'function') {
           showRepairBanner('✓ Loaded living presentation from Visual Creator!', true);
+        }
+        if (typeof showToast === 'function') {
+          showToast('✓ Loaded living presentation from Visual Creator!', 'ok');
         }
         return;
       } catch (err) {
@@ -13009,14 +13432,13 @@ async function deleteDoc(id){
 
 const MASTER_TEMPLATES = [
   {
-    id: 'annual-report',
-    category: 'finance',
-    title: 'Financial & ESG Annual Living Report',
-    desc: 'High-octane next-gen game launch interactive ad with reactive charts, audio walkthrough, in-engine video, and live dispatch.',
+    id: 'game-launch',
+    category: 'game',
+    title: 'Apex Velocity GT — Interactive Launch Showcase',
+    desc: 'High-octane next-gen game launch interactive showcase with 3D aerodynamic chassis, throttle dyno telemetry, in-engine 4K video, and founder allocation.',
     icon: '🏎️',
     bg: 'linear-gradient(135deg,#0e0b1e 0%,#2d124d 50%,#00f0ff22 100%)',
-    tags: ['3D Hologram', 'Synthwave Audio', '4K Video', 'Live Telemetry', '3 Pages'],
-    docFile: 'financial-annual-report.ldocx'
+    tags: ['3D GT Chassis', 'Throttle Dyno', '4K In-Engine', 'Pit Telemetry', '3 Pages']
   },
   {
     id: 'daily-prophet',
@@ -13025,8 +13447,7 @@ const MASTER_TEMPLATES = [
     desc: 'Enchanted wizarding newspaper with moving living portraits, 3D Golden Snitch, live spell feed, and magical blueprint.',
     icon: '🧙‍♂️',
     bg: 'linear-gradient(135deg,#1f1608 0%,#3d280c 50%,#f59e0b22 100%)',
-    tags: ['Moving Portraits', '3D Snitch', 'Interactive Forms', 'Parchment Theme', '12 Pages'],
-    docFile: 'newspaper.ldocx'
+    tags: ['Moving Portraits', '3D Snitch', 'Interactive Forms', 'Parchment Theme', '12 Pages']
   },
   {
     id: 'aerospace-mission',
@@ -13109,24 +13530,24 @@ function renderTemplateVault() {
 }
 
 async function useTemplate(tplId, mode) {
-  const tpl = MASTER_TEMPLATES.find(t => t.id === tplId);
+  const tpl = MASTER_TEMPLATES.find(t => t.id === tplId || (tplId === 'annual-report' && t.id === 'game-launch'));
   if (!tpl) return;
 
   // Custom rich blueprints per template
   let spec = null;
-  if (tpl.id === 'annual-report') {
+  if (tpl.id === 'game-launch' || tpl.id === 'annual-report') {
     spec = {
-      title: 'Financial & ESG Annual Living Report',
+      title: 'Apex Velocity GT — Interactive Launch Showcase',
       author: 'Polyphony Velocity Studios',
       lang: 'en',
       pages: [
         {
-          title: 'The Reveal — Financial & ESG Living Report',
+          title: 'The Reveal — Apex Velocity GT',
           blocks: [
-            { type: 'heading', level: 1, text: 'GLOBAL FINANCIAL ANNUAL REPORT' },
-            { type: 'paragraph', text: 'HIGH-OCTANE NEXT-GEN LIVING RACING SIMULATOR \u2022 RUNTIME V2.0' },
-            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Executive Financial Walkthrough (132 BPM)' },
-            { type: '3d_model', format: 'obj', mesh_template: 'polyhedron', material_mode: 'cyber_hologram' }
+            { type: 'heading', level: 1, text: 'APEX VELOCITY GT — NEXT-GEN LIVING LAUNCH' },
+            { type: 'paragraph', text: 'High-octane next-gen living launch showcase featuring reactive aerodynamics, dynamic telemetry, and 3D chassis inspection.' },
+            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Twin-Turbo V10 Synth Soundscape (132 BPM)' },
+            { type: '3d_model', format: 'obj', mesh_template: 'car', material_mode: 'obsidian', value: 'Apex Velocity GT Aerodynamic Chassis' }
           ]
         },
         {
@@ -13134,40 +13555,26 @@ async function useTemplate(tplId, mode) {
           blocks: [
             { type: 'heading', level: 2, text: 'ENGINEERING, AERO & IN-ENGINE DYNAMICS' },
             { type: 'feature_grid', cards: [
-              { badge: 'AERO-PHYSICS', title: 'Ground-Effect Downforce', desc: 'Active venturi tunnels generating 1,450 kg of downforce.' },
-              { badge: 'NEURAL AI', title: 'Dynamic Copilot Core', desc: 'Predictive neural telemetry modeling track grip at 1,000 Hz.' },
-              { badge: 'TELEMETRY', title: 'Real-Time Telemetry Hub', desc: 'Bi-directional telemetry link syncing tire thermals.' }
+              { badge: 'AERO-PHYSICS', title: 'Ground-Effect Venturi', desc: 'Active ground-effect underbody tunnels producing 1,450 kg of downforce at 280 km/h.' },
+              { badge: 'NEURAL AI', title: 'Dynamic Grip Copilot', desc: 'Predictive neural telemetry modeling asphalt grip and tire deformation at 1,000 Hz.' },
+              { badge: 'TELEMETRY', title: 'Bi-Directional Pit Telemetry', desc: 'Live CAN-bus wireless telemetry streaming camber and thermal dissipation.' }
             ]},
-            { type: 'jsx_canvas', value: 'Interactive Real-Time Dyno Speedometer', style: {
-              code: `
-                <div style="background:rgba(0,240,255,.05);border:1px solid rgba(0,240,255,.2);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px">
-                  <div style="display:flex;justify-content:space-between;align-items:center">
-                    <span style="font-size:12px;font-weight:800;color:#00f0ff;text-transform:uppercase">🏎️ Dynamic Throttle Dyno</span>
-                    <span id="dyno-mph" style="font-family:monospace;font-size:18px;font-weight:900;color:#38bdf8">184 MPH</span>
-                  </div>
-                  <input type="range" min="0" max="260" value="184" style="width:100%;accent-color:#00f0ff;cursor:pointer" oninput="document.getElementById('dyno-mph').textContent=this.value+' MPH';document.getElementById('dyno-rpm').textContent=(this.value*42)+' RPM';">
-                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:monospace">
-                    <span>Power: 1,400 BHP</span>
-                    <span id="dyno-rpm">7,728 RPM</span>
-                    <span>Traction: 99.8%</span>
-                  </div>
-                </div>
-              `
-            }},
-            { type: 'web_video', src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm', label: '4K In-Engine Motion Capture', autoplay: true }
+            { type: 'throttle_dyno', vehicle_name: 'Apex Velocity GT', bhp: 1400, max_rpm: 9000, theme: 'cyan' },
+            { type: 'web_video', src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm', label: '4K In-Engine Motion Capture & Track Run', autoplay: true }
           ]
         },
         {
           title: 'Dispatch & Pre-Order Deck',
           blocks: [
             { type: 'heading', level: 2, text: 'GLOBAL PIT DISPATCH & VIP ACCESS' },
-            { type: 'live_feed', title: 'GLOBAL PIT BEACON', sources: 'Track: Nürburgring 24H | Asphalt Temp: 42°C | Grip: 99.4%' },
-            { type: 'preorder', tier: 'FOUNDER VELOCITY PASS', price: '$99.99', perks: 'Day-1 Instant Access, Exclusive Holographic GT Car Skin, Season Pass' },
+            { type: 'live_feed', title: 'GLOBAL PIT BEACON', sources: 'Track: Nürburgring 24H | Asphalt Temp: 42°C | Grip: 99.4% | Wind: 8 kn NW' },
+            { type: 'preorder', tier: 'FOUNDER VELOCITY PASS (EDITION 1 OF 500)', price: '$99.99', perks: 'Day-1 Instant Access, Exclusive Holographic GT Car Skin, Lifetime Season Pass' },
             { type: 'form', fields: [
               { label: 'Driver Call-Sign', field_type: 'input_text', placeholder: 'Enter your callsign' },
-              { label: 'VIP Email Address', field_type: 'input_email', placeholder: 'pilot@velocity.com' }
+              { label: 'VIP Email Address', field_type: 'input_email', placeholder: 'pilot@velocity.com' },
+              { label: 'Preferred Transmission', field_type: 'input_text', placeholder: '7-Speed Dual-Clutch Sequential' }
             ]},
-            { type: 'button', value: 'CONFIRM PRE-ORDER', action: 'submit', target: 'order_confirm' }
+            { type: 'button', value: 'CONFIRM VIP PRE-ORDER', action: 'submit', target: 'order_confirm' }
           ]
         }
       ]
@@ -13179,48 +13586,37 @@ async function useTemplate(tplId, mode) {
       lang: 'en',
       pages: [
         {
-          title: 'Breaking: LDOC Format Conquers Wizarding Web',
+          title: 'Front Page: LDOC Format Conquers Wizarding World',
           blocks: [
             { type: 'heading', level: 1, text: 'THE DAILY PROPHET' },
-            { type: 'paragraph', text: 'DIAGON ALLEY — The LDOC Living Document Format has been declared complete. All enchantments active.' },
-            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Diagon Alley Symphony' },
-            { type: '3d_model', format: 'obj', mesh_template: 'snitch', material_mode: 'royal_gold' }
+            { type: 'paragraph', text: 'DIAGON ALLEY — The International Confederation of Wizards has officially standardized the LDOC Living Document Format. Moving portraits and live spellcasting declared compliant.' },
+            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Diagon Alley Symphonic Charm' },
+            { type: '3d_model', format: 'obj', mesh_template: 'snitch', material_mode: 'gold', value: 'The Golden Snitch — Enchanted 3D Relic' }
           ]
         },
         {
-          title: 'Living Blueprint & Wand Spell Caster',
+          title: 'Living Portraits & Spell Caster Sandbox',
           blocks: [
-            { type: 'heading', level: 2, text: 'MAGICAL BLUEPRINT ARCHITECTURE' },
+            { type: 'heading', level: 2, text: 'LIVING PORTRAITS & RUNIC SPELLCASTING' },
             { type: 'feature_grid', cards: [
-              { badge: 'CONTAINER', title: 'Zero-Loss Zip Envelope', desc: 'Carries raw offline 3D models and videos.' },
-              { badge: 'SECURITY', title: 'Signed CRC-32 Header', desc: 'Tamper-proof magical enchantment verification.' },
-              { badge: 'AST NODE', title: 'Dynamic Tree Representation', desc: 'Renders responsive interactive enchantments.' }
+              { badge: 'ENCHANTMENT', title: 'Living Moving Portraits', desc: 'Dynamic CSS & WebGL frame animations that react to reader cursor and ambient light.' },
+              { badge: 'SECURITY', title: 'Anti-Curse CRC-32 Header', desc: 'Tamper-proof magical seal ensuring zero corruption across owl post dispatches.' },
+              { badge: 'OFFLINE', title: 'Self-Contained Grimoire', desc: 'Bundles all spells, parchment themes, and 3D relics into a single offline artifact.' }
             ]},
-            { type: 'jsx_canvas', value: 'Interactive Wand Spell Runic Matrix', style: {
-              code: `
-                <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:14px;padding:16px;text-align:center">
-                  <div style="font-size:13px;font-weight:800;color:#fef08a;margin-bottom:8px">⚡ Wand Spell Cast Matrix</div>
-                  <div style="display:flex;justify-content:center;gap:10px;margin-bottom:12px">
-                    <button class="pres-btn secondary" style="padding:6px 14px;font-size:11px" onclick="document.getElementById('spell-res').innerHTML='✨ <em>Lumos Maxima!</em> Light fills the enchanted canvas.'">✨ Lumos</button>
-                    <button class="pres-btn secondary" style="padding:6px 14px;font-size:11px" onclick="document.getElementById('spell-res').innerHTML='🛡️ <em>Expecto Patronum!</em> Silver mist swirls in 3D.'">🛡️ Patronus</button>
-                    <button class="pres-btn secondary" style="padding:6px 14px;font-size:11px" onclick="document.getElementById('spell-res').innerHTML='⚡ <em>Expelliarmus!</em> Red spark leaps forward.'">⚡ Disarm</button>
-                  </div>
-                  <div id="spell-res" style="font-size:12px;color:var(--gold);font-style:italic">Select a runic incantation to cast.</div>
-                </div>
-              `
-            }}
+            { type: 'spell_matrix', wand_name: 'Elder Wand (Phoenix Feather Core)', spells: ['Lumos Maxima', 'Expecto Patronum', 'Expelliarmus', 'Incendio', 'Aresto Momentum'], aura: 'gold' }
           ]
         },
         {
-          title: 'Ministry Dispatch Beacon',
+          title: 'Ministry Alert Network & Owl Post',
           blocks: [
-            { type: 'heading', level: 2, text: 'MINISTRY ALERT NETWORK' },
-            { type: 'live_feed', title: 'MINISTRY ALERT NETWORK', sources: 'Status: ALL CLEAR | Auror Node: Active | Floo Network: Open' },
+            { type: 'heading', level: 2, text: 'MINISTRY ALERT NETWORK & OWL POST' },
+            { type: 'live_feed', title: 'MINISTRY ALERT NETWORK', sources: 'Status: ALL CLEAR | Auror Garrison: Active | Floo Network: Nominal | Portkey Hubs: Online' },
             { type: 'form', fields: [
               { label: 'Wizard / Witch Name', field_type: 'input_text', placeholder: 'Your Name' },
-              { label: 'Owl Address', field_type: 'input_email', placeholder: 'research@quantum-lab.org' }
+              { label: 'Owl Post Delivery Address', field_type: 'input_email', placeholder: 'research@quantum-lab.org' },
+              { label: 'Wand Core Material', field_type: 'input_text', placeholder: 'Phoenix Feather / Dragon Heartstring' }
             ]},
-            { type: 'button', value: 'DISPATCH OWL', action: 'submit', target: 'dispatch_owl' }
+            { type: 'button', value: 'DISPATCH REGISTERED OWL', action: 'submit', target: 'dispatch_owl' }
           ]
         }
       ]
@@ -13228,54 +13624,41 @@ async function useTemplate(tplId, mode) {
   } else if (tpl.id === 'aerospace-mission') {
     spec = {
       title: 'AeroSpace Vanguard X-1 Dossier',
-      author: 'Orbital Dynamics Lab',
+      author: 'Orbital Dynamics Laboratory',
       lang: 'en',
       pages: [
         {
           title: 'Mission Briefing — Vanguard X-1',
           blocks: [
-            { type: 'heading', level: 1, text: 'VANGUARD X-1 ORBITAL DOSSIER' },
-            { type: 'paragraph', text: 'Autonomous deep-space explorer spacecraft specifications and trajectory matrix.' },
-            { type: '3d_model', format: 'obj', mesh_template: 'polyhedron', material_mode: 'crystal_cobalt' },
-            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Orbital Telemetry Drone' }
+            { type: 'heading', level: 1, text: 'VANGUARD X-1 DEEP SPACE DOSSIER' },
+            { type: 'paragraph', text: 'Autonomous deep-space exploratory probe orbital trajectory, titanium structural metrics, and telemetry downlink architecture.' },
+            { type: '3d_model', format: 'obj', mesh_template: 'satellite', material_mode: 'crystal', value: 'Vanguard X-1 Satellite Bus & High-Gain Array' },
+            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'DSN Deep Space Carrier Frequency' }
           ]
         },
         {
-          title: 'Subsystems & Gravitational Simulator',
+          title: 'Orbital Subsystems & Trajectory Calculator',
           blocks: [
-            { type: 'heading', level: 2, text: 'ORBITAL SUBSYSTEM MATRIX' },
+            { type: 'heading', level: 2, text: 'ORBITAL PROPULSION & GRAVITATIONAL DYNAMICS' },
             { type: 'feature_grid', cards: [
-              { badge: 'PROPULSION', title: 'Ion Thruster Array', desc: 'Continuous 0.25N specific impulse output.' },
-              { badge: 'POWER', title: 'GaAs Solar Wings', desc: '12.4 kW peak solar conversion efficiency.' },
-              { badge: 'COMMS', title: 'Ka-Band Phased Array', desc: '1.2 Gbps optical deep space downlink.' }
+              { badge: 'PROPULSION', title: 'Dual Xenon Hall Thrusters', desc: 'Continuous 0.25N specific impulse output with 4,200s Isp efficiency.' },
+              { badge: 'AVIONICS', title: 'Radiation-Hardened Titanium Matrix', desc: 'Triple-modular redundant flight computers sealed in beryllium shielding.' },
+              { badge: 'DOWNLINK', title: 'Ka-Band Deep Space Phased Array', desc: '1.2 Gbps optical telemetry downlink synchronized with Goldstone DSN.' }
             ]},
-            { type: 'jsx_canvas', value: 'Orbital Trajectory & Altitude Simulator', style: {
-              code: `
-                <div style="background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.3);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px">
-                  <div style="display:flex;justify-content:space-between;color:#38bdf8;font-size:12px;font-weight:800">
-                    <span>🛰️ Orbital Altitude</span>
-                    <span id="orb-alt" style="font-family:monospace;font-size:16px">35,786 KM (GEO)</span>
-                  </div>
-                  <input type="range" min="400" max="42000" value="35786" style="width:100%;accent-color:#38bdf8" oninput="document.getElementById('orb-alt').textContent=this.value+' KM';document.getElementById('orb-vel').textContent=(Math.sqrt(398600/(6371+parseInt(this.value))).toFixed(2))+' KM/S'">
-                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:monospace">
-                    <span>Velocity: <strong id="orb-vel" style="color:#fff">3.07 KM/S</strong></span>
-                    <span>Inclination: 0.0°</span>
-                  </div>
-                </div>
-              `
-            }}
+            { type: 'orbit_sim', craft_name: 'Vanguard X-1 Orbiter', body: 'earth', altitude: 35786 }
           ]
         },
         {
-          title: 'Mission Dispatch & Authorization',
+          title: 'Mission Clock & Flight Uplink Authorization',
           blocks: [
-            { type: 'heading', level: 2, text: 'LIVE TELEMETRY BEACON' },
-            { type: 'live_feed', title: 'MISSION CLOCK BEACON', sources: 'T+ 00:42:18 | Apogee: 35,786 km | Signal Lock: 99.9%' },
+            { type: 'heading', level: 2, text: 'MISSION TELEMETRY & COMMAND AUTHORIZATION' },
+            { type: 'live_feed', title: 'MISSION CLOCK & TELEMETRY BEACON', sources: 'T+ 148:22:04 | Apogee: 35,786 km | Perigee: 35,782 km | DSN Lock: 99.98%' },
             { type: 'form', fields: [
-              { label: 'Commander ID', field_type: 'input_text', placeholder: 'CDR-8842' },
-              { label: 'Uplink Passkey', field_type: 'input_text', placeholder: 'Enter authorization code' }
+              { label: 'Flight Director Call-Sign', field_type: 'input_text', placeholder: 'CDR-8842 (Vanguard Flight)' },
+              { label: 'DSN Cryptographic Passkey', field_type: 'input_text', placeholder: 'DSN-AUTH-9942-X1' },
+              { label: 'Uplink Command Code', field_type: 'input_text', placeholder: 'BURN_EXECUTE_GEO_INJECT' }
             ]},
-            { type: 'button', value: 'AUTHORIZE UPLINK', action: 'submit', target: 'uplink_auth' }
+            { type: 'button', value: 'AUTHORIZE TELEMETRY UPLINK', action: 'submit', target: 'uplink_auth' }
           ]
         }
       ]
@@ -13283,54 +13666,41 @@ async function useTemplate(tplId, mode) {
   } else if (tpl.id === 'haute-horlogerie') {
     spec = {
       title: 'Chrono-Master Haute Horlogerie',
-      author: 'Atelier Horloger',
+      author: 'Atelier Horloger Genève',
       lang: 'en',
       pages: [
         {
           title: 'The Tourbillon Masterpiece',
           blocks: [
-            { type: 'heading', level: 1, text: 'CHRONO-MASTER HAUTE HORLOGERIE' },
-            { type: 'paragraph', text: 'Ultra-luxury mechanical timepiece showcase featuring titanium escapement.' },
-            { type: '3d_model', format: 'obj', mesh_template: 'wheel', material_mode: 'royal_gold' },
-            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Horological Symphony' }
+            { type: 'heading', level: 1, text: 'CHRONO-MASTER ATELIER HORLOGERIE' },
+            { type: 'paragraph', text: 'Grand Complication mechanical timepiece featuring flying tourbillon, obsidian carbon casing, and hand-finished Genevan bridges.' },
+            { type: '3d_model', format: 'obj', mesh_template: 'tourbillon', material_mode: 'gold', value: 'Flying Tourbillon Escapement Mechanism' },
+            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Horological Acoustic Escapement (4 Hz / 28,800 vph)' }
           ]
         },
         {
-          title: 'Swiss Craftsmanship & Escapement Sandbox',
+          title: 'Swiss Craftsmanship & Escapement Tuner',
           blocks: [
-            { type: 'heading', level: 2, text: 'SWISS PRECISION & CALIBRE 9400' },
+            { type: 'heading', level: 2, text: 'SWISS CHRONOMETRIC PRECISION & CALIBRE 9400' },
             { type: 'feature_grid', cards: [
-              { badge: 'BALANCE', title: 'Silicon Hairspring', desc: 'Anti-magnetic oscillator beating at 28,800 vph.' },
-              { badge: 'POWER', title: 'Twin Barrel Reserve', desc: '120-hour autonomous chronometric reserve.' },
-              { badge: 'FINISH', title: 'Côtes de Genève', desc: 'Hand-chamfered bridges with black polish.' }
+              { badge: 'ESCAPEMENT', title: 'Titanium Tourbillon Cage', desc: 'Ultra-lightweight 0.28g flying cage rotating once every 60 seconds to negate gravity.' },
+              { badge: 'MATERIALS', title: 'Obsidian Forged Carbon', desc: 'Layered carbon composite case tested to 100 meters water resistance.' },
+              { badge: 'CERTIFICATION', title: 'Geneva Seal & COSC', desc: 'Accredited chronometer precision verified within -1 to +2 seconds per day.' }
             ]},
-            { type: 'jsx_canvas', value: 'Interactive Balance Wheel Frequency Tuner', style: {
-              code: `
-                <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px">
-                  <div style="display:flex;justify-content:space-between;color:#fef08a;font-size:12px;font-weight:800">
-                    <span>⏱️ Calibre Frequency</span>
-                    <span id="cal-vph" style="font-family:monospace;font-size:16px">28,800 VPH (4 Hz)</span>
-                  </div>
-                  <input type="range" min="18000" max="36000" step="3600" value="28800" style="width:100%;accent-color:#f59e0b" oninput="document.getElementById('cal-vph').textContent=this.value+' VPH ('+(this.value/7200).toFixed(1)+' Hz)'">
-                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:monospace">
-                    <span>Deviation: ±0.5s/day</span>
-                    <span>Jewels: 38 Rubies</span>
-                  </div>
-                </div>
-              `
-            }}
+            { type: 'balance_tuner', title: 'Calibre 9400 Frequency Calibration', vph: 28800 }
           ]
         },
         {
-          title: 'VIP Reservation Deck',
+          title: 'VIP Allocation & Relic Deck',
           blocks: [
-            { type: 'heading', level: 2, text: 'LIMITED EDITION RELIC DECK' },
-            { type: 'preorder', tier: 'FOUNDER ATELIER EDITION (1 of 25)', price: '$48,000', perks: 'Hand-engraved sapphire caseback, Geneva Seal certification, Lifetime bespoke service' },
+            { type: 'heading', level: 2, text: 'PIÈCE UNIQUE ATELIER RESERVATION' },
+            { type: 'preorder', tier: 'CHRONO-MASTER ATELIER PIÈCE UNIQUE (1 OF 25)', price: '$48,000', perks: 'Hand-engraved sapphire caseback, Geneva Seal certificate, Bespoke alligator strap, Lifetime concierge maintenance' },
             { type: 'form', fields: [
-              { label: 'Collector Full Name', field_type: 'input_text', placeholder: 'Your Name' },
-              { label: 'Private Concierge Email', field_type: 'input_email', placeholder: 'concierge@collector.ch' }
+              { label: 'Collector Full Name', field_type: 'input_text', placeholder: 'Lord / Lady Collector' },
+              { label: 'Private Concierge Email', field_type: 'input_email', placeholder: 'concierge@collector.ch' },
+              { label: 'Preferred Allocation Number (1-25)', field_type: 'input_text', placeholder: 'Piece No. 07' }
             ]},
-            { type: 'button', value: 'REQUEST PRIVATE ALLOCATION', action: 'submit', target: 'chrono_alloc' }
+            { type: 'button', value: 'SUBMIT PRIVATE ALLOCATION REQUEST', action: 'submit', target: 'chrono_alloc' }
           ]
         }
       ]
@@ -13344,102 +13714,77 @@ async function useTemplate(tplId, mode) {
         {
           title: 'Executive Vision — CyberMatrix AI',
           blocks: [
-            { type: 'heading', level: 1, text: 'CYBERMATRIX AI' },
-            { type: 'paragraph', text: 'Autonomous enterprise reasoning models delivering 10x ROI for Fortune 500 workflows.' },
-            { type: '3d_model', format: 'obj', mesh_template: 'polyhedron', material_mode: 'cyber_hologram' },
-            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'CyberMatrix Pitch Score' }
+            { type: 'heading', level: 1, text: 'CYBERMATRIX AI — SERIES B INVESTMENT DECK' },
+            { type: 'paragraph', text: 'Autonomous enterprise cognitive agent infrastructure delivering verified 10x ROI for Fortune 500 decision systems.' },
+            { type: '3d_model', format: 'obj', mesh_template: 'neural_node', material_mode: 'cyber', value: 'CyberMatrix Neural Synapse Cluster' },
+            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Executive Keynote Soundscape' }
           ]
         },
         {
-          title: 'Market Traction & ARR Growth Calculator',
+          title: 'Financial Traction & Valuation Projector',
           blocks: [
-            { type: 'heading', level: 2, text: 'ENTERPRISE METRICS & TRACTION' },
+            { type: 'heading', level: 2, text: 'FINANCIAL TRACTION & UNIT ECONOMICS' },
             { type: 'feature_grid', cards: [
-              { badge: 'REVENUE', title: '$14.2M ARR', desc: '320% YoY organic revenue acceleration.' },
-              { badge: 'RETENTION', title: '148% NRR', desc: 'Expansion across enterprise accounts.' },
-              { badge: 'GROSS MARGIN', title: '84% Margin', desc: 'Optimized inference orchestration.' }
+              { badge: 'REVENUE', title: '$14.2M Current ARR', desc: '320% Year-over-Year organic expansion across Global 2000 accounts.' },
+              { badge: 'NET RETENTION', title: '148% NRR', desc: 'Zero churn among enterprise tier customers with rapid departmental land-and-expand.' },
+              { badge: 'GROSS MARGIN', title: '84% SaaS Margin', desc: 'Hardware-accelerated inference orchestration cutting compute overhead by 68%.' }
             ]},
-            { type: 'jsx_canvas', value: 'Interactive Enterprise Valuation & ARR Projector', style: {
-              code: `
-                <div style="background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.3);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px">
-                  <div style="display:flex;justify-content:space-between;color:#34d399;font-size:12px;font-weight:800">
-                    <span>💼 Projected FY27 ARR</span>
-                    <span id="arr-val" style="font-family:monospace;font-size:16px">$45.0M</span>
-                  </div>
-                  <input type="range" min="15" max="100" value="45" style="width:100%;accent-color:#34d399" oninput="document.getElementById('arr-val').textContent='$'+this.value+'.0M';document.getElementById('arr-val-mult').textContent='$'+(this.value*18).toFixed(0)+'M Enterprise Value'">
-                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:monospace">
-                    <span>Multiple: 18x ARR</span>
-                    <span id="arr-val-mult" style="color:#fff;font-weight:bold">$810M Enterprise Value</span>
-                  </div>
-                </div>
-              `
-            }}
+            { type: 'arr_projector', saas_name: 'CyberMatrix AI Enterprise', start_arr: 14200000, growth_rate: 12, multiple: 18 }
           ]
         },
         {
-          title: 'Founder Meeting & Investment Registration',
+          title: 'Series B Round Participation & Dataroom',
           blocks: [
-            { type: 'heading', level: 2, text: 'ROUND PARTICIPATION' },
-            { type: 'preorder', tier: 'SERIES B ALLOCATION ($35M ROUND)', price: '$5,000,000 Ticket', perks: 'Board observer seat, Pro-rata super rights, Co-invest allocation' },
+            { type: 'heading', level: 2, text: 'SERIES B PARTICIPATION ALLOCATION' },
+            { type: 'preorder', tier: 'SERIES B INSTITUTIONAL TICKET ($35M ROUND)', price: '$5,000,000 Minimum', perks: 'Board observer seat, Super pro-rata participation rights, Direct CTO access' },
             { type: 'form', fields: [
-              { label: 'Partner / Fund Name', field_type: 'input_text', placeholder: 'Venture Capital Partner' },
-              { label: 'Institutional Email', field_type: 'input_email', placeholder: 'partner@vc.com' }
+              { label: 'Partner / Managing Director Name', field_type: 'input_text', placeholder: 'General Partner Name' },
+              { label: 'Institutional VC Email', field_type: 'input_email', placeholder: 'partner@sequoia-tier.com' },
+              { label: 'Intended Check Size ($M)', field_type: 'input_text', placeholder: '$5,000,000' }
             ]},
-            { type: 'button', value: 'REQUEST DATAROOM ACCESS', action: 'submit', target: 'vc_dataroom' }
+            { type: 'button', value: 'REQUEST CONFIDENTIAL DATAROOM ACCESS', action: 'submit', target: 'vc_dataroom' }
           ]
         }
       ]
     };
   } else {
-    // Quantum Mechanics courseware
+    // Quantum Mechanics masterclass
     spec = {
-      title: 'Quantum Mechanics Interactive Masterclass',
+      title: 'Quantum Mechanics Interactive Course',
       author: 'Institute for Theoretical Physics',
       lang: 'en',
       pages: [
         {
-          title: 'The Quantum Wavefunction',
+          title: 'Wave-Particle Duality & Atomic Lattice',
           blocks: [
             { type: 'heading', level: 1, text: 'QUANTUM MECHANICS MASTERCLASS' },
-            { type: 'paragraph', text: 'Wave-particle duality, Schrödinger equations, and interactive quantum state superposition.' },
-            { type: '3d_model', format: 'obj', mesh_template: 'cube', material_mode: 'crystal_cobalt' },
-            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Quantum Resonant Field' }
+            { type: 'paragraph', text: 'Explore crystal lattice structures, Schrödinger wave equations, probability densities, and quantum superposition.' },
+            { type: '3d_model', format: 'obj', mesh_template: 'atomic_lattice', material_mode: 'crystal', value: 'Face-Centered Cubic (FCC) Atomic Lattice' },
+            { type: 'web_audio', src: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Synthwave_-_Loop.ogg', label: 'Quantum Harmonic Resonance (432 Hz)' }
           ]
         },
         {
-          title: 'Interactive Wavefunction Simulator',
+          title: 'Interactive Schrödinger Wavefunction Simulator',
           blocks: [
-            { type: 'heading', level: 2, text: 'QUANTUM HARMONIC OSCILLATOR' },
+            { type: 'heading', level: 2, text: 'SCHRÖDINGER WAVE EQUATIONS & POTENTIAL BARRIER' },
             { type: 'feature_grid', cards: [
-              { badge: 'STATE', title: 'Superposition |ψ⟩', desc: 'Linear combination of orthonormal eigenstates.' },
-              { badge: 'OPERATOR', title: 'Hamiltonian Ĥ', desc: 'Kinetic + potential energy matrix operator.' },
-              { badge: 'PROBABILITY', title: 'Born Rule |ψ|²', desc: 'Spatial probability density function.' }
+              { badge: 'SUPERPOSITION', title: 'State Vector |ψ⟩', desc: 'Coherent linear superposition of orthogonal energy eigenstates ψ(x,t).' },
+              { badge: 'HAMILTONIAN', title: 'Total Energy Operator Ĥ', desc: 'Ĥ = -(ℏ²/2m)∇² + V(x), dictating time-evolution via iℏ ∂ψ/∂t = Ĥψ.' },
+              { badge: 'BORN RULE', title: 'Probability Density P(x)', desc: 'P(x) = |ψ(x)|², normalizing spatial probability across the potential well.' }
             ]},
-            { type: 'jsx_canvas', value: 'Quantum Energy Level & Probability Visualizer', style: {
-              code: `
-                <div style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px">
-                  <div style="display:flex;justify-content:space-between;color:#c084fc;font-size:12px;font-weight:800">
-                    <span>⚛️ Quantum Energy Level (n)</span>
-                    <span id="qm-level" style="font-family:monospace;font-size:16px">n = 3 (E = 3.5 ℏω)</span>
-                  </div>
-                  <input type="range" min="0" max="6" value="3" style="width:100%;accent-color:#a855f7" oninput="document.getElementById('qm-level').textContent='n = '+this.value+' (E = '+(parseFloat(this.value)+0.5)+' ℏω)';document.getElementById('qm-prob').textContent=(100/(parseInt(this.value)+1)).toFixed(1)+'% Tunneling Prob'">
-                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);font-family:monospace">
-                    <span>Nodes: 3</span>
-                    <span id="qm-prob" style="color:#fff">25.0% Tunneling Prob</span>
-                  </div>
-                </div>
-              `
-            }}
+            { type: 'quantum_sim', title: 'Schrödinger Wavefunction Simulator', quantum_number: 3, barrier_v: 4.2 }
           ]
         },
         {
-          title: 'Interactive Knowledge Check',
+          title: 'STEM Certification Exam & Knowledge Check',
           blocks: [
-            { type: 'heading', level: 2, text: 'STEM CERTIFICATION QUIZ' },
+            { type: 'heading', level: 2, text: 'STEM MASTERCLASS CERTIFICATION QUIZ' },
+            { type: 'live_feed', title: 'ACADEMIC PROCTOR BEACON', sources: 'Session: MIT-QM-901 | Student Status: Online | Proctor Node: Verified | Time Remaining: 45:00' },
             { type: 'form', fields: [
-              { label: 'Student Name', field_type: 'input_text', placeholder: 'Enter your name' },
+              { label: 'Student Full Name', field_type: 'input_text', placeholder: 'Enter your name' },
               { label: 'University / Institute Email', field_type: 'input_email', placeholder: 'student@mit.edu' },
-              { label: 'What happens to the wavelength when momentum doubles?', field_type: 'input_text', placeholder: 'Halves (λ = h/p)' }
+              { label: 'What occurs to de Broglie wavelength when particle momentum doubles?', field_type: 'input_text', placeholder: 'Halves (λ = h/p)' },
+              { label: 'Which principle dictates that [x̂, p̂] = iℏ?', field_type: 'input_text', placeholder: 'Heisenberg Uncertainty Principle / Canonical Commutation' }
             ]},
             { type: 'button', value: 'SUBMIT ANSWERS FOR GRADING', action: 'submit', target: 'qm_quiz' }
           ]
@@ -13464,21 +13809,15 @@ async function useTemplate(tplId, mode) {
     switchTab('viewer');
     showLoading();
     try {
-          // Compile client-side without any server dependencies
-    const blob = await compileLdocxClientSide(spec);
-    const fname = (convState.title || 'living-document').replace(/[^a-z0-9_\-]/gi, '_') + '.ldocx';
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname; a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-
-    closeConvWizard();
-    switchTab('viewer');
-    await loadLdocxFileDirect(blob);
-    toast('✓ Living Document successfully forged and opened in Viewer!', 'ok');
-  } catch (err) {
-    showToast('Living Document Forging failed: ' + err.message, 'err');
-  } finally {
-    if (nextBtn) { nextBtn.textContent = 'Next Step →'; nextBtn.disabled = false; }
-  }
+      const res = await compileLdocxClientSide(spec);
+      await loadLdocxFileDirect(res.blob);
+      showViewer();
+      if (typeof showToast === 'function') {
+        showToast(`✓ Blueprint "${spec.title}" loaded in Live Viewer!`, 'ok');
+      }
+    } catch (err) {
+      showToast('Blueprint preview error: ' + err.message, 'err');
+    }
   }
 }
 
@@ -14919,7 +15258,7 @@ function edRenderBlocks() {
 
 async function buildAndView() {
   if (!edPages.length) { showToast('Add at least one page.'); return; }
-  const btn = document.getElementById('build-view-btn');
+  const btn = document.getElementById('build-view-btn') || document.getElementById('build-btn');
   if (btn) {
     btn.textContent = 'Building...';
     btn.disabled = true;
@@ -14938,11 +15277,15 @@ async function buildAndView() {
 
     // Compile client-side
     const { blob, title } = await compileLdocxClientSide(spec);
+    switchTab('viewer');
     showViewer();
     // Direct load into browser memory
     await loadLdocxFileDirect(blob);
     if (typeof showRepairBanner === 'function') {
       showRepairBanner(`✓ Built and opened "${title}" in Live Presentation!`, true);
+    }
+    if (typeof showToast === 'function') {
+      showToast(`✓ Built and opened "${title}" in Live Viewer!`, 'ok');
     }
   } catch(err) {
     showToast('Build error: ' + err.message, 'err');

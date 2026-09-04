@@ -7290,7 +7290,11 @@ async function buildDoc(){
       }
       toast('✓ Built! Launching in Studio…','ok');
       setTimeout(() => {
-        window.location.href = '/live-studio?load=transfer';
+        let targetUrl = 'live-studio.html?load=transfer';
+        if (window.location.protocol !== 'file:' && window.location.pathname.includes('/creator') && !window.location.pathname.endsWith('.html')) {
+          targetUrl = '/live-studio?load=transfer';
+        }
+        window.location.href = targetUrl;
       }, 500);
     };
     reader.readAsDataURL(blob);
