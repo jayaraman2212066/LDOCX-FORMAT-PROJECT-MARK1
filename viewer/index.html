@@ -1171,6 +1171,170 @@ body.mode-paper .page-paper-layer {
   0%, 100% { box-shadow: 0 0 16px rgba(245,158,11,.35); transform: scale(1); }
   50% { box-shadow: 0 0 30px rgba(245,158,11,.65); transform: scale(1.02); }
 }
+/* ── Living Document Interactive Showcase Stage ────────────────────────── */
+.conv-showcase-card {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.95), rgba(10, 15, 30, 0.98));
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75), 0 0 25px rgba(245, 158, 11, 0.15);
+  margin: 6px 0 16px 0;
+}
+.conv-showcase-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: rgba(15, 20, 35, 0.95);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.conv-showcase-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fef08a;
+  letter-spacing: .6px;
+}
+.conv-pulse-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulseDot 1.8s infinite ease-in-out;
+}
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.6; }
+}
+.conv-showcase-tag {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fde047;
+  font-size: 11.5px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-family: monospace;
+  font-weight: 600;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.conv-showcase-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.conv-showcase-nav-btn {
+  background: var(--surface2);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.conv-showcase-nav-btn:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.conv-showcase-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.conv-page-indicator {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #cbd5e1;
+  padding: 4px 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.conv-showcase-viewport {
+  background: #080b13;
+  padding: 24px 20px;
+  max-height: 720px;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
+.conv-living-sheet {
+  width: 100%;
+  max-width: 820px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 32px 36px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  color: var(--text, #f1f5f9);
+  min-height: 380px;
+}
+.conv-living-sheet.theme-paper {
+  background: #fdfdfd;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+}
+.conv-living-sheet.theme-paper h1, .conv-living-sheet.theme-paper h2, .conv-living-sheet.theme-paper h3 {
+  color: #0f172a;
+}
+.conv-living-sheet.theme-paper p {
+  color: #334155;
+}
+.conv-living-sheet.theme-cyber {
+  background: #050811;
+  color: #e2e8f0;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.1);
+}
+.conv-living-sheet h1 {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 0 14px 0;
+  line-height: 1.3;
+}
+.conv-living-sheet h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 20px 0 10px 0;
+  line-height: 1.35;
+}
+.conv-living-sheet h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 16px 0 8px 0;
+}
+.conv-living-sheet p {
+  font-size: 14.5px;
+  line-height: 1.65;
+  margin: 0 0 12px 0;
+  color: var(--text2, #cbd5e1);
+}
+.conv-living-sheet img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.conv-living-sheet .pres-3d-card {
+  height: 480px;
+  margin: 20px 0;
+}
 
 .conv-stats-grid {
   display: grid;
@@ -3296,6 +3460,13 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  if (typeof window !== 'undefined' && window.pdfjsLib) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+</script>
 </head>
 <body>
 
@@ -3907,6 +4078,30 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
         <button class="conv-btn secondary" id="conv-reset-btn" onclick="convResetDropZone()" title="Convert another document">
           🔄 Convert Another
         </button>
+      </div>
+
+      <!-- Living Document Interactive Showcase Stage -->
+      <div id="conv-showcase-card" class="conv-showcase-card">
+        <div class="conv-showcase-header">
+          <div class="conv-showcase-title">
+            <span class="conv-pulse-dot"></span>
+            <span>Living Document Presentation</span>
+            <span class="conv-showcase-tag" id="conv-showcase-page-title">Page 1</span>
+          </div>
+          <div class="conv-showcase-controls">
+            <button type="button" class="conv-showcase-nav-btn" id="conv-prev-page-btn" onclick="convShowcasePrevPage()">◀ Prev</button>
+            <span id="conv-page-indicator" class="conv-page-indicator">1 / 1</span>
+            <button type="button" class="conv-showcase-nav-btn" id="conv-next-page-btn" onclick="convShowcaseNextPage()">Next ▶</button>
+            <div style="width:1px;height:16px;background:rgba(255,255,255,0.15);margin:0 4px"></div>
+            <button type="button" class="conv-showcase-nav-btn" onclick="convOpenInViewer()" title="Open in 3D Living Viewer">👁️ 3D View</button>
+          </div>
+        </div>
+        
+        <div class="conv-showcase-viewport" id="conv-showcase-viewport">
+          <div class="conv-living-sheet" id="conv-living-sheet">
+            <!-- Active page blocks rendered live with interactive 3D, typography, and visuals -->
+          </div>
+        </div>
       </div>
 
       <!-- Statistics Grid -->
@@ -5496,12 +5691,25 @@ async function parse3DModelToSpec(file) {
   const ext = filename.split('.').pop().toLowerCase();
   const title = filename.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
 
+  let meshData = null;
+  try {
+    if (window.LDoc3DConverter && ['stl', 'obj', '3mf', 'json'].includes(ext)) {
+      meshData = await window.LDoc3DConverter.parseFile(file);
+    }
+  } catch (err) {
+    console.warn('LDoc3DConverter parse failed, falling back to data URL:', err);
+  }
+
   const dataUrl = await new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+
+  const vertCount = meshData && meshData.vertices ? meshData.vertices.length : null;
+  const faceCount = meshData && meshData.faces ? meshData.faces.length : null;
+  const statsDetail = vertCount ? ` (${vertCount.toLocaleString()} vertices, ${faceCount.toLocaleString()} faces)` : '';
 
   return {
     title: `${title} (3D Living Model)`,
@@ -5512,8 +5720,20 @@ async function parse3DModelToSpec(file) {
       title: `${title} 3D Spatial Model`,
       blocks: [
         { id: 'b_1', type: 'heading', level: 1, text: `${title} 3D Model` },
-        { id: 'b_2', type: 'paragraph', text: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB).` },
-        { id: 'b_3', type: '3d_model', src: dataUrl, format: ext, value: title }
+        { 
+          id: 'b_2', 
+          type: 'paragraph', 
+          text: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.` 
+        },
+        { 
+          id: 'b_3', 
+          type: '3d_model', 
+          src: dataUrl, 
+          format: ext, 
+          value: title, 
+          mesh_data: meshData, 
+          style: { material: 'gold', auto_rotate: true, format: ext } 
+        }
       ]
     }]
   };
@@ -5558,10 +5778,142 @@ async function parseMediaToSpec(file) {
 
 async function parsePdfToSpec(file) {
   const filename = file.name;
-  const title = filename.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
+  const docTitle = filename.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
   const arrayBuffer = await file.arrayBuffer();
-  const u8 = new Uint8Array(arrayBuffer);
 
+  // 1. Try modern PDF.js extraction
+  if (typeof window !== 'undefined' && window.pdfjsLib) {
+    try {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const pages = [];
+
+      for (let pNum = 1; pNum <= pdf.numPages; pNum++) {
+        const page = await pdf.getPage(pNum);
+        const textContent = await page.getTextContent();
+
+        // Render high-res visual snapshot canvas
+        let pageImgData = null;
+        try {
+          const viewport = page.getViewport({ scale: 1.4 });
+          const canvas = document.createElement('canvas');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          const ctx = canvas.getContext('2d');
+          await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+          pageImgData = canvas.toDataURL('image/jpeg', 0.82);
+        } catch (renderErr) {
+          console.warn('Page canvas render warning:', renderErr);
+        }
+
+        // Group text items into lines based on transform Y coordinate
+        const lineMap = new Map();
+        const items = textContent.items || [];
+        for (const item of items) {
+          if (!item.str || !item.str.trim()) continue;
+          const y = Math.round(item.transform[5]);
+          const fontSize = Math.hypot(item.transform[0], item.transform[1]);
+          if (!lineMap.has(y)) {
+            lineMap.set(y, { y, fontSize, text: item.str });
+          } else {
+            const entry = lineMap.get(y);
+            entry.text += ' ' + item.str;
+            entry.fontSize = Math.max(entry.fontSize, fontSize);
+          }
+        }
+
+        // Sort lines from top of page to bottom (descending Y in PDF coordinates)
+        const sortedLines = Array.from(lineMap.values()).sort((a, b) => b.y - a.y);
+        const blocks = [];
+        let detectedPageTitle = '';
+
+        // First, check if top line is a heading
+        let lineIdx = 0;
+        if (sortedLines.length > 0 && sortedLines[0].fontSize >= 14) {
+          detectedPageTitle = sortedLines[0].text.trim();
+          blocks.push({ id: `b_${pNum}_h1`, type: 'heading', level: 1, text: detectedPageTitle, value: detectedPageTitle });
+          lineIdx = 1;
+        } else {
+          detectedPageTitle = `Page ${pNum}: ${docTitle}`;
+          blocks.push({ id: `b_${pNum}_h1`, type: 'heading', level: 2, text: detectedPageTitle, value: detectedPageTitle });
+        }
+
+        // Add page image snapshot banner if available
+        if (pageImgData) {
+          blocks.push({
+            id: `b_${pNum}_snap`,
+            type: 'web_image',
+            src: pageImgData,
+            alt: `Page ${pNum} visual snapshot`,
+            value: `Page ${pNum} Visual Capture`,
+            style: { src: pageImgData, alt: `Page ${pNum} visual snapshot`, maxHeight: '440px', borderRadius: '12px', margin: '14px 0', border: '1px solid rgba(255,255,255,0.1)' }
+          });
+        }
+
+        // Aggregate consecutive body lines into paragraphs and subheadings
+        let currentPara = [];
+        for (let i = lineIdx; i < sortedLines.length; i++) {
+          const l = sortedLines[i];
+          const txt = l.text.trim();
+          if (!txt) continue;
+
+          if (l.fontSize >= 15) {
+            // Heading 2
+            if (currentPara.length) {
+              const pText = currentPara.join(' ');
+              blocks.push({ id: `b_${pNum}_p_${blocks.length}`, type: 'paragraph', text: pText, value: pText });
+              currentPara = [];
+            }
+            blocks.push({ id: `b_${pNum}_h2_${blocks.length}`, type: 'heading', level: 2, text: txt, value: txt });
+          } else if (l.fontSize >= 13 && txt.length < 90) {
+            // Heading 3
+            if (currentPara.length) {
+              const pText = currentPara.join(' ');
+              blocks.push({ id: `b_${pNum}_p_${blocks.length}`, type: 'paragraph', text: pText, value: pText });
+              currentPara = [];
+            }
+            blocks.push({ id: `b_${pNum}_h3_${blocks.length}`, type: 'heading', level: 3, text: txt, value: txt });
+          } else {
+            // Paragraph line
+            currentPara.push(txt);
+            if (txt.endsWith('.') || txt.endsWith('!') || txt.endsWith(':') || currentPara.length >= 4) {
+              const pText = currentPara.join(' ');
+              blocks.push({ id: `b_${pNum}_p_${blocks.length}`, type: 'paragraph', text: pText, value: pText });
+              currentPara = [];
+            }
+          }
+        }
+        if (currentPara.length) {
+          const pText = currentPara.join(' ');
+          blocks.push({ id: `b_${pNum}_p_${blocks.length}`, type: 'paragraph', text: pText, value: pText });
+        }
+
+        pages.push({
+          id: `page_${pNum}`,
+          title: detectedPageTitle || `Page ${pNum}`,
+          blocks: blocks.length ? blocks : [{ id: `b_${pNum}_empty`, type: 'paragraph', text: `Page ${pNum} content preserved.`, value: `Page ${pNum} content preserved.` }]
+        });
+      }
+
+      if (pages.length > 0) {
+        return {
+          title: docTitle,
+          author: 'Universal PDF Converter',
+          theme: 'paper',
+          pages: pages
+        };
+      }
+    } catch (pdfErr) {
+      console.warn('PDF.js parsing notice, falling back:', pdfErr);
+    }
+  }
+
+  // 2. Fallback parser if PDF.js is unavailable
+  return parsePdfFallback(file, docTitle, arrayBuffer);
+}
+
+function parsePdfFallback(file, docTitle, arrayBuffer) {
+  const u8 = new Uint8Array(arrayBuffer);
   let extractedText = '';
   const textDecoder = new TextDecoder('latin1');
   const rawStr = textDecoder.decode(u8);
@@ -5580,13 +5932,13 @@ async function parsePdfToSpec(file) {
   }
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: title },
+    { id: 'b_1', type: 'heading', level: 1, text: docTitle },
     { id: 'b_2', type: 'paragraph', text: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).` }
   ];
 
   if (extractedText && extractedText.trim().length > 20) {
     const paras = extractedText.trim().split(/\s{3,}|\.\s+/);
-    paras.slice(0, 15).forEach((p, idx) => {
+    paras.slice(0, 20).forEach((p, idx) => {
       if (p.trim()) {
         blocks.push({ id: 'b_p_' + idx, type: 'paragraph', text: p.trim() + '.' });
       }
@@ -5595,17 +5947,20 @@ async function parsePdfToSpec(file) {
     blocks.push({
       id: 'b_notice',
       type: 'paragraph',
-      text: 'Document structure preserved. You can edit this page, add sections, and insert interactive widgets in Studio Editor.'
+      text: 'PDF document structure preserved with layout metadata. You can customize interactive components, add 3D elements, or embed audio in Studio.'
     });
   }
 
   return {
-    title: title,
+    title: docTitle,
     author: 'Universal PDF Converter',
     theme: 'paper',
-    pages: [{ id: 'page_1', title: title, blocks: blocks }]
+    pages: [{ id: 'page_1', title: docTitle, blocks: blocks }]
   };
 }
+
+let convCurrentShowcaseSpec = null;
+let convCurrentShowcaseIndex = 0;
 
 function renderConvResult(spec, blob, file) {
   const dropZone = document.getElementById('conv-drop-zone');
@@ -5633,6 +5988,9 @@ function renderConvResult(spec, blob, file) {
     spec.pages.forEach((p, i) => {
       const div = document.createElement('div');
       div.className = 'conv-outline-item';
+      div.style.cursor = 'pointer';
+      div.title = `Click to display Page ${i + 1} in showcase`;
+      div.onclick = () => convShowcaseGoToPage(i);
       const blockTypes = (p.blocks || []).map(b => b.type).slice(0, 5).join(', ');
       div.innerHTML = `
         <span style="font-weight:700;color:#fef08a">Page ${i + 1}: ${p.title || 'Section'}</span>
@@ -5640,6 +5998,65 @@ function renderConvResult(spec, blob, file) {
       `;
       outline.appendChild(div);
     });
+  }
+
+  // Immediately display the interactive showcase on Page 1!
+  convRenderShowcase(spec, 0);
+}
+
+function convRenderShowcase(spec, pageIndex) {
+  convCurrentShowcaseSpec = spec;
+  convCurrentShowcaseIndex = Math.max(0, Math.min(pageIndex, spec.pages.length - 1));
+
+  const page = spec.pages[convCurrentShowcaseIndex];
+  if (!page) return;
+
+  const titleEl = document.getElementById('conv-showcase-page-title');
+  if (titleEl) titleEl.textContent = page.title || `Page ${convCurrentShowcaseIndex + 1}`;
+
+  const indicatorEl = document.getElementById('conv-page-indicator');
+  if (indicatorEl) indicatorEl.textContent = `${convCurrentShowcaseIndex + 1} / ${spec.pages.length}`;
+
+  const prevBtn = document.getElementById('conv-prev-page-btn');
+  const nextBtn = document.getElementById('conv-next-page-btn');
+  if (prevBtn) prevBtn.disabled = convCurrentShowcaseIndex <= 0;
+  if (nextBtn) nextBtn.disabled = convCurrentShowcaseIndex >= spec.pages.length - 1;
+
+  const sheet = document.getElementById('conv-living-sheet');
+  if (sheet) {
+    sheet.innerHTML = '';
+    const themeName = spec.theme || 'paper';
+    sheet.className = `conv-living-sheet theme-${themeName}`;
+
+    if (page.blocks && page.blocks.length) {
+      page.blocks.forEach(b => {
+        try {
+          renderBlockNode(b, sheet);
+        } catch (bErr) {
+          console.warn('Showcase block render warning:', bErr);
+        }
+      });
+    } else {
+      sheet.innerHTML = '<div style="color:var(--text3);padding:24px;text-align:center">This page has no content blocks.</div>';
+    }
+  }
+}
+
+function convShowcaseNextPage() {
+  if (convCurrentShowcaseSpec && convCurrentShowcaseIndex < convCurrentShowcaseSpec.pages.length - 1) {
+    convRenderShowcase(convCurrentShowcaseSpec, convCurrentShowcaseIndex + 1);
+  }
+}
+
+function convShowcasePrevPage() {
+  if (convCurrentShowcaseSpec && convCurrentShowcaseIndex > 0) {
+    convRenderShowcase(convCurrentShowcaseSpec, convCurrentShowcaseIndex - 1);
+  }
+}
+
+function convShowcaseGoToPage(index) {
+  if (convCurrentShowcaseSpec) {
+    convRenderShowcase(convCurrentShowcaseSpec, index);
   }
 }
 
@@ -7240,22 +7657,78 @@ init() {
   loadModel(options) {
     if(!options) return;
     if(typeof options === 'string') options = { url: options };
-    if(options.url && (options.url.endsWith('.glb') || options.url.endsWith('.gltf')) && typeof THREE.GLTFLoader !== 'undefined') {
+    this.autoRotate = true;
+    const url = options.url || '';
+    const fmt = (options.format || '').toLowerCase();
+
+    // 1. MeshData provided directly from client parser
+    if(options.meshData && options.meshData.vertices && options.meshData.vertices.length > 0) {
+      this.loadMeshFromJSON(options.meshData);
+      this.autoRotate = true;
+      return;
+    }
+
+    // 2. GLTF / GLB 3D model
+    const isGlb = fmt === 'glb' || fmt === 'gltf' || url.includes('.glb') || url.includes('.gltf') || url.startsWith('data:model/gltf') || url.startsWith('data:application/octet-stream');
+    if(url && isGlb && typeof THREE.GLTFLoader !== 'undefined') {
       const loader = new THREE.GLTFLoader();
-      loader.load(options.url, (gltf) => {
+      loader.load(url, (gltf) => {
         if(this.mesh) this.scene.remove(this.mesh);
         this.mesh = gltf.scene;
         this.setMaterialMode(this.materialMode);
         this.scene.add(this.mesh);
         this.fitCameraToObject();
+        this.autoRotate = true;
       }, undefined, (err) => {
-        console.warn('GLTF fallback to procedural geometry:', err);
+        console.warn('GLTF loader notice, fallback to meshData:', err);
         if(options.meshData) this.loadMeshFromJSON(options.meshData);
       });
       return;
     }
+
+    // 3. STL 3D model
+    const isStl = fmt === 'stl' || url.includes('.stl');
+    if(url && isStl && typeof THREE.STLLoader !== 'undefined') {
+      const loader = new THREE.STLLoader();
+      loader.load(url, (geometry) => {
+        if(this.mesh) this.scene.remove(this.mesh);
+        geometry.computeVertexNormals();
+        geometry.center();
+        this.geometry = geometry;
+        this.material = this.createMaterial(this.materialMode);
+        this.mesh = new THREE.Mesh(geometry, this.material);
+        this.scene.add(this.mesh);
+        this.fitCameraToObject();
+        this.autoRotate = true;
+      }, undefined, (err) => {
+        console.warn('STL loader fallback to meshData:', err);
+        if(options.meshData) this.loadMeshFromJSON(options.meshData);
+      });
+      return;
+    }
+
+    // 4. OBJ 3D model
+    const isObj = fmt === 'obj' || url.includes('.obj');
+    if(url && isObj && typeof THREE.OBJLoader !== 'undefined') {
+      const loader = new THREE.OBJLoader();
+      loader.load(url, (obj) => {
+        if(this.mesh) this.scene.remove(this.mesh);
+        this.mesh = obj;
+        this.setMaterialMode(this.materialMode);
+        this.scene.add(this.mesh);
+        this.fitCameraToObject();
+        this.autoRotate = true;
+      }, undefined, (err) => {
+        console.warn('OBJ loader fallback to meshData:', err);
+        if(options.meshData) this.loadMeshFromJSON(options.meshData);
+      });
+      return;
+    }
+
+    // 5. General fallback
     if(options.meshData) {
       this.loadMeshFromJSON(options.meshData);
+      this.autoRotate = true;
     }
   }
 
@@ -7342,16 +7815,24 @@ init() {
   }
 
   fitCameraToObject() {
-    if (!this.mesh || !this.geometry) return;
-    this.geometry.computeBoundingBox();
-    const box = this.geometry.boundingBox;
-    const size = new THREE.Vector3();
-    box.getSize(size);
-    const maxDim = Math.max(size.x, size.y, size.z, 0.4);
-    const fov = this.camera.fov * (Math.PI / 180);
-    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.5;
-    this.camera.position.set(0, 0, Math.max(cameraZ, 2.2));
-    this.camera.lookAt(0, 0, 0);
+    if (!this.mesh) return;
+    try {
+      const box = new THREE.Box3().setFromObject(this.mesh);
+      const size = new THREE.Vector3();
+      box.getSize(size);
+      const center = new THREE.Vector3();
+      box.getCenter(center);
+      if (center.lengthSq() > 0.0001) {
+        this.mesh.position.sub(center);
+      }
+      const maxDim = Math.max(size.x, size.y, size.z, 0.4);
+      const fov = (this.camera.fov || 55) * (Math.PI / 180);
+      let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 1.55;
+      this.camera.position.set(0, 0, Math.max(cameraZ, 2.2));
+      this.camera.lookAt(0, 0, 0);
+    } catch (e) {
+      console.warn('fitCameraToObject notice:', e);
+    }
   }
 
   wakeUp() {
@@ -8215,10 +8696,9 @@ function runAiBlock(el){
   },900+Math.random()*600);
 }
 </script>
-
 <script>
-function nodeText(n){if(n.value)return n.value;if(n.children)for(const c of n.children)if(c.type==='text'&&c.value)return c.value;return '';}
-function nodeLabel(n){return(n.aria&&n.aria.label)||n.value||nodeText(n)||'';}
+function nodeText(n){if(!n)return '';if(n.value!==undefined)return String(n.value);if(n.text!==undefined)return String(n.text);if(n.children)for(const c of n.children)if(c.type==='text'&&(c.value!==undefined||c.text!==undefined))return String(c.value!==undefined?c.value:c.text);return '';}
+function nodeLabel(n){return(n.aria&&n.aria.label)||n.value||n.text||nodeText(n)||'';}
 function nodePH(n){return(n.aria&&n.aria.placeholder)||'';}
 function assetUrl(n){return n.asset_id?`${API}/documents/${docId}/assets/${n.asset_id}`:'';;}
 
@@ -8556,8 +9036,18 @@ function renderBlockNode(node,parent){
       });
       parent.appendChild(tbl);break;
     }
-    case 'image':{make3DImageCard(assetUrl(node),(node.aria&&node.aria.alt)||node.value||'Image',parent);break;}
-    case 'web_image':{make3DImageCard((node.style&&node.style.src)||'',(node.style&&node.style.alt)||node.value||'Image',parent);break;}
+    case 'image':{
+      const imgSrc = node.src || assetUrl(node) || (node.style && node.style.src) || '';
+      const imgAlt = (node.aria && node.aria.alt) || node.alt || node.value || 'Image';
+      make3DImageCard(imgSrc, imgAlt, parent);
+      break;
+    }
+    case 'web_image':{
+      const imgSrc = (node.style && node.style.src) || node.src || node.url || (node.style && node.style.url) || '';
+      const imgAlt = (node.style && node.style.alt) || node.alt || node.value || 'Image';
+      make3DImageCard(imgSrc, imgAlt, parent);
+      break;
+    }
             case 'audio':case 'web_audio':{
       const src=(node.style&&node.style.src)||node.src||assetUrl(node)||'';
       const lbl=(node.style&&node.style.label)||(node.aria&&node.aria.label)||node.value||'Atmospheric Soundtrack';
@@ -9100,7 +9590,7 @@ ${escapeHtml(rawCode)}
             window.__threeViewers[canvasId] = viewer;
             container.dataset.canvasId = canvasId;
             if (modelUrl) {
-              viewer.loadModel({ url: modelUrl, meshData: modelData });
+              viewer.loadModel({ url: modelUrl, meshData: modelData, format: format });
             } else {
               viewer.loadMeshFromJSON(modelData);
             }
