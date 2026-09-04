@@ -39,7 +39,9 @@ if (fs.existsSync(path.join(__dirname, 'studio.html'))) {
 const assets = [
   'index.html', 'ai-brain.png', 'app.ico', 'daily-prophet.ldocx',
   'jszip.min.js', 'ldoc_background_image.png', 'ldoc_logo.png', 'manifest.json',
-  'ldoc-config.js', 'ldoc-toast.js', 'ldoc-parser.js', 'ldoc-editor-core.js', 'ldoc-shared-modals.js'
+  'ldoc-config.js', 'ldoc-toast.js', 'ldoc-parser.js', 'ldoc-editor-core.js', 'ldoc-shared-modals.js',
+  'LDOCX_ARCHITECTURE_AND_SECURITY_GUIDE.pdf', 'LDOCX_TECHNICAL_SPECIFICATION.pdf',
+  'LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.pdf', 'LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md'
 ];
 
 assets.forEach(a => {

@@ -183,7 +183,7 @@ body::before{
 #file-input{display:none}
 
 /* ── Main Layout ────────────────────────────────────────────────────────────── */
-#main{position:relative;z-index:1;display:flex;flex:1;overflow:hidden}
+#main{position:relative;z-index:1;display:flex;flex:1;overflow:hidden;margin-bottom:24px}
 #viewer-panel{display:flex;flex:1;overflow:hidden}
 #content-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:rgba(10,10,20,.60);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 #page-canvas{flex:1;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;min-height:0;padding:24px 0 60px;transition:opacity .2s}
@@ -865,12 +865,12 @@ body.mode-paper .page-paper-layer {
 .ed-page-item.active{background:rgba(245,158,11,.12);border-left-color:var(--gold);color:var(--gold)}
 .ed-page-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:0 2px;margin-left:auto}
 .ed-page-del:hover{color:#f87171}
-#ed-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;height:100%}
+#ed-main{flex:1 1 0;min-width:0;display:flex;flex-direction:column;overflow:hidden;min-height:0;height:100%}
 #ed-meta{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;gap:10px;align-items:center;flex-shrink:0;flex-wrap:wrap}
 #ed-meta label{font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase}
 #ed-meta input{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 9px;font-size:13px}
 #ed-meta input:focus{outline:none;border-color:var(--gold)}
-#ed-body{flex:1;display:flex;overflow:hidden;min-height:0}
+#ed-body{flex:1 1 auto;min-width:0;display:flex;overflow:hidden;min-height:0}
 #ed-blocks-panel{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:var(--bg);min-height:0}
 #ed-blocks-panel::-webkit-scrollbar{width:4px}
 #ed-blocks-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
@@ -884,7 +884,7 @@ body.mode-paper .page-paper-layer {
 .ed-block-up{position:absolute;top:10px;right:52px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px}
 .ed-block-dn{position:absolute;top:10px;right:32px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px}
 .ed-block-up:hover,.ed-block-dn:hover{color:var(--gold)}
-#ed-add-bar{background:var(--surface);border-top:1px solid var(--border);padding:8px 14px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;z-index:5}
+#ed-add-bar{background:rgba(14,16,28,0.98);border-top:1px solid rgba(255,255,255,0.12);padding:10px 14px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;z-index:20;min-height:50px;align-items:center;box-shadow:0 -4px 16px rgba(0,0,0,0.4)}
 .add-block-btn{background:var(--surface2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;transition:all .12s}
 .add-block-btn:hover{background:rgba(245,158,11,.15);border-color:var(--gold);color:var(--gold)}
 #ed-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:14px}
@@ -908,14 +908,14 @@ body.mode-paper .page-paper-layer {
 }
 .ldoc-loading-sub{font-size:11px;color:var(--text3);letter-spacing:1px;font-weight:500}
 
-/* ── Live Presentation Preview Panel (Editor Split View) ───────────────────── */
 #ed-preview-pane{
-  width:0;min-width:0;max-width:60%;overflow:hidden;
+  width:0;min-width:0;max-width:80%;overflow:hidden;
   background:radial-gradient(circle at top center,#151528 0%,#090910 100%);
   border-left:1.5px solid var(--border);transition:width .3s cubic-bezier(.4,0,.2,1),min-width .3s;
   display:flex;flex-direction:column;position:relative;z-index:2;
+  flex-shrink:0 !important;
 }
-#ed-preview-pane.open{width:48%;min-width:320px}
+#ed-preview-pane.open{width:48%;min-width:320px;flex-shrink:0 !important}
 #ed-preview-pane .preview-header{
   padding:10px 16px;background:rgba(10,10,18,.96);border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;
@@ -2441,35 +2441,43 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 
 
 #editor-panel {
-  height: calc(100vh - 100px) !important;
+  height: calc(100vh - 120px) !important;
+  max-height: calc(100vh - 120px) !important;
   overflow: hidden !important;
+  margin-bottom: 28px !important;
 }
 #ed-pages {
   overflow-y: auto !important;
   height: 100% !important;
   max-height: 100% !important;
+  flex-shrink: 0 !important;
 }
 #ed-main {
   display: flex !important;
   flex-direction: column !important;
   height: 100% !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  flex: 1 1 0% !important;
   overflow: hidden !important;
 }
 #ed-body {
-  flex: 1 !important;
+  flex: 1 1 auto !important;
   overflow-y: auto !important;
-  height: 100% !important;
-  max-height: calc(100vh - 160px) !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
 }
 #ed-blocks-panel {
   overflow-y: auto !important;
-  height: auto !important;
-  max-height: 100% !important;
-  padding-bottom: 60px !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding-bottom: 24px !important;
 }
 #ed-preview-pane {
   height: 100% !important;
   overflow: hidden !important;
+  flex-shrink: 0 !important;
 }
 #ed-preview-body {
   overflow-y: auto !important;
@@ -2822,11 +2830,15 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   flex-wrap: nowrap !important;
   overflow-x: auto !important;
   -webkit-overflow-scrolling: touch !important;
-  padding: 8px 10px !important;
+  padding: 8px 12px !important;
+  min-height: 48px !important;
+  align-items: center !important;
   gap: 6px !important;
   background: rgba(14, 16, 28, 0.98) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
   scrollbar-width: none !important;
+  z-index: 20 !important;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.4) !important;
 }
 #ed-add-bar::-webkit-scrollbar, #add-bar::-webkit-scrollbar {
   display: none !important;
@@ -3587,11 +3599,14 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
     <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
       <div class="dmenu-btn">Help ▾</div>
       <div class="dmenu-dropdown">
-        <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.pdf')"><span>📕 Architecture &amp; Security Guide (PDF)</span></div>
-        <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md')"><span>📄 Technical Specification (Markdown)</span></div>
+        <div class="dmenu-entry" onclick="toggleHelpDrawer()"><span>📖 Help &amp; Guides Drawer</span><span class="hotkey">F1</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="window.open('https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1')"><span>🌐 GitHub Repository</span></div>
-        <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.4.0 (Enterprise Reactive 3D Edition)\nBuilt with Three.js WebGL & Dynamic Tactile Physics', 'info')"><span>ℹ️ About LDOC Studio</span></div>
+        <div class="dmenu-entry" onclick="window.open('LDOCX_ARCHITECTURE_AND_SECURITY_GUIDE.pdf', '_blank')"><span>🛡️ Architecture &amp; Security Guide (PDF)</span></div>
+        <div class="dmenu-entry" onclick="window.open('LDOCX_TECHNICAL_SPECIFICATION.pdf', '_blank')"><span>⚙️ Technical Specification v2.5 (PDF)</span></div>
+        <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md', '_blank')"><span>📄 Technical Specification (Markdown)</span></div>
+        <div class="dmenu-divider"></div>
+        <div class="dmenu-entry" onclick="window.open('https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1', '_blank')"><span>🌐 GitHub Repository</span></div>
+        <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.5.0 (Enterprise Reactive 3D Edition)\nBuilt with Three.js WebGL & Dynamic Tactile Physics', 'info')"><span>ℹ️ About LDOC Studio</span></div>
       </div>
     </div>
   </div>
@@ -3604,7 +3619,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
     <span class="logo">LDOC</span>
   </div>
   <button class="tab-btn active" id="tab-viewer" onclick="switchTab('viewer')">Viewer</button>
-  <button class="tab-btn" id="tab-editor" onclick="switchTab('editor')">🎨 Creator &amp; Editor</button>
+  <button class="tab-btn" id="tab-editor" onclick="switchTab('editor')">✏️ Editor</button>
   <button class="tab-btn" id="tab-converter" onclick="switchTab('converter')">⚡ Convert</button>
   <button class="tab-btn" id="tab-templates" onclick="switchTab('templates')">🌟 Vault</button>
   <button class="tab-btn" id="tab-docs" onclick="switchTab('docs')">Documents</button>
@@ -4537,6 +4552,74 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
   </div>
 </div>
 
+<!-- 📖 Help, Architecture & Security Guide, and Technical Specification Drawer -->
+<div id="help-drawer" style="display:none;position:fixed;top:0;right:0;width:520px;max-width:92vw;height:100vh;background:rgba(14,16,28,0.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:1.5px solid var(--gold,#f59e0b);box-shadow:-12px 0 40px rgba(0,0,0,0.85);z-index:10000;flex-direction:column;animation:slideInRight 0.25s ease-out">
+  <div style="padding:16px 20px;background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(124,58,237,0.18));border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:22px">📖</span>
+      <div>
+        <h3 style="margin:0;font-size:15px;color:#fef08a;font-family:'Cinzel',serif;font-weight:700">Help &amp; Documentation</h3>
+        <div style="font-size:11px;color:var(--text3)">Living Document Architecture, Security &amp; Specifications</div>
+      </div>
+    </div>
+    <button onclick="toggleHelpDrawer()" style="background:none;border:none;color:#cbd5e1;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px" title="Close Help Drawer">✕</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px">
+    
+    <!-- PDF Card 1: Architecture & Security Guide -->
+    <div style="background:rgba(255,255,255,0.03);border:1.5px solid rgba(245,158,11,0.35);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,0.4)">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1px">Official Architecture &amp; Security Blueprint</span>
+        <span style="font-size:10px;padding:2px 8px;background:rgba(245,158,11,0.15);color:#fef08a;border-radius:12px;border:1px solid rgba(245,158,11,0.3)">PDF Guide</span>
+      </div>
+      <h4 style="margin:0;font-size:15px;color:#fff;font-weight:700">🛡️ Architecture &amp; Security Guide</h4>
+      <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.5">
+        Comprehensive enterprise manual for senior engineers and security teams. Details hermetic zero-trust client sandboxing, ZIP-Slip mitigations, cryptographic SHA-256 package verification, tactile paper physics, and 3D WebGL runtime architecture.
+      </p>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <a href="LDOCX_ARCHITECTURE_AND_SECURITY_GUIDE.pdf" target="_blank" style="flex:1;text-align:center;padding:8px 12px;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(124,58,237,0.25));border:1px solid var(--gold);border-radius:8px;color:#fef08a;font-size:12px;font-weight:700;text-decoration:none">📖 Open / View PDF</a>
+        <a href="LDOCX_ARCHITECTURE_AND_SECURITY_GUIDE.pdf" download="LDOCX_ARCHITECTURE_AND_SECURITY_GUIDE.pdf" style="padding:8px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#cbd5e1;font-size:12px;font-weight:600;text-decoration:none">⬇️ Download</a>
+      </div>
+    </div>
+
+    <!-- PDF Card 2: Technical Specification Standard -->
+    <div style="background:rgba(255,255,255,0.03);border:1.5px solid rgba(56,189,248,0.35);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,0.4)">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:11px;font-weight:800;color:#38bdf8;text-transform:uppercase;letter-spacing:1px">Container Specification Standard</span>
+        <span style="font-size:10px;padding:2px 8px;background:rgba(56,189,248,0.15);color:#38bdf8;border-radius:12px;border:1px solid rgba(56,189,248,0.3)">Standard v2.5.0</span>
+      </div>
+      <h4 style="margin:0;font-size:15px;color:#fff;font-weight:700">⚙️ Technical Specification (PDF)</h4>
+      <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.5">
+        Authoritative format standard. Defines the ZIP container anatomy, manifest.json schemas, page AST block node taxonomy (headings, code, 3D models, fluid waves, JSX sandboxes), floating text typography models, and lenient recovery quarantine algorithms.
+      </p>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <a href="LDOCX_TECHNICAL_SPECIFICATION.pdf" target="_blank" style="flex:1;text-align:center;padding:8px 12px;background:linear-gradient(135deg,rgba(56,189,248,0.25),rgba(124,58,237,0.25));border:1px solid #38bdf8;border-radius:8px;color:#38bdf8;font-size:12px;font-weight:700;text-decoration:none">📖 Open / View PDF</a>
+        <a href="LDOCX_TECHNICAL_SPECIFICATION.pdf" download="LDOCX_TECHNICAL_SPECIFICATION.pdf" style="padding:8px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#cbd5e1;font-size:12px;font-weight:600;text-decoration:none">⬇️ Download</a>
+      </div>
+    </div>
+
+    <!-- Quick Keyboard Shortcuts & Hints -->
+    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px">
+      <div style="font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">⚡ Essential Studio Shortcuts</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
+        <div style="color:#94a3b8"><span style="color:#fef08a;font-family:monospace;font-weight:700">Ctrl + S</span>: Save .ldocx</div>
+        <div style="color:#94a3b8"><span style="color:#fef08a;font-family:monospace;font-weight:700">Ctrl + W</span>: FX Wizard</div>
+        <div style="color:#94a3b8"><span style="color:#fef08a;font-family:monospace;font-weight:700">Ctrl + Shift + H</span>: AI Assistant</div>
+        <div style="color:#94a3b8"><span style="color:#fef08a;font-family:monospace;font-weight:700">F1</span>: Help Drawer</div>
+        <div style="color:#94a3b8"><span style="color:#fef08a;font-family:monospace;font-weight:700">Double Click</span>: Free Text Box</div>
+        <div style="color:#94a3b8"><span style="color:#fef08a;font-family:monospace;font-weight:700">Drag Splitter</span>: Resize Panes</div>
+      </div>
+    </div>
+
+    <!-- Community & Open Standard Links -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.08);font-size:11.5px">
+      <span style="color:#94a3b8">Open Source Standard Repository</span>
+      <a href="https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1" target="_blank" style="color:var(--gold);text-decoration:none;font-weight:700">GitHub ➔</a>
+    </div>
+
+  </div>
+</div>
+
 <script>
 // Auto-detect port from the current page URL. The server upgrades WebSocket requests on the
 // same HTTP port under the /ws path, so the UI must connect to that exact endpoint.
@@ -4825,6 +4908,74 @@ function switchWizParticleMode(mode) {
 }
 
 function applyWizardFx(action) {
+  const isEditor = (document.getElementById('editor-panel')?.style.display !== 'none') || (window.__activeTab === 'editor');
+
+  if (isEditor) {
+    if (!edPages || edPages.length === 0) {
+      if (typeof edAddPage === 'function') edAddPage();
+    }
+    const curEdPage = (typeof edPages !== 'undefined') ? (edPages.find(p => p.id === edCurrentPage) || edPages[0]) : null;
+    if (!curEdPage) return;
+    curEdPage.blocks = curEdPage.blocks || [];
+
+    if (action === 'bg_water') {
+      curEdPage.fx = 'water';
+      setVisualFx('water');
+      showToast('🌊 Applied Fluid Water Waves background to active page!');
+    } else if (action === 'bg_particles') {
+      curEdPage.fx = 'particles';
+      setVisualFx('stardust');
+      showToast('✨ Applied Cyber Stardust background to active page!');
+    } else if (action === 'insert_water') {
+      curEdPage.blocks.push({ id: edBId(), type: 'water_effect', title: 'Volumetric Water Waves' });
+      showToast('🌊 Inserted Volumetric Water Waves block into active page!', 'ok');
+    } else if (action === 'insert_particles') {
+      curEdPage.blocks.push({ id: edBId(), type: 'particles', value: 'stardust', text: 'Cyber Stardust Particles' });
+      showToast('✨ Inserted Particle FX block into active page!', 'ok');
+    } else if (action === 'insert_dyno') {
+      curEdPage.blocks.push({
+        id: edBId(),
+        type: 'jsx_canvas',
+        title: 'Interactive Simulator Sandbox',
+        code: 'function Widget(){\n  const [val, setVal] = useState(65);\n  return <div style={{padding:16,background:"#0a0f1d",borderRadius:8,color:"#38bdf8",border:"1px solid rgba(56,189,248,0.3)"}}><h4>⚡ Reactive Sandbox</h4><input type="range" min="1" max="100" value={val} onChange={e=>setVal(e.target.value)} style={{width:"100%"}} /><p>Telemetry Output: {val}%</p></div>;\n}'
+      });
+      showToast('⚡ Inserted Interactive Simulator Sandbox into active page!', 'ok');
+    } else if (action === 'insert_wand' || action === 'insert_orbit' || action === 'insert_arr') {
+      curEdPage.blocks.push({
+        id: edBId(),
+        type: '3d_model',
+        mesh_template: action === 'insert_orbit' ? 'satellite' : 'supercar',
+        material_mode: 'cyber_hologram'
+      });
+      showToast('📦 Inserted 3D Spatial Hologram Model into active page!', 'ok');
+    } else if (action === 'insert_stripe_button') {
+      curEdPage.blocks.push({
+        id: edBId(),
+        type: 'button',
+        value: 'Unlock Living License ($29)',
+        action: 'submit',
+        target: 'checkout'
+      });
+      showToast('💎 Inserted Living Checkout Button into active page!', 'ok');
+    } else if (action === 'insert_smart_form') {
+      curEdPage.blocks.push({
+        id: edBId(),
+        type: 'form',
+        title: 'Interactive Feedback Form',
+        fields: [
+          { label: 'Full Name', field_type: 'input_text', placeholder: 'Enter your name' },
+          { label: 'Email Address', field_type: 'input_text', placeholder: 'name@company.com' }
+        ]
+      });
+      showToast('📑 Inserted Lead Form into active page!', 'ok');
+    }
+
+    if (typeof edRenderBlocks === 'function') edRenderBlocks();
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+    return;
+  }
+
+  // Viewer mode fallback
   const curPage = pages.find(p => p.number === currentPage || p.id === currentPage) || pages[0];
   if (!curPage) return;
 
@@ -4836,23 +4987,23 @@ function applyWizardFx(action) {
     setVisualFx('stardust');
   } else if (action === 'insert_water') {
     curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'particles', value: 'stardust', content: 'Interactive Ambient Particles' });
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'water_effect', title: 'Volumetric Water Waves' });
     if (typeof renderPages === 'function') renderPages();
   } else if (action === 'insert_particles') {
     curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'particles', value: 'stardust', content: 'Cyber Stardust Block' });
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'particles', value: 'stardust', text: 'Cyber Stardust Block' });
     if (typeof renderPages === 'function') renderPages();
   } else if (action === 'insert_dyno') {
     curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'dyno_sandbox', title: 'Interactive Simulator', content: 'x = np.linspace(0, 10, 100)\ny = np.sin(x)' });
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'jsx_canvas', title: 'Interactive Simulator', code: 'function Widget(){\n  return <div style={{padding:12,color:"#38bdf8"}}>⚡ Live Reactive Sandbox</div>;\n}' });
     if (typeof renderPages === 'function') renderPages();
   } else if (action === 'insert_wand' || action === 'insert_orbit' || action === 'insert_arr') {
     curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'chart', title: 'Dynamic ARR Projection', content: 'ARR Trajectory Model' });
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: '3d_model', mesh_template: 'supercar', material_mode: 'cyber_hologram' });
     if (typeof renderPages === 'function') renderPages();
   } else if (action === 'insert_stripe_button') {
     curPage.blocks = curPage.blocks || [];
-    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'stripe_button', label: 'Unlock Living Pro License', price: '$29' });
+    curPage.blocks.push({ id: 'b_' + Date.now(), type: 'button', value: 'Unlock Living License ($29)', action: 'submit' });
     if (typeof renderPages === 'function') renderPages();
   } else if (action === 'insert_smart_form') {
     curPage.blocks = curPage.blocks || [];
@@ -6613,6 +6764,10 @@ function edToggleLivePreview() {
   if (!preview) return;
   preview.classList.toggle('open');
   const isOpen = preview.classList.contains('open');
+  if (!isOpen) {
+    preview.style.flex = '';
+    preview.style.width = '';
+  }
   if (splitter) splitter.style.display = isOpen ? 'block' : 'none';
   if (btn) {
     btn.classList.toggle('active', isOpen);
@@ -6622,39 +6777,43 @@ function edToggleLivePreview() {
 
 // 10. Free Dynamic Text Tool & DOCX-Style Floating Boxes
 function toggleFreeTextTool() {
-  let activeSheet = null;
-  const convPanel = document.getElementById('converter-panel');
-  const edPanel = document.getElementById('editor-panel');
+  let target = null;
+  const isEditor = (document.getElementById('editor-panel')?.style.display !== 'none') || (window.__activeTab === 'editor');
+  const isConv = (document.getElementById('converter-panel')?.style.display !== 'none') || (window.__activeTab === 'converter');
 
-  if (convPanel && convPanel.style.display !== 'none') {
-    activeSheet = document.getElementById('conv-living-sheet');
-  } else if (edPanel && edPanel.style.display !== 'none') {
-    activeSheet = document.querySelector('.ed-page-sheet.active') || document.querySelector('.ed-page-sheet') || document.getElementById('ed-pages');
+  if (isEditor) {
+    target = document.querySelector('#ed-preview-body .pres-page') || document.getElementById('ed-preview-body') || document.getElementById('ed-blocks-panel') || document.getElementById('ed-main');
+  } else if (isConv) {
+    target = document.getElementById('conv-living-sheet') || document.getElementById('converter-panel');
   } else {
-    activeSheet = document.querySelector('.pres-page') || document.getElementById('page-canvas') || document.getElementById('main');
+    target = document.querySelector('#page-canvas .pres-page') || document.querySelector('.pres-page') || document.getElementById('page-canvas') || document.body;
   }
 
-  if (!activeSheet) activeSheet = document.body;
+  if (!target) target = document.body;
 
-  const computedPos = window.getComputedStyle(activeSheet).position;
+  const computedPos = window.getComputedStyle(target).position;
   if (computedPos === 'static') {
-    activeSheet.style.position = 'relative';
+    target.style.position = 'relative';
   }
 
-  spawnAmbientText(60, 80, 'Type freely here...', null, activeSheet);
+  const rect = target.getBoundingClientRect();
+  const spawnX = Math.min(80, Math.max(20, Math.floor(rect.width * 0.1)));
+  const spawnY = Math.min(100, Math.max(30, Math.floor(rect.height * 0.15)));
+
+  spawnAmbientText(spawnX, spawnY, 'Type freely here...', null, target);
 }
 
 function spawnAmbientText(x = 60, y = 80, text = 'Type freely here...', ftObj = null, parent = null) {
   let target = parent;
   if (!target) {
-    const convPanel = document.getElementById('converter-panel');
-    const edPanel = document.getElementById('editor-panel');
-    if (convPanel && convPanel.style.display !== 'none') {
+    const isEditor = (document.getElementById('editor-panel')?.style.display !== 'none') || (window.__activeTab === 'editor');
+    const isConv = (document.getElementById('converter-panel')?.style.display !== 'none') || (window.__activeTab === 'converter');
+    if (isEditor) {
+      target = document.querySelector('#ed-preview-body .pres-page') || document.getElementById('ed-preview-body') || document.getElementById('ed-main');
+    } else if (isConv) {
       target = document.getElementById('conv-living-sheet');
-    } else if (edPanel && edPanel.style.display !== 'none') {
-      target = document.querySelector('.ed-page-sheet.active') || document.querySelector('.ed-page-sheet') || document.getElementById('ed-pages');
     } else {
-      target = document.querySelector('.pres-page') || document.getElementById('page-canvas') || document.getElementById('main') || document.body;
+      target = document.querySelector('.pres-page') || document.getElementById('page-canvas') || document.body;
     }
   }
   if (!target) return;
@@ -6669,56 +6828,262 @@ function spawnAmbientText(x = 60, y = 80, text = 'Type freely here...', ftObj = 
   el.id = ftId;
   el.className = 'ldoc-ambient-text ldoc-floating-docx-box';
   el.setAttribute('data-ft-id', ftId);
-  el.style.cssText = `position:absolute;left:${x}px;top:${y}px;min-width:240px;max-width:480px;background:rgba(18,22,38,0.96);backdrop-filter:blur(12px);border:1.5px solid var(--gold,#f59e0b);border-radius:10px;z-index:999;box-shadow:0 10px 32px rgba(0,0,0,0.65);color:#f8fafc;font-family:inherit;font-size:15px;`;
+
+  const initFont = (ftObj && ftObj.fontFamily) || "'Inter', sans-serif";
+  const initSize = (ftObj && ftObj.fontSize) || '15px';
+  const initColor = (ftObj && ftObj.color) || '#f8fafc';
+  const initBg = (ftObj && ftObj.bgStyle) || 'glass';
+  const initW = (ftObj && ftObj.width) || '280px';
+  const initH = (ftObj && ftObj.height) || 'auto';
+
+  let bgCss = 'background:rgba(18,22,38,0.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1.5px solid var(--gold,#f59e0b);color:#f8fafc;';
+  if (initBg === 'none') {
+    bgCss = 'background:transparent;border:1px dashed rgba(245,158,11,0.6);color:#f8fafc;';
+  } else if (initBg === 'paper') {
+    bgCss = 'background:#ffffff;border:1px solid #cbd5e1;color:#0f172a;box-shadow:0 8px 24px rgba(0,0,0,0.25);';
+  } else if (initBg === 'gold') {
+    bgCss = 'background:rgba(245,158,11,0.18);backdrop-filter:blur(12px);border:1.5px solid var(--gold);color:#fef08a;box-shadow:0 0 20px rgba(245,158,11,0.3);';
+  }
+
+  el.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${initW};min-width:180px;max-width:90%;height:${initH};border-radius:10px;z-index:999;box-shadow:0 10px 32px rgba(0,0,0,0.65);display:flex;flex-direction:column;${bgCss}`;
 
   el.innerHTML = `
-    <div class="docx-ft-hud" style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:rgba(245,158,11,0.18);border-bottom:1px solid rgba(245,158,11,0.3);cursor:move;border-radius:8px 8px 0 0;user-select:none">
-      <span style="font-size:11px;font-weight:700;color:#fef08a">✍️ Free Text</span>
-      <div style="display:flex;align-items:center;gap:6px">
-        <button type="button" class="ft-tool-btn" onclick="document.execCommand('bold',false,null)" style="background:none;border:none;color:#fff;font-weight:bold;cursor:pointer;padding:2px 5px;font-size:11.5px" title="Bold">B</button>
-        <button type="button" class="ft-tool-btn" onclick="document.execCommand('italic',false,null)" style="background:none;border:none;color:#fff;font-style:italic;cursor:pointer;padding:2px 5px;font-size:11.5px" title="Italic">I</button>
-        <button type="button" class="ft-tool-btn" onclick="this.closest('.ldoc-floating-docx-box').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;padding:2px 5px;font-size:12px;font-weight:bold" title="Delete text box">✕</button>
+    <div class="docx-ft-hud" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px;padding:4px 8px;background:rgba(245,158,11,0.22);border-bottom:1px solid rgba(245,158,11,0.35);cursor:move;border-radius:8px 8px 0 0;user-select:none">
+      <div style="display:flex;align-items:center;gap:4px">
+        <span style="font-size:11px;font-weight:800;color:#fef08a;cursor:move" title="Drag to move">☩ Text</span>
+        <select class="ft-font-sel" style="background:#0d1117;border:1px solid rgba(255,255,255,0.2);color:#e2e8f0;font-size:10px;padding:1px 4px;border-radius:4px;outline:none" title="Font Family">
+          <option value="'Inter', sans-serif">Sans</option>
+          <option value="'Cinzel', serif">Cinzel</option>
+          <option value="'Merriweather', serif">Serif</option>
+          <option value="'Fira Code', monospace">Mono</option>
+          <option value="'Caveat', cursive">Script</option>
+        </select>
+        <select class="ft-size-sel" style="background:#0d1117;border:1px solid rgba(255,255,255,0.2);color:#e2e8f0;font-size:10px;padding:1px 4px;border-radius:4px;outline:none" title="Font Size">
+          <option value="12px">12</option>
+          <option value="14px">14</option>
+          <option value="16px" selected>16</option>
+          <option value="18px">18</option>
+          <option value="22px">22</option>
+          <option value="28px">28</option>
+          <option value="36px">36</option>
+        </select>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:4px">
+        <button type="button" class="ft-color-btn" data-color="#f59e0b" style="width:13px;height:13px;border-radius:50%;background:#f59e0b;border:1px solid #fff;cursor:pointer;padding:0" title="Gold"></button>
+        <button type="button" class="ft-color-btn" data-color="#ffffff" style="width:13px;height:13px;border-radius:50%;background:#ffffff;border:1px solid #fff;cursor:pointer;padding:0" title="White"></button>
+        <button type="button" class="ft-color-btn" data-color="#38bdf8" style="width:13px;height:13px;border-radius:50%;background:#38bdf8;border:1px solid #fff;cursor:pointer;padding:0" title="Cyan"></button>
+        <button type="button" class="ft-color-btn" data-color="#34d399" style="width:13px;height:13px;border-radius:50%;background:#34d399;border:1px solid #fff;cursor:pointer;padding:0" title="Emerald"></button>
+        <button type="button" class="ft-color-btn" data-color="#f43f5e" style="width:13px;height:13px;border-radius:50%;background:#f43f5e;border:1px solid #fff;cursor:pointer;padding:0" title="Rose"></button>
+        <input type="color" class="ft-custom-color" value="#f59e0b" style="width:15px;height:15px;padding:0;border:none;background:transparent;cursor:pointer" title="Custom color">
+        <button type="button" class="ft-bg-toggle" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fef08a;border-radius:4px;font-size:10px;padding:1px 4px;cursor:pointer" title="Change Background Style">🎨 BG</button>
+        <button type="button" class="ft-act-btn" data-cmd="bold" style="background:none;border:none;color:#fff;font-weight:bold;cursor:pointer;padding:1px 3px;font-size:11px" title="Bold">B</button>
+        <button type="button" class="ft-act-btn" data-cmd="italic" style="background:none;border:none;color:#fff;font-style:italic;cursor:pointer;padding:1px 3px;font-size:11px" title="Italic">I</button>
+        <button type="button" class="ft-act-btn" data-cmd="underline" style="background:none;border:none;color:#fff;text-decoration:underline;cursor:pointer;padding:1px 3px;font-size:11px" title="Underline">U</button>
+        <button type="button" class="ft-del-btn" style="background:none;border:none;color:#ef4444;cursor:pointer;padding:1px 4px;font-size:12px;font-weight:bold" title="Delete text box">✕</button>
       </div>
     </div>
-    <div class="docx-ft-editor docx-in-place-editable" contenteditable="true" style="padding:10px 14px;outline:none;min-height:38px;line-height:1.5;color:#f8fafc">
+    
+    <div class="docx-ft-editor docx-in-place-editable" contenteditable="true" style="padding:10px 14px;outline:none;min-height:38px;line-height:1.5;font-family:${initFont};font-size:${initSize};color:${initColor};flex:1;overflow:auto">
       ${escapeHtml(text)}
     </div>
+
+    <div class="docx-ft-resizer" style="width:14px;height:14px;position:absolute;right:2px;bottom:2px;cursor:nwse-resize;display:flex;align-items:flex-end;justify-content:flex-end;color:var(--gold);font-size:10px;user-select:none;opacity:0.7">◢</div>
   `;
 
-  // HUD drag handler
   const hud = el.querySelector('.docx-ft-hud');
-  let isDragging = false, startX, startY, initLeft, initTop;
+  const editor = el.querySelector('.docx-ft-editor');
+  const fontSel = el.querySelector('.ft-font-sel');
+  const sizeSel = el.querySelector('.ft-size-sel');
+  const resizer = el.querySelector('.docx-ft-resizer');
+  const bgBtn = el.querySelector('.ft-bg-toggle');
+  const delBtn = el.querySelector('.ft-del-btn');
+
+  if (fontSel && ftObj?.fontFamily) fontSel.value = ftObj.fontFamily;
+  if (sizeSel && ftObj?.fontSize) sizeSel.value = ftObj.fontSize;
+
+  if (fontSel) {
+    fontSel.addEventListener('change', () => {
+      editor.style.fontFamily = fontSel.value;
+      saveState();
+    });
+  }
+
+  if (sizeSel) {
+    sizeSel.addEventListener('change', () => {
+      editor.style.fontSize = sizeSel.value;
+      saveState();
+    });
+  }
+
+  el.querySelectorAll('.ft-color-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const col = btn.getAttribute('data-color');
+      editor.style.color = col;
+      saveState();
+    });
+  });
+
+  const customColor = el.querySelector('.ft-custom-color');
+  if (customColor) {
+    customColor.addEventListener('input', () => {
+      editor.style.color = customColor.value;
+      saveState();
+    });
+  }
+
+  el.querySelectorAll('.ft-act-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const cmd = btn.getAttribute('data-cmd');
+      document.execCommand(cmd, false, null);
+      saveState();
+    });
+  });
+
+  let bgModes = ['glass', 'none', 'paper', 'gold'];
+  let curBgIdx = bgModes.indexOf(initBg);
+  if (curBgIdx === -1) curBgIdx = 0;
+  if (bgBtn) {
+    bgBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      curBgIdx = (curBgIdx + 1) % bgModes.length;
+      const mode = bgModes[curBgIdx];
+      if (mode === 'glass') {
+        el.style.background = 'rgba(18,22,38,0.95)';
+        el.style.border = '1.5px solid var(--gold,#f59e0b)';
+        el.style.boxShadow = '0 10px 32px rgba(0,0,0,0.65)';
+        editor.style.color = editor.style.color || '#f8fafc';
+      } else if (mode === 'none') {
+        el.style.background = 'transparent';
+        el.style.border = '1px dashed rgba(245,158,11,0.6)';
+        el.style.boxShadow = 'none';
+      } else if (mode === 'paper') {
+        el.style.background = '#ffffff';
+        el.style.border = '1px solid #cbd5e1';
+        el.style.boxShadow = '0 8px 24px rgba(0,0,0,0.25)';
+        editor.style.color = '#0f172a';
+      } else if (mode === 'gold') {
+        el.style.background = 'rgba(245,158,11,0.22)';
+        el.style.border = '1.5px solid var(--gold)';
+        el.style.boxShadow = '0 0 24px rgba(245,158,11,0.4)';
+        editor.style.color = '#fef08a';
+      }
+      saveState();
+    });
+  }
+
+  if (delBtn) {
+    delBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      el.remove();
+      if (typeof edPages !== 'undefined') {
+        const curP = edPages.find(p => p.id === edCurrentPage);
+        if (curP && Array.isArray(curP.floating_texts)) {
+          curP.floating_texts = curP.floating_texts.filter(f => f.id !== ftId);
+        }
+      }
+    });
+  }
+
+  // HUD Dragging
+  let isDragging = false, startX = 0, startY = 0, initLeft = 0, initTop = 0;
   hud.addEventListener('mousedown', (e) => {
-    if (e.target.tagName === 'BUTTON') return;
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
     isDragging = true;
     startX = e.clientX;
     startY = e.clientY;
     initLeft = el.offsetLeft;
     initTop = el.offsetTop;
+    document.body.style.userSelect = 'none';
     e.preventDefault();
   });
-  window.addEventListener('mousemove', (e) => {
+  const onMouseMove = (e) => {
     if (!isDragging) return;
     const dx = e.clientX - startX;
     const dy = e.clientY - startY;
     el.style.left = Math.max(0, initLeft + dx) + 'px';
     el.style.top = Math.max(0, initTop + dy) + 'px';
+  };
+  const onMouseUp = () => {
+    if (isDragging) {
+      isDragging = false;
+      document.body.style.userSelect = '';
+      saveState();
+    }
+  };
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup', onMouseUp);
+
+  // Box Resizing Handle
+  let isResizing = false, rStartX = 0, rStartY = 0, rInitW = 0, rInitH = 0;
+  resizer.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    rStartX = e.clientX;
+    rStartY = e.clientY;
+    rInitW = el.getBoundingClientRect().width;
+    rInitH = el.getBoundingClientRect().height;
+    document.body.style.userSelect = 'none';
+    e.stopPropagation();
+    e.preventDefault();
   });
-  window.addEventListener('mouseup', () => { isDragging = false; });
+  const onResizeMove = (e) => {
+    if (!isResizing) return;
+    const dw = e.clientX - rStartX;
+    const dh = e.clientY - rStartY;
+    el.style.width = Math.max(180, rInitW + dw) + 'px';
+    el.style.height = Math.max(50, rInitH + dh) + 'px';
+  };
+  const onResizeUp = () => {
+    if (isResizing) {
+      isResizing = false;
+      document.body.style.userSelect = '';
+      saveState();
+    }
+  };
+  window.addEventListener('mousemove', onResizeMove);
+  window.addEventListener('mouseup', onResizeUp);
+
+  function saveState() {
+    if (typeof edPages !== 'undefined') {
+      const curP = edPages.find(p => p.id === edCurrentPage);
+      if (curP) {
+        curP.floating_texts = curP.floating_texts || [];
+        const idx = curP.floating_texts.findIndex(f => f.id === ftId);
+        const stateObj = {
+          id: ftId,
+          x: parseInt(el.style.left, 10) || 0,
+          y: parseInt(el.style.top, 10) || 0,
+          text: editor.innerText || editor.textContent || '',
+          fontFamily: editor.style.fontFamily,
+          fontSize: editor.style.fontSize,
+          color: editor.style.color,
+          bgStyle: bgModes[curBgIdx],
+          width: el.style.width,
+          height: el.style.height
+        };
+        if (idx !== -1) curP.floating_texts[idx] = stateObj;
+        else curP.floating_texts.push(stateObj);
+      }
+    }
+  }
+
+  editor.addEventListener('input', saveState);
 
   target.appendChild(el);
 
-  const editor = el.querySelector('.docx-ft-editor');
-  setTimeout(() => {
-    editor.focus();
-    const range = document.createRange();
-    range.selectNodeContents(editor);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }, 40);
-
-  if (typeof showToast === 'function') showToast('✍️ Free text box inserted! Drag anywhere and type freely.', 'ok');
+  if (!ftObj) {
+    setTimeout(() => {
+      editor.focus();
+      const range = document.createRange();
+      range.selectNodeContents(editor);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }, 40);
+    if (typeof showToast === 'function') showToast('✍️ Free text box inserted! Drag, resize, choose fonts & colors.', 'ok');
+  }
 }
 
 // 11. Interactive Block Handlers
@@ -10941,43 +11306,47 @@ function edUpdateLivePreview() {
 
     const slideDiv = document.createElement('div');
     slideDiv.className = `pres-page pres-slide mode-${window.__presentationMode || 'paper'}`;
-    slideDiv.style.cssText = 'background:rgba(18,18,30,0.9);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;color:#f1f5f9;min-height:360px;box-shadow:0 8px 32px rgba(0,0,0,0.5);';
+    slideDiv.style.cssText = 'background:rgba(18,18,30,0.94);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:24px;color:#f1f5f9;min-height:360px;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.5);overflow:hidden;';
 
     const header = document.createElement('h2');
     header.textContent = curPage.title || `Page ${pageIdx}`;
-    header.style.cssText = 'font-size:20px;font-weight:800;color:#fff;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:8px;';
+    header.style.cssText = 'font-size:20px;font-weight:800;color:#fff;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.12);padding-bottom:8px;font-family:\'Cinzel\',serif;';
     slideDiv.appendChild(header);
+
+    const contentLayer = document.createElement('div');
+    contentLayer.className = 'pres-content-layer';
+    contentLayer.style.cssText = 'position:relative;z-index:2;display:flex;flex-direction:column;gap:12px;';
+    slideDiv.appendChild(contentLayer);
 
     const blocks = curPage.blocks || [];
     if (blocks.length === 0) {
       const emptyMsg = document.createElement('div');
       emptyMsg.textContent = 'No blocks on this page yet. Use "Add Element" below.';
-      emptyMsg.style.cssText = 'color:#64748b;font-style:italic;font-size:12px;padding:20px 0;';
-      slideDiv.appendChild(emptyMsg);
+      emptyMsg.style.cssText = 'color:#64748b;font-style:italic;font-size:12px;padding:24px 0;text-align:center;';
+      contentLayer.appendChild(emptyMsg);
     } else {
       blocks.forEach(b => {
-        const blkDiv = document.createElement('div');
-        blkDiv.style.cssText = 'margin-bottom:12px;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);';
-        if (b.type === 'heading') {
-          blkDiv.innerHTML = `<h${b.level || 2} style="margin:0;color:#fff">${escapeHtml(b.text || 'Heading')}</h${b.level || 2}>`;
-        } else if (b.type === 'paragraph') {
-          blkDiv.innerHTML = `<p style="margin:0;color:#cbd5e1;line-height:1.6">${escapeHtml(b.text || 'Paragraph text...')}</p>`;
-        } else if (b.type === 'quote') {
-          blkDiv.innerHTML = `<blockquote style="margin:0;border-left:3px solid #f59e0b;padding-left:10px;color:#fef08a;font-style:italic">${escapeHtml(b.text || 'Quote')}</blockquote>`;
-        } else if (b.type === 'code') {
-          blkDiv.innerHTML = `<pre style="margin:0;background:#05070c;padding:10px;border-radius:6px;font-family:monospace;font-size:12px;color:#38bdf8;overflow-x:auto"><code>${escapeHtml(b.code || b.text || '')}</code></pre>`;
-        } else if (b.type === 'particles') {
-          blkDiv.innerHTML = `<div style="color:#c084fc;font-weight:700;font-size:12px">✨ Particle FX (${b.value || 'stardust'})</div><canvas id="blk-p-${b.id}" width="280" height="80" style="width:100%;height:80px;background:#05070c;border-radius:6px;margin-top:6px"></canvas>`;
-          setTimeout(() => initInPageParticleCanvas(`blk-p-${b.id}`, b.value || 'stardust'), 40);
-        } else if (b.type === 'water_effect') {
-          blkDiv.innerHTML = `<div style="color:#38bdf8;font-weight:700;font-size:12px">🌊 Volumetric Water Ripples</div><canvas id="blk-w-${b.id}" width="280" height="60" style="width:100%;height:60px;background:#05070c;border-radius:6px;margin-top:6px"></canvas>`;
-          setTimeout(() => initInPageWaterCanvas(`blk-w-${b.id}`), 40);
-        } else {
-          blkDiv.innerHTML = `<div style="font-size:11px;color:#94a3b8;font-weight:700;text-transform:uppercase">${escapeHtml(b.type)}</div><div style="font-size:13px;color:#e2e8f0">${escapeHtml(b.text || b.value || b.title || '')}</div>`;
+        try {
+          if (typeof renderBlockNode === 'function') {
+            renderBlockNode(b, contentLayer);
+          } else {
+            const blkDiv = document.createElement('div');
+            blkDiv.textContent = b.text || b.value || b.type;
+            contentLayer.appendChild(blkDiv);
+          }
+        } catch(err) {
+          console.warn('Live preview render notice:', err);
         }
-        slideDiv.appendChild(blkDiv);
       });
     }
+
+    // Render floating texts on top of the slide
+    if (Array.isArray(curPage.floating_texts) && curPage.floating_texts.length > 0) {
+      curPage.floating_texts.forEach(ft => {
+        spawnAmbientText(ft.x || 60, ft.y || 80, ft.text || '', ft, slideDiv);
+      });
+    }
+
     body.appendChild(slideDiv);
   }, 40);
 }
@@ -11085,21 +11454,92 @@ function edMoveBlock(id, dir) {
   edUpdateLivePreview();
 }
 
-// Open existing .ldocx file directly in the Editor
+// Open existing .ldocx or .ldoc file directly in the Editor (100% client-side)
 async function edOpenLdocxFile(e) {
-  const file = e.target.files[0];
+  const file = e.target.files && e.target.files[0];
   if (!file) return;
   try {
-    const bytes = await file.arrayBuffer();
-    const up = await fetch(`${API}/documents`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/octet-stream' },
-      body: bytes
-    });
-    const uj = await up.json();
-    if (!uj.id) throw new Error(uj.error || 'Upload failed');
-    await edLoadFromDocId(uj.id);
+    showToast('📂 Loading file into Editor...', 'info');
+    let title = file.name.replace(/\.(ldocx|ldoc)$/i, '');
+    let author = 'Living Document Creator';
+    let lang = 'en';
+    let loadedPages = [];
+
+    if (file.name.endsWith('.ldoc') || file.type === 'application/json') {
+      const text = await file.text();
+      const json = JSON.parse(text);
+      title = (json.manifest && json.manifest.title) || json.title || title;
+      author = (json.manifest && json.manifest.author) || json.author || author;
+      lang = (json.manifest && json.manifest.lang) || json.lang || lang;
+      loadedPages = json.pages || [];
+    } else {
+      // Use LDocParser lenient package parser (100% client-side)
+      if (typeof LDocParser !== 'undefined' && LDocParser.parseLdocxLenient) {
+        const res = await LDocParser.parseLdocxLenient(file);
+        title = (res.manifest && res.manifest.title) || title;
+        author = (res.manifest && res.manifest.author) || author;
+        lang = (res.manifest && res.manifest.lang) || lang;
+        loadedPages = res.pages || [];
+      } else {
+        const JSZipLib = window.JSZip || (typeof ensureJSZipReady === 'function' ? await ensureJSZipReady() : null);
+        if (!JSZipLib) throw new Error('ZIP parser not initialized.');
+        const zip = await JSZipLib.loadAsync(file);
+        const mFile = zip.file('manifest.json');
+        if (mFile) {
+          try {
+            const m = JSON.parse(await mFile.async('text'));
+            title = m.title || title;
+            author = m.author || author;
+            lang = m.lang || lang;
+          } catch(_){}
+        }
+        const pFiles = [];
+        zip.forEach((relPath, entry) => {
+          if (!entry.dir && /pages\/page_\d+\.json$/i.test(relPath)) pFiles.push(entry);
+        });
+        pFiles.sort((a,b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+        for (const entry of pFiles) {
+          try {
+            const pData = JSON.parse(await entry.async('text'));
+            loadedPages.push(pData);
+          } catch(_){}
+        }
+        if (!loadedPages.length && zip.file('spec.json')) {
+          try {
+            const s = JSON.parse(await zip.file('spec.json').async('text'));
+            loadedPages = s.pages || [];
+          } catch(_){}
+        }
+      }
+    }
+
+    if (!loadedPages.length) {
+      loadedPages = [{ id: 'p_1', title: 'Page 1', blocks: [{ id: 'b_1', type: 'heading', level: 1, text: title }] }];
+    }
+
+    const tEl = document.getElementById('ed-title'); if (tEl) tEl.value = title;
+    const aEl = document.getElementById('ed-author'); if (aEl) aEl.value = author;
+    const lEl = document.getElementById('ed-lang'); if (lEl) lEl.value = lang;
+    const docTitle = document.getElementById('doc-title'); if (docTitle) docTitle.textContent = title;
+
+    edPages = loadedPages.map((p, idx) => ({
+      id: edPId(),
+      title: p.title || `Page ${idx + 1}`,
+      blocks: (p.blocks || []).map(b => ({
+        id: edBId(),
+        ...b,
+        text: b.text || b.value || ''
+      })),
+      floating_texts: Array.isArray(p.floating_texts) ? p.floating_texts : []
+    }));
+
+    edRenderPageList();
+    if (edPages.length) edSelectPage(edPages[0].id);
+    switchTab('editor');
+    edUpdateLivePreview();
+    showToast(`✓ Document "${title}" loaded successfully into Editor (${edPages.length} pages)!`, 'ok');
   } catch (err) {
+    console.error('Editor file open error:', err);
     showToast('Failed to load into Editor: ' + err.message, 'err');
   } finally {
     e.target.value = '';
@@ -14609,9 +15049,112 @@ function drawShareQRCode(text) {
   }
 }
 
-// Auto-initialize header state on load
+// ─── Live Splitter Drag Engine & Help Drawer Controller ───
+function toggleHelpDrawer() {
+  const d = document.getElementById('help-drawer');
+  if (!d) return;
+  const isShown = d.style.display === 'flex';
+  d.style.display = isShown ? 'none' : 'flex';
+}
+
+function initEditorSplitters() {
+  const leftSplitter = document.getElementById('ed-splitter-left');
+  const rightSplitter = document.getElementById('ed-splitter-right');
+  const pagesSidebar = document.getElementById('ed-pages');
+  const previewPane = document.getElementById('ed-preview-pane');
+
+  // Left splitter: resizes ed-pages sidebar
+  if (leftSplitter && pagesSidebar) {
+    let isDraggingLeft = false, startX = 0, startWidth = 0;
+    const onMouseDownLeft = (e) => {
+      isDraggingLeft = true;
+      startX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      startWidth = pagesSidebar.getBoundingClientRect().width;
+      leftSplitter.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+    };
+    const onMouseMoveLeft = (e) => {
+      if (!isDraggingLeft) return;
+      const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      const dx = clientX - startX;
+      const newWidth = Math.max(160, Math.min(480, startWidth + dx));
+      pagesSidebar.style.width = newWidth + 'px';
+      pagesSidebar.style.flex = `0 0 ${newWidth}px`;
+    };
+    const onMouseUpLeft = () => {
+      if (!isDraggingLeft) return;
+      isDraggingLeft = false;
+      leftSplitter.classList.remove('dragging');
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+
+    leftSplitter.addEventListener('mousedown', onMouseDownLeft);
+    leftSplitter.addEventListener('touchstart', onMouseDownLeft, { passive: false });
+    window.addEventListener('mousemove', onMouseMoveLeft);
+    window.addEventListener('touchmove', onMouseMoveLeft, { passive: false });
+    window.addEventListener('mouseup', onMouseUpLeft);
+    window.addEventListener('touchend', onMouseUpLeft);
+  }
+
+  // Right splitter: resizes ed-preview-pane
+  if (rightSplitter && previewPane) {
+    let isDraggingRight = false, startX = 0, startWidth = 0;
+    const onMouseDownRight = (e) => {
+      if (!previewPane.classList.contains('open')) return;
+      isDraggingRight = true;
+      startX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      startWidth = previewPane.getBoundingClientRect().width;
+      rightSplitter.classList.add('dragging');
+      previewPane.style.transition = 'none';
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+    };
+    const onMouseMoveRight = (e) => {
+      if (!isDraggingRight) return;
+      const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      const dx = startX - clientX;
+      const maxW = Math.floor(window.innerWidth * 0.80);
+      const newWidth = Math.max(260, Math.min(maxW, startWidth + dx));
+      previewPane.style.width = newWidth + 'px';
+      previewPane.style.flex = `0 0 ${newWidth}px`;
+      previewPane.style.maxWidth = '80%';
+    };
+    const onMouseUpRight = () => {
+      if (!isDraggingRight) return;
+      isDraggingRight = false;
+      rightSplitter.classList.remove('dragging');
+      previewPane.style.transition = '';
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      edUpdateLivePreview();
+    };
+
+    rightSplitter.addEventListener('mousedown', onMouseDownRight);
+    rightSplitter.addEventListener('touchstart', onMouseDownRight, { passive: false });
+    window.addEventListener('mousemove', onMouseMoveRight);
+    window.addEventListener('touchmove', onMouseMoveRight, { passive: false });
+    window.addEventListener('mouseup', onMouseUpRight);
+    window.addEventListener('touchend', onMouseUpRight);
+  }
+}
+
+// Auto-initialize header state, splitters, and keyboard shortcuts on load
 document.addEventListener('DOMContentLoaded', () => {
   updateHeaderAuthButton();
+  initEditorSplitters();
+});
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  initEditorSplitters();
+}
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'F1') {
+    e.preventDefault();
+    toggleHelpDrawer();
+  }
 });
 </script>
 
