@@ -12,10 +12,12 @@ scratch/
 test_*.js
 *.log
 
-# Non-web sources (Rust crates, specs, backend)
+# Non-web sources (Rust crates, specs, tools, backups)
 source/
 specs/
-backend/
+_backups/
+examples/
+LDOC_TOOLS/
 tauri.conf.json
 Cargo.toml
 Cargo.lock
