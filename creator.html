@@ -170,9 +170,9 @@
 /* Floating Elements Pop-up Modal Dock */
 #popup-elements-modal {
   position: fixed;
-  bottom: 30px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%) translateY(20px);
+  transform: translate(-50%, calc(-50% + 20px));
   opacity: 0;
   pointer-events: none;
   z-index: 9500;
@@ -181,14 +181,16 @@
   -webkit-backdrop-filter: blur(28px);
   border: 1.5px solid var(--gold);
   border-radius: 18px;
-  padding: 16px 20px;
-  box-shadow: 0 24px 70px rgba(0,0,0,0.9), 0 0 30px rgba(245,158,11,0.25);
-  max-width: 90vw;
-  width: 760px;
+  padding: 18px 24px;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.95), 0 0 40px rgba(245,158,11,0.3);
+  max-width: 92vw;
+  width: 780px;
+  max-height: 85vh;
+  overflow-y: auto;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 #popup-elements-modal.open {
-  transform: translateX(-50%) translateY(0) !important;
+  transform: translate(-50%, -50%) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
