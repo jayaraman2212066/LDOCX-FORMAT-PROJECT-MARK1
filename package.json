@@ -4,7 +4,6 @@
   "description": "LDOCX — The Living Document Architecture & Studio",
   "scripts": {
     "start": "npx serve public",
-    "build": "node -e \"console.log('Static distribution ready')\"",
     "assemble": "node ./build_static.js"
   },
   "keywords": [
