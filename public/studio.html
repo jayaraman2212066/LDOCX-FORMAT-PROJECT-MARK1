@@ -8566,10 +8566,21 @@ function synthesizeLivingAd(s) {
 // ── Universal Client-Side AI API Dispatcher (Gemini, Claude, OpenAI, Ollama) ─
 function detectAiProviderFromKey(key) {
   const k = (key || '').trim();
-  if (k.startsWith('AIzaSy')) return { provider: 'gemini', model: 'gemini-2.5-flash', name: 'Google Gemini' };
-  if (k.startsWith('sk-ant')) return { provider: 'claude', model: 'claude-3-5-sonnet-latest', name: 'Anthropic Claude' };
-  if (k.startsWith('sk-')) return { provider: 'openai', model: 'gpt-4o-mini', name: 'OpenAI' };
-  if (k.startsWith('http') || k.includes('localhost') || k.includes('11434')) return { provider: 'ollama', model: 'llama3.2', name: 'Local Ollama' };
+  if (k.startsWith('AQ.') || k.startsWith('AIzaSy') || k.startsWith('AIza') || (k.startsWith('AI') && k.length > 20)) {
+    return { provider: 'gemini', model: 'gemini-2.5-flash', name: 'Google Gemini' };
+  }
+  if (k.startsWith('sk-ant-') || k.startsWith('sk-ant')) {
+    return { provider: 'claude', model: 'claude-3-5-sonnet-latest', name: 'Anthropic Claude' };
+  }
+  if (k.startsWith('sk-')) {
+    return { provider: 'openai', model: 'gpt-4o-mini', name: 'OpenAI' };
+  }
+  if (k.startsWith('gsk_')) {
+    return { provider: 'openai', model: 'llama-3.3-70b-versatile', name: 'Groq Cloud API' };
+  }
+  if (k.startsWith('http://') || k.startsWith('https://') || k.includes('localhost') || k.includes('11434')) {
+    return { provider: 'ollama', model: 'llama3.2', name: 'Local Ollama' };
+  }
   return null;
 }
 
@@ -9471,67 +9482,67 @@ init() {
     const url = options.url || '';
     const fmt = (options.format || '').toLowerCase();
 
-    // 1. MeshData provided directly from client parser
+    // 1. Prioritize URL (offline base64 data URL or online model URL)
+    if (url) {
+      const isGlb = fmt === 'glb' || fmt === 'gltf' || url.includes('.glb') || url.includes('.gltf') || url.startsWith('data:model/gltf') || url.startsWith('data:application/octet-stream') || (url.startsWith('data:') && (fmt === 'glb' || fmt === 'gltf' || !fmt));
+      if (isGlb && typeof THREE.GLTFLoader !== 'undefined') {
+        const loader = new THREE.GLTFLoader();
+        loader.load(url, (gltf) => {
+          if(this.mesh) this.scene.remove(this.mesh);
+          this.mesh = gltf.scene;
+          this.setMaterialMode(this.materialMode);
+          this.scene.add(this.mesh);
+          this.fitCameraToObject();
+          this.autoRotate = true;
+        }, undefined, (err) => {
+          console.warn('GLTF loader notice, fallback to meshData:', err);
+          if(options.meshData) this.loadMeshFromJSON(options.meshData);
+        });
+        return;
+      }
+
+      const isStl = fmt === 'stl' || url.includes('.stl') || (url.startsWith('data:') && fmt === 'stl');
+      if (isStl && typeof THREE.STLLoader !== 'undefined') {
+        const loader = new THREE.STLLoader();
+        loader.load(url, (geometry) => {
+          if(this.mesh) this.scene.remove(this.mesh);
+          geometry.computeVertexNormals();
+          geometry.center();
+          this.geometry = geometry;
+          this.material = this.createMaterial(this.materialMode);
+          this.mesh = new THREE.Mesh(geometry, this.material);
+          this.scene.add(this.mesh);
+          this.fitCameraToObject();
+          this.autoRotate = true;
+        }, undefined, (err) => {
+          console.warn('STL loader fallback to meshData:', err);
+          if(options.meshData) this.loadMeshFromJSON(options.meshData);
+        });
+        return;
+      }
+
+      const isObj = fmt === 'obj' || url.includes('.obj') || (url.startsWith('data:') && fmt === 'obj');
+      if (isObj && typeof THREE.OBJLoader !== 'undefined') {
+        const loader = new THREE.OBJLoader();
+        loader.load(url, (obj) => {
+          if(this.mesh) this.scene.remove(this.mesh);
+          this.mesh = obj;
+          this.setMaterialMode(this.materialMode);
+          this.scene.add(this.mesh);
+          this.fitCameraToObject();
+          this.autoRotate = true;
+        }, undefined, (err) => {
+          console.warn('OBJ loader fallback to meshData:', err);
+          if(options.meshData) this.loadMeshFromJSON(options.meshData);
+        });
+        return;
+      }
+    }
+
+    // 2. MeshData fallback
     if(options.meshData && options.meshData.vertices && options.meshData.vertices.length > 0) {
       this.loadMeshFromJSON(options.meshData);
       this.autoRotate = true;
-      return;
-    }
-
-    // 2. GLTF / GLB 3D model
-    const isGlb = fmt === 'glb' || fmt === 'gltf' || url.includes('.glb') || url.includes('.gltf') || url.startsWith('data:model/gltf') || url.startsWith('data:application/octet-stream');
-    if(url && isGlb && typeof THREE.GLTFLoader !== 'undefined') {
-      const loader = new THREE.GLTFLoader();
-      loader.load(url, (gltf) => {
-        if(this.mesh) this.scene.remove(this.mesh);
-        this.mesh = gltf.scene;
-        this.setMaterialMode(this.materialMode);
-        this.scene.add(this.mesh);
-        this.fitCameraToObject();
-        this.autoRotate = true;
-      }, undefined, (err) => {
-        console.warn('GLTF loader notice, fallback to meshData:', err);
-        if(options.meshData) this.loadMeshFromJSON(options.meshData);
-      });
-      return;
-    }
-
-    // 3. STL 3D model
-    const isStl = fmt === 'stl' || url.includes('.stl');
-    if(url && isStl && typeof THREE.STLLoader !== 'undefined') {
-      const loader = new THREE.STLLoader();
-      loader.load(url, (geometry) => {
-        if(this.mesh) this.scene.remove(this.mesh);
-        geometry.computeVertexNormals();
-        geometry.center();
-        this.geometry = geometry;
-        this.material = this.createMaterial(this.materialMode);
-        this.mesh = new THREE.Mesh(geometry, this.material);
-        this.scene.add(this.mesh);
-        this.fitCameraToObject();
-        this.autoRotate = true;
-      }, undefined, (err) => {
-        console.warn('STL loader fallback to meshData:', err);
-        if(options.meshData) this.loadMeshFromJSON(options.meshData);
-      });
-      return;
-    }
-
-    // 4. OBJ 3D model
-    const isObj = fmt === 'obj' || url.includes('.obj');
-    if(url && isObj && typeof THREE.OBJLoader !== 'undefined') {
-      const loader = new THREE.OBJLoader();
-      loader.load(url, (obj) => {
-        if(this.mesh) this.scene.remove(this.mesh);
-        this.mesh = obj;
-        this.setMaterialMode(this.materialMode);
-        this.scene.add(this.mesh);
-        this.fitCameraToObject();
-        this.autoRotate = true;
-      }, undefined, (err) => {
-        console.warn('OBJ loader fallback to meshData:', err);
-        if(options.meshData) this.loadMeshFromJSON(options.meshData);
-      });
       return;
     }
 
@@ -10508,8 +10519,8 @@ function runAiBlock(el){
 </script>
 <script>
 function nodeText(n){if(!n)return '';if(n.text!==undefined&&n.text!=='')return String(n.text);if(n.value!==undefined&&n.value!=='')return String(n.value);if(n.children)for(const c of n.children)if(c.type==='text'&&(c.text!==undefined||c.value!==undefined))return String(c.text!==undefined&&c.text!==''?c.text:c.value);return '';}
-function nodeLabel(n){return(n.aria&&n.aria.label)||n.value||n.text||nodeText(n)||'';}
-function nodePH(n){return(n.aria&&n.aria.placeholder)||'';}
+function nodeLabel(n){if(!n)return '';return n.label||(n.aria&&n.aria.label)||n.value||n.text||nodeText(n)||'';}
+function nodePH(n){if(!n)return '';return n.placeholder||(n.aria&&n.aria.placeholder)||'';}
 function assetUrl(n){return n.asset_id?`${API}/documents/${docId}/assets/${n.asset_id}`:'';;}
 
 function collectNodes(root){
@@ -10697,6 +10708,7 @@ function onAiKeyInput(bid) {
   const keyInp = document.getElementById(`ai-cfg-key-${bid}`);
   const sel = document.getElementById(`ai-cfg-provider-${bid}`);
   const modelInp = document.getElementById(`ai-cfg-model-${bid}`);
+  const pill = document.getElementById(`ai-cfg-detect-pill-${bid}`);
   if (!keyInp || !sel) return;
   const detected = detectAiProviderFromKey(keyInp.value);
   if (detected) {
@@ -10704,6 +10716,12 @@ function onAiKeyInput(bid) {
     if (modelInp && (!modelInp.value || modelInp.value.includes('gemini') || modelInp.value.includes('gpt') || modelInp.value.includes('llama') || modelInp.value.includes('claude'))) {
       modelInp.value = detected.model;
     }
+    if (pill) {
+      pill.style.display = 'block';
+      pill.innerHTML = `✨ Auto-Detected: <strong style="color:#10b981">${detected.name}</strong> • Recommended: <code style="color:#fef08a">${detected.model}</code>`;
+    }
+  } else if (pill) {
+    pill.style.display = 'none';
   }
 }
 
@@ -11214,7 +11232,22 @@ function renderBlockNode(node,parent){
           }
 
           // 3. Fallback to lead capture
-          if (!dispatched && (!j || !j.ok)) {
+          if (node.destination === 'local') {
+            try {
+              const subs = JSON.parse(localStorage.getItem('ldoc_form_submissions') || '[]');
+              subs.push({ timestamp: new Date().toISOString(), data: data });
+              localStorage.setItem('ldoc_form_submissions', JSON.stringify(subs));
+            } catch(e){}
+          } else if (node.destination === 'download') {
+            try {
+              const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+              const u = URL.createObjectURL(blob);
+              const a = document.createElement('a'); a.href = u; a.download = 'form-submission.json'; a.click();
+              URL.revokeObjectURL(u);
+            } catch(e){}
+          }
+
+          if (!dispatched && (!j || !j.ok) && node.destination !== 'local' && node.destination !== 'download') {
             try {
               const leadPayload = {
                 name: data.name || data.Name || data['Full Name'] || data['Your Name'] || data['Executive Name'] || 'Lead Submitter',
@@ -11235,9 +11268,9 @@ function renderBlockNode(node,parent){
           const ok = document.createElement('div');
           ok.className = 'pres-form-success';
           ok.style.cssText = 'color:#34d399;font-size:12.5px;font-weight:700;padding:10px 14px;margin-top:10px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);border-radius:8px;text-align:center';
-          ok.textContent = webhookUrl 
+          ok.textContent = node.success_msg || (webhookUrl 
             ? `✓ Dispatched directly to webhook (${webhookUrl.length > 35 ? webhookUrl.slice(0, 35) + '…' : webhookUrl})!`
-            : '✓ Form Submitted Successfully!';
+            : '✓ Form Submitted Successfully!');
           form.appendChild(ok);
           setTimeout(() => ok.remove(), 4500);
         } catch (err) {
@@ -11248,7 +11281,11 @@ function renderBlockNode(node,parent){
       };
 
       const fList = (node.children && node.children.length) ? node.children : (node.fields || []);
-      fList.forEach(field => renderBlockNode(field, form));
+      fList.forEach(field => {
+        const f = Object.assign({}, field);
+        if (!f.type && f.field_type) f.type = f.field_type;
+        renderBlockNode(f, form);
+      });
 
       const hasbtn=form.querySelector('.pres-btn');
       if(!hasbtn){
@@ -11263,7 +11300,7 @@ function renderBlockNode(node,parent){
         else if (st === 'fluid_ripple') styleClass = ' style-fluid-ripple';
         btn.className='pres-btn' + styleClass;
         btn.style.marginTop = '12px';
-        btn.textContent='⚡ Submit';
+        btn.textContent=node.button_text || '⚡ Submit';
         form.appendChild(btn);
       }
       parent.appendChild(form);break;
@@ -11273,6 +11310,24 @@ function renderBlockNode(node,parent){
       const l=document.createElement('label');l.textContent=nodeLabel(node);
       const i=document.createElement('input');i.type='text';i.placeholder=nodePH(node);
       w.appendChild(l);w.appendChild(i);parent.appendChild(w);break;
+    }
+    case 'input_number':{
+      const w=document.createElement('div');w.className='pres-field';
+      const l=document.createElement('label');l.textContent=nodeLabel(node);
+      const i=document.createElement('input');i.type='number';i.placeholder=nodePH(node);
+      w.appendChild(l);w.appendChild(i);parent.appendChild(w);break;
+    }
+    case 'input_tel':{
+      const w=document.createElement('div');w.className='pres-field';
+      const l=document.createElement('label');l.textContent=nodeLabel(node);
+      const i=document.createElement('input');i.type='tel';i.placeholder=nodePH(node);
+      w.appendChild(l);w.appendChild(i);parent.appendChild(w);break;
+    }
+    case 'textarea':{
+      const w=document.createElement('div');w.className='pres-field';
+      const l=document.createElement('label');l.textContent=nodeLabel(node);
+      const t=document.createElement('textarea');t.placeholder=nodePH(node);t.rows=3;
+      w.appendChild(l);w.appendChild(t);parent.appendChild(w);break;
     }
     case 'input_email':{
       const w=document.createElement('div');w.className='pres-field';
@@ -11407,23 +11462,33 @@ function renderBlockNode(node,parent){
       break;
     }
     case 'preorder':case 'preorder_card':case 'cta':{
-      const card=document.createElement('div');card.className='preorder-card';
-      const badge=(node.style&&node.style.badge)||'FOUNDER\'S EDITION DECK';
-      const title=(node.style&&node.style.title)||node.value||'DOWNLOAD AUDITED FINANCIAL REPORT';
-      const bonuses=(node.style&&node.style.bonuses)||[
-        'Unlimited Cloud Document Vault & Real-Time Collaboration',
-        'VIP Season Grid Pass (All 6 DLC Districts Included)',
-        '500,000 Velocity In-Game Credits',
-        'Forged Titanium Aerodynamic Wheel & Rim Set'
-      ];
-      const btnText=(node.style&&node.style.button_text)||'⚡ PRE-ORDER NOW — $69.99';
-      const checkoutUrl=(node.style&&node.style.checkout_url)||(node.style&&node.style.target)||'';
-      const onClickAction = checkoutUrl ? `window.open('${checkoutUrl}', '_blank')` : "showToast('⚡ Pre-Order Registered! Founder Pass Added to Account.', 'ok')";
+      const card = document.createElement('div');
+      card.className = 'preorder-card';
+      const badge = (node.badge !== undefined ? node.badge : (node.tier !== undefined ? node.tier : (node.style && (node.style.badge || node.style.tier)))) ?? 'FOUNDER PASS';
+      const title = (node.title !== undefined ? node.title : (node.value !== undefined ? node.value : (node.style && (node.style.title || node.style.value)))) ?? 'SPECIAL OFFER DECK';
+      const price = node.price !== undefined ? node.price : ((node.style && node.style.price) || '');
+      
+      let rawBonuses = node.perks !== undefined ? node.perks : (node.bonuses !== undefined ? node.bonuses : (node.style && (node.style.perks || node.style.bonuses)));
+      let bonuses = [];
+      if (Array.isArray(rawBonuses)) {
+        bonuses = rawBonuses;
+      } else if (typeof rawBonuses === 'string' && rawBonuses.trim()) {
+        bonuses = rawBonuses.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+      } else if (rawBonuses === undefined) {
+        bonuses = ['Unlimited Collaboration & Vault', 'VIP Feature Pass Included'];
+      }
+      
+      let btnText = node.button_text || (node.style && node.style.button_text) || '';
+      if (!btnText) {
+        btnText = price ? `⚡ PRE-ORDER NOW — ${price}` : (title ? `⚡ Get ${title}` : '⚡ PRE-ORDER NOW');
+      }
+      const checkoutUrl = (node.checkout_url || (node.style && node.style.checkout_url) || (node.style && node.style.target) || '').trim();
+      const onClickAction = checkoutUrl ? `window.open('${escapeHtml(checkoutUrl)}', '_blank')` : "showToast('⚡ Pre-Order Registered! Founder Pass Added to Account.', 'ok')";
       card.innerHTML=`
-        <div class="preorder-badge">${badge}</div>
-        <div class="preorder-title">${title}</div>
-        <ul class="preorder-bonuses">${bonuses.map(b=>`<li>${b}</li>`).join('')}</ul>
-        <button class="preorder-btn" onclick="${onClickAction}">${btnText}</button>
+        <div class="preorder-badge">${escapeHtml(badge)}</div>
+        <div class="preorder-title">${escapeHtml(title)}</div>
+        <ul class="preorder-bonuses">${bonuses.map(b=>`<li>${escapeHtml(b)}</li>`).join('')}</ul>
+        <button class="preorder-btn" onclick="${onClickAction}">${escapeHtml(btnText)}</button>
       `;
       parent.appendChild(card);break;
     }
@@ -11485,6 +11550,9 @@ function renderBlockNode(node,parent){
               <input type="password" id="ai-cfg-key-${bid}" value="${escapeHtml(cfg.apiKey)}" placeholder="Paste AIzaSy... / sk-... / sk-ant-... / http://localhost:11434" oninput="onAiKeyInput('${bid}')" style="flex:1;padding:5px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#fff;font-size:11px;font-family:monospace">
               <button class="find-btn" type="button" onclick="toggleAiKeyVisibility('${bid}')" style="padding:4px 8px;font-size:11px">👁️</button>
               <button class="find-btn" type="button" onclick="saveAiBlockSettings('${bid}')" style="padding:4px 12px;font-size:11px;background:#10b981;color:#fff;font-weight:700">Save</button>
+            </div>
+            <div id="ai-cfg-detect-pill-${bid}" style="font-size:10.5px;color:#38bdf8;margin-top:6px;padding:4px 8px;background:rgba(56,189,248,0.1);border-radius:6px;border:1px solid rgba(56,189,248,0.25);display:${detectAiProviderFromKey(cfg.apiKey)?'block':'none'};font-weight:600">
+              ${detectAiProviderFromKey(cfg.apiKey) ? `✨ Auto-Detected: <strong style="color:#10b981">${detectAiProviderFromKey(cfg.apiKey).name}</strong> • Recommended: <code style="color:#fef08a">${detectAiProviderFromKey(cfg.apiKey).model}</code>` : ''}
             </div>
           </div>
           <div style="font-size:10px;color:#64748b">
@@ -11744,33 +11812,52 @@ ${escapeHtml(rawCode || 'System Prompt: Living Document Multi-Page Assistant')}
     }
     case 'jsx_canvas':case 'interactive_sandbox':case 'live_sandbox':{
       const st = node.style || {};
-      const title = (st.title || node.value || 'Interactive Living Reactive Sandbox').toUpperCase();
-      const code = st.code || `// Interactive Reactive Widget
-<div style="display:flex;flex-direction:column;gap:12px;color:#fff">
-  <div style="display:flex;justify-content:space-between">
-    <span>🏎️ Velocity Output</span>
-    <span id="dyno-val" style="color:#00f0ff;font-weight:bold">1,400 BHP</span>
+      const title = (st.title || node.title || node.value || 'Interactive Reactive Sandbox').toUpperCase();
+      let rawCode = st.code || node.code || `<div style="padding:16px;color:#fff;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(56,189,248,0.3)">
+  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+    <span style="font-weight:700;color:#38bdf8">⚡ Dynamic Output</span>
+    <span id="dyno-val" style="color:#00f0ff;font-weight:bold;font-size:16px">50%</span>
   </div>
-  <input type="range" min="200" max="2000" value="1400" style="width:100%;accent-color:#00f0ff" oninput="document.getElementById('dyno-val').textContent=this.value+' BHP'">
+  <input type="range" min="0" max="100" value="50" style="width:100%;accent-color:#00f0ff;cursor:pointer" oninput="document.getElementById('dyno-val').textContent=this.value+'%'">
 </div>`;
+      
       const card = document.createElement('div');
       card.className = 'jsx-canvas-card';
-      const uid = 'jsx-' + Math.random().toString(36).slice(2);
-      
+      const uid = 'jsx_' + Math.random().toString(36).slice(2, 9);
+
+      // Rewrite element IDs and document.getElementById to be instance-scoped, preventing collisions between Editor and Live Preview
+      const scopedCode = rawCode
+        .replace(/\bid=(["'])([^"'\s>]+)\1/g, (m, q, id) => `id=${q}${id}_${uid}${q}`)
+        .replace(/document\.getElementById\((["'])([^"'\s\)]+)\1\)/g, (m, q, id) => `document.getElementById('${id}_${uid}')`);
+
       card.innerHTML = `
         <div class="jsx-header">
-          <span class="jsx-badge">⚡ ${title}</span>
+          <span class="jsx-badge">⚡ ${escapeHtml(title)}</span>
           <div style="display:flex;gap:6px">
-            <button class="jsx-toggle-btn" onclick="toggleJsxCode('${uid}')">👁️ Code</button>
-            <button class="jsx-toggle-btn" onclick="resetJsxSandbox('${uid}')">🔄 Reset</button>
+            <button class="jsx-toggle-btn" type="button" onclick="toggleJsxCode('${uid}')">👁️ Code</button>
+            <button class="jsx-toggle-btn" type="button" onclick="resetJsxSandbox('${uid}')">🔄 Reset</button>
           </div>
         </div>
-        <div class="jsx-body" id="${uid}-body">
-          ${code}
+        <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative">
+          ${scopedCode}
         </div>
-        <pre class="jsx-code-view" id="${uid}-code"><code>${escapeHtml(code)}</code></pre>
+        <pre class="jsx-code-view" id="${uid}-code"><code>${escapeHtml(rawCode)}</code></pre>
       `;
       parent.appendChild(card);
+
+      // Execute any inline <script> tags inside the scoped sandbox safely
+      setTimeout(() => {
+        const bodyEl = document.getElementById(`${uid}-body`);
+        if (bodyEl) {
+          const scripts = bodyEl.querySelectorAll('script');
+          scripts.forEach(s => {
+            try {
+              const fn = new Function('container', 'scopeId', s.textContent);
+              fn(bodyEl, uid);
+            } catch(err) { console.warn('JSX Sandbox script error:', err); }
+          });
+        }
+      }, 50);
       break;
     }
     case 'water_effect':case 'fluid_canvas':{
@@ -11810,10 +11897,6 @@ ${escapeHtml(rawCode || 'System Prompt: Living Document Multi-Page Assistant')}
     }
     case 'throttle_dyno':case 'dyno_sandbox':{
       renderThrottleDyno(node, parent);
-      break;
-    }
-    case 'spell_matrix':{
-      renderSpellMatrix(node, parent);
       break;
     }
     case 'orbit_sim':{
@@ -13242,9 +13325,9 @@ async function useTemplate(tplId, mode) {
 // ═════════════════════════════════════════════════════════════════════════════
 
 let edPreviewDebounceTimer = null;
-function edUpdateLivePreview() {
+function edUpdateLivePreview(immediate = false) {
   clearTimeout(edPreviewDebounceTimer);
-  edPreviewDebounceTimer = setTimeout(() => {
+  const doRender = () => {
     const pane = document.getElementById('ed-preview-pane');
     const body = document.getElementById('ed-preview-body');
     const badge = document.getElementById('ed-preview-badge');
@@ -13316,7 +13399,12 @@ function edUpdateLivePreview() {
     if (pageFx && pageFx !== 'none') {
       renderPageEnvironmentalFx(slideDiv, pageFx);
     }
-  }, 40);
+  };
+  if (immediate) {
+    doRender();
+  } else {
+    edPreviewDebounceTimer = setTimeout(doRender, 40);
+  }
 }
 
 let edPages = [], edCurrentPage = null, edBSeq = 0, edPSeq = 0;
@@ -13704,7 +13792,7 @@ function edRenderBlocks() {
     form: '📑', feature_grid: '🌟', live_feed: '📡', preorder: '💎', button: '🔘',
     jsx_canvas: '⚡', interactive_sandbox: '⚡', particles: '✨', particle_canvas: '✨',
     water_effect: '🌊', fluid_canvas: '🌊',
-    throttle_dyno: '🏎️', dyno_sandbox: '🏎️', spell_matrix: '🪄', orbit_sim: '🛰️',
+    throttle_dyno: '🏎️', dyno_sandbox: '🏎️', orbit_sim: '🛰️',
     arr_projector: '📈', tilt_card: '📐'
   };
 
@@ -13813,40 +13901,253 @@ function edRenderBlocks() {
       const hi = document.createElement('input'); hi.placeholder = 'Col 1, Col 2'; hi.value = (block.headers || []).join(', '); hi.style.marginTop = '4px'; hi.oninput = () => { block.headers = hi.value.split(',').map(s => s.trim()); }; div.appendChild(hi);
       mk('textarea', 'Row values (comma separated)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => { block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim())); }, { rows: 4 });
     } else if (block.type === 'ai') {
-      mk('textarea', 'AI prompt or context (document multi-page contents are also fed automatically)...', block.prompt || '', v => { block.prompt = v; }, { rows: 3 });
+      const cfg = getAiConfig();
+      const aiHdr = document.createElement('div');
+      aiHdr.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.07)';
+      const pName = cfg.provider === 'gemini' ? 'Google Gemini' : (cfg.provider === 'openai' ? 'OpenAI' : (cfg.provider === 'claude' ? 'Anthropic Claude' : 'Local Ollama'));
+      aiHdr.innerHTML = `
+        <div style="font-size:11px;color:#fef08a;font-weight:700">✨ ${pName} <span style="font-size:10px;color:#38bdf8;font-weight:400">• ${cfg.model || 'gemini-2.5-flash'}</span></div>
+        <button type="button" class="find-btn" style="font-size:10px;padding:3px 8px">⚙️ AI Settings</button>
+      `;
+      const aiDrawer = document.createElement('div');
+      aiDrawer.style.cssText = 'display:none;background:#090d14;border:1px solid rgba(56,189,248,0.3);border-radius:8px;padding:10px;margin-bottom:8px;font-size:11px';
+      aiDrawer.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+          <div>
+            <label style="font-size:9.5px;color:var(--text3);display:block">PROVIDER</label>
+            <select class="ed-ai-provider" style="width:100%;padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:#fff;font-size:11px">
+              <option value="gemini" ${cfg.provider==='gemini'?'selected':''}>Google Gemini</option>
+              <option value="openai" ${cfg.provider==='openai'?'selected':''}>OpenAI</option>
+              <option value="claude" ${cfg.provider==='claude'?'selected':''}>Anthropic Claude</option>
+              <option value="ollama" ${cfg.provider==='ollama'?'selected':''}>Local Ollama</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:9.5px;color:var(--text3);display:block">MODEL</label>
+            <input type="text" class="ed-ai-model" value="${cfg.model || 'gemini-2.5-flash'}" placeholder="gemini-2.5-flash" style="width:100%;padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:#fff;font-size:11px">
+          </div>
+        </div>
+        <div>
+          <label style="font-size:9.5px;color:var(--text3);display:block">API KEY / ENDPOINT</label>
+          <div style="display:flex;gap:4px">
+            <input type="password" class="ed-ai-key" value="${cfg.apiKey || ''}" placeholder="Paste API Key (AQ... / AIza... / sk-...)" style="flex:1;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:#fff;font-size:11px;font-family:monospace">
+            <button type="button" class="find-btn ed-ai-save-btn" style="padding:4px 10px;font-size:11px;background:#10b981;color:#fff;font-weight:700">Save</button>
+          </div>
+          <div class="ed-ai-detect" style="font-size:10px;color:#38bdf8;margin-top:4px;display:${detectAiProviderFromKey(cfg.apiKey)?'block':'none'}">
+            ${detectAiProviderFromKey(cfg.apiKey) ? `✨ Auto-Detected: ${detectAiProviderFromKey(cfg.apiKey).name}` : ''}
+          </div>
+        </div>
+      `;
+      const btnToggle = aiHdr.querySelector('button');
+      btnToggle.onclick = () => { aiDrawer.style.display = aiDrawer.style.display === 'none' ? 'block' : 'none'; };
+      const keyInp = aiDrawer.querySelector('.ed-ai-key');
+      const provSel = aiDrawer.querySelector('.ed-ai-provider');
+      const modInp = aiDrawer.querySelector('.ed-ai-model');
+      const detectDiv = aiDrawer.querySelector('.ed-ai-detect');
+      keyInp.oninput = () => {
+        const d = detectAiProviderFromKey(keyInp.value);
+        if (d) {
+          provSel.value = d.provider;
+          modInp.value = d.model;
+          detectDiv.style.display = 'block';
+          detectDiv.innerHTML = `✨ Auto-Detected: <strong style="color:#10b981">${d.name}</strong> • Recommended: <code style="color:#fef08a">${d.model}</code>`;
+        } else {
+          detectDiv.style.display = 'none';
+        }
+      };
+      aiDrawer.querySelector('.ed-ai-save-btn').onclick = () => {
+        const p = provSel.value;
+        const k = keyInp.value.trim();
+        const m = modInp.value.trim() || (p === 'gemini' ? 'gemini-2.5-flash' : (p === 'openai' ? 'gpt-4o-mini' : (p === 'claude' ? 'claude-3-5-sonnet-latest' : 'llama3.2')));
+        localStorage.setItem('ldoc_ai_provider', p);
+        localStorage.setItem('ldoc_ai_api_key', k);
+        localStorage.setItem('ldoc_ai_model', m);
+        aiHdr.querySelector('div').innerHTML = `✨ ${p.toUpperCase()} <span style="font-size:10px;color:#38bdf8;font-weight:400">• ${m}</span>`;
+        aiDrawer.style.display = 'none';
+        if (typeof showToast === 'function') showToast(`✓ AI Settings Saved (${p.toUpperCase()})`, 'ok');
+        edUpdateLivePreview();
+      };
+      div.appendChild(aiHdr);
+      div.appendChild(aiDrawer);
+
+      mk('textarea', 'System / Assistant Prompt (multi-page contents are fed automatically)...', block.prompt || '', v => { block.prompt = v; edUpdateLivePreview(); }, { rows: 3 });
     } else if (block.type === 'form') {
       mk('input', 'Form Title / Header', block.title || '⚡ VIP Priority Early Access', v => { block.title = v; edUpdateLivePreview(); });
-      mk('input', 'Webhook Destination URL', block.webhook_url || '', v => { block.webhook_url = v; edUpdateLivePreview(); });
       
-      const stRow = document.createElement('div');
-      stRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0;padding:6px;background:var(--surface2);border-radius:6px';
-      stRow.innerHTML = '<span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">BUTTON STYLE</span>';
+      // Destination & Action selector
+      const destRow = document.createElement('div');
+      destRow.style.cssText = 'display:grid;grid-template-columns:130px 1fr;gap:6px;margin:4px 0';
+      const destSel = document.createElement('select');
+      destSel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px;font-size:11.5px';
+      [
+        ['webhook', '🌐 Webhook POST'],
+        ['local', '💾 LocalStorage Table'],
+        ['download', '📄 Download JSON'],
+        ['email', '✉️ Mailto Link']
+      ].forEach(d => {
+        const o = document.createElement('option'); o.value = d[0]; o.textContent = d[1];
+        if (d[0] === (block.destination || 'webhook')) o.selected = true;
+        destSel.appendChild(o);
+      });
+      const destInp = document.createElement('input');
+      destInp.placeholder = 'Webhook URL (https://...) or Email';
+      destInp.value = block.webhook_url || '';
+      destInp.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px;font-size:11.5px';
+      destSel.onchange = () => { block.destination = destSel.value; edUpdateLivePreview(); };
+      destInp.oninput = () => { block.webhook_url = destInp.value; edUpdateLivePreview(); };
+      destRow.appendChild(destSel); destRow.appendChild(destInp);
+      div.appendChild(destRow);
+
+      // Submit Button Label & Style Row
+      const btnRow = document.createElement('div');
+      btnRow.style.cssText = 'display:grid;grid-template-columns:1fr 140px;gap:6px;margin:4px 0';
+      const btnTxt = document.createElement('input');
+      btnTxt.placeholder = 'Button Label (e.g. ⚡ Submit Application)';
+      btnTxt.value = block.button_text || '⚡ Submit';
+      btnTxt.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px;font-size:11.5px';
+      btnTxt.oninput = () => { block.button_text = btnTxt.value; edUpdateLivePreview(); };
+
       const bSel = document.createElement('select');
-      bSel.style.cssText = 'background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:12px';
-      [['royal_gold','✨ Royal Gold Shimmer'],['neon_cyan','⚡ Cyber Neon Cyan'],['purple_nebula','🔮 Purple Nebula'],['glass_hologram','💎 Frosted Glass'],['tactile_3d','🏎️ 3D Tactile Push'],['fluid_ripple','🌊 Fluid Ripple']].forEach(st=>{
+      bSel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px;font-size:11.5px';
+      [['royal_gold','✨ Royal Gold'],['neon_cyan','⚡ Neon Cyan'],['purple_nebula','🔮 Purple Nebula'],['glass_hologram','💎 Frosted Glass'],['tactile_3d','🏎️ 3D Tactile'],['fluid_ripple','🌊 Fluid Ripple']].forEach(st=>{
         const o=document.createElement('option');o.value=st[0];o.textContent=st[1];
         if(st[0]===(block.btn_style||'royal_gold')) o.selected=true;
         bSel.appendChild(o);
       });
       bSel.onchange = () => { block.btn_style = bSel.value; edUpdateLivePreview(); };
-      stRow.appendChild(bSel);
-      div.appendChild(stRow);
+      btnRow.appendChild(btnTxt); btnRow.appendChild(bSel);
+      div.appendChild(btnRow);
 
-      const hl = document.createElement('div'); hl.style.cssText = 'font-size:11px;color:var(--text3);margin:6px 0 4px'; hl.textContent = 'Fields format: Label | Type (input_text, input_email, select) | Placeholder'; div.appendChild(hl);
-      mk('textarea', '', (block.fields || []).map(f => `${f.label} | ${f.field_type} | ${f.placeholder || ''}`).join('\n'), v => {
-        block.fields = v.split('\n').filter(s => s.trim()).map(line => {
-          const p = line.split('|').map(s => s.trim());
-          return { label: p[0] || '', field_type: p[1] || 'input_text', placeholder: p[2] || undefined };
+      // Visual Field Builder Section
+      const fbHeader = document.createElement('div');
+      fbHeader.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin:8px 0 4px;padding:4px 0;border-bottom:1px solid var(--border)';
+      fbHeader.innerHTML = `
+        <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">FORM FIELDS BUILDER</span>
+        <button type="button" class="find-btn" style="font-size:10.5px;padding:3px 8px;background:rgba(56,189,248,0.15);color:#38bdf8;border-color:rgba(56,189,248,0.4)">➕ Add Field</button>
+      `;
+      div.appendChild(fbHeader);
+
+      if (!Array.isArray(block.fields) || !block.fields.length) {
+        block.fields = [
+          { label: 'Full Name', field_type: 'input_text', placeholder: 'Enter your name', required: true },
+          { label: 'Email Address', field_type: 'input_email', placeholder: 'Enter your email', required: true }
+        ];
+      }
+
+      const fieldsContainer = document.createElement('div');
+      fieldsContainer.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-bottom:6px';
+      div.appendChild(fieldsContainer);
+
+      const renderFieldsList = () => {
+        fieldsContainer.innerHTML = '';
+        block.fields.forEach((f, idx) => {
+          const fCard = document.createElement('div');
+          fCard.style.cssText = 'background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:11.5px';
+          
+          const topRow = document.createElement('div');
+          topRow.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:4px';
+
+          const fLbl = document.createElement('input');
+          fLbl.value = f.label || '';
+          fLbl.placeholder = 'Field Label';
+          fLbl.style.cssText = 'flex:1;padding:3px 6px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px;font-weight:600';
+          fLbl.oninput = () => { f.label = fLbl.value; syncChildren(); };
+
+          const fType = document.createElement('select');
+          fType.style.cssText = 'padding:3px 5px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#38bdf8;font-size:11px';
+          [
+            ['input_text', 'Text'],
+            ['input_email', 'Email'],
+            ['input_number', 'Number'],
+            ['input_tel', 'Phone'],
+            ['textarea', 'Textarea'],
+            ['input_select', 'Dropdown'],
+            ['input_checkbox', 'Checkbox']
+          ].forEach(t => {
+            const o = document.createElement('option'); o.value = t[0]; o.textContent = t[1];
+            if (t[0] === (f.field_type || f.type || 'input_text')) o.selected = true;
+            fType.appendChild(o);
+          });
+          fType.onchange = () => { f.field_type = f.type = fType.value; syncChildren(); renderFieldsList(); };
+
+          const btnDel = document.createElement('button');
+          btnDel.type = 'button';
+          btnDel.textContent = '🗑️';
+          btnDel.title = 'Delete Field';
+          btnDel.style.cssText = 'background:none;border:none;cursor:pointer;font-size:12px;padding:2px 4px';
+          btnDel.onclick = () => {
+            block.fields.splice(idx, 1);
+            syncChildren();
+            renderFieldsList();
+          };
+
+          topRow.appendChild(fLbl);
+          topRow.appendChild(fType);
+          topRow.appendChild(btnDel);
+          fCard.appendChild(topRow);
+
+          // Second Row: Placeholder / Options
+          const botRow = document.createElement('div');
+          botRow.style.cssText = 'display:flex;gap:6px;align-items:center';
+
+          if (f.field_type === 'input_select') {
+            const optInp = document.createElement('input');
+            optInp.placeholder = 'Options (comma-separated e.g. Basic, Pro, Enterprise)';
+            optInp.value = Array.isArray(f.options) ? f.options.join(', ') : (f.options || '');
+            optInp.style.cssText = 'flex:1;padding:3px 6px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#cbd5e1;font-size:10.5px';
+            optInp.oninput = () => { f.options = optInp.value.split(',').map(s=>s.trim()).filter(Boolean); syncChildren(); };
+            botRow.appendChild(optInp);
+          } else if (f.field_type !== 'input_checkbox') {
+            const phInp = document.createElement('input');
+            phInp.placeholder = 'Placeholder text (e.g. Enter value)';
+            phInp.value = f.placeholder || '';
+            phInp.style.cssText = 'flex:1;padding:3px 6px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#cbd5e1;font-size:10.5px';
+            phInp.oninput = () => { f.placeholder = phInp.value; syncChildren(); };
+            botRow.appendChild(phInp);
+          }
+
+          const reqLbl = document.createElement('label');
+          reqLbl.style.cssText = 'font-size:10px;color:var(--text3);display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap';
+          const reqChk = document.createElement('input');
+          reqChk.type = 'checkbox';
+          reqChk.checked = !!f.required;
+          reqChk.onchange = () => { f.required = reqChk.checked; syncChildren(); };
+          reqLbl.appendChild(reqChk);
+          reqLbl.appendChild(document.createTextNode('Req'));
+          botRow.appendChild(reqLbl);
+
+          fCard.appendChild(botRow);
+          fieldsContainer.appendChild(fCard);
         });
+      };
+
+      const syncChildren = () => {
         block.children = (block.fields || []).map(f => ({
-          id: 'f_' + Math.random().toString(36).substr(2, 5),
-          type: f.field_type,
+          id: 'f_' + Math.random().toString(36).substr(2, 6),
+          type: f.field_type || f.type || 'input_text',
+          field_type: f.field_type || f.type || 'input_text',
           label: f.label,
           placeholder: f.placeholder,
-          options: f.options
+          options: f.options,
+          required: f.required
         }));
         edUpdateLivePreview();
-      }, { rows: 4 });
+      };
+
+      fbHeader.querySelector('button').onclick = () => {
+        block.fields.push({
+          label: 'Field ' + (block.fields.length + 1),
+          field_type: 'input_text',
+          placeholder: 'Enter details',
+          required: false
+        });
+        syncChildren();
+        renderFieldsList();
+      };
+
+      renderFieldsList();
+      syncChildren();
+
     } else if (block.type === 'web_image') {
       mk('input', 'Image URL (https://...)', block.src || '', v => { block.src = v; });
       mk('input', 'Alt description', block.alt || '', v => { block.alt = v; });
@@ -13857,36 +14158,134 @@ function edRenderBlocks() {
       mk('input', 'Video URL (https://... MP4/WebM)', block.src || '', v => { block.src = v; });
       mk('input', 'Video Label', block.label || '', v => { block.label = v; });
     } else if (block.type === '3d_model') {
-      const rowDiv = document.createElement('div');
-      rowDiv.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px';
+      mk('input', 'Hologram Title / Caption', block.value || '', v => { block.value = v; edUpdateLivePreview(); });
 
-      const tplDiv = document.createElement('div');
-      tplDiv.innerHTML = '<span style="font-size:10px;color:var(--text3);font-weight:700">3D MODEL PRESET</span>';
-      const tpl = document.createElement('select');
-      tpl.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:13px;width:100%;margin-top:2px';
-      ['polyhedron', 'cube', 'sphere', 'sphere', 'pyramid'].forEach(t => {
-        const o = document.createElement('option'); o.value = t; o.textContent = t.toUpperCase();
-        if (t === block.mesh_template) o.selected = true;
-        tpl.appendChild(o);
-      });
-      tpl.onchange = () => { block.mesh_template = tpl.value; edUpdateLivePreview(); };
-      tplDiv.appendChild(tpl);
+      // Mode Selector Tabs
+      let curMode = block.src ? (block.src.startsWith('data:') ? 'upload' : 'url') : 'preset';
+      const modeBar = document.createElement('div');
+      modeBar.style.cssText = 'display:flex;gap:4px;margin:4px 0;background:var(--surface2);padding:3px;border-radius:6px';
 
+      const btnUpload = document.createElement('button');
+      btnUpload.type = 'button';
+      btnUpload.textContent = '📁 Offline Upload';
+      btnUpload.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='upload'?'background:#38bdf8;color:#0a0a14':'background:transparent;color:var(--text2)'}`;
+
+      const btnUrl = document.createElement('button');
+      btnUrl.type = 'button';
+      btnUrl.textContent = '🌐 Online URL';
+      btnUrl.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='url'?'background:#38bdf8;color:#0a0a14':'background:transparent;color:var(--text2)'}`;
+
+      const btnPreset = document.createElement('button');
+      btnPreset.type = 'button';
+      btnPreset.textContent = '📦 Preset 3D';
+      btnPreset.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='preset'?'background:#38bdf8;color:#0a0a14':'background:transparent;color:var(--text2)'}`;
+
+      modeBar.appendChild(btnUpload);
+      modeBar.appendChild(btnUrl);
+      modeBar.appendChild(btnPreset);
+      div.appendChild(modeBar);
+
+      const dynamicArea = document.createElement('div');
+      dynamicArea.style.cssText = 'margin:6px 0';
+      div.appendChild(dynamicArea);
+
+      const render3dSourceMode = () => {
+        btnUpload.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='upload'?'background:#38bdf8;color:#0a0a14':'background:transparent;color:var(--text2)'}`;
+        btnUrl.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='url'?'background:#38bdf8;color:#0a0a14':'background:transparent;color:var(--text2)'}`;
+        btnPreset.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='preset'?'background:#38bdf8;color:#0a0a14':'background:transparent;color:var(--text2)'}`;
+        dynamicArea.innerHTML = '';
+
+        if (curMode === 'upload') {
+          const dropBox = document.createElement('div');
+          dropBox.style.cssText = 'border:1.5px dashed rgba(56,189,248,0.4);background:rgba(56,189,248,0.04);border-radius:8px;padding:12px;text-align:center;cursor:pointer';
+          dropBox.innerHTML = `
+            <div style="font-size:22px;margin-bottom:4px">📁</div>
+            <div style="font-size:11.5px;font-weight:700;color:#38bdf8">${block.filename ? escapeHtml(block.filename) : 'Click or Drop .GLB, .GLTF, .OBJ, .STL'}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">${block.src ? '✓ Model embedded offline in document' : 'Works 100% offline — stored directly in .ldocx package'}</div>
+          `;
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = '.glb,.gltf,.obj,.stl';
+          fileInput.style.display = 'none';
+          fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              block.filename = file.name;
+              const ext = file.name.split('.').pop().toLowerCase();
+              block.format = ext;
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                block.src = ev.target.result;
+                block.mesh_template = '';
+                edUpdateLivePreview();
+                render3dSourceMode();
+                if (typeof showToast === 'function') showToast(`✓ 3D Model Loaded (${file.name})`, 'ok');
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+          dropBox.onclick = () => fileInput.click();
+          dynamicArea.appendChild(dropBox);
+          dynamicArea.appendChild(fileInput);
+
+          if (block.src) {
+            const clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.textContent = '🗑️ Remove Model File';
+            clearBtn.className = 'find-btn';
+            clearBtn.style.cssText = 'margin-top:6px;font-size:10.5px;color:#ef4444;border-color:rgba(239,68,68,0.3)';
+            clearBtn.onclick = () => { block.src = ''; block.filename = ''; edUpdateLivePreview(); render3dSourceMode(); };
+            dynamicArea.appendChild(clearBtn);
+          }
+        } else if (curMode === 'url') {
+          const urlInp = document.createElement('input');
+          urlInp.placeholder = '3D Model Online URL (https://... model.glb, .gltf, .obj, .stl)';
+          urlInp.value = block.src && !block.src.startsWith('data:') ? block.src : '';
+          urlInp.style.cssText = 'width:100%;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px';
+          urlInp.oninput = () => {
+            block.src = urlInp.value.trim();
+            const ext = block.src.split('?')[0].split('.').pop().toLowerCase();
+            if (['glb','gltf','obj','stl'].includes(ext)) block.format = ext;
+            block.mesh_template = '';
+            edUpdateLivePreview();
+          };
+          dynamicArea.appendChild(urlInp);
+        } else {
+          const tplDiv = document.createElement('div');
+          tplDiv.innerHTML = '<span style="font-size:10px;color:var(--text3);font-weight:700">3D GEOMETRY PRESET</span>';
+          const tpl = document.createElement('select');
+          tpl.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:13px;width:100%;margin-top:2px';
+          ['pyramid', 'cube', 'sphere', 'polyhedron', 'torus', 'wheel', 'qubit'].forEach(t => {
+            const o = document.createElement('option'); o.value = t; o.textContent = t.toUpperCase();
+            if (t === (block.mesh_template || 'pyramid')) o.selected = true;
+            tpl.appendChild(o);
+          });
+          tpl.onchange = () => { block.src = ''; block.mesh_template = tpl.value; edUpdateLivePreview(); };
+          tplDiv.appendChild(tpl);
+          dynamicArea.appendChild(tplDiv);
+        }
+      };
+
+      btnUpload.onclick = () => { curMode = 'upload'; render3dSourceMode(); };
+      btnUrl.onclick = () => { curMode = 'url'; render3dSourceMode(); };
+      btnPreset.onclick = () => { curMode = 'preset'; render3dSourceMode(); };
+      render3dSourceMode();
+
+      // Material Shader Selector
       const matDiv = document.createElement('div');
+      matDiv.style.marginTop = '6px';
       matDiv.innerHTML = '<span style="font-size:10px;color:var(--text3);font-weight:700">MATERIAL SHADER</span>';
       const mat = document.createElement('select');
-      mat.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:13px;width:100%;margin-top:2px';
+      mat.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:12px;width:100%;margin-top:2px';
       ['cyber_hologram', 'royal_gold', 'obsidian_carbon', 'crystal_cobalt', 'wireframe'].forEach(m => {
         const o = document.createElement('option'); o.value = m; o.textContent = m.replace(/_/g, ' ').toUpperCase();
-        if (m === block.material_mode) o.selected = true;
+        if (m === (block.material_mode || 'cyber_hologram')) o.selected = true;
         mat.appendChild(o);
       });
       mat.onchange = () => { block.material_mode = mat.value; edUpdateLivePreview(); };
       matDiv.appendChild(mat);
+      div.appendChild(matDiv);
 
-      rowDiv.appendChild(tplDiv);
-      rowDiv.appendChild(matDiv);
-      div.appendChild(rowDiv);
     } else if (block.type === 'feature_grid') {
       const hl = document.createElement('div'); hl.style.cssText = 'font-size:11px;color:var(--text3);margin-bottom:4px'; hl.textContent = '3-Card Grid Format: Badge | Title | Description (one card per line)'; div.appendChild(hl);
       mk('textarea', '', (block.cards || []).map(c => `${c.badge} | ${c.title} | ${c.desc}`).join('\n'), v => {
@@ -13896,18 +14295,18 @@ function edRenderBlocks() {
         });
       }, { rows: 4 });
     } else if (block.type === 'button') {
-      mk('input', 'Button Label (e.g. 💳 Register via Stripe)', block.value || '', v => { block.value = v; edUpdateLivePreview(); });
+      mk('input', 'Button Label', block.value || '⚡ Action Button', v => { block.value = v; edUpdateLivePreview(); });
       
       const actRow = document.createElement('div');
-      actRow.style.cssText = 'display:grid;grid-template-columns:140px 1fr;gap:8px;margin-top:4px';
+      actRow.style.cssText = 'display:grid;grid-template-columns:130px 1fr;gap:6px;margin-top:4px';
       
       const sel = document.createElement('select');
-      sel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:12px';
+      sel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:11.5px';
       [
         ['link', '🌐 External / Stripe Link'],
         ['navigate', '🧭 Navigate Slide'],
         ['submit', '⚡ Submit Form / Webhook'],
-        ['save_state', '💾 Save State']
+        ['save_state', '💾 Save Document State']
       ].forEach(a => {
         const o = document.createElement('option'); o.value = a[0]; o.textContent = a[1];
         if (a[0] === (block.action || (block.style&&block.style.action) || 'link')) o.selected = true;
@@ -13916,15 +14315,15 @@ function edRenderBlocks() {
 
       const ti = document.createElement('input');
       const curAction = sel.value;
-      ti.placeholder = curAction === 'link' ? 'https://buy.stripe.com/... or https://...' : (curAction === 'navigate' ? 'next / prev / 1' : 'target');
+      ti.placeholder = curAction === 'link' ? 'https://buy.stripe.com/... or URL' : (curAction === 'navigate' ? 'next / prev / slide number' : 'target');
       ti.value = block.target || (block.style&&block.style.target) || (curAction === 'link' ? 'https://buy.stripe.com/demo_checkout' : 'next');
-      ti.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:12px';
+      ti.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:11.5px';
       
       sel.onchange = () => { 
         block.action = sel.value; 
         if(!block.style) block.style={};
         block.style.action = sel.value;
-        ti.placeholder = sel.value === 'link' ? 'https://buy.stripe.com/... or https://...' : (sel.value === 'navigate' ? 'next / prev / 1' : 'target');
+        ti.placeholder = sel.value === 'link' ? 'https://buy.stripe.com/... or URL' : (sel.value === 'navigate' ? 'next / prev / slide number' : 'target');
         edUpdateLivePreview();
       };
       ti.oninput = () => { 
@@ -13937,13 +14336,12 @@ function edRenderBlocks() {
       actRow.appendChild(ti);
       div.appendChild(actRow);
 
-      // Button Style selector & Live Preview in Card
+      // Button Style and Options Row
       const styleRow = document.createElement('div');
-      styleRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;padding:8px;background:var(--surface2);border-radius:8px';
-      styleRow.innerHTML = '<span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">BUTTON THEME</span>';
+      styleRow.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px';
       
       const stSel = document.createElement('select');
-      stSel.style.cssText = 'background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:12px';
+      stSel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px;font-size:11.5px';
       [['royal_gold','✨ Royal Gold Shimmer'],['neon_cyan','⚡ Cyber Neon Cyan'],['purple_nebula','🔮 Purple Nebula'],['glass_hologram','💎 Frosted Glass'],['tactile_3d','🏎️ 3D Tactile Push'],['fluid_ripple','🌊 Fluid Ripple'],['minimal','🔳 Obsidian Outline']].forEach(st=>{
         const o=document.createElement('option');o.value=st[0];o.textContent=st[1];
         if(st[0]===((block.style&&block.style.btn_style)||'royal_gold')) o.selected=true;
@@ -13954,26 +14352,148 @@ function edRenderBlocks() {
         block.style.btn_style = stSel.value;
         edUpdateLivePreview();
       };
+
+      const winSel = document.createElement('select');
+      winSel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px;font-size:11.5px';
+      [['_blank', '↗ Open New Tab'], ['_self', '⤵ Open Same Tab']].forEach(w => {
+        const o = document.createElement('option'); o.value = w[0]; o.textContent = w[1];
+        if (w[0] === (block.target_window || '_blank')) o.selected = true;
+        winSel.appendChild(o);
+      });
+      winSel.onchange = () => {
+        block.target_window = winSel.value;
+        if (!block.style) block.style = {};
+        block.style.new_tab = winSel.value === '_blank';
+        edUpdateLivePreview();
+      };
+
       styleRow.appendChild(stSel);
+      styleRow.appendChild(winSel);
       div.appendChild(styleRow);
 
     } else if (block.type === 'live_feed') {
       mk('input', 'Beacon Title', block.title || 'LIVE DISPATCH BEACON', v => { block.title = v; edUpdateLivePreview(); });
       mk('input', 'Sources / Metrics text', block.sources || '', v => { block.sources = v; edUpdateLivePreview(); });
     } else if (block.type === 'preorder') {
-      mk('input', 'Tier Name', block.tier || 'FOUNDER PASS', v => { block.tier = v; edUpdateLivePreview(); });
-      mk('input', 'Price', block.price || '$499', v => { block.price = v; edUpdateLivePreview(); });
-      mk('input', 'Perks (comma separated)', block.perks || '', v => { block.perks = v; edUpdateLivePreview(); });
-      mk('input', '💳 Direct Stripe / Checkout Payment Link', (block.style&&block.style.checkout_url) || block.checkout_url || 'https://buy.stripe.com/demo_pass', v => {
+      mk('input', 'Tier / Badge (e.g. FOUNDER PASS)', block.badge || block.tier || 'FOUNDER PASS', v => { block.badge = block.tier = v; edUpdateLivePreview(); });
+      mk('input', 'Card Headline / Title', block.title || block.value || 'SPECIAL ACCESS PASS', v => { block.title = block.value = v; edUpdateLivePreview(); });
+      mk('input', 'Price Tag (e.g. $499 or $69.99)', block.price || '$499', v => { block.price = v; edUpdateLivePreview(); });
+      mk('input', 'Button Text (e.g. ⚡ PRE-ORDER NOW)', block.button_text || '', v => { block.button_text = v; edUpdateLivePreview(); });
+      mk('textarea', 'Perks & Features (one per line or comma-separated)', Array.isArray(block.perks) ? block.perks.join('\n') : (block.perks || (Array.isArray(block.bonuses) ? block.bonuses.join('\n') : (block.bonuses || 'Unlimited Cloud Collaboration\nVIP Season Pass Included'))), v => { 
+        block.perks = block.bonuses = v.split('\n').map(s => s.trim()).filter(Boolean);
+        edUpdateLivePreview(); 
+      }, { rows: 3 });
+      mk('input', '💳 Payment / Checkout Link', block.checkout_url || (block.style && block.style.checkout_url) || 'https://buy.stripe.com/demo_pass', v => {
         if(!block.style) block.style={};
-        block.style.checkout_url = v;
-        block.checkout_url = v;
+        block.style.checkout_url = block.checkout_url = v;
         edUpdateLivePreview();
       });
     } else if (block.type === 'jsx_canvas' || block.type === 'interactive_sandbox') {
-      mk('input', 'Sandbox Title', block.value || 'Interactive Sandbox', v => { block.value = v; edUpdateLivePreview(); });
-      const hint = document.createElement('div'); hint.style.cssText = 'font-size:11px;color:#38bdf8;margin:4px 0'; hint.textContent = '⚡ Live HTML/JS widget rendered in Viewer and Editor'; div.appendChild(hint);
-      mk('textarea', 'HTML/JS code for the widget', block.style?.code || '', v => { 
+      mk('input', 'Sandbox Title', block.value || block.title || 'Interactive Reactive Sandbox', v => { block.value = block.title = v; edUpdateLivePreview(); });
+
+      // Presets Selector
+      const tplRow = document.createElement('div');
+      tplRow.style.cssText = 'display:flex;align-items:center;gap:6px;margin:6px 0';
+      tplRow.innerHTML = '<span style="font-size:10px;font-weight:700;color:#38bdf8;text-transform:uppercase">FEATURE TEMPLATES:</span>';
+      const tplSel = document.createElement('select');
+      tplSel.style.cssText = 'flex:1;background:var(--surface2);border:1px solid var(--border);color:#fff;border-radius:6px;padding:4px 8px;font-size:11px';
+      
+      const templates = [
+        ['custom', '✏️ Custom Code...'],
+        ['slider_gauge', '🎚️ Reactive Slider & Dynamic Gauge'],
+        ['live_chart', '📊 Interactive Realtime SVG Chart'],
+        ['fluid_waves', '🌊 Fluid Ripple Canvas'],
+        ['particles_physics', '✨ Particle Physics Constellation'],
+        ['timer_stopwatch', '⏱️ Productivity Timer & Stopwatch'],
+        ['throttle_dyno', '🏎️ Throttle Dyno & BHP Meter'],
+        ['orbital_gravity', '🪐 Orbital Velocity Simulator'],
+        ['roi_calc', '🧮 Interactive ROI Calculator']
+      ];
+      templates.forEach(t => {
+        const o = document.createElement('option'); o.value = t[0]; o.textContent = t[1];
+        tplSel.appendChild(o);
+      });
+
+      const getTemplateCode = (key) => {
+        switch(key) {
+          case 'slider_gauge':
+            return `<div style="padding:16px;color:#fff;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(56,189,248,0.3)">
+  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+    <span style="font-weight:700;color:#38bdf8">⚡ Dynamic Output</span>
+    <span id="dyno-val" style="color:#00f0ff;font-weight:bold;font-size:16px">50%</span>
+  </div>
+  <input type="range" min="0" max="100" value="50" style="width:100%;accent-color:#00f0ff;cursor:pointer" oninput="document.getElementById('dyno-val').textContent=this.value+'%'">
+  <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:4px">
+    <span>0% Idle</span><span>50% Nominal</span><span>100% Overdrive</span>
+  </div>
+</div>`;
+          case 'live_chart':
+            return `<div style="padding:16px;color:#fff;background:rgba(15,23,42,0.85);border-radius:12px;border:1px solid rgba(56,189,248,0.3)">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <strong style="color:#38bdf8;font-size:13px">📊 Realtime Telemetry Stream</strong>
+    <span style="font-size:10px;color:#10b981">● Connected</span>
+  </div>
+  <div style="display:flex;align-items:flex-end;gap:8px;height:90px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.1)">
+    <div style="flex:1;background:linear-gradient(180deg,#38bdf8,#0284c7);height:40%;border-radius:4px;transition:height .3s"></div>
+    <div style="flex:1;background:linear-gradient(180deg,#38bdf8,#0284c7);height:75%;border-radius:4px;transition:height .3s"></div>
+    <div style="flex:1;background:linear-gradient(180deg,#f59e0b,#d97706);height:60%;border-radius:4px;transition:height .3s"></div>
+    <div style="flex:1;background:linear-gradient(180deg,#10b981,#059669);height:95%;border-radius:4px;transition:height .3s"></div>
+    <div style="flex:1;background:linear-gradient(180deg,#a78bfa,#7c3aed);height:50%;border-radius:4px;transition:height .3s"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:6px">
+    <span>Node 1</span><span>Node 2</span><span>Node 3</span><span>Node 4</span><span>Node 5</span>
+  </div>
+</div>`;
+          case 'timer_stopwatch':
+            return `<div style="padding:16px;text-align:center;color:#fff;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(167,139,250,0.3)">
+  <div style="font-size:10px;color:#a78bfa;font-weight:700;letter-spacing:1px;text-transform:uppercase">Session Focus Stopwatch</div>
+  <div id="sw-display" style="font-size:32px;font-weight:800;font-family:monospace;color:#fef08a;margin:8px 0">00:00.0</div>
+  <div style="display:flex;justify-content:center;gap:8px">
+    <button type="button" onclick="if(!window.__swI){var t0=Date.now()-(window.__swD||0);window.__swI=setInterval(function(){var d=Date.now()-t0;window.__swD=d;var s=Math.floor(d/1000);var m=Math.floor(s/60);var ms=Math.floor((d%1000)/100);document.getElementById('sw-display').textContent=(m<10?'0':'')+m+':'+(s%60<10?'0':'')+(s%60)+'.'+ms;},100);}" style="padding:5px 14px;background:#10b981;border:none;border-radius:6px;color:#fff;font-weight:700;cursor:pointer">Start</button>
+    <button type="button" onclick="clearInterval(window.__swI);window.__swI=null;" style="padding:5px 14px;background:#f59e0b;border:none;border-radius:6px;color:#0a0a14;font-weight:700;cursor:pointer">Pause</button>
+    <button type="button" onclick="clearInterval(window.__swI);window.__swI=null;window.__swD=0;document.getElementById('sw-display').textContent='00:00.0';" style="padding:5px 14px;background:rgba(255,255,255,0.1);border:none;border-radius:6px;color:#fff;cursor:pointer">Reset</button>
+  </div>
+</div>`;
+          case 'throttle_dyno':
+            return `<div style="padding:16px;color:#fff;background:rgba(10,12,22,0.9);border-radius:12px;border:1px solid rgba(245,158,11,0.3)">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <span style="color:#f59e0b;font-weight:700;font-size:12px">🏎️ Quantum Throttle Dynamometer</span>
+    <span id="dyno-hp" style="font-size:16px;font-weight:800;color:#fef08a">1,400 BHP</span>
+  </div>
+  <input type="range" min="300" max="2500" value="1400" style="width:100%;accent-color:#f59e0b;cursor:pointer" oninput="document.getElementById('dyno-hp').textContent=Number(this.value).toLocaleString()+' BHP';document.getElementById('dyno-bar').style.width=(this.value/25)+'%'">
+  <div style="background:rgba(255,255,255,0.1);height:8px;border-radius:4px;overflow:hidden;margin-top:8px">
+    <div id="dyno-bar" style="height:100%;width:56%;background:linear-gradient(90deg,#10b981,#f59e0b,#ef4444);transition:width .1s"></div>
+  </div>
+</div>`;
+          case 'roi_calc':
+            return `<div style="padding:16px;color:#fff;background:rgba(16,24,39,0.9);border-radius:12px;border:1px solid rgba(16,185,129,0.3)">
+  <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+    <strong style="color:#34d399;font-size:12px">🧮 Interactive ROI Calculator</strong>
+    <span id="roi-out" style="font-size:16px;font-weight:800;color:#fef08a">$24,500</span>
+  </div>
+  <div style="font-size:10px;color:#94a3b8;margin-bottom:3px">Principal Investment ($)</div>
+  <input type="range" min="1000" max="50000" step="500" value="10000" style="width:100%;accent-color:#10b981;cursor:pointer" oninput="window.__roiP=Number(this.value);var ret=(window.__roiP||10000)*(1+((window.__roiR||24)/100)*(window.__roiY||5));document.getElementById('roi-out').textContent='$'+Math.round(ret).toLocaleString();">
+  <div style="font-size:10px;color:#94a3b8;margin:8px 0 3px">Annual Return: 24% APY • 5-Year Horizon</div>
+</div>`;
+          default:
+            return `<div style="padding:16px;color:#fff"><div style="display:flex;justify-content:space-between"><span>⚡ Dynamic Output</span><span id="dyno-val" style="color:#00f0ff;font-weight:bold">50%</span></div><input type="range" min="0" max="100" value="50" style="width:100%;accent-color:#00f0ff" oninput="document.getElementById('dyno-val').textContent=this.value+'%'"></div>`;
+        }
+      };
+
+      tplSel.onchange = () => {
+        if (tplSel.value !== 'custom') {
+          const newCode = getTemplateCode(tplSel.value);
+          if (!block.style) block.style = {};
+          block.style.code = newCode;
+          ta.value = newCode;
+          if (codePreview) codePreview.innerHTML = newCode;
+          edUpdateLivePreview();
+        }
+      };
+      tplRow.appendChild(tplSel);
+      div.appendChild(tplRow);
+
+      const ta = mk('textarea', 'HTML/JS code for the interactive widget', (block.style && block.style.code) || getTemplateCode('slider_gauge'), v => { 
         if(!block.style) block.style={}; 
         block.style.code = v; 
         if(codePreview) codePreview.innerHTML = v;
@@ -13984,7 +14504,7 @@ function edRenderBlocks() {
       wrap.className = 'ed-block-interactive-wrap';
       wrap.innerHTML = '<div class="badge"><span>⚡ Live Interactive Sandbox Preview</span></div>';
       const codePreview = document.createElement('div');
-      codePreview.innerHTML = block.style?.code || '<div style="color:var(--text3);font-size:12px">Interactive sandbox active</div>';
+      codePreview.innerHTML = (block.style && block.style.code) || getTemplateCode('slider_gauge');
       wrap.appendChild(codePreview);
       div.appendChild(wrap);
 
@@ -14045,21 +14565,6 @@ function edRenderBlocks() {
       r.appendChild(bInp); r.appendChild(rpmInp); r.appendChild(tSel);
       div.appendChild(r);
 
-    } else if (block.type === 'spell_matrix') {
-      mk('input', 'Wand / Arcane Matrix Name', block.wand_name || 'Elder Wand', v => { block.wand_name = v; edUpdateLivePreview(); });
-      mk('input', 'Active Spells (comma-separated)', Array.isArray(block.spells) ? block.spells.join(', ') : (block.spells || ''), v => {
-        block.spells = v.split(',').map(s => s.trim()).filter(Boolean);
-        edUpdateLivePreview();
-      });
-      const aSel = document.createElement('select');
-      aSel.style.cssText = 'background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:12px;margin-top:4px';
-      [['gold','✨ Golden Sunfire'],['cyan','Celestial Cyan'],['violet','🔮 Violet Void'],['emerald','🟢 Emerald Spark']].forEach(a => {
-        const o = document.createElement('option'); o.value = a[0]; o.textContent = a[1];
-        if (a[0] === (block.aura || 'gold')) o.selected = true;
-        aSel.appendChild(o);
-      });
-      aSel.onchange = () => { block.aura = aSel.value; edUpdateLivePreview(); };
-      div.appendChild(aSel);
 
     } else if (block.type === 'orbit_sim') {
       mk('input', 'Craft Name', block.craft_name || 'Orbital Recon Sat-IV', v => { block.craft_name = v; edUpdateLivePreview(); });
@@ -14241,7 +14746,7 @@ async function buildAndSave() {
         fx: p.fx || null,
         theme: p.theme || null,
         floating_texts: Array.isArray(p.floating_texts) ? p.floating_texts.map(ft => Object.assign({}, ft)) : [],
-        blocks: (p.blocks || []).map(b => Object.assign({}, b))
+        blocks: (p.blocks || []).map(b => JSON.parse(JSON.stringify(b)))
       }))
     };
 
