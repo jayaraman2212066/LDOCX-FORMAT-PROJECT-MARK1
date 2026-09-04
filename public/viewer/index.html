@@ -3109,8 +3109,12 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 .price-desc { font-size: 12.5px; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
 .price-features { list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #cbd5e1; }
 
-</style>
 <script src="jszip.min.js"></script>
+<script src="ldoc-config.js"></script>
+<script src="ldoc-toast.js"></script>
+<script src="ldoc-parser.js"></script>
+<script src="ldoc-editor-core.js"></script>
+<script src="ldoc-shared-modals.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
@@ -3121,7 +3125,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <div id="desktop-menubar">
   <a href="/models" class="dmenu-brand" style="text-decoration:none;margin-right:4px">🏛️ Models Hub</a>
     <a href="/" class="dmenu-brand" style="text-decoration:none;margin-right:8px">🌐 Portal</a>
-    <div class="dmenu-brand" onclick="alert('LDOCX Living Document Studio v2.4.0 (Enterprise Reactive 3D Edition)')">
+    <div class="dmenu-brand" onclick="showToast('LDOCX Living Document Studio v2.4.0 (Enterprise Reactive 3D Edition)', 'info')">
     <img src="ldoc_logo.png" alt="LDOC">
     <span>LDOC Studio</span>
   </div>
@@ -3204,7 +3208,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md')"><span>📄 Technical Specification (Markdown)</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="window.open('https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1')"><span>🌐 GitHub Repository</span></div>
-        <div class="dmenu-entry" onclick="alert('LDOCX Living Document Studio\nVersion 2.4.0 (Enterprise Reactive 3D Edition)\nBuilt with Three.js WebGL & Dynamic Tactile Physics')"><span>ℹ️ About LDOC Studio</span></div>
+        <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.4.0 (Enterprise Reactive 3D Edition)\nBuilt with Three.js WebGL & Dynamic Tactile Physics', 'info')"><span>ℹ️ About LDOC Studio</span></div>
       </div>
     </div>
   </div>
@@ -3255,7 +3259,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   <button class="toolbar-btn" id="open-btn" onclick="document.getElementById('file-input').click()">&#128194; Open .ldocx</button>
   <button class="toolbar-btn" id="ed-open-btn" onclick="document.getElementById('ed-file-input').click()" style="display:none">📂 Open</button>
   <input type="file" id="ed-file-input" accept=".ldocx,.ldoc" style="display:none" onchange="edOpenLdocxFile(event)">
-  <button class="toolbar-btn" id="save-btn" onclick="saveDoc()" style="display:none">&#128190; Save .ldocx</button>
+  <button class="toolbar-btn primary" id="save-btn" onclick="saveDoc()" style="display:inline-flex;align-items:center;gap:6px" title="Save / Export .ldocx package">&#128190; Save .ldocx</button>
   <button class="toolbar-btn" id="pages-toggle-btn" onclick="togglePagesPanel()" style="display:none">&#9776; Pages</button>
   <button class="toolbar-btn primary" id="build-btn" onclick="buildAndView()" style="display:none">&#9654; Build &amp; View</button>
   <button class="toolbar-btn" id="build-save-btn" onclick="buildAndSave()" style="display:none">&#128190; Build &amp; Save</button>
@@ -3295,7 +3299,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
         <span>Launch Web Studio in Browser</span>
       </a>
-      <div class="portal-cli-pill" onclick="navigator.clipboard.writeText('npm install @ldoc/sdk');alert('Copied to clipboard: npm install @ldoc/sdk')">
+      <div class="portal-cli-pill" onclick="navigator.clipboard.writeText('npm install @ldoc/sdk');showToast('Copied to clipboard: npm install @ldoc/sdk', 'ok')">
         <code>$ npm i @ldoc/sdk</code>
         <span class="copy-icon">📋</span>
       </div>
@@ -3422,7 +3426,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="os-title">macOS</div>
         <div class="os-version">v2.5.0 • Universal DMG</div>
         <div class="os-reqs">Apple Silicon (M1/M2/M3/M4) &amp; Intel</div>
-        <button class="portal-btn secondary" style="width:100%;margin-top:14px" onclick="alert('macOS DMG downloaded package starting...')">
+        <button class="portal-btn secondary" style="width:100%;margin-top:14px" onclick="showToast('macOS DMG downloaded package starting...', 'info')">
           <span>⬇ Download for macOS</span>
         </button>
         <div style="font-size:11px;color:#64748b;margin-top:8px">macOS Monterey 12.0+ or later</div>
@@ -3434,7 +3438,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="os-title">Linux</div>
         <div class="os-version">v2.5.0 • AppImage &amp; .deb</div>
         <div class="os-reqs">Ubuntu, Debian, Fedora, Arch</div>
-        <button class="portal-btn secondary" style="width:100%;margin-top:14px" onclick="alert('Linux AppImage download starting...')">
+        <button class="portal-btn secondary" style="width:100%;margin-top:14px" onclick="showToast('Linux AppImage download starting...', 'info')">
           <span>⬇ Download for Linux</span>
         </button>
         <div style="font-size:11px;color:#64748b;margin-top:8px">Standalone x86_64 AppImage</div>
@@ -3504,8 +3508,8 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
           <li style="display:flex;align-items:center;gap:8px"><span style="color:#10b981">✓</span> Canonical JSON Schema 2.5.0 Enforcement</li>
         </ul>
         <div style="display:flex;gap:10px">
-          <button class="portal-btn primary-glow" onclick="alert('NPM Package @ldoc/sdk v2.5.0 ready!')">Install via NPM</button>
-          <button class="portal-btn secondary" onclick="alert('Opening SPEC.md container documentation...')">View SPEC.md</button>
+          <button class="portal-btn primary-glow" onclick="showToast('NPM Package @ldoc/sdk v2.5.0 ready!', 'info')">Install via NPM</button>
+          <button class="portal-btn secondary" onclick="showToast('Opening SPEC.md container documentation...', 'info')">View SPEC.md</button>
         </div>
       </div>
 
@@ -3584,7 +3588,7 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
       <!-- Enterprise Team -->
       <div class="portal-price-card">
         <div class="price-tier-name">ENTERPRISE TEAM</div>
-        <div class="price-amount">$999 <span class="price-period">/ year</span></div>
+        <div class="price-amount">$99 <span class="price-period">/ month</span> <span style="font-size:13px;color:#34d399;font-weight:700">($999 / year)</span></div>
         <p class="price-desc">For organizations deploying living documents at enterprise scale.</p>
         <ul class="price-features">
           <li>✓ <strong>Everything in Pro Studio</strong></li>
@@ -4650,12 +4654,35 @@ function edToggleLivePreview() {
 
 // 10. Free Dynamic Text Tool
 function toggleFreeTextTool() {
-  window.__freeTextActive = !window.__freeTextActive;
-  const btn = document.getElementById('free-text-btn');
-  if (btn) {
-    btn.style.boxShadow = window.__freeTextActive ? '0 0 12px #38bdf8' : 'none';
+  if (typeof LDocEditorCore !== 'undefined') {
+    if (typeof edPages !== 'undefined' && edPages.length > 0) {
+      LDocEditorCore.state.pages = edPages;
+      const curIdx = typeof currentEdPageIndex !== 'undefined' ? currentEdPageIndex : 0;
+      LDocEditorCore.state.currentPageId = (edPages[curIdx] && edPages[curIdx].id) || edPages[0].id;
+    }
+    const ft = LDocEditorCore.addFreeText();
+    spawnAmbientText(ft.left, ft.top, ft.text);
+    return;
   }
-  showToast(window.__freeTextActive ? 'Free Text Tool: Click anywhere on slide to place text' : 'Free Text Tool: Deactivated');
+  spawnAmbientText(140, 160, 'Dynamic paper text note');
+}
+
+function spawnAmbientText(x, y, text = 'Dynamic text note...', ftObj = null, parent = null) {
+  const target = parent || document.getElementById('page-canvas') || document.getElementById('canvas-content') || document.querySelector('.slide-page') || document.getElementById('main') || document.body;
+  if (!target) return;
+  const ftId = (ftObj && ftObj.id) || ('ft-' + Math.random().toString(36).slice(2, 9));
+  const el = document.createElement('div');
+  el.id = ftId;
+  el.className = 'ldoc-ambient-text';
+  el.setAttribute('data-ft-id', ftId);
+  el.style.cssText = `position:absolute;left:${x}px;top:${y}px;color:#f8fafc;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;background:rgba(15,23,42,0.85);backdrop-filter:blur(8px);border:1px dashed #38bdf8;border-radius:6px;padding:6px 12px;z-index:999;cursor:move;box-shadow:0 8px 24px rgba(0,0,0,0.5);min-width:120px;`;
+  el.contentEditable = 'true';
+  el.textContent = text;
+  target.appendChild(el);
+  setTimeout(() => {
+    el.focus();
+  }, 50);
+  if (typeof showToast === 'function') showToast('✍️ Text note added! Type to edit in-place.', 'ok');
 }
 
 // 11. Interactive Block Handlers
@@ -4753,7 +4780,7 @@ function switchTab(tab){
   
   document.getElementById('open-btn').style.display=tab==='viewer'?'':'none';
   document.getElementById('ed-open-btn').style.display=tab==='editor'?'':'none';
-  document.getElementById('save-btn').style.display=(tab==='viewer'&&docId)?'':'none';
+  document.getElementById('save-btn').style.display='inline-flex';
   document.getElementById('build-btn').style.display=tab==='editor'?'':'none';
   document.getElementById('build-save-btn').style.display=tab==='editor'?'':'none';
   if(tab==='docs')refreshDocs();
@@ -6557,13 +6584,84 @@ async function renderDirectPresentation(manifest, extractedPages) {
   showRepairBanner(`✓ Living Document "${manifest.title}" successfully loaded!`, true);
 }
 
+function renderRecoveredPages(docData) {
+  const canvas = document.getElementById('page-canvas');
+  if (!canvas) return;
+  canvas.innerHTML = '';
+  const pages = docData.pages || [];
+  const pc = pages.length;
+
+  pages.forEach((item, idx) => {
+    const pageNum = item.num || (idx + 1);
+    const anchor = document.createElement('div');
+    anchor.id = `page-anchor-${pageNum}`;
+    anchor.dataset.pageNum = pageNum;
+    anchor.style.cssText = 'height:0;visibility:hidden';
+    canvas.appendChild(anchor);
+
+    const page = document.createElement('div');
+    page.className = 'pres-page' + (typeof is3DTiltActive !== 'undefined' && is3DTiltActive ? ' tilt-active' : '');
+    page.id = `pres-page-${pageNum}`;
+    page.dataset.pageNum = pageNum;
+
+    const paperLayer = document.createElement('div');
+    paperLayer.className = 'page-paper-layer';
+    page.appendChild(paperLayer);
+
+    const fxCanvas = document.createElement('canvas');
+    fxCanvas.className = 'page-fx-canvas';
+    page.appendChild(fxCanvas);
+
+    const contentLayer = document.createElement('div');
+    contentLayer.className = 'page-content-layer';
+
+    const header = document.createElement('div');
+    header.className = 'pres-page-header';
+    header.innerHTML = `<span>Page ${pageNum} of ${pc}</span> <span>${escapeHtml(item.title || ('Page ' + pageNum))}</span>`;
+    contentLayer.appendChild(header);
+
+    const blocks = item.blocks || (item.content && item.content.root && item.content.root.children) || [];
+    blocks.forEach(b => renderBlockNode(b, contentLayer));
+
+    page.appendChild(contentLayer);
+    canvas.appendChild(page);
+
+    setTimeout(() => {
+      if (typeof initPageEnvironmentalFx === 'function') initPageEnvironmentalFx(page, fxCanvas);
+    }, 40 * (idx + 1));
+  });
+
+  const titleEl = document.getElementById('doc-title');
+  if (titleEl) titleEl.textContent = docData.title || 'Living Document';
+}
+
 async function loadFile(file) {
   showLoading('Opening Living Document…');
   // 1. Primary: Direct In-Browser Client-Side Engine (0 Network Overhead, 100% Vercel & Offline Compatible)
   const ok = await loadLdocxFileDirect(file);
   if (ok) return;
 
-  // 2. Secondary: If direct parse fails, try server upload if available
+  // 2. Secondary: Client-Side Lenient Auto-Repair (Bug B4 Recovery)
+  if (typeof LDocParser !== 'undefined') {
+    try {
+      const { manifest, pages: recoveredPages, quarantinedCount } = await LDocParser.parseLdocxLenient(file);
+      if (recoveredPages && recoveredPages.length > 0) {
+        currentDoc = { title: manifest.title, theme: manifest.theme, pages: recoveredPages };
+        renderRecoveredPages(currentDoc);
+        showViewer();
+        if (quarantinedCount > 0) {
+          showRepairBanner(`✓ Recovered ${recoveredPages.length} pages (${quarantinedCount} corrupted blocks safely quarantined)`, false);
+        } else {
+          showRepairBanner(`✓ Document Auto-Healed! Loaded in Presentation Format.`, true);
+        }
+        return;
+      }
+    } catch (parserErr) {
+      console.warn('Lenient parser recovery deferred:', parserErr);
+    }
+  }
+
+  // 3. Tertiary: If direct parse fails, try server upload if available
   try {
     const bytes = await file.arrayBuffer();
     const up = await fetch(`${API}/documents`, {
@@ -6582,7 +6680,7 @@ async function loadFile(file) {
     console.warn('Server fallback upload error:', err);
   }
 
-  // 3. Tertiary: In-Studio Auto-Repair Reconstructor
+  // 4. Quaternary: In-Studio Auto-Repair Reconstructor
   try {
     showRepairBanner('Reconstructing Document Structure…', false);
     const recoveredId = await autoRepairAndRecoverLdocx(file);
@@ -6596,7 +6694,11 @@ async function loadFile(file) {
   }
 
   showDropZone();
-  alert('Could not open .ldocx file. Please ensure it is a valid living document package.');
+  if (typeof LDocToast !== 'undefined') {
+    LDocToast.show('Could not open .ldocx file. Please ensure it is a valid living document package.', 'err', 5000);
+  } else if (typeof showToast === 'function') {
+    showToast('Could not open .ldocx file. Please ensure it is a valid living document package.', 'err');
+  }
 }
 
 async function openDoc(id){
@@ -7450,10 +7552,10 @@ function renderBlockNode(node,parent){
             form.appendChild(ok);
             setTimeout(() => ok.remove(), 4000);
           } else {
-            alert('Submission notice: ' + ((j && j.error) || 'Submission processed!'));
+            showToast('Submission notice: ' + ((j && j.error) || 'Submission processed!'));
           }
         } catch (err) {
-          alert('Submission error: ' + err.message);
+          showToast('Submission error: ' + err.message, 'err');
         } finally {
           if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origText; }
         }
@@ -7528,7 +7630,7 @@ function renderBlockNode(node,parent){
           if (isUrl) {
             window.open(target, st.new_tab !== false ? '_blank' : '_self');
           } else {
-            alert('🔗 External Link: ' + (target || 'No target configured'));
+            showToast('🔗 External Link: ' + (target || 'No target configured'));
           }
         } else if(st.action==='navigate'){
           const idx=pages.findIndex(p=>p.number===currentPage);
@@ -7539,10 +7641,10 @@ function renderBlockNode(node,parent){
         } else if(st.action==='submit'){
           const form = btn.closest('form');
           if(form) form.requestSubmit();
-          else alert('✓ Action Executed Successfully');
+          else showToast('✓ Action Executed Successfully', 'ok');
         } else {
           if (isUrl) window.open(target, '_blank');
-          else alert('⚡ Action: ' + (node.value || 'Clicked'));
+          else showToast('⚡ Action: ' + (node.value || 'Clicked'));
         }
       };
       parent.appendChild(btn);break;
@@ -7602,7 +7704,7 @@ function renderBlockNode(node,parent){
       ];
       const btnText=(node.style&&node.style.button_text)||'⚡ PRE-ORDER NOW — $69.99';
       const checkoutUrl=(node.style&&node.style.checkout_url)||(node.style&&node.style.target)||'';
-      const onClickAction = checkoutUrl ? `window.open('${checkoutUrl}', '_blank')` : "alert('⚡ Pre-Order Registered! Founder Pass Added to Account.')";
+      const onClickAction = checkoutUrl ? `window.open('${checkoutUrl}', '_blank')` : "showToast('⚡ Pre-Order Registered! Founder Pass Added to Account.', 'ok')";
       card.innerHTML=`
         <div class="preorder-badge">${badge}</div>
         <div class="preorder-title">${title}</div>
@@ -7973,14 +8075,29 @@ function showViewer(){document.getElementById('drop-zone').style.display='none';
 function showDropZone(){document.getElementById('drop-zone').style.display='flex';document.getElementById('loading').style.display='none';document.getElementById('page-canvas').style.display='none';document.getElementById('pages-toggle-btn').style.display='none';document.getElementById('save-btn').style.display='none';}
 
 async function saveDoc(){
-  if(!docId)return;
+  if (typeof LDocEditorCore !== 'undefined') {
+    return await LDocEditorCore.saveActiveDocument();
+  }
   try{
-    const res=await fetch(`${API}/documents/${docId}/export`);
-    if(!res.ok)throw new Error('Export failed: '+res.status);
-    const blob=await res.blob();
-    const title=(document.getElementById('doc-title').textContent||'document').split('\u2014')[0].trim().replace(/[^a-z0-9_\-]/gi,'_')||'document';
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=title+'.ldocx';a.click();URL.revokeObjectURL(a.href);
-  }catch(e){alert('Save failed: '+e.message);}
+    if (docId) {
+      const res=await fetch(`${API}/documents/${docId}/export`);
+      if(res.ok) {
+        const blob=await res.blob();
+        const title=(document.getElementById('doc-title').textContent||'document').split('\u2014')[0].trim().replace(/[^a-z0-9_\-]/gi,'_')||'document';
+        const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=title+'.ldocx';a.click();URL.revokeObjectURL(a.href);
+        if (typeof showToast === 'function') showToast('Saved ' + title + '.ldocx', 'ok');
+        return;
+      }
+    }
+    if (typeof LDocParser !== 'undefined') {
+      const spec = (typeof currentDoc !== 'undefined' && currentDoc) || { title: 'Living Document', pages: typeof edPages !== 'undefined' ? edPages : [] };
+      const { blob, title } = await LDocParser.compileLdocxClientSide(spec);
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = (title || 'document') + '.ldocx'; a.click(); URL.revokeObjectURL(a.href);
+      if (typeof showToast === 'function') showToast('Saved ' + title + '.ldocx', 'ok');
+    }
+  }catch(e){
+    if (typeof showToast === 'function') showToast('Save failed: '+e.message, 'err');
+  }
 }
 
 (async()=>{
@@ -8090,15 +8207,16 @@ async function downloadDocById(id, title){
     a.download=(title||'document')+'.ldocx';
     a.click();
     URL.revokeObjectURL(a.href);
-  }catch(e){alert('Download failed: '+e.message);}
+  }catch(e){showToast('Download failed: '+e.message, 'err');}
 }
 
 async function openDocFromList(id){switchTab('viewer');await openDoc(id);}
 async function deleteDoc(id){
-  if(!confirm('Remove this document from studio?'))return;
-  await fetch(`${API}/documents/${id}`,{method:'DELETE'});
-  refreshDocs();
-  if(docId===id){docId=null;showDropZone();document.getElementById('doc-title').textContent='No document loaded';document.getElementById('validation-badge').style.display='none';}
+  LDocToast.confirm('Delete Document', 'Remove this document from studio?', async () => {
+    await fetch(`${API}/documents/${id}`,{method:'DELETE'});
+    refreshDocs();
+    if(docId===id){docId=null;showDropZone();document.getElementById('doc-title').textContent='No document loaded';document.getElementById('validation-badge').style.display='none';}
+  });
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
@@ -8573,7 +8691,7 @@ async function useTemplate(tplId, mode) {
     await loadLdocxFileDirect(blob);
     toast('✓ Living Document successfully forged and opened in Viewer!', 'ok');
   } catch (err) {
-    alert('Living Document Forging failed: ' + err.message);
+    showToast('Living Document Forging failed: ' + err.message, 'err');
   } finally {
     if (nextBtn) { nextBtn.textContent = 'Next Step →'; nextBtn.disabled = false; }
   }
@@ -8698,7 +8816,7 @@ function edShowEmpty() {
 
 function edAddBlock(type) {
   const page = edPages.find(p => p.id === edCurrentPage);
-  if (!page) { alert('Add a page first.'); return; }
+  if (!page) { showToast('Add a page first.'); return; }
   const b = { id: edBId(), type };
 
   if (type === 'heading') { b.level = 1; b.text = ''; }
@@ -8770,7 +8888,7 @@ async function edOpenLdocxFile(e) {
     if (!uj.id) throw new Error(uj.error || 'Upload failed');
     await edLoadFromDocId(uj.id);
   } catch (err) {
-    alert('Failed to load into Editor: ' + err.message);
+    showToast('Failed to load into Editor: ' + err.message, 'err');
   } finally {
     e.target.value = '';
   }
@@ -9117,7 +9235,7 @@ function edRenderBlocks() {
 }
 
 async function buildAndView() {
-  if (!edPages.length) { alert('Add at least one page.'); return; }
+  if (!edPages.length) { showToast('Add at least one page.'); return; }
   const btn = document.getElementById('build-view-btn');
   btn.textContent = 'Building...';
   btn.disabled = true;
@@ -9142,7 +9260,7 @@ async function buildAndView() {
       showRepairBanner(`✓ Built and opened "${title}" in Live Presentation!`, true);
     }
   } catch(err) {
-    alert('Build error: ' + err.message);
+    showToast('Build error: ' + err.message, 'err');
   } finally {
     btn.textContent = '▶ Build & View';
     btn.disabled = false;
@@ -9197,7 +9315,7 @@ async function compileLdocxClientSide(spec) {
 }
 
 async function buildAndSave() {
-  if (!edPages.length) { alert('Add at least one page.'); return; }
+  if (!edPages.length) { showToast('Add at least one page.'); return; }
   const btn = document.getElementById('build-save-btn');
   btn.textContent = 'Saving...';
   btn.disabled = true;
@@ -9228,7 +9346,7 @@ async function buildAndSave() {
       showRepairBanner(`✓ Saved & Downloaded "${safeTitle}.ldocx"!`, true);
     }
   } catch(err) {
-    alert('Save error: ' + err.message);
+    showToast('Save error: ' + err.message, 'err');
   } finally {
     btn.textContent = '💾 Build & Save';
     btn.disabled = false;
@@ -9979,7 +10097,7 @@ window.LDoc3DSceneEditor = {
     const box = new THREE.Mesh(geom, mat);
     box.position.set(Math.random() * 2 - 1, 0.5, Math.random() * 2 - 1);
     this.scene.add(box);
-    alert("Added primitive box mesh to 3D scene graph!");
+    showToast("Added primitive box mesh to 3D scene graph!", 'ok');
   },
 
   updateTransform() {
@@ -10006,7 +10124,7 @@ window.LDoc3DSceneEditor = {
   },
 
   saveToDocument() {
-    alert("3D Scene Graph saved to Document AST!");
+    showToast("3D Scene Graph saved to Document AST!", 'ok');
     window.LDocShell.close('three-scene-editor-shell');
   }
 };
@@ -10468,7 +10586,7 @@ window.LDoc3DPythonHub = {
       this.updatePythonCode(file.name);
       if (window.toast) window.toast(`✓ Ingested: ${mesh.vertices.length} vertices, ${mesh.faces.length} triangles`, 'ok');
     } catch (e) {
-      alert('3D Ingestion Error: ' + e.message);
+      showToast('3D Ingestion Error: ' + e.message, 'err');
     }
   },
 
@@ -10495,7 +10613,7 @@ window.LDoc3DPythonHub = {
   },
 
   insertToActiveDocument() {
-    if (!this.currentMesh) { alert('Please drop a 3D model first.'); return; }
+    if (!this.currentMesh) { showToast('Please drop a 3D model first.'); return; }
     // Insert into creator or current document AST
     if (typeof addBlock === 'function') {
       const b = {
@@ -10509,15 +10627,15 @@ window.LDoc3DPythonHub = {
         pages[activePageIdx].blocks.push(b);
         if (typeof renderBlocks === 'function') renderBlocks();
         if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
-        alert('3D Mesh inserted into Active Creator Page!');
+        showToast('3D Mesh inserted into Active Creator Page!');
       }
     } else {
-      alert('3D Mesh saved! You can also download the clean JSON mesh.');
+      showToast('3D Mesh saved! You can also download the clean JSON mesh.', 'ok');
     }
   },
 
   downloadMeshJson() {
-    if (!this.currentMesh) { alert('No active 3D model loaded.'); return; }
+    if (!this.currentMesh) { showToast('No active 3D model loaded.'); return; }
     const blob = new Blob([JSON.stringify(this.currentMesh, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -10642,7 +10760,7 @@ print(f"Generated LDOCX Mesh: {len(mesh['vertices'])} vertices, {len(mesh['faces
     const codeEl = document.getElementById('ml-python-code');
     if (codeEl) {
       navigator.clipboard.writeText(codeEl.innerText);
-      alert('Python pipeline code copied to clipboard!');
+      showToast('Python pipeline code copied to clipboard!');
     }
   }
 };
@@ -10939,7 +11057,7 @@ async function exportPdfCloud() {
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     if (typeof toast === 'function') toast('✓ Flattened High-Fidelity PDF downloaded!', 'ok');
   } catch (err) {
-    alert('Cloud PDF Export: ' + err.message);
+    showToast('Cloud PDF Export: ' + err.message);
   }
 }
 
@@ -10962,12 +11080,12 @@ async function optimize3dCloud() {
     const j = await res.json();
     if (j.ok) {
       if (typeof toast === 'function') toast(`✓ 3D Mesh Normalized: ${j.optimized_triangles} triangles (Draco Quantized 14-bit)`, 'ok');
-      else alert(`✓ 3D Mesh Normalized: ${j.optimized_triangles} triangles (<35,000 enforced)`);
+      else showToast(`✓ 3D Mesh Normalized: ${j.optimized_triangles} triangles (<35,000 enforced)`, 'ok');
     } else {
-      alert('Optimization failed: ' + (j.error || 'Unknown'));
+      showToast('Optimization failed: ' + (j.error || 'Unknown'), 'err');
     }
   } catch (err) {
-    alert('Cloud 3D Optimizer: ' + err.message);
+    showToast('Cloud 3D Optimizer: ' + err.message);
   }
 }
 
@@ -10975,7 +11093,7 @@ async function verifyPackageIntegrityCloud() {
   if (typeof toast === 'function') toast('🔒 Checking Cryptographic SHA-256 Package Signatures...', 'info');
   setTimeout(() => {
     if (typeof toast === 'function') toast('✓ Package Verified: SHA-256 Manifest Untampered & Authentic', 'ok');
-    else alert('✓ Package Verified: SHA-256 Manifest Untampered & Authentic');
+    else showToast('✓ Package Verified: SHA-256 Manifest Untampered & Authentic', 'ok');
   }, 400);
 }
 
@@ -11163,7 +11281,7 @@ function formatAstJson() {
     const parsed = JSON.parse(editor.value);
     editor.value = JSON.stringify(parsed, null, 2);
   } catch(err) {
-    alert('JSON Syntax Error: ' + err.message);
+    showToast('JSON Syntax Error: ' + err.message, 'err');
   }
 }
 
@@ -11190,7 +11308,7 @@ function applyAstJsonDirectly() {
     toggleAstInspector();
     if (typeof toast === 'function') toast('✓ Live AST Synchronized!', 'ok');
   } catch(err) {
-    alert('Invalid AST JSON: ' + err.message);
+    showToast('Invalid AST JSON: ' + err.message);
   }
 }
 
@@ -11314,7 +11432,7 @@ function executeReplaceAll() {
   if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
   if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
   executeFind(findTerm);
-  alert(`Replaced ${count} occurrences across document!`);
+  showToast(`Replaced ${count} occurrences across document!`, 'ok');
 }
 
 // ── 5. Right-Click IDE Context Menu ─────────────────────────────────────────
@@ -11853,64 +11971,17 @@ function updateHeaderAuthButton() {
 
 // ── CLOUD VAULT (MY DOCUMENTS) ──────────────────────────────────────────────
 async function showCloudVaultModal() {
-  const modal = document.getElementById('cloud-vault-modal');
-  if (!modal) return;
-  modal.classList.add('active');
-
-  const listEl = document.getElementById('cloud-vault-list');
-  listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8">Syncing with cloud database...</div>';
-
-  try {
-    const headers = {};
-    if (LDocAuth.getToken()) headers['Authorization'] = 'Bearer ' + LDocAuth.getToken();
-    const res = await fetch('/api/documents', { headers });
-    const docs = await res.json();
-
-    if (!Array.isArray(docs) || docs.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8">No documents yet. Click "New Cloud Document" to create one.</div>';
-      return;
-    }
-
-    listEl.innerHTML = docs.map(d => `
-      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-size:14px;font-weight:700;color:#fff">${escapeHtml(d.title)}</div>
-          <div style="font-size:11.5px;color:#94a3b8;margin-top:2px">ID: ${d.id} • Revision v${d.version || 1} • ${new Date(d.updated_at || Date.now()).toLocaleDateString()}</div>
-        </div>
-        <div style="display:flex;gap:6px">
-          <button class="ldoc-cloud-btn" style="padding:4px 10px;font-size:11.5px" onclick="loadCloudDocument('${d.id}')">✏️ Open</button>
-          <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="showVersionsModal('${d.id}')">↺ History</button>
-        </div>
-      </div>
-    `).join('');
-  } catch (err) {
-    listEl.innerHTML = '<div style="color:#f87171;padding:16px">Failed to load documents: ' + err.message + '</div>';
-  }
+  if (typeof LDocModals !== 'undefined') return LDocModals.showCloudVaultModal();
 }
 
 function closeCloudVaultModal() {
+  if (typeof LDocModals !== 'undefined') return LDocModals.closeCloudVaultModal();
   const modal = document.getElementById('cloud-vault-modal');
   if (modal) modal.classList.remove('active');
 }
 
 async function createNewCloudDoc() {
-  const title = prompt('Enter document title:', 'New Living Document');
-  if (!title) return;
-  try {
-    const headers = { 'Content-Type': 'application/json' };
-    if (LDocAuth.getToken()) headers['Authorization'] = 'Bearer ' + LDocAuth.getToken();
-    const res = await fetch('/api/documents', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ title, theme: 'dark_gold' })
-    });
-    const doc = await res.json();
-    currentActiveDocId = doc.id;
-    localStorage.setItem('ldoc_active_doc_id', doc.id);
-    showCloudVaultModal();
-  } catch (err) {
-    alert('Error creating cloud document: ' + err.message);
-  }
+  if (typeof LDocModals !== 'undefined') return LDocModals.createLocalDraft();
 }
 
 async function loadCloudDocument(docId) {
@@ -11930,64 +12001,37 @@ async function loadCloudDocument(docId) {
     }
     closeCloudVaultModal();
   } catch (err) {
-    alert('Error opening document: ' + err.message);
+    if (typeof showToast === 'function') showToast('Error opening document: ' + err.message, 'err');
   }
 }
 
 // ── VERSION HISTORY ─────────────────────────────────────────────────────────
 async function showVersionsModal(docId) {
-  docId = docId || currentActiveDocId;
-  const modal = document.getElementById('versions-modal');
-  if (!modal) return;
-  modal.classList.add('active');
-
-  const listEl = document.getElementById('versions-history-list');
-  listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">Fetching version snapshots...</div>';
-
-  try {
-    const res = await fetch(`/api/documents/${docId}/versions`);
-    const versions = await res.json();
-
-    if (!Array.isArray(versions) || versions.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">No past snapshots recorded yet.</div>';
-      return;
-    }
-
-    listEl.innerHTML = versions.map(v => `
-      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <span style="font-weight:700;color:#f59e0b;font-size:12.5px">v${v.version_num}</span>
-          <span style="color:#e2e8f0;font-size:12.5px;margin-left:8px">${escapeHtml(v.summary || 'Revision')}</span>
-          <div style="font-size:11px;color:#94a3b8;margin-top:2px">${new Date(v.created_at).toLocaleString()}</div>
-        </div>
-        <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="restoreSnapshot('${docId}', '${v.id}')">↺ Restore</button>
-      </div>
-    `).join('');
-  } catch (err) {
-    listEl.innerHTML = '<div style="color:#f87171;padding:16px">Failed to load versions: ' + err.message + '</div>';
-  }
+  if (typeof LDocModals !== 'undefined') return LDocModals.showVersionsModal(docId);
 }
 
 function closeVersionsModal() {
+  if (typeof LDocModals !== 'undefined') return LDocModals.closeVersionsModal();
   const modal = document.getElementById('versions-modal');
   if (modal) modal.classList.remove('active');
 }
 
 async function restoreSnapshot(docId, versionId) {
-  if (!confirm('Are you sure you want to restore this revision snapshot?')) return;
-  try {
-    const res = await fetch(`/api/documents/${docId}/restore`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ version_id: versionId })
-    });
-    const restored = await res.json();
-    alert('Document restored to revision successfully!');
-    closeVersionsModal();
-    loadCloudDocument(docId);
-  } catch (err) {
-    alert('Error restoring revision: ' + err.message);
-  }
+  LDocToast.confirm('Restore Revision', 'Are you sure you want to restore this revision snapshot?', async () => {
+    try {
+      const res = await fetch(`/api/documents/${docId}/restore`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ version_id: versionId })
+      });
+      const restored = await res.json();
+      showToast('Document restored to revision successfully!', 'ok');
+      closeVersionsModal();
+      loadCloudDocument(docId);
+    } catch (err) {
+      showToast('Error restoring revision: ' + err.message, 'err');
+    }
+  });
 }
 
 // ── SHARE MODAL ─────────────────────────────────────────────────────────────
@@ -12011,18 +12055,18 @@ function copyShareLink() {
   const inp = document.getElementById('share-link-input');
   inp.select();
   navigator.clipboard.writeText(inp.value);
-  alert('Share URL copied to clipboard!');
+  showToast('Share URL copied to clipboard!');
 }
 
 function copyEmbedCode() {
   const inp = document.getElementById('share-embed-input');
   inp.select();
   navigator.clipboard.writeText(inp.value);
-  alert('Iframe embed code copied to clipboard!');
+  showToast('Iframe embed code copied to clipboard!');
 }
 
-// ── STRIPE BILLING & PRICING MODAL ──────────────────────────────────────────
 function showBillingModal() {
+  if (typeof LDocModals !== 'undefined') return LDocModals.showBillingModal();
   const modal = document.getElementById('billing-modal');
   if (modal) modal.classList.add('active');
 }
@@ -12043,10 +12087,10 @@ async function initiateStripeCheckout(priceId) {
     if (session.checkout_url) {
       window.location.href = session.checkout_url;
     } else {
-      alert('Checkout session created: ' + (session.session_id || 'OK') + '\n(In Stripe test mode)');
+      showToast('Checkout session created: ' + (session.session_id || 'OK') + '\n(In Stripe test mode)');
     }
   } catch (err) {
-    alert('Billing error: ' + err.message);
+    showToast('Billing error: ' + err.message, 'err');
   }
 }
 
@@ -12117,7 +12161,7 @@ function renderProfileHub(user) {
         <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:6px">DEVELOPER SDK API KEY (@ldoc/sdk)</div>
         <div style="display:flex;gap:6px">
           <input type="text" class="ldoc-cloud-input" value="ldoc_live_94d59cef_d2540fcd6919" readonly style="font-family:monospace;font-size:11.5px">
-          <button class="ldoc-cloud-btn secondary" style="white-space:nowrap" onclick="navigator.clipboard.writeText('ldoc_live_94d59cef_d2540fcd6919');alert('Copied API Key to clipboard!')">📋 Copy</button>
+          <button class="ldoc-cloud-btn secondary" style="white-space:nowrap" onclick="navigator.clipboard.writeText('ldoc_live_94d59cef_d2540fcd6919');showToast('Copied API Key to clipboard!', 'ok')">📋 Copy</button>
         </div>
       </div>
       <div style="display:flex;gap:8px">
@@ -12179,7 +12223,7 @@ async function executeInstantFastCheckout(tier) {
         <div class="license-key-pill" id="generated-lic">${lic}</div>
         <div style="font-size:11.5px;color:#cbd5e1;margin-bottom:14px">Receipt &amp; digital certificate dispatched to <b>jayaramankalidasan@gmail.com</b></div>
         <div style="display:flex;gap:8px;justify-content:center">
-          <button class="ldoc-cloud-btn" onclick="navigator.clipboard.writeText('${lic}');alert('Copied license key!')">📋 Copy License</button>
+          <button class="ldoc-cloud-btn" onclick="navigator.clipboard.writeText('${lic}');showToast('Copied license key!', 'ok')">📋 Copy License</button>
           <button class="ldoc-cloud-btn secondary" onclick="closeBillingModal()">Start Creating</button>
         </div>
       </div>
@@ -12290,7 +12334,7 @@ async function handleLeadSubmit(e) {
       </div>
     `;
   } catch (err) {
-    alert('Lead error: ' + err.message);
+    showToast('Lead error: ' + err.message, 'err');
   } finally {
     btn.textContent = '🚀 Confirm VIP Reservation';
     btn.disabled = false;

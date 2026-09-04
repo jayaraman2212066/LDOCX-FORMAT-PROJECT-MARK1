@@ -3,6 +3,12 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/creator", "destination": "/creator.html" },
+    { "source": "/live-studio", "destination": "/live-studio.html" },
+    { "source": "/studio", "destination": "/studio.html" },
+    { "source": "/viewer", "destination": "/viewer.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

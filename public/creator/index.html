@@ -2949,7 +2949,7 @@ body.creator-split-50-50 #creator-preview-pane {
 <div id="desktop-menubar">
   <a href="/models" class="dmenu-brand" style="text-decoration:none;margin-right:4px">🏛️ Models Hub</a>
     <a href="/" class="dmenu-brand" style="text-decoration:none;margin-right:8px">🌐 Developer Portal</a>
-    <div class="dmenu-brand" onclick="alert('LDOCX Document Creator v2.4.0 (Enterprise Reactive 3D Edition)')">
+    <div class="dmenu-brand" onclick="toast('LDOCX Document Creator v2.4.0 (Enterprise Reactive 3D Edition)', 'info')">
     <img src="ldoc_logo.png" alt="LDOC">
     <span>LDOC Creator</span>
   </div>
@@ -3447,6 +3447,12 @@ body.creator-split-50-50 #creator-preview-pane {
 <div id="toast"></div>
 <input type="file" id="json-file-inp" accept=".json" style="display:none" onchange="onImportJSON(this)">
 
+<script src="jszip.min.js"></script>
+<script src="ldoc-config.js"></script>
+<script src="ldoc-toast.js"></script>
+<script src="ldoc-parser.js"></script>
+<script src="ldoc-editor-core.js"></script>
+<script src="ldoc-shared-modals.js"></script>
 <script>
 const isLocalServer = typeof window !== 'undefined' && 
   (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') && 
@@ -4793,20 +4799,33 @@ function enableCreatorInPlaceEditing(container) {
 }
 
 function toggleCreatorFreeTextTool() {
-  isCreatorFreeTextActive = !isCreatorFreeTextActive;
-  const btn = document.getElementById('creator-free-text-btn');
-  const body = document.getElementById('creator-preview-body');
-  if (btn) {
-    btn.style.background = isCreatorFreeTextActive ? 'linear-gradient(135deg,#38bdf8,#818cf8)' : '';
-    btn.style.color = isCreatorFreeTextActive ? '#090912' : '#38bdf8';
-    btn.textContent = isCreatorFreeTextActive ? '✍️ Click Slide to Place' : '✍️ Add Text';
+  const curPage = pages.find(p => p.id === currentPage) || pages[0];
+  if (!curPage) {
+    addPage();
   }
-  if (body) {
-    body.style.cursor = isCreatorFreeTextActive ? 'crosshair' : '';
+  const x = 120 + ((curPage && curPage.floating_texts ? curPage.floating_texts.length : 0) * 20) % 180;
+  const y = 140 + ((curPage && curPage.floating_texts ? curPage.floating_texts.length : 0) * 25) % 200;
+  spawnCreatorAmbientText(x, y, 'Dynamic text note...');
+  
+  // Register with shared undo/redo stack
+  if (typeof LDocEditorCore !== 'undefined') {
+    LDocEditorCore.state.pages = pages;
+    LDocEditorCore.state.currentPageId = currentPage;
+    LDocEditorCore.pushUndoSnapshot();
   }
-  if (isCreatorFreeTextActive) {
-    toast('Click inside the slide preview to place dynamic text!', 'ok');
-  }
+
+  // Auto focus the created element
+  setTimeout(() => {
+    const p = pages.find(pg => pg.id === currentPage) || pages[0];
+    if (p && p.floating_texts && p.floating_texts.length) {
+      const lastFt = p.floating_texts[p.floating_texts.length - 1];
+      const el = document.getElementById(lastFt.id);
+      if (el) {
+        el.contentEditable = 'true';
+        el.focus();
+      }
+    }
+  }, 50);
 }
 
 
@@ -4870,18 +4889,11 @@ async function handleCreatorFileInsert(files) {
   // 1. .ldocx / .ldoc Living Document Package
   if (['ldocx', 'ldoc', 'zip'].includes(ext)) {
     try {
-      showLoader('LDOC STUDIO', `Unzipping and loading ${file.name}...`);
-      if (typeof JSZip === 'undefined') throw new Error('JSZip library initializing...');
-      const zip = await JSZip.loadAsync(file);
-      const specFile = zip.file('spec.json') || zip.file('doc.json');
-      if (specFile) {
-        const specText = await specFile.async('text');
-        const spec = JSON.parse(specText);
-        loadSpec(spec);
-        toast(`✓ Loaded Living Document: ${spec.title || file.name}`, 'ok');
-        hideLoader();
-        return;
-      }
+      const { manifest, pages: recoveredPages } = await LDocParser.parseLdocxLenient(file);
+      loadSpec({ title: manifest.title, theme: manifest.theme, pages: recoveredPages });
+      toast(`✓ Loaded Living Document: ${manifest.title || file.name}`, 'ok');
+      hideLoader();
+      return;
     } catch(err) {
       hideLoader();
       toast('Could not open .ldocx: ' + err.message, 'err');
@@ -5204,69 +5216,6 @@ function deleteFt(ftId) {
   toast('Deleted text annotation', 'ok');
 }
 
-function spawnCreatorAmbientText(x, y, text = 'Click to write dynamic text...') {
-  const body = document.getElementById('creator-preview-body');
-  if (!body) return;
-
-  const textWrap = document.createElement('div');
-  textWrap.className = 'ldoc-ambient-text active' + (ft.locked ? ' locked' : '');
-  textWrap.style.left = `${Math.max(10, x - 80)}px`;
-  textWrap.style.top = `${Math.max(10, y - 30)}px`;
-
-  textWrap.innerHTML = `
-    <div class="ambient-text-hud">
-      <div class="hud-handle" title="Drag to move">⋮⋮</div>
-      <select class="hud-select" onchange="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.fontFamily = this.value">
-        <option value="'Dancing Script', cursive">✍️ Hand Script</option>
-        <option value="'Cinzel Decorative', serif">👑 Royal</option>
-        <option value="'Playfair Display', serif">📰 Editorial</option>
-        <option value="'Plus Jakarta Sans', sans-serif">⚡ Modern</option>
-        <option value="'JetBrains Mono', monospace">💻 Mono</option>
-      </select>
-      <select class="hud-select" onchange="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.fontSize = this.value">
-        <option value="16px">16px</option>
-        <option value="22px" selected>22px</option>
-        <option value="32px">32px</option>
-        <option value="44px">44px</option>
-      </select>
-      <div class="hud-colors">
-        <span class="hud-dot" style="background:#f59e0b" onclick="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.color = '#f59e0b'"></span>
-        <span class="hud-dot" style="background:#38bdf8" onclick="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.color = '#38bdf8'"></span>
-        <span class="hud-dot" style="background:#c084fc" onclick="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.color = '#c084fc'"></span>
-        <span class="hud-dot" style="background:#34d399" onclick="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.color = '#34d399'"></span>
-        <span class="hud-dot" style="background:#ffffff" onclick="this.closest('.ldoc-ambient-text').querySelector('.ambient-text-body').style.color = '#ffffff'"></span>
-      </div>
-      <button class="hud-btn hud-del" onclick="this.closest('.ldoc-ambient-text').remove()">✕</button>
-    </div>
-    <div class="ambient-text-body" contenteditable="true" spellcheck="false">${escapeHtml(text)}</div>
-  `;
-
-  // Draggable
-  let isDragging = false, startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
-  const handle = textWrap.querySelector('.hud-handle');
-  handle.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
-    initialLeft = textWrap.offsetLeft;
-    initialTop = textWrap.offsetTop;
-    e.stopPropagation();
-  });
-
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    textWrap.style.left = `${initialLeft + (e.clientX - startX)}px`;
-    textWrap.style.top = `${initialTop + (e.clientY - startY)}px`;
-  });
-
-  document.addEventListener('mouseup', () => { if (isDragging) isDragging = false; });
-
-  body.appendChild(textWrap);
-  setTimeout(() => {
-    const b = textWrap.querySelector('.ambient-text-body');
-    if (b) b.focus();
-  }, 50);
-}
 
 // Click and Double-click listeners on creator-preview-body
 document.addEventListener('DOMContentLoaded', () => {
@@ -7431,8 +7380,11 @@ async function buildDoc(){
 
 // ── 📦 Client-Side Zero-Server .ldocx Compiler (100% Vercel & Offline Compatible) ──
 async function compileLdocxClientSide(spec) {
-  if (typeof JSZip === 'undefined') {
-    throw new Error('JSZip library is initializing, please try again in a moment.');
+  if (typeof LDocParser !== 'undefined' && LDocParser.compileLdocxClientSide) {
+    return await LDocParser.compileLdocxClientSide(spec);
+  }
+  if (typeof JSZip === 'undefined' && typeof ensureJSZipReady === 'function') {
+    await ensureJSZipReady();
   }
   const zip = new JSZip();
 
@@ -7530,7 +7482,7 @@ function validateSpec(){
       if(!p.title.trim())issues.push(`Page ${i+1}: title is empty`);
       if(!p.blocks.length)issues.push(`Page ${i+1}: no blocks`);
     });
-    if(issues.length)toast('Issues: '+issues.join('; '),'err');
+    if(issues.length)toast('Issues: '+issues.join('; '), 'err');
     else toast(`✓ Spec looks good — ${spec.pages.length} pages, ${spec.pages.reduce((a,p)=>a+p.blocks.length,0)} blocks`,'ok');
   }finally{
     setTimeout(hideLoader, 400);
@@ -7584,15 +7536,16 @@ function onImportJSON(inp){
 }
 
 function clearAll(){
-  if(!confirm('Clear everything?'))return;
-  pages=[];pSeq=0;bSeq=0;currentPage=null;
-  renderPageList();showNoPage();updateStats();
-  document.getElementById('m-title').value='My Document';
-  document.getElementById('m-author').value='Author';
-  document.getElementById('m-subtitle').value='';
-  document.getElementById('m-desc').value='';
-  updateCreatorLivePreview();
-  toast('Cleared','ok');
+  LDocToast.confirm('Clear Document', 'Are you sure you want to clear everything and start fresh?', () => {
+    pages=[];pSeq=0;bSeq=0;currentPage=null;
+    renderPageList();showNoPage();updateStats();
+    document.getElementById('m-title').value='My Document';
+    document.getElementById('m-author').value='Author';
+    document.getElementById('m-subtitle').value='';
+    document.getElementById('m-desc').value='';
+    updateCreatorLivePreview();
+    toast('Cleared','ok');
+  });
 }
 
 // ── Templates ─────────────────────────────────────────────────────────────────
@@ -7735,8 +7688,20 @@ function renderTemplates(){
   const list=document.getElementById('template-list');list.innerHTML='';
   TEMPLATES.forEach(t=>{
     const card=document.createElement('div');card.className='tpl-card';
-    card.innerHTML=`<div class="tpl-name">${t.name}</div><div class="tpl-desc">${t.desc}</div><span class="tpl-badge ${t.badgeType}">${t.badge}</span>`;
-    card.onclick=()=>{if(pages.length&&!confirm('Load template? This will replace current content.'))return;clearAll();t.build();};
+    card.onclick=()=>{
+      const applyTpl = () => {
+        pages=[];pSeq=0;bSeq=0;currentPage=null;
+        renderPageList();showNoPage();updateStats();
+        t.build();
+        updateCreatorLivePreview();
+        toast('Loaded ' + t.name, 'ok');
+      };
+      if (pages.length) {
+        LDocToast.confirm('Load Template', 'Load template "' + t.name + '"? This will replace current content.', applyTpl);
+      } else {
+        applyTpl();
+      }
+    };
     list.appendChild(card);
   });
 }
@@ -8639,7 +8604,7 @@ window.LDoc3DSceneEditor = {
     const box = new THREE.Mesh(geom, mat);
     box.position.set(Math.random() * 2 - 1, 0.5, Math.random() * 2 - 1);
     this.scene.add(box);
-    alert("Added primitive box mesh to 3D scene graph!");
+    toast("Added primitive box mesh to 3D scene graph!", 'ok');
   },
 
   updateTransform() {
@@ -8666,7 +8631,7 @@ window.LDoc3DSceneEditor = {
   },
 
   saveToDocument() {
-    alert("3D Scene Graph saved to Document AST!");
+    toast("3D Scene Graph saved to Document AST!", 'ok');
     window.LDocShell.close('three-scene-editor-shell');
   }
 };
@@ -8970,7 +8935,7 @@ async function exportPdfCloud() {
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     if (typeof toast === 'function') toast('✓ Flattened High-Fidelity PDF downloaded!', 'ok');
   } catch (err) {
-    alert('Cloud PDF Export: ' + err.message);
+    toast('Cloud PDF Export: ' + err.message);
   }
 }
 
@@ -8993,12 +8958,12 @@ async function optimize3dCloud() {
     const j = await res.json();
     if (j.ok) {
       if (typeof toast === 'function') toast(`✓ 3D Mesh Normalized: ${j.optimized_triangles} triangles (Draco Quantized 14-bit)`, 'ok');
-      else alert(`✓ 3D Mesh Normalized: ${j.optimized_triangles} triangles (<35,000 enforced)`);
+      else toast(`✓ 3D Mesh Normalized: ${j.optimized_triangles} triangles (<35,000 enforced)`, 'ok');
     } else {
-      alert('Optimization failed: ' + (j.error || 'Unknown'));
+      toast('Optimization failed: ' + (j.error || 'Unknown'), 'err');
     }
   } catch (err) {
-    alert('Cloud 3D Optimizer: ' + err.message);
+    toast('Cloud 3D Optimizer: ' + err.message);
   }
 }
 
@@ -9006,7 +8971,7 @@ async function verifyPackageIntegrityCloud() {
   if (typeof toast === 'function') toast('🔒 Checking Cryptographic SHA-256 Package Signatures...', 'info');
   setTimeout(() => {
     if (typeof toast === 'function') toast('✓ Package Verified: SHA-256 Manifest Untampered & Authentic', 'ok');
-    else alert('✓ Package Verified: SHA-256 Manifest Untampered & Authentic');
+    else toast('✓ Package Verified: SHA-256 Manifest Untampered & Authentic', 'ok');
   }, 400);
 }
 
@@ -9194,7 +9159,7 @@ function formatAstJson() {
     const parsed = JSON.parse(editor.value);
     editor.value = JSON.stringify(parsed, null, 2);
   } catch(err) {
-    alert('JSON Syntax Error: ' + err.message);
+    toast('JSON Syntax Error: ' + err.message, 'err');
   }
 }
 
@@ -9221,7 +9186,7 @@ function applyAstJsonDirectly() {
     toggleAstInspector();
     if (typeof toast === 'function') toast('✓ Live AST Synchronized!', 'ok');
   } catch(err) {
-    alert('Invalid AST JSON: ' + err.message);
+    toast('Invalid AST JSON: ' + err.message);
   }
 }
 
@@ -9345,7 +9310,7 @@ function executeReplaceAll() {
   if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
   if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
   executeFind(findTerm);
-  alert(`Replaced ${count} occurrences across document!`);
+  toast(`Replaced ${count} occurrences across document!`, 'ok');
 }
 
 // ── 5. Right-Click IDE Context Menu ─────────────────────────────────────────
@@ -9884,64 +9849,17 @@ function updateHeaderAuthButton() {
 
 // ── CLOUD VAULT (MY DOCUMENTS) ──────────────────────────────────────────────
 async function showCloudVaultModal() {
-  const modal = document.getElementById('cloud-vault-modal');
-  if (!modal) return;
-  modal.classList.add('active');
-
-  const listEl = document.getElementById('cloud-vault-list');
-  listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8">Syncing with cloud database...</div>';
-
-  try {
-    const headers = {};
-    if (LDocAuth.getToken()) headers['Authorization'] = 'Bearer ' + LDocAuth.getToken();
-    const res = await fetch('/api/documents', { headers });
-    const docs = await res.json();
-
-    if (!Array.isArray(docs) || docs.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8">No documents yet. Click "New Cloud Document" to create one.</div>';
-      return;
-    }
-
-    listEl.innerHTML = docs.map(d => `
-      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-size:14px;font-weight:700;color:#fff">${escapeHtml(d.title)}</div>
-          <div style="font-size:11.5px;color:#94a3b8;margin-top:2px">ID: ${d.id} • Revision v${d.version || 1} • ${new Date(d.updated_at || Date.now()).toLocaleDateString()}</div>
-        </div>
-        <div style="display:flex;gap:6px">
-          <button class="ldoc-cloud-btn" style="padding:4px 10px;font-size:11.5px" onclick="loadCloudDocument('${d.id}')">✏️ Open</button>
-          <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="showVersionsModal('${d.id}')">↺ History</button>
-        </div>
-      </div>
-    `).join('');
-  } catch (err) {
-    listEl.innerHTML = '<div style="color:#f87171;padding:16px">Failed to load documents: ' + err.message + '</div>';
-  }
+  if (typeof LDocModals !== 'undefined') return LDocModals.showCloudVaultModal();
 }
 
 function closeCloudVaultModal() {
+  if (typeof LDocModals !== 'undefined') return LDocModals.closeCloudVaultModal();
   const modal = document.getElementById('cloud-vault-modal');
   if (modal) modal.classList.remove('active');
 }
 
 async function createNewCloudDoc() {
-  const title = prompt('Enter document title:', 'New Living Document');
-  if (!title) return;
-  try {
-    const headers = { 'Content-Type': 'application/json' };
-    if (LDocAuth.getToken()) headers['Authorization'] = 'Bearer ' + LDocAuth.getToken();
-    const res = await fetch('/api/documents', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ title, theme: 'dark_gold' })
-    });
-    const doc = await res.json();
-    currentActiveDocId = doc.id;
-    localStorage.setItem('ldoc_active_doc_id', doc.id);
-    showCloudVaultModal();
-  } catch (err) {
-    alert('Error creating cloud document: ' + err.message);
-  }
+  if (typeof LDocModals !== 'undefined') return LDocModals.createLocalDraft();
 }
 
 async function loadCloudDocument(docId) {
@@ -9956,69 +9874,28 @@ async function loadCloudDocument(docId) {
         if (typeof renderBlocks === 'function') renderBlocks();
         if (typeof renderPreview === 'function') renderPreview();
       }
-      const titleEl = document.getElementById('doc-title') || document.getElementById('top-title');
-      if (titleEl) titleEl.textContent = doc.title;
+      const titleEl = document.getElementById('top-title');
+      if (titleEl) titleEl.value = doc.title;
     }
     closeCloudVaultModal();
   } catch (err) {
-    alert('Error opening document: ' + err.message);
+    if (typeof toast === 'function') toast('Error opening document: ' + err.message, 'err');
   }
 }
 
 // ── VERSION HISTORY ─────────────────────────────────────────────────────────
 async function showVersionsModal(docId) {
-  docId = docId || currentActiveDocId;
-  const modal = document.getElementById('versions-modal');
-  if (!modal) return;
-  modal.classList.add('active');
-
-  const listEl = document.getElementById('versions-history-list');
-  listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">Fetching version snapshots...</div>';
-
-  try {
-    const res = await fetch(`/api/documents/${docId}/versions`);
-    const versions = await res.json();
-
-    if (!Array.isArray(versions) || versions.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">No past snapshots recorded yet.</div>';
-      return;
-    }
-
-    listEl.innerHTML = versions.map(v => `
-      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <span style="font-weight:700;color:#f59e0b;font-size:12.5px">v${v.version_num}</span>
-          <span style="color:#e2e8f0;font-size:12.5px;margin-left:8px">${escapeHtml(v.summary || 'Revision')}</span>
-          <div style="font-size:11px;color:#94a3b8;margin-top:2px">${new Date(v.created_at).toLocaleString()}</div>
-        </div>
-        <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="restoreSnapshot('${docId}', '${v.id}')">↺ Restore</button>
-      </div>
-    `).join('');
-  } catch (err) {
-    listEl.innerHTML = '<div style="color:#f87171;padding:16px">Failed to load versions: ' + err.message + '</div>';
-  }
+  if (typeof LDocModals !== 'undefined') return LDocModals.showVersionsModal(docId);
 }
 
 function closeVersionsModal() {
+  if (typeof LDocModals !== 'undefined') return LDocModals.closeVersionsModal();
   const modal = document.getElementById('versions-modal');
   if (modal) modal.classList.remove('active');
 }
 
 async function restoreSnapshot(docId, versionId) {
-  if (!confirm('Are you sure you want to restore this revision snapshot?')) return;
-  try {
-    const res = await fetch(`/api/documents/${docId}/restore`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ version_id: versionId })
-    });
-    const restored = await res.json();
-    alert('Document restored to revision successfully!');
-    closeVersionsModal();
-    loadCloudDocument(docId);
-  } catch (err) {
-    alert('Error restoring revision: ' + err.message);
-  }
+  if (typeof LDocModals !== 'undefined') return LDocModals.restoreSnapshot(1);
 }
 
 // ── SHARE MODAL ─────────────────────────────────────────────────────────────
@@ -10042,18 +9919,19 @@ function copyShareLink() {
   const inp = document.getElementById('share-link-input');
   inp.select();
   navigator.clipboard.writeText(inp.value);
-  alert('Share URL copied to clipboard!');
+  if (typeof toast === 'function') toast('Share URL copied to clipboard!', 'ok');
 }
 
 function copyEmbedCode() {
   const inp = document.getElementById('share-embed-input');
   inp.select();
   navigator.clipboard.writeText(inp.value);
-  alert('Iframe embed code copied to clipboard!');
+  if (typeof toast === 'function') toast('Iframe embed code copied to clipboard!', 'ok');
 }
 
 // ── STRIPE BILLING & PRICING MODAL ──────────────────────────────────────────
 function showBillingModal() {
+  if (typeof LDocModals !== 'undefined') return LDocModals.showBillingModal();
   const modal = document.getElementById('billing-modal');
   if (modal) modal.classList.add('active');
 }
@@ -10074,10 +9952,10 @@ async function initiateStripeCheckout(priceId) {
     if (session.checkout_url) {
       window.location.href = session.checkout_url;
     } else {
-      alert('Checkout session created: ' + (session.session_id || 'OK') + '\n(In Stripe test mode)');
+      toast('Checkout session created: ' + (session.session_id || 'OK') + '\n(In Stripe test mode)');
     }
   } catch (err) {
-    alert('Billing error: ' + err.message);
+    toast('Billing error: ' + err.message, 'err');
   }
 }
 
@@ -10148,7 +10026,7 @@ function renderProfileHub(user) {
         <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:6px">DEVELOPER SDK API KEY (@ldoc/sdk)</div>
         <div style="display:flex;gap:6px">
           <input type="text" class="ldoc-cloud-input" value="ldoc_live_94d59cef_d2540fcd6919" readonly style="font-family:monospace;font-size:11.5px">
-          <button class="ldoc-cloud-btn secondary" style="white-space:nowrap" onclick="navigator.clipboard.writeText('ldoc_live_94d59cef_d2540fcd6919');alert('Copied API Key to clipboard!')">📋 Copy</button>
+          <button class="ldoc-cloud-btn secondary" style="white-space:nowrap" onclick="navigator.clipboard.writeText('ldoc_live_94d59cef_d2540fcd6919');toast('Copied API Key to clipboard!', 'ok')">📋 Copy</button>
         </div>
       </div>
       <div style="display:flex;gap:8px">
@@ -10210,7 +10088,7 @@ async function executeInstantFastCheckout(tier) {
         <div class="license-key-pill" id="generated-lic">${lic}</div>
         <div style="font-size:11.5px;color:#cbd5e1;margin-bottom:14px">Receipt &amp; digital certificate dispatched to <b>jayaramankalidasan@gmail.com</b></div>
         <div style="display:flex;gap:8px;justify-content:center">
-          <button class="ldoc-cloud-btn" onclick="navigator.clipboard.writeText('${lic}');alert('Copied license key!')">📋 Copy License</button>
+          <button class="ldoc-cloud-btn" onclick="navigator.clipboard.writeText('${lic}');toast('Copied license key!', 'ok')">📋 Copy License</button>
           <button class="ldoc-cloud-btn secondary" onclick="closeBillingModal()">Start Creating</button>
         </div>
       </div>
@@ -10321,7 +10199,7 @@ async function handleLeadSubmit(e) {
       </div>
     `;
   } catch (err) {
-    alert('Lead error: ' + err.message);
+    toast('Lead error: ' + err.message, 'err');
   } finally {
     btn.textContent = '🚀 Confirm VIP Reservation';
     btn.disabled = false;
@@ -10475,7 +10353,7 @@ document.body.addEventListener('drop', async (e) => {
           if (typeof showToast === 'function') showToast(`🏎️ Ingested 3D Model: ${file.name}`, 'ok');
           return;
         }
-      } catch (err) { alert('3D parse error: ' + err.message); }
+      } catch (err) { toast('3D parse error: ' + err.message, 'err'); }
     }
 
     // Audio (.mp3, .wav, .ogg)
