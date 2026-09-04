@@ -1,4 +1,4 @@
-// LDOC-Viewer — Native Windows Free Reader Launcher
+// LDOC-Editor — Native Windows Living Document Editor & Universal Converter
 // Copyright (c) 2026 Jayaraman K. All Rights Reserved.
 // Licensed under Apache License, Version 2.0.
 
@@ -9,8 +9,8 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
-[assembly: AssemblyTitle("LDOC Free Viewer")]
-[assembly: AssemblyDescription("LDOC Free Living Document (.ldocx) Reader & Presentation Engine")]
+[assembly: AssemblyTitle("LDOC Editor & Converter")]
+[assembly: AssemblyDescription("LDOC Living Document (.ldocx) Visual Editor, Blueprint Studio & Universal Converter")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Jayaraman K")]
 [assembly: AssemblyProduct("LDOC Living Document Suite")]
@@ -20,7 +20,7 @@ using System.Windows.Forms;
 [assembly: AssemblyVersion("2.5.0.0")]
 [assembly: AssemblyFileVersion("2.5.0.0")]
 
-namespace LDOCViewer
+namespace LDOCEditor
 {
     static class Program
     {
@@ -31,33 +31,35 @@ namespace LDOCViewer
             {
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
                 
-                // Locate Viewer HTML
-                string viewerPath = Path.Combine(baseDir, "index.html");
-                if (!File.Exists(viewerPath))
+                // Locate Editor HTML:
+                // 1. Check local directory (when packaged inside packages/ldoc-editor or standalone folder)
+                string editorPath = Path.Combine(baseDir, "index.html");
+                if (!File.Exists(editorPath))
                 {
-                    viewerPath = Path.Combine(baseDir, "packages", "ldoc-viewer", "index.html");
+                    // 2. Check packages/ldoc-editor/index.html (when executed from repository root)
+                    editorPath = Path.Combine(baseDir, "packages", "ldoc-editor", "index.html");
                 }
-                if (!File.Exists(viewerPath))
+                if (!File.Exists(editorPath))
                 {
-                    viewerPath = Path.Combine(baseDir, "viewer.html");
+                    editorPath = Path.Combine(baseDir, "studio.html");
                 }
-                if (!File.Exists(viewerPath))
+                if (!File.Exists(editorPath))
                 {
-                    viewerPath = Path.Combine(baseDir, "live-studio.html");
+                    editorPath = Path.Combine(baseDir, "live-studio.html");
                 }
 
-                if (!File.Exists(viewerPath))
+                if (!File.Exists(editorPath))
                 {
                     MessageBox.Show(
-                        "Could not locate the LDOC Viewer HTML files.\nExpected: " + viewerPath,
-                        "LDOC Viewer — Error",
+                        "Could not locate the LDOC Editor HTML files.\nExpected: " + editorPath,
+                        "LDOC Editor — Error",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error
                     );
                     return;
                 }
 
-                string url = "file:///" + viewerPath.Replace('\\', '/');
+                string url = "file:///" + editorPath.Replace('\\', '/');
 
                 // If an .ldocx file was passed via drag-and-drop or command line
                 if (args.Length > 0 && !string.IsNullOrEmpty(args[0]))
@@ -88,7 +90,7 @@ namespace LDOCViewer
                     ProcessStartInfo psi = new ProcessStartInfo();
                     psi.FileName = edgePath;
                     psi.Arguments = string.Format(
-                        "--app=\"{0}\" --allow-file-access-from-files --enable-file-cookies --window-size=1380,900",
+                        "--app=\"{0}\" --allow-file-access-from-files --enable-file-cookies --window-size=1440,940",
                         url
                     );
                     psi.UseShellExecute = false;
@@ -103,8 +105,8 @@ namespace LDOCViewer
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "Error launching LDOC Viewer:\n" + ex.Message,
-                    "LDOC Viewer",
+                    "Error launching LDOC Editor:\n" + ex.Message,
+                    "LDOC Editor",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );

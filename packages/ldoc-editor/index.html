@@ -11,7 +11,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>LDOC Living Studio — Freemium IDE</title>
+<title>LDOC Living Document Editor &amp; Universal Converter</title>
 <link rel="icon" type="image/png" href="ldoc_logo.png">
 <link rel="shortcut icon" href="app.ico">
 <link rel="apple-touch-icon" href="ldoc_logo.png">
@@ -3627,96 +3627,72 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 
 <!-- Native Desktop Menu Bar (Antigravity Style) -->
 <div id="desktop-menubar">
-  <a href="/models" class="dmenu-brand" style="text-decoration:none;margin-right:4px">🏛️ Models Hub</a>
-    <a href="/" class="dmenu-brand" style="text-decoration:none;margin-right:8px">🌐 Portal</a>
-    <div class="dmenu-brand" onclick="showToast('LDOCX Living Document Studio v2.4.0 (Enterprise Reactive 3D Edition)', 'info')">
+  <div class="dmenu-brand" onclick="showToast('LDOC Living Document Editor &amp; Converter v2.5.0', 'info')">
     <img src="ldoc_logo.png" alt="LDOC">
-    <span>LDOC Studio</span>
+    <span>LDOC Editor &amp; Converter</span>
   </div>
   <div class="dmenu-items">
     <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
       <div class="dmenu-btn">File ▾</div>
       <div class="dmenu-dropdown">
-        <div class="dmenu-entry" onclick="location.href='creator.html'"><span>📄 New Document (+Creator)</span><span class="hotkey">Ctrl+N</span></div>
-        <div class="dmenu-entry" onclick="document.getElementById('file-input').click()"><span>📂 Open .ldocx File...</span><span class="hotkey">Ctrl+O</span></div>
-        <div class="dmenu-entry" onclick="saveDoc()"><span>💾 Save / Export .ldocx</span><div class="dmenu-entry" onclick="showCloudVaultModal()"><span>🌟 Cloud Documents Vault</span></div><div class="dmenu-entry" onclick="showVersionsModal()"><span>↺ Version History &amp; Restore</span></div><div class="dmenu-entry" onclick="showShareModal()"><span>🔗 Share Living Document</span></div><span class="hotkey">Ctrl+S</span></div>
+        <div class="dmenu-entry" onclick="if(typeof edPages!=='undefined'){edPages=[];edAddPage();switchTab('editor');}"><span>📄 New Living Document</span><span class="hotkey">Ctrl+N</span></div>
+        <div class="dmenu-entry" onclick="document.getElementById('ed-file-input').click()"><span>📂 Open .ldocx File...</span><span class="hotkey">Ctrl+O</span></div>
+        <div class="dmenu-entry" onclick="saveDoc()"><span>💾 Save / Export .ldocx</span><span class="hotkey">Ctrl+S</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="location.href='creator.html'"><span>🎨 Open Visual Creator</span><span class="hotkey">Ctrl+Shift+C</span></div>
         <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Universal Document Converter</span></div>
-        <div class="dmenu-entry" onclick="switchTab('templates')"><span>🌟 Template Gallery</span></div>
+        <div class="dmenu-entry" onclick="switchTab('templates')"><span>🌟 Blueprint Vault &amp; Templates</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.pdf')"><span>📕 Architecture &amp; Security Spec (PDF)</span></div>
-        <div class="dmenu-entry" onclick="window.close()"><span>✕ Exit Studio</span><span class="hotkey">Alt+F4</span></div>
+        <div class="dmenu-entry" onclick="location.reload()"><span>🔄 Reload Window</span><span class="hotkey">Ctrl+R</span></div>
+        <div class="dmenu-entry" onclick="window.close()"><span>✕ Exit Editor</span><span class="hotkey">Alt+F4</span></div>
       </div>
     </div>
 
     <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
       <div class="dmenu-btn">Edit ▾</div>
       <div class="dmenu-dropdown">
-        <div class="dmenu-entry" onclick="toggleFreeTextTool()"><span>✍️ Add In-Canvas Free Text</span><span class="hotkey">Ctrl+T</span></div>
         <div class="dmenu-entry" onclick="switchTab('editor')"><span>🛠️ Open In-Place Block Editor</span></div>
+        <div class="dmenu-entry" onclick="toggleFreeTextTool()"><span>✍️ Add In-Canvas Free Text</span><span class="hotkey">Ctrl+T</span></div>
+        <div class="dmenu-entry" onclick="if(typeof edAddPage==='function'){edAddPage();switchTab('editor');}"><span>➕ Add New Section / Slide</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="prevSlide()"><span>◀ Previous Slide</span><span class="hotkey">Left</span></div>
-        <div class="dmenu-entry" onclick="nextSlide()"><span>▶ Next Slide</span><span class="hotkey">Right</span></div>
-        <div class="dmenu-divider"></div>
-        <div class="dmenu-section-hdr">Universal Suite v2.5.0</div>
+        <div class="dmenu-section-hdr">Integrated Creative Studios</div>
         <div class="dmenu-entry" onclick="LDocAnnotate.toggleToolbar()"><span>🖋️ PDF / Annotation Toolbar</span><span class="hotkey">Ctrl+Shift+A</span></div>
-        <div class="dmenu-entry" onclick="LDocPhotoStudio.openForImage(document.querySelector('img'))"><span>🎨 Photo Studio (Photoshop)</span><span class="hotkey">Ctrl+Shift+P</span></div>
-        <div class="dmenu-entry" onclick="LDoc3DSceneEditor.openForModel()"><span>🎮 3D Scene Editor (Unity-Style)</span><span class="hotkey">Ctrl+Shift+3</span></div>
+        <div class="dmenu-entry" onclick="LDocPhotoStudio.openForImage(document.querySelector('img'))"><span>🎨 Photo Studio (Photoshop-Style)</span><span class="hotkey">Ctrl+Shift+P</span></div>
+        <div class="dmenu-entry" onclick="LDoc3DSceneEditor.openForModel()"><span>🎮 3D Scene Editor (Spatial)</span><span class="hotkey">Ctrl+Shift+3</span></div>
+      </div>
+    </div>
+
+    <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
+      <div class="dmenu-btn">Convert ▾</div>
+      <div class="dmenu-dropdown">
+        <div class="dmenu-section-hdr">Universal Format Ingestion</div>
+        <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Open Converter Studio</span></div>
+        <div class="dmenu-entry" onclick="switchTab('converter');document.getElementById('conv-file-input').click()"><span>📂 Convert Markdown / TXT / DOCX / PDF...</span></div>
+        <div class="dmenu-divider"></div>
+        <div class="dmenu-entry" onclick="switchTab('converter')"><span>🏎️ Convert 3D Models (GLB/OBJ/STL)</span></div>
+        <div class="dmenu-entry" onclick="switchTab('converter')"><span>🎵 Convert Audio / Soundtracks</span></div>
       </div>
     </div>
 
     <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
       <div class="dmenu-btn">View ▾</div>
       <div class="dmenu-dropdown">
-        <div class="dmenu-section-hdr">Presentation Artifact Modes</div>
-        <div class="dmenu-entry" onclick="setPresentationMode('paper')"><span>📜 Enchanted Tactile Paper</span></div>
-        <div class="dmenu-entry" onclick="setPresentationMode('glass')"><span>💎 Frosted Glass Cards</span></div>
-        <div class="dmenu-entry" onclick="setPresentationMode('deck')"><span>🎬 Keynote Slide Deck</span></div>
-        <div class="dmenu-entry" onclick="setPresentationMode('gazette')"><span>📰 Living Editorial Gazette</span></div>
+        <div class="dmenu-entry" onclick="switchTab('editor')"><span>✏️ Block Editor Mode</span></div>
+        <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Document Converter</span></div>
+        <div class="dmenu-entry" onclick="switchTab('templates')"><span>🌟 Blueprint Vault</span></div>
+        <div class="dmenu-entry" onclick="switchTab('viewer')"><span>👁️ Reading &amp; Presentation Preview</span></div>
         <div class="dmenu-divider"></div>
+        <div class="dmenu-entry" onclick="togglePagesPanel()"><span>📑 Pages Overview Panel</span><span class="hotkey">Ctrl+P</span></div>
         <div class="dmenu-entry" onclick="toggle3DPerspectiveTilt()"><span>📐 Toggle 3D Perspective Tilt</span><span class="hotkey">Ctrl+M</span></div>
-        <div class="dmenu-entry" onclick="toggleLivingMotion()"><span>🪄 Toggle Living Animations</span></div>
         <div class="dmenu-entry" onclick="if(document.fullscreenElement){document.exitFullscreen()}else{document.documentElement.requestFullscreen()}"><span>⛶ Toggle Fullscreen</span><span class="hotkey">F11</span></div>
-      </div>
-    </div>
-
-    <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
-      <div class="dmenu-btn">FX &amp; Magic ▾</div>
-      <div class="dmenu-dropdown">
-        <div class="dmenu-section-hdr">Dynamic Canvas Visuals</div>
-        <div class="dmenu-entry" onclick="setVisualFx('water')"><span>🌊 Fluid Water Waves</span></div>
-        <div class="dmenu-entry" onclick="setVisualFx('stardust')"><span>✨ Cyber Stardust</span></div>
-        <div class="dmenu-entry" onclick="setVisualFx('warp')"><span>🏎️ Hyperspace Warp</span></div>
-        <div class="dmenu-entry" onclick="setVisualFx('embers')"><span>⚡ Golden Magick Embers</span></div>
-        <div class="dmenu-entry" onclick="setVisualFx('shards')"><span>💎 Crystal Diamond Shards</span></div>
-        <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="toggleFxWizard()"><span>⚜ Living Enhancement Wizard</span><span class="hotkey">Ctrl+W</span></div>
-        <div class="dmenu-entry" onclick="GlobalAudio.toggle()"><span>🎵 Atmospheric Soundtrack</span><span class="hotkey">Ctrl+Shift+M</span></div>
-      </div>
-    </div>
-
-    <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
-      <div class="dmenu-btn">Window ▾</div>
-      <div class="dmenu-dropdown">
-        <div class="dmenu-entry" onclick="location.reload()"><span>🔄 Reload Window</span><span class="hotkey">Ctrl+R</span></div>
-        <div class="dmenu-entry" onclick="toggleAiHelper()"><span>🧠 AI Document Copilot</span><span class="hotkey">Ctrl+Shift+H</span></div>
-        <div class="dmenu-entry" onclick="togglePagesPanel()"><span>📑 Pages Overview Panel</span></div>
       </div>
     </div>
 
     <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
       <div class="dmenu-btn">Help ▾</div>
       <div class="dmenu-dropdown">
-        <div class="dmenu-entry" onclick="toggleHelpDrawer()"><span>📖 Help &amp; Guides Drawer</span><span class="hotkey">F1</span></div>
+        <div class="dmenu-entry" onclick="toggleHelpDrawer()"><span>📖 Editor &amp; Converter Guide</span><span class="hotkey">F1</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="window.open('LDOCX_ARCHITECTURE_AND_SECURITY_GUIDE.pdf', '_blank')"><span>🛡️ Architecture &amp; Security Guide (PDF)</span></div>
-        <div class="dmenu-entry" onclick="window.open('LDOCX_TECHNICAL_SPECIFICATION.pdf', '_blank')"><span>⚙️ Technical Specification v2.5 (PDF)</span></div>
-        <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md', '_blank')"><span>📄 Technical Specification (Markdown)</span></div>
-        <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="window.open('https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1', '_blank')"><span>🌐 GitHub Repository</span></div>
-        <div class="dmenu-entry" onclick="showLegalSecurityModal()"><span>🛡️ Legal, Security &amp; License (Apache-2.0)</span></div>
-        <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.5.0 (Enterprise Reactive 3D Edition)\nCopyright © 2026 Jayaraman K. Apache-2.0 License', 'info')"><span>ℹ️ About LDOC Studio</span></div>
+        <div class="dmenu-entry" onclick="showToast('LDOC Living Document Editor &amp; Converter\nVersion 2.5.0 (Enterprise Reactive 3D Edition)\nFreemium Desktop Suite', 'info')"><span>ℹ️ About LDOC Editor</span></div>
       </div>
     </div>
   </div>
@@ -3724,24 +3700,30 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 
 
 <div id="toolbar">
-  <div style="display:inline-flex;align-items:center;gap:9px;margin-right:6px">
+  <div style="display:inline-flex;align-items:center;gap:9px;margin-right:8px">
     <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 12px rgba(245,158,11,.45)">
-    <span class="logo">LDOC</span>
+    <span class="logo">LDOC EDITOR</span>
   </div>
-  <button class="tab-btn active" id="tab-viewer" onclick="switchTab('viewer')">Viewer</button>
-  <button class="tab-btn" id="tab-editor" onclick="switchTab('editor')">✏️ Editor</button>
+  <button class="tab-btn active" id="tab-editor" onclick="switchTab('editor')">✏️ Editor</button>
   <button class="tab-btn" id="tab-converter" onclick="switchTab('converter')">⚡ Convert</button>
   <button class="tab-btn" id="tab-templates" onclick="switchTab('templates')">🌟 Vault</button>
-  <button class="tab-btn" id="tab-docs" onclick="switchTab('docs')">Documents</button>
-  <a href="creator.html" style="background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.3);color:var(--accent);font-size:13px;font-weight:600;padding:5px 14px;border-radius:8px;text-decoration:none;margin-left:4px">+ Creator</a>
-  <button class="toolbar-btn" style="border-color:rgba(16,185,129,0.4);color:#34d399;gap:5px;font-size:11px" onclick="showLegalSecurityModal()" title="Apache 2.0 Licensed & Copyright © 2026 Jayaraman K">🛡️ Apache-2.0</button>
+  <button class="tab-btn" id="tab-viewer" onclick="switchTab('viewer')">👁️ Preview</button>
 
-  <span class="doc-title" id="doc-title">No document loaded</span>
+  <button class="toolbar-btn" id="ed-open-btn" onclick="document.getElementById('ed-file-input').click()" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--gold);font-weight:700">📂 Open</button>
+  <input type="file" id="ed-file-input" accept=".ldocx,.ldoc" style="display:none" onchange="edOpenLdocxFile(event)">
+  <input type="file" id="file-input" accept=".ldocx,.ldoc" style="display:none">
+  
+  <button class="toolbar-btn primary" id="save-btn" onclick="saveDoc()" style="display:inline-flex;align-items:center;gap:6px" title="Save / Export .ldocx package">💾 Save .ldocx</button>
+  <button class="toolbar-btn primary" id="build-btn" onclick="buildAndView()" style="background:linear-gradient(135deg,rgba(16,185,129,.3),rgba(5,150,105,.4));border-color:#10b981;color:#a7f3d0;font-weight:700">▶ Build &amp; View</button>
+  <button class="toolbar-btn" id="build-save-btn" onclick="buildAndSave()" style="display:none">&#128190; Build &amp; Save</button>
+  <button class="toolbar-btn" id="pages-toggle-btn" onclick="togglePagesPanel()">📑 Pages</button>
+
+  <span class="doc-title" id="doc-title" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">No document loaded</span>
   <span id="validation-badge"></span>
   
   <!-- Visual FX Enhancer Dropdown -->
   <div class="fx-dropdown-wrap" style="position:relative;display:inline-flex;align-items:center">
-    <button class="toolbar-btn" id="fx-menu-btn" onclick="toggleFxMenu(event)" title="Visual Power Enhancers (Particles, Water Waves, Warp)">✨ FX: <span id="current-fx-name">Water Waves</span> ▾</button>
+    <button class="toolbar-btn" id="fx-menu-btn" onclick="toggleFxMenu(event)" title="Visual Power Enhancers">✨ FX ▾</button>
     <div id="fx-dropdown-menu" style="display:none;position:absolute;top:100%;right:0;margin-top:6px;background:rgba(18,18,30,.98);backdrop-filter:blur(16px);border:1.5px solid var(--gold);border-radius:12px;padding:8px;min-width:210px;z-index:9999;box-shadow:0 12px 36px rgba(0,0,0,.85)">
       <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:var(--gold);padding:4px 8px;letter-spacing:1px">Dynamic Background FX</div>
       <div class="fx-option active" onclick="setVisualFx('water', this)">🌊 Fluid Water Waves</div>
@@ -3750,26 +3732,14 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
       <div class="fx-option" onclick="setVisualFx('embers', this)">⚡ Golden Magick Embers</div>
       <div class="fx-option" onclick="setVisualFx('shards', this)">💎 Crystal Diamond Shards</div>
       <div class="fx-option" onclick="setVisualFx('none', this)">🚫 Off (Minimalist)</div>
-      <div style="border-top:1px solid rgba(255,255,255,.08);margin:6px 0"></div>
-      <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:var(--gold);padding:4px 8px;letter-spacing:1px">Living Perspective &amp; Controls</div>
-      <div class="fx-option" onclick="toggle3DPerspectiveTilt()"><span id="fx-tilt-status">📐 3D Page Tilt: ON</span></div>
-      <div class="fx-option" onclick="toggleFxWizard(); const m=document.getElementById('fx-dropdown-menu'); if(m) m.style.display='none';" style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);margin-top:4px"><span style="color:#fef08a;font-weight:700">🌊 Open Water Waves Drawer ➔</span></div>
     </div>
   </div>
 
-  <button class="toolbar-btn" id="fx-wizard-toggle-btn" onclick="toggleFxWizard()" style="background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(124,58,237,.25));border-color:var(--gold);color:#fef08a;font-weight:700" title="Open Living Document Enhancement Wizard (Side Landscape)">⚜ FX Wizard</button>
-  <button class="toolbar-btn" id="motion-toggle-btn" onclick="toggleLivingMotion()" title="Toggle Living Animations & Auto-Rotation">&#x1FA84; Motion: ON</button>
-  <button class="toolbar-btn" id="open-btn" onclick="document.getElementById('file-input').click()">&#128194; Open .ldocx</button>
-  <button class="toolbar-btn" id="ed-open-btn" onclick="document.getElementById('ed-file-input').click()" style="display:none">📂 Open</button>
-  <input type="file" id="ed-file-input" accept=".ldocx,.ldoc" style="display:none" onchange="edOpenLdocxFile(event)">
-  <button class="toolbar-btn primary" id="save-btn" onclick="saveDoc()" style="display:inline-flex;align-items:center;gap:6px" title="Save / Export .ldocx package">&#128190; Save .ldocx</button>
-  <button class="toolbar-btn" id="pages-toggle-btn" onclick="togglePagesPanel()" style="display:none">&#9776; Pages</button>
-  <button class="toolbar-btn primary" id="build-btn" onclick="buildAndView()" style="display:none">&#9654; Build &amp; View</button>
-  <button class="toolbar-btn" id="build-save-btn" onclick="buildAndSave()" style="display:none">&#128190; Build &amp; Save</button>
-  <input type="file" id="file-input" accept=".ldocx,.ldoc">
+  <button class="toolbar-btn" onclick="if(document.fullscreenElement){document.exitFullscreen()}else{document.documentElement.requestFullscreen()}" title="Toggle Fullscreen Mode (F11)">⛶ Fullscreen</button>
+  <!-- Compatibility placeholders -->
+  <button id="open-btn" style="display:none"></button>
+  <button id="tab-docs" style="display:none"></button>
 </div>
-
-  <button class="toolbar-btn primary" id="ai-helper-toggle" onclick="toggleAiHelper()"><img src="ai-brain.png" alt="AI Brain" style="width:18px;height:18px;object-fit:contain;border-radius:4px" /> AI Helper</button>
 
 <div id="main">
   
@@ -18683,5 +18653,13 @@ function closeLegalSecurityModal() {
 console.log('%c🛡️ LDOCX Living Document Studio v2.5.0\\n%cCopyright (c) 2026 Jayaraman K. All Rights Reserved.\\nLicensed under Apache-2.0 with Patent Retaliation Protection.\\nTrademarks "LDOC", "LDOCX", "Living Document" are protected.', 'color:#f59e0b;font-weight:bold;font-size:13px;line-height:1.5', 'color:#94a3b8;font-size:11px;');
 </script>
 
+<script>
+// Auto-activate Editor tab on start
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    if (typeof switchTab === 'function') switchTab('editor');
+  }, 100);
+});
+</script>
 </body>
 </html>

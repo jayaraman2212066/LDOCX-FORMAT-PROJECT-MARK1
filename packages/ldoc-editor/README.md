@@ -19,7 +19,7 @@
 ---
 
 ## Desktop Usage (Windows)
-Run `LDOC-Studio.exe` or open `index.html` in any modern browser.
+Run `LDOC-Editor.exe` (Standalone Editor & Universal Converter) or open `index.html` in any modern browser.
 
 ---
 

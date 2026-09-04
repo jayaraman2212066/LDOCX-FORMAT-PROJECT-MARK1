@@ -1,4 +1,4 @@
-# Create Desktop Shortcuts for LDOC Viewer and LDOC Studio
+# Create Desktop Shortcuts for LDOC Suite
 # Copyright (c) 2026 Jayaraman K. Apache-2.0 License.
 
 $ErrorActionPreference = "Stop"
@@ -21,15 +21,28 @@ try {
         Write-Host "✅ Created shortcut: LDOC Free Viewer on Desktop" -ForegroundColor Green
     }
 
-    # 2. LDOC Studio Shortcut
+    # 2. LDOC Editor & Converter Shortcut
+    $editorExe = Join-Path $scriptDir "LDOC-Editor.exe"
+    $editorIco = Join-Path $scriptDir "ldoc_editor.ico"
+    if (Test-Path $editorExe) {
+        $eShortcut = $ws.CreateShortcut((Join-Path $desktop "LDOC Editor & Converter.lnk"))
+        $eShortcut.TargetPath = $editorExe
+        $eShortcut.WorkingDirectory = $scriptDir
+        $eShortcut.IconLocation = "$editorIco,0"
+        $eShortcut.Description = "Launch LDOC Editor & Universal Converter (.ldocx)"
+        $eShortcut.Save()
+        Write-Host "✅ Created shortcut: LDOC Editor & Converter on Desktop" -ForegroundColor Green
+    }
+
+    # 3. LDOC Living Studio Shortcut
     $studioExe = Join-Path $scriptDir "LDOC-Studio.exe"
-    $studioIco = Join-Path $scriptDir "ldoc_editor.ico"
+    $studioIco = Join-Path $scriptDir "app.ico"
     if (Test-Path $studioExe) {
         $sShortcut = $ws.CreateShortcut((Join-Path $desktop "LDOC Living Studio.lnk"))
         $sShortcut.TargetPath = $studioExe
         $sShortcut.WorkingDirectory = $scriptDir
         $sShortcut.IconLocation = "$studioIco,0"
-        $sShortcut.Description = "Launch LDOC Living Document Studio IDE (Freemium)"
+        $sShortcut.Description = "Launch LDOC Living Document Studio (Fullstack Suite)"
         $sShortcut.Save()
         Write-Host "✅ Created shortcut: LDOC Living Studio on Desktop" -ForegroundColor Green
     }
