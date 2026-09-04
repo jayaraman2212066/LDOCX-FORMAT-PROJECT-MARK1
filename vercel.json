@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "framework": null,
-  "buildCommand": null,
   "cleanUrls": true,
   "trailingSlash": false,
   "outputDirectory": "public",
@@ -34,7 +32,7 @@
       ]
     },
     {
-      "source": "/(.*\\.(?:ldocx|3mf|stl|obj|glb))",
+      "source": "/:match*\\.(ldocx|3mf|stl|obj|glb)",
       "headers": [
         {
           "key": "Content-Type",

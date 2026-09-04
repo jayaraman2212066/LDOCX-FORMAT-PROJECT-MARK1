@@ -792,13 +792,20 @@ body::before{
 
 /* ── ⚜ Living Document Enhancement Wizard (Side Landscape Drawer) ────────── */
 #fx-wizard-sidebar{
-  position:fixed;top:52px;right:0;bottom:0;width:0;overflow:hidden;
+  position:fixed;top:52px;right:0;bottom:0;width:clamp(360px,32vw,440px);overflow:hidden;
   background:rgba(12,12,22,.98);backdrop-filter:blur(24px);
   border-left:1.5px solid var(--accent);z-index:999;
-  transition:width .32s cubic-bezier(.16,1,.3,1);
+  transform:translateX(105%);
+  visibility:hidden;
+  pointer-events:none;
+  transition:transform .32s cubic-bezier(.16,1,.3,1), visibility .32s, width .32s cubic-bezier(.16,1,.3,1);
   display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.85);
 }
-#fx-wizard-sidebar.open{width:clamp(360px,32vw,440px)}
+#fx-wizard-sidebar.open{
+  transform:translateX(0);
+  visibility:visible;
+  pointer-events:auto;
+}
 #fx-wizard-sidebar.open.landscape-wide{width:clamp(520px,46vw,720px)}
 .fx-wiz-header{
   padding:14px 20px;border-bottom:1px solid var(--border);flex-shrink:0;
@@ -4702,9 +4709,10 @@ function toggleCreatorFreeTextTool() {
   if (!curPage) {
     addPage();
   }
-  const x = 120 + ((curPage && curPage.floating_texts ? curPage.floating_texts.length : 0) * 20) % 180;
-  const y = 140 + ((curPage && curPage.floating_texts ? curPage.floating_texts.length : 0) * 25) % 200;
-  spawnCreatorAmbientText(x, y, 'Dynamic text note...');
+  const count = curPage && curPage.floating_texts ? curPage.floating_texts.length : 0;
+  const x = 140 + (count * 20) % 180;
+  const y = 160 + (count * 25) % 200;
+  spawnCreatorAmbientText(x, y, 'Click to write dynamic text...');
   
   // Register with shared undo/redo stack
   if (typeof LDocEditorCore !== 'undefined') {
@@ -4712,24 +4720,9 @@ function toggleCreatorFreeTextTool() {
     LDocEditorCore.state.currentPageId = currentPage;
     LDocEditorCore.pushUndoSnapshot();
   }
-
-  // Auto focus the created element
-  setTimeout(() => {
-    const p = pages.find(pg => pg.id === currentPage) || pages[0];
-    if (p && p.floating_texts && p.floating_texts.length) {
-      const lastFt = p.floating_texts[p.floating_texts.length - 1];
-      const el = document.getElementById(lastFt.id);
-      if (el) {
-        el.contentEditable = 'true';
-        el.focus();
-      }
-    }
-  }, 50);
 }
 
-
-
-// ── ✍️ Reliable Click / Double-Click to Add Free Text Anywhere on Slide ──
+// ── ✍️ Reliable Click to Add Free Text Anywhere on Slide ──
 function attachCreatorSlideFreeTextListener(slide) {
   if (!slide || slide._ftListenerAttached) return;
   slide._ftListenerAttached = true;
@@ -4741,17 +4734,8 @@ function attachCreatorSlideFreeTextListener(slide) {
     const rect = slide.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
+    isCreatorFreeTextActive = false;
     spawnCreatorAmbientText(x, y, 'Click to write dynamic text...');
-    toggleCreatorFreeTextTool(); // Deactivate tool after placement
-  });
-
-  // Double-click anywhere on the slide automatically adds text at that spot!
-  slide.addEventListener('dblclick', (e) => {
-    if (e.target.closest('.ldoc-ambient-text') || e.target.closest('button') || e.target.closest('input')) return;
-    const rect = slide.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    spawnCreatorAmbientText(x, y, 'Dynamic paper text note');
   });
 }
 
@@ -4775,7 +4759,28 @@ function spawnCreatorAmbientText(x, y, text = 'Click to write dynamic text...') 
 
   renderCreatorFloatingTexts();
   scheduleAutoSave();
-  toast('✍️ Text placed! Double-click anytime to edit in-place.', 'ok');
+
+  // Focus and activate the newly placed text note
+  setTimeout(() => {
+    const wrap = document.querySelector(`[data-ft-id="${ftId}"]`);
+    if (wrap) {
+      document.querySelectorAll('.ldoc-ambient-text.active').forEach(el => el.classList.remove('active'));
+      wrap.classList.add('active');
+      const bodyEl = wrap.querySelector('.ambient-text-body');
+      if (bodyEl) {
+        bodyEl.focus();
+        try {
+          const range = document.createRange();
+          range.selectNodeContents(bodyEl);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        } catch(_) {}
+      }
+    }
+  }, 40);
+
+  toast('✍️ Text placed! Click outside when finished.', 'ok');
 }
 
 
@@ -4941,7 +4946,7 @@ function renderCreatorFloatingTexts() {
 
   curPage.floating_texts.forEach(ft => {
     const textWrap = document.createElement('div');
-    textWrap.className = 'ldoc-ambient-text active' + (ft.locked ? ' locked' : '');
+    textWrap.className = 'ldoc-ambient-text' + (ft.locked ? ' locked' : '') + (ft.saved ? ' saved' : '');
     textWrap.dataset.ftId = ft.id;
     textWrap.style.left = `${ft.left}px`;
     textWrap.style.top = `${ft.top}px`;
@@ -4974,14 +4979,30 @@ function renderCreatorFloatingTexts() {
         <button class="hud-btn hud-lock" style="background:${ft.locked ? '#f59e0b' : 'rgba(255,255,255,0.1)'};color:${ft.locked ? '#000' : '#fff'};font-weight:700;padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer;border:none" onclick="lockFtPlacement('${ft.id}')" title="Lock/Unlock text placement on slide">${ft.locked ? '🔒 Locked' : '📌 Lock'}</button>
         <button class="hud-btn hud-del" onclick="deleteFt('${ft.id}')" title="Remove annotation">✕</button>
       </div>
-      <div class="ambient-text-body" contenteditable="true" spellcheck="false" 
+      <div class="ambient-text-body" contenteditable="${!ft.locked}" spellcheck="false" 
            style="font-family:${ft.font};font-size:${ft.size};color:${ft.color};outline:none;min-width:60px">
         ${escapeHtml(ft.text)}
       </div>
     `;
 
-    // Live typing sync
+    // Click/focus activation
+    textWrap.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.ldoc-ambient-text.active').forEach(el => {
+        if (el !== textWrap) el.classList.remove('active');
+      });
+      textWrap.classList.add('active');
+    });
+
     const bodyEl = textWrap.querySelector('.ambient-text-body');
+    bodyEl.addEventListener('focus', () => {
+      document.querySelectorAll('.ldoc-ambient-text.active').forEach(el => {
+        if (el !== textWrap) el.classList.remove('active');
+      });
+      textWrap.classList.add('active');
+    });
+
+    // Live typing sync
     bodyEl.oninput = () => {
       ft.text = bodyEl.innerText;
       scheduleAutoSave();
@@ -5103,6 +5124,8 @@ function updateFtProp(ftId, prop, val) {
     ft[prop] = val;
     renderCreatorFloatingTexts();
     scheduleAutoSave();
+    const wrap = document.querySelector(`[data-ft-id="${ftId}"]`);
+    if (wrap) wrap.classList.add('active');
   }
 }
 
@@ -5116,7 +5139,7 @@ function deleteFt(ftId) {
 }
 
 
-// Click and Double-click listeners on creator-preview-body
+// Click listeners & outside-click HUD dismissal on creator-preview-body
 document.addEventListener('DOMContentLoaded', () => {
   const body = document.getElementById('creator-preview-body');
   if (!body) return;
@@ -5125,15 +5148,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isCreatorFreeTextActive) return;
     if (e.target.closest('.ldoc-ambient-text') || e.target.closest('.ambient-text-hud')) return;
     const r = body.getBoundingClientRect();
+    isCreatorFreeTextActive = false;
     spawnCreatorAmbientText(e.clientX - r.left + body.scrollLeft, e.clientY - r.top + body.scrollTop);
-    toggleCreatorFreeTextTool();
   });
+});
 
-  body.addEventListener('dblclick', (e) => {
-    if (e.target.closest('.ldoc-ambient-text') || e.target.closest('.ambient-text-hud')) return;
-    const r = body.getBoundingClientRect();
-    spawnCreatorAmbientText(e.clientX - r.left + body.scrollLeft, e.clientY - r.top + body.scrollTop);
-  });
+// Dismiss ambient text toolbar HUD when clicking anywhere outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.ldoc-ambient-text') && !e.target.closest('.ambient-text-hud') && !e.target.closest('#creator-free-text-btn')) {
+    document.querySelectorAll('.ldoc-ambient-text.active').forEach(el => el.classList.remove('active'));
+  }
 });
 
 
@@ -6550,6 +6574,11 @@ function restoreAutoSavedWorkspace() {
     if (saved) {
       const spec = JSON.parse(saved);
       if (spec && spec.pages && spec.pages.length > 0) {
+        spec.pages.forEach(p => {
+          if (p.floating_texts) {
+            p.floating_texts = p.floating_texts.filter(ft => ft && ft.text && ft.text.trim() !== '' && ft.text !== 'Click to write dynamic text...');
+          }
+        });
         loadSpec(spec);
         toast('✓ Restored your auto-saved workspace!', 'ok');
         updateAutoSaveIndicator(true);
@@ -7561,7 +7590,8 @@ function loadSpec(spec){
   if(spec.title)document.getElementById('m-title').value=spec.title;
   pages=[];pSeq=0;bSeq=0;currentPage=null;
   (spec.pages||[]).forEach(sp=>{
-    const p={id:pid(),title:sp.title||'Page',blocks:[]};
+    const validFts = (sp.floating_texts || []).filter(ft => ft && ft.text && ft.text.trim() !== '' && ft.text !== 'Click to write dynamic text...');
+    const p={id:pid(),title:sp.title||'Page',blocks:[],floating_texts:validFts};
     (sp.blocks||[]).forEach(sb=>{
       const b={id:bid(),...sb};
       if(sb.type==='web_image'){b.src=sb.style?.src||sb.src||'';b.alt=sb.style?.alt||sb.alt||sb.value||'';}
