@@ -12,6 +12,14 @@ scratch/
 test_*.js
 *.log
 
+# Non-web sources (Rust crates, specs, backend)
+source/
+specs/
+backend/
+tauri.conf.json
+Cargo.toml
+Cargo.lock
+
 # Editor configs
 .vscode
 .idea
