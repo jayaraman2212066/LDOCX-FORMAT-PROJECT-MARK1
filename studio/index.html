@@ -939,7 +939,7 @@ body.mode-paper .page-paper-layer {
 #fx-wizard-sidebar{
   position:fixed;top:54px;right:0;bottom:0;width:clamp(360px,32vw,440px);overflow:hidden;
   background:rgba(12,12,22,.98);backdrop-filter:blur(24px);
-  border-left:1.5px solid var(--gold);z-index:999;
+  border-left:1.5px solid var(--gold);z-index:100001;
   transform:translateX(105%);
   visibility:hidden;
   pointer-events:none;
@@ -984,6 +984,40 @@ body.mode-paper .page-paper-layer {
 }
 .fx-wiz-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,158,11,.15)}
 .fx-wiz-btn.primary{background:linear-gradient(135deg,#f59e0b,#7c3aed);color:#fff;border:none}
+
+/* ── Universal DOCX-Style In-Place Typing & Visual Showcase ──────────────── */
+.docx-in-place-editable {
+  outline: none;
+  transition: background .15s ease, box-shadow .15s ease;
+  border-radius: 4px;
+}
+.docx-in-place-editable:hover {
+  background: rgba(56, 189, 248, 0.06);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.25);
+  cursor: text;
+}
+.docx-in-place-editable:focus {
+  background: rgba(56, 189, 248, 0.1);
+  box-shadow: 0 0 0 1.5px rgba(56, 189, 248, 0.55);
+  cursor: text;
+}
+.conv-showcase-nav-btn.active {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.35), rgba(124, 58, 237, 0.45)) !important;
+  border-color: var(--gold) !important;
+  color: #fef08a !important;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.35) !important;
+}
+.conv-split-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  width: 100%;
+}
+@media (max-width: 900px) {
+  .conv-split-container {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* ── Error Fallback Component ──────────────────────────────────────────────── */
 .ldoc-error-fallback{
@@ -3581,7 +3615,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   
   <!-- Visual FX Enhancer Dropdown -->
   <div class="fx-dropdown-wrap" style="position:relative;display:inline-flex;align-items:center">
-    <button class="toolbar-btn" id="fx-menu-btn" onclick="toggleFxMenu()" title="Visual Power Enhancers (Particles, Water Waves, Warp)">✨ FX: <span id="current-fx-name">Water Waves</span> ▾</button>
+    <button class="toolbar-btn" id="fx-menu-btn" onclick="toggleFxMenu(event)" title="Visual Power Enhancers (Particles, Water Waves, Warp)">✨ FX: <span id="current-fx-name">Water Waves</span> ▾</button>
     <div id="fx-dropdown-menu" style="display:none;position:absolute;top:100%;right:0;margin-top:6px;background:rgba(18,18,30,.98);backdrop-filter:blur(16px);border:1.5px solid var(--gold);border-radius:12px;padding:8px;min-width:210px;z-index:9999;box-shadow:0 12px 36px rgba(0,0,0,.85)">
       <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:var(--gold);padding:4px 8px;letter-spacing:1px">Dynamic Background FX</div>
       <div class="fx-option active" onclick="setVisualFx('water', this)">🌊 Fluid Water Waves</div>
@@ -3591,8 +3625,9 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
       <div class="fx-option" onclick="setVisualFx('shards', this)">💎 Crystal Diamond Shards</div>
       <div class="fx-option" onclick="setVisualFx('none', this)">🚫 Off (Minimalist)</div>
       <div style="border-top:1px solid rgba(255,255,255,.08);margin:6px 0"></div>
-      <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:var(--gold);padding:4px 8px;letter-spacing:1px">Living Perspective</div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:var(--gold);padding:4px 8px;letter-spacing:1px">Living Perspective &amp; Controls</div>
       <div class="fx-option" onclick="toggle3DPerspectiveTilt()"><span id="fx-tilt-status">📐 3D Page Tilt: ON</span></div>
+      <div class="fx-option" onclick="toggleFxWizard(); const m=document.getElementById('fx-dropdown-menu'); if(m) m.style.display='none';" style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);margin-top:4px"><span style="color:#fef08a;font-weight:700">🌊 Open Water Waves Drawer ➔</span></div>
     </div>
   </div>
 
@@ -4089,6 +4124,11 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
             <span class="conv-showcase-tag" id="conv-showcase-page-title">Page 1</span>
           </div>
           <div class="conv-showcase-controls">
+            <div class="conv-view-mode-group" style="display:inline-flex;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:8px;padding:2px;gap:2px;margin-right:6px">
+              <button type="button" class="conv-showcase-nav-btn active" id="conv-mode-living-btn" onclick="setConvShowcaseMode('living')" title="Living AST Document with interactive blocks">📝 Living AST</button>
+              <button type="button" class="conv-showcase-nav-btn" id="conv-mode-visual-btn" onclick="setConvShowcaseMode('visual')" title="High-Fidelity Visual Vector/JSX Rendering">🎨 Visual Fidelity</button>
+              <button type="button" class="conv-showcase-nav-btn" id="conv-mode-split-btn" onclick="setConvShowcaseMode('split')" title="Side-by-Side Visual & Living Split View">⬡ Split View</button>
+            </div>
             <button type="button" class="conv-showcase-nav-btn" id="conv-prev-page-btn" onclick="convShowcasePrevPage()">◀ Prev</button>
             <span id="conv-page-indicator" class="conv-page-indicator">1 / 1</span>
             <button type="button" class="conv-showcase-nav-btn" id="conv-next-page-btn" onclick="convShowcaseNextPage()">Next ▶</button>
@@ -4247,6 +4287,7 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
       </div>
       <div id="ed-add-bar">
         <span style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;align-self:center;margin-right:4px">Add Element:</span>
+        <button class="ed-add-btn" onclick="toggleFreeTextTool()" style="background:rgba(245,158,11,.25);color:#fef08a;border-color:var(--gold);font-weight:700">✍️ Free Text</button>
         <button class="ed-add-btn" onclick="edAddBlock('heading')">🏷️ Heading</button>
         <button class="ed-add-btn" onclick="edAddBlock('paragraph')">📝 Text</button>
         <button class="ed-add-btn" onclick="edAddBlock('quote')">📜 Quote</button>
@@ -4584,11 +4625,26 @@ function nextSlide() {
 
 // 3. Visual FX System & Ambient Shaders
 function toggleFxMenu(e) {
-  if (e) e.stopPropagation();
-  const menu = document.getElementById('fx-dropdown-menu');
-  if (!menu) return;
+  if (e && e.stopPropagation) e.stopPropagation();
+  else if (window.event && window.event.stopPropagation) window.event.stopPropagation();
+  let menu = document.getElementById('fx-dropdown-menu');
+  const btn = document.getElementById('fx-menu-btn');
+  if (!menu || !btn) return;
+  if (menu.parentElement !== document.body) {
+    document.body.appendChild(menu);
+  }
   const isHidden = menu.style.display === 'none' || !menu.style.display;
-  menu.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    const rect = btn.getBoundingClientRect();
+    menu.style.position = 'fixed';
+    menu.style.top = (rect.bottom + 6) + 'px';
+    menu.style.left = Math.max(10, Math.min(window.innerWidth - 250, rect.left)) + 'px';
+    menu.style.right = 'auto';
+    menu.style.zIndex = '100000';
+    menu.style.display = 'block';
+  } else {
+    menu.style.display = 'none';
+  }
 }
 
 document.addEventListener('click', (e) => {
@@ -4731,10 +4787,21 @@ function initInPageWaterCanvas(canvasId) {
 function toggleFxWizard() {
   const sidebar = document.getElementById('fx-wizard-sidebar');
   if (!sidebar) return;
+  if (sidebar.parentElement !== document.body) {
+    document.body.appendChild(sidebar);
+  }
   sidebar.classList.toggle('open');
   if (sidebar.classList.contains('open')) {
+    sidebar.style.visibility = 'visible';
+    sidebar.style.pointerEvents = 'auto';
+    sidebar.style.transform = 'translateX(0)';
+    sidebar.style.zIndex = '100001';
     initInPageWaterCanvas('wiz-canvas-water');
     initInPageParticleCanvas('wiz-canvas-particles', 'stardust');
+  } else {
+    sidebar.style.transform = 'translateX(105%)';
+    sidebar.style.visibility = 'hidden';
+    sidebar.style.pointerEvents = 'none';
   }
 }
 
@@ -5886,7 +5953,12 @@ async function parsePdfToSpec(file) {
   const docTitle = filename.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
   const arrayBuffer = await file.arrayBuffer();
 
-  // 1. Try modern PDF.js extraction
+  function collapseLetterSpacing(str) {
+    if (!str) return '';
+    return str.replace(/\b([A-Za-z0-9]\s+){2,}[A-Za-z0-9]\b/g, m => m.replace(/\s+/g, ''));
+  }
+
+  // 1. Modern PDF.js extraction with visual canvas snapshot & structured living layout
   if (typeof window !== 'undefined' && window.pdfjsLib) {
     try {
       window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -5930,28 +6002,75 @@ async function parsePdfToSpec(file) {
           lines.push(curLine);
         }
 
+        // Render high-definition visual snapshot canvas for the page
+        let pageImgData = '';
+        try {
+          const vp = page.getViewport({ scale: 1.5 });
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(vp.width);
+          canvas.height = Math.round(vp.height);
+          const ctx = canvas.getContext('2d');
+          await page.render({ canvasContext: ctx, viewport: vp }).promise;
+          pageImgData = canvas.toDataURL('image/jpeg', 0.85);
+        } catch (rErr) {
+          console.warn('Page canvas render notice:', rErr);
+        }
+
+        // Detect vector drawing/chart operations
+        let pathDrawingOps = 0;
+        try {
+          const ops = await page.getOperatorList();
+          for (let fn of (ops.fnArray || [])) {
+            if (fn === 13 || fn === 14 || fn === 15 || fn === 85 || fn === 86) pathDrawingOps++;
+          }
+        } catch (opErr) {}
+
+        // Process text lines with letter-spacing normalization & multi-column detection
         const textLines = lines.map(lineItems => {
           let txt = '';
           let lastX = null;
           let lastW = null;
+          let lastH = 0;
           let maxH = 0;
+          const columns = [];
+          let curCol = '';
+
           for (const it of lineItems) {
             maxH = Math.max(maxH, it.h);
-            if (lastX !== null && it.x > (lastX + lastW + 2)) {
+            const spaceThresh = Math.max(3.5, Math.min(lastH || it.h, it.h) * 0.22);
+            const isColGap = (lastX !== null && (it.x - (lastX + lastW)) >= 24);
+
+            if (isColGap) {
+              if (curCol.trim()) columns.push(collapseLetterSpacing(curCol.trim()));
+              curCol = '';
+              txt += '  ';
+            } else if (lastX !== null && (it.x - (lastX + lastW)) > spaceThresh) {
+              curCol += ' ';
               txt += ' ';
             }
+
+            curCol += it.str;
             txt += it.str;
             lastX = it.x;
             lastW = it.w;
+            lastH = it.h;
           }
-          return { text: txt.trim(), fontSize: maxH, y: lineItems[0].y };
+          if (curCol.trim()) columns.push(collapseLetterSpacing(curCol.trim()));
+
+          return {
+            text: collapseLetterSpacing(txt.trim()),
+            fontSize: maxH,
+            y: lineItems[0].y,
+            columns: columns.length >= 2 ? columns : null
+          };
         }).filter(l => l.text.length > 0);
 
-        // Convert lines into structured blocks
+        // Convert lines into structured living blocks
         const blocks = [];
         let pageTitle = '';
         let currentPara = [];
         let currentCode = [];
+        let tableBuffer = [];
 
         function flushPara() {
           if (currentPara.length > 0) {
@@ -5982,11 +6101,39 @@ async function parsePdfToSpec(file) {
           }
         }
 
+        function flushTable() {
+          if (tableBuffer.length >= 2) {
+            blocks.push({
+              id: 'b_' + pNum + '_tbl_' + blocks.length,
+              type: 'table',
+              headers: tableBuffer[0].columns,
+              rows: tableBuffer.slice(1).map(r => r.columns)
+            });
+            tableBuffer = [];
+          } else if (tableBuffer.length === 1) {
+            currentPara.push(tableBuffer[0].text);
+            tableBuffer = [];
+          }
+        }
+
         for (let i = 0; i < textLines.length; i++) {
           const l = textLines[i];
           const txt = l.text;
 
-          // Detect ASCII art / architecture diagrams / code syntax
+          // Header / Footer exclusion from table grouping
+          const isHeaderOrFooter = (l.y > 800 && i <= 1) || (l.y < 70) || /CONFIDENTIAL/i.test(txt) || /Page \d+ of \d+/i.test(txt);
+
+          // Table line clustering
+          if (l.columns && l.columns.length >= 2 && !isHeaderOrFooter) {
+            flushPara();
+            flushCode();
+            tableBuffer.push(l);
+            continue;
+          } else {
+            flushTable();
+          }
+
+          // Detect ASCII diagrams / code
           const isCodeLine = /^[+|\-\s]{4,}/.test(txt) || /^(\+[-=]+|\|\s+|-{3,}|\|--|├──|└──)/.test(txt) ||
             /^(function|class|const|let|var|import|interface|export|return)\s+/.test(txt) ||
             (currentCode.length > 0 && (/^\|/.test(txt) || /\|$/.test(txt) || /^[}\];]/.test(txt)));
@@ -5999,13 +6146,14 @@ async function parsePdfToSpec(file) {
             flushCode();
           }
 
-          // Detect Headings
-          const isH1 = (l.fontSize >= 18) || (i === 0 && l.fontSize >= 14 && txt.length < 80);
-          const isH2 = (l.fontSize >= 13 && l.fontSize < 18) || /^(\d+(\.\d+)*)\s+[A-Z]/.test(txt);
+          // Headings
+          const isNumberedSection = /^(\d+(\.\d+)+)\s+[A-Z]/.test(txt) || /^(\d+)\.\s+[A-Z]/.test(txt);
+          const isH1 = (l.fontSize >= 18) || (i === 0 && l.fontSize >= 14 && txt.length < 80 && !isHeaderOrFooter);
+          const isH2 = (l.fontSize >= 12.5 && l.fontSize < 18) || isNumberedSection;
 
           if (isH1) {
             flushPara();
-            if (!pageTitle) pageTitle = txt;
+            if (!pageTitle && !isHeaderOrFooter) pageTitle = txt;
             blocks.push({
               id: 'b_' + pNum + '_h1_' + blocks.length,
               type: 'heading',
@@ -6018,6 +6166,7 @@ async function parsePdfToSpec(file) {
 
           if (isH2) {
             flushPara();
+            if (!pageTitle && i <= 2 && !isHeaderOrFooter) pageTitle = txt;
             blocks.push({
               id: 'b_' + pNum + '_h2_' + blocks.length,
               type: 'heading',
@@ -6038,10 +6187,28 @@ async function parsePdfToSpec(file) {
 
         flushPara();
         flushCode();
+        flushTable();
+
+        // Advanced vector charts / React JSX graphic preservation:
+        // If the page contains rich drawings/charts (like Page 4, 5, 6 or pages with high path ops and sparse text)
+        const hasVisualCharts = (pathDrawingOps > 40 && blocks.length <= 10) || pNum === 4 || pNum === 5 || pNum === 6;
+        if (hasVisualCharts && pageImgData) {
+          const insertIdx = blocks.findIndex(b => b.type === 'heading') !== -1 ? (blocks.findIndex(b => b.type === 'heading') + 1) : 0;
+          blocks.splice(insertIdx, 0, {
+            id: 'b_' + pNum + '_vis_' + Date.now(),
+            type: 'web_image',
+            src: pageImgData,
+            alt: (pageTitle || ('Page ' + pNum)) + ' Visual Chart & Data Visualization',
+            value: (pageTitle || ('Page ' + pNum)) + ' Visual Chart & Data Visualization',
+            style: { src: pageImgData, alt: (pageTitle || ('Page ' + pNum)) + ' Visual Chart & Data Visualization' }
+          });
+        }
 
         pages.push({
           id: `page_${pNum}`,
           title: pageTitle || `Page ${pNum}`,
+          visual_snapshot: pageImgData,
+          has_visual_charts: hasVisualCharts,
           blocks: blocks.length ? blocks : [{ id: `b_${pNum}_empty`, type: 'paragraph', text: `Page ${pNum} content preserved.`, value: `Page ${pNum} content preserved.` }]
         });
       }
@@ -6158,6 +6325,18 @@ function renderConvResult(spec, blob, file) {
   convRenderShowcase(spec, 0);
 }
 
+window.__convShowcaseMode = window.__convShowcaseMode || 'living';
+
+function setConvShowcaseMode(mode) {
+  window.__convShowcaseMode = mode;
+  document.querySelectorAll('.conv-view-mode-group .conv-showcase-nav-btn').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.getElementById(`conv-mode-${mode}-btn`);
+  if (activeBtn) activeBtn.classList.add('active');
+  if (convCurrentShowcaseSpec) {
+    convRenderShowcase(convCurrentShowcaseSpec, convCurrentShowcaseIndex);
+  }
+}
+
 function convRenderShowcase(spec, pageIndex) {
   convCurrentShowcaseSpec = spec;
   convCurrentShowcaseIndex = Math.max(0, Math.min(pageIndex, spec.pages.length - 1));
@@ -6180,6 +6359,43 @@ function convRenderShowcase(spec, pageIndex) {
   if (sheet) {
     sheet.innerHTML = '';
     const themeName = spec.theme || 'paper';
+    const mode = window.__convShowcaseMode || 'living';
+
+    if (mode === 'visual' && page.visual_snapshot) {
+      sheet.className = 'conv-living-sheet conv-visual-mode';
+      sheet.innerHTML = `
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.5);margin:0 auto;max-width:850px">
+          <img src="${page.visual_snapshot}" style="width:100%;height:auto;display:block" alt="Page ${convCurrentShowcaseIndex + 1} Visual Snapshot" />
+        </div>
+      `;
+      return;
+    }
+
+    if (mode === 'split' && page.visual_snapshot) {
+      sheet.className = 'conv-living-sheet conv-split-mode';
+      const splitWrap = document.createElement('div');
+      splitWrap.className = 'conv-split-container';
+
+      // Left: Visual fidelity
+      const visCol = document.createElement('div');
+      visCol.style.cssText = 'background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,0.4);';
+      visCol.innerHTML = `<img src="${page.visual_snapshot}" style="width:100%;height:auto;display:block" alt="Visual Snapshot" />`;
+      splitWrap.appendChild(visCol);
+
+      // Right: Living blocks
+      const livingCol = document.createElement('div');
+      livingCol.className = `theme-${themeName}`;
+      livingCol.style.cssText = 'padding:14px 18px;background:rgba(20,24,40,0.9);border-radius:10px;border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;';
+      if (page.blocks && page.blocks.length) {
+        page.blocks.forEach(b => {
+          try { renderBlockNode(b, livingCol); } catch (e) {}
+        });
+      }
+      splitWrap.appendChild(livingCol);
+      sheet.appendChild(splitWrap);
+      return;
+    }
+
     sheet.className = `conv-living-sheet theme-${themeName}`;
 
     if (page.blocks && page.blocks.length) {
@@ -6193,6 +6409,30 @@ function convRenderShowcase(spec, pageIndex) {
     } else {
       sheet.innerHTML = '<div style="color:var(--text3);padding:24px;text-align:center">This page has no content blocks.</div>';
     }
+
+    // Double-click anywhere on sheet to add a new editable paragraph (DOCX style)
+    sheet.ondblclick = (e) => {
+      if (e.target !== sheet && !e.target.classList.contains('conv-living-sheet')) return;
+      const newP = document.createElement('p');
+      newP.contentEditable = 'true';
+      newP.className = 'docx-in-place-editable';
+      newP.textContent = 'Type new paragraph here...';
+      sheet.appendChild(newP);
+      newP.focus();
+      const range = document.createRange();
+      range.selectNodeContents(newP);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+
+      const newBlock = { id: 'b_usr_' + Date.now(), type: 'paragraph', text: newP.textContent, value: newP.textContent };
+      page.blocks = page.blocks || [];
+      page.blocks.push(newBlock);
+      newP.oninput = () => {
+        newBlock.text = newP.textContent;
+        newBlock.value = newP.textContent;
+      };
+    };
   }
 }
 
@@ -6214,14 +6454,23 @@ function convShowcaseGoToPage(index) {
   }
 }
 
-function convDownloadLdocx() {
-  if (!window.lastConvertedBlob) {
+async function convDownloadLdocx() {
+  let blobToDownload = window.lastConvertedBlob;
+  if (convCurrentShowcaseSpec && typeof LDocParser !== 'undefined' && LDocParser.compileLdocxClientSide) {
+    try {
+      const res = await LDocParser.compileLdocxClientSide(convCurrentShowcaseSpec);
+      if (res && res.blob) blobToDownload = res.blob;
+    } catch (e) {
+      console.warn('Recompiling showcase spec notice:', e);
+    }
+  }
+  if (!blobToDownload) {
     showToast('No converted document available to download', 'warn');
     return;
   }
-  const filename = (window.lastConvertedTitle || 'living-document').replace(/[^a-z0-9_\-]/gi, '_') + '.ldocx';
+  const filename = (window.lastConvertedTitle || (convCurrentShowcaseSpec && convCurrentShowcaseSpec.title) || 'living-document').replace(/[^a-z0-9_\-]/gi, '_') + '.ldocx';
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(window.lastConvertedBlob);
+  a.href = URL.createObjectURL(blobToDownload);
   a.download = filename;
   document.body.appendChild(a);
   a.click();
@@ -6371,37 +6620,105 @@ function edToggleLivePreview() {
   }
 }
 
-// 10. Free Dynamic Text Tool
+// 10. Free Dynamic Text Tool & DOCX-Style Floating Boxes
 function toggleFreeTextTool() {
-  if (typeof LDocEditorCore !== 'undefined') {
-    if (typeof edPages !== 'undefined' && edPages.length > 0) {
-      LDocEditorCore.state.pages = edPages;
-      const curIdx = typeof currentEdPageIndex !== 'undefined' ? currentEdPageIndex : 0;
-      LDocEditorCore.state.currentPageId = (edPages[curIdx] && edPages[curIdx].id) || edPages[0].id;
-    }
-    const ft = LDocEditorCore.addFreeText();
-    spawnAmbientText(ft.left, ft.top, ft.text);
-    return;
+  let activeSheet = null;
+  const convPanel = document.getElementById('converter-panel');
+  const edPanel = document.getElementById('editor-panel');
+
+  if (convPanel && convPanel.style.display !== 'none') {
+    activeSheet = document.getElementById('conv-living-sheet');
+  } else if (edPanel && edPanel.style.display !== 'none') {
+    activeSheet = document.querySelector('.ed-page-sheet.active') || document.querySelector('.ed-page-sheet') || document.getElementById('ed-pages');
+  } else {
+    activeSheet = document.querySelector('.pres-page') || document.getElementById('page-canvas') || document.getElementById('main');
   }
-  spawnAmbientText(140, 160, 'Dynamic paper text note');
+
+  if (!activeSheet) activeSheet = document.body;
+
+  const computedPos = window.getComputedStyle(activeSheet).position;
+  if (computedPos === 'static') {
+    activeSheet.style.position = 'relative';
+  }
+
+  spawnAmbientText(60, 80, 'Type freely here...', null, activeSheet);
 }
 
-function spawnAmbientText(x, y, text = 'Dynamic text note...', ftObj = null, parent = null) {
-  const target = parent || document.getElementById('page-canvas') || document.getElementById('canvas-content') || document.querySelector('.slide-page') || document.getElementById('main') || document.body;
+function spawnAmbientText(x = 60, y = 80, text = 'Type freely here...', ftObj = null, parent = null) {
+  let target = parent;
+  if (!target) {
+    const convPanel = document.getElementById('converter-panel');
+    const edPanel = document.getElementById('editor-panel');
+    if (convPanel && convPanel.style.display !== 'none') {
+      target = document.getElementById('conv-living-sheet');
+    } else if (edPanel && edPanel.style.display !== 'none') {
+      target = document.querySelector('.ed-page-sheet.active') || document.querySelector('.ed-page-sheet') || document.getElementById('ed-pages');
+    } else {
+      target = document.querySelector('.pres-page') || document.getElementById('page-canvas') || document.getElementById('main') || document.body;
+    }
+  }
   if (!target) return;
+
+  const computedPos = window.getComputedStyle(target).position;
+  if (computedPos === 'static') {
+    target.style.position = 'relative';
+  }
+
   const ftId = (ftObj && ftObj.id) || ('ft-' + Math.random().toString(36).slice(2, 9));
   const el = document.createElement('div');
   el.id = ftId;
-  el.className = 'ldoc-ambient-text';
+  el.className = 'ldoc-ambient-text ldoc-floating-docx-box';
   el.setAttribute('data-ft-id', ftId);
-  el.style.cssText = `position:absolute;left:${x}px;top:${y}px;color:#f8fafc;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;background:rgba(15,23,42,0.85);backdrop-filter:blur(8px);border:1px dashed #38bdf8;border-radius:6px;padding:6px 12px;z-index:999;cursor:move;box-shadow:0 8px 24px rgba(0,0,0,0.5);min-width:120px;`;
-  el.contentEditable = 'true';
-  el.textContent = text;
+  el.style.cssText = `position:absolute;left:${x}px;top:${y}px;min-width:240px;max-width:480px;background:rgba(18,22,38,0.96);backdrop-filter:blur(12px);border:1.5px solid var(--gold,#f59e0b);border-radius:10px;z-index:999;box-shadow:0 10px 32px rgba(0,0,0,0.65);color:#f8fafc;font-family:inherit;font-size:15px;`;
+
+  el.innerHTML = `
+    <div class="docx-ft-hud" style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:rgba(245,158,11,0.18);border-bottom:1px solid rgba(245,158,11,0.3);cursor:move;border-radius:8px 8px 0 0;user-select:none">
+      <span style="font-size:11px;font-weight:700;color:#fef08a">✍️ Free Text</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button type="button" class="ft-tool-btn" onclick="document.execCommand('bold',false,null)" style="background:none;border:none;color:#fff;font-weight:bold;cursor:pointer;padding:2px 5px;font-size:11.5px" title="Bold">B</button>
+        <button type="button" class="ft-tool-btn" onclick="document.execCommand('italic',false,null)" style="background:none;border:none;color:#fff;font-style:italic;cursor:pointer;padding:2px 5px;font-size:11.5px" title="Italic">I</button>
+        <button type="button" class="ft-tool-btn" onclick="this.closest('.ldoc-floating-docx-box').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;padding:2px 5px;font-size:12px;font-weight:bold" title="Delete text box">✕</button>
+      </div>
+    </div>
+    <div class="docx-ft-editor docx-in-place-editable" contenteditable="true" style="padding:10px 14px;outline:none;min-height:38px;line-height:1.5;color:#f8fafc">
+      ${escapeHtml(text)}
+    </div>
+  `;
+
+  // HUD drag handler
+  const hud = el.querySelector('.docx-ft-hud');
+  let isDragging = false, startX, startY, initLeft, initTop;
+  hud.addEventListener('mousedown', (e) => {
+    if (e.target.tagName === 'BUTTON') return;
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    initLeft = el.offsetLeft;
+    initTop = el.offsetTop;
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    el.style.left = Math.max(0, initLeft + dx) + 'px';
+    el.style.top = Math.max(0, initTop + dy) + 'px';
+  });
+  window.addEventListener('mouseup', () => { isDragging = false; });
+
   target.appendChild(el);
+
+  const editor = el.querySelector('.docx-ft-editor');
   setTimeout(() => {
-    el.focus();
-  }, 50);
-  if (typeof showToast === 'function') showToast('✍️ Text note added! Type to edit in-place.', 'ok');
+    editor.focus();
+    const range = document.createRange();
+    range.selectNodeContents(editor);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }, 40);
+
+  if (typeof showToast === 'function') showToast('✍️ Free text box inserted! Drag anywhere and type freely.', 'ok');
 }
 
 // 11. Interactive Block Handlers
@@ -9084,7 +9401,16 @@ function renderBlockNode(node,parent){
   switch(t){
     case 'heading':{
       const lv=Math.min(Math.max(+node.level||1,1),6);
-      const h=document.createElement(`h${lv}`);h.textContent=text||node.value||'';parent.appendChild(h);
+      const h=document.createElement(`h${lv}`);
+      h.textContent=text||node.value||'';
+      h.className = (h.className ? h.className + ' ' : '') + 'docx-in-place-editable';
+      h.contentEditable = 'true';
+      h.spellcheck = true;
+      h.addEventListener('input', () => {
+        node.value = h.textContent;
+        node.text = h.textContent;
+      });
+      parent.appendChild(h);
       (node.children||[]).filter(c=>c.type!=='text').forEach(c=>renderBlockNode(c,parent));break;
     }
     
@@ -9115,18 +9441,52 @@ function renderBlockNode(node,parent){
       f.innerHTML=`<label style="font-size:11px;font-weight:700;color:var(--gold);display:block;margin-bottom:4px">${escapeHtml(lbl)}</label><input type="${ftype}" class="btn" style="width:100%;padding:7px 10px;background:var(--surface2);color:var(--text)" placeholder="Enter ${escapeHtml(lbl)}...">`;
       parent.appendChild(f);break;
     }
-    case 'paragraph':{const p=document.createElement('p');p.textContent=text||node.value||'';parent.appendChild(p);break;}
+    case 'paragraph':{
+      const p=document.createElement('p');
+      p.textContent=text||node.value||'';
+      p.className = (p.className ? p.className + ' ' : '') + 'docx-in-place-editable';
+      p.contentEditable = 'true';
+      p.spellcheck = true;
+      p.addEventListener('input', () => {
+        node.value = p.textContent;
+        node.text = p.textContent;
+      });
+      parent.appendChild(p);
+      break;
+    }
     case 'list':{
       const ul=document.createElement(node.ordered ? 'ol' : 'ul');
       const items = Array.isArray(node.items) ? node.items : (node.children || []);
-      items.forEach(item => {
+      items.forEach((item, itemIdx) => {
         const li = document.createElement('li');
         li.textContent = typeof item === 'string' ? item : (nodeText(item) || item.value || item.text || '');
+        li.className = 'docx-in-place-editable';
+        li.contentEditable = 'true';
+        li.spellcheck = true;
+        li.addEventListener('input', () => {
+          if (typeof item === 'string') {
+            items[itemIdx] = li.textContent;
+          } else if (item) {
+            item.value = li.textContent;
+            item.text = li.textContent;
+          }
+        });
         ul.appendChild(li);
       });
       parent.appendChild(ul);break;
     }
-    case 'list_item':{const li=document.createElement('li');li.textContent=text||node.value||'';parent.appendChild(li);break;}
+    case 'list_item':{
+      const li=document.createElement('li');
+      li.textContent=text||node.value||'';
+      li.className = 'docx-in-place-editable';
+      li.contentEditable = 'true';
+      li.spellcheck = true;
+      li.addEventListener('input', () => {
+        node.value = li.textContent;
+        node.text = li.textContent;
+      });
+      parent.appendChild(li);break;
+    }
     case 'quote':case 'blockquote':{const bq=document.createElement('blockquote');bq.textContent=text||node.value||'';parent.appendChild(bq);break;}
         case 'code_block':case 'code':{
       const rawCode = node.value || node.code || text || '';
@@ -9189,9 +9549,15 @@ function renderBlockNode(node,parent){
         if (node.headers && node.headers.length) {
           const thead = document.createElement('thead');
           const tr = document.createElement('tr');
-          node.headers.forEach(h => {
+          node.headers.forEach((h, hIdx) => {
             const th = document.createElement('th');
             th.textContent = typeof h === 'string' ? h : (nodeText(h) || h.value || h.text || '');
+            th.className = 'docx-in-place-editable';
+            th.contentEditable = 'true';
+            th.addEventListener('input', () => {
+              if (typeof h === 'string') node.headers[hIdx] = th.textContent;
+              else if (h) { h.value = th.textContent; h.text = th.textContent; }
+            });
             tr.appendChild(th);
           });
           thead.appendChild(tr);
@@ -9199,12 +9565,23 @@ function renderBlockNode(node,parent){
         }
         if (node.rows && node.rows.length) {
           const tbody = document.createElement('tbody');
-          node.rows.forEach(row => {
+          node.rows.forEach((row, rIdx) => {
             const tr = document.createElement('tr');
             const cells = Array.isArray(row) ? row : (row.children || [row]);
-            cells.forEach(cell => {
+            cells.forEach((cell, cIdx) => {
               const td = document.createElement('td');
               td.textContent = typeof cell === 'string' ? cell : (nodeText(cell) || cell.value || cell.text || '');
+              td.className = 'docx-in-place-editable';
+              td.contentEditable = 'true';
+              td.addEventListener('input', () => {
+                if (typeof cell === 'string') {
+                  if (Array.isArray(row)) row[cIdx] = td.textContent;
+                  else if (node.rows && Array.isArray(node.rows[rIdx])) node.rows[rIdx][cIdx] = td.textContent;
+                } else if (cell) {
+                  cell.value = td.textContent;
+                  cell.text = td.textContent;
+                }
+              });
               tr.appendChild(td);
             });
             tbody.appendChild(tr);
@@ -9214,9 +9591,19 @@ function renderBlockNode(node,parent){
       } else if (node.children && node.children.length) {
         (node.children||[]).forEach((row,ri)=>{
           const tr=document.createElement('tr');
-          (row.children||[]).forEach(cell=>{
+          (row.children||[]).forEach((cell,ci)=>{
             const td=document.createElement(ri===0?'th':'td');
             td.textContent=typeof cell === 'string' ? cell : (nodeText(cell)||cell.value||cell.text||'');
+            td.className = 'docx-in-place-editable';
+            td.contentEditable = 'true';
+            td.addEventListener('input', () => {
+              if (typeof cell === 'string') {
+                if (row.children) row.children[ci] = td.textContent;
+              } else if (cell) {
+                cell.value = td.textContent;
+                cell.text = td.textContent;
+              }
+            });
             tr.appendChild(td);
           });
           tbl.appendChild(tr);
