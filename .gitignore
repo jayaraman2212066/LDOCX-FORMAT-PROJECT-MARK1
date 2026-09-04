@@ -32,4 +32,5 @@ Thumbs.db
 
 # Backups
 _backups/
-
+*.tmp
+*.temp

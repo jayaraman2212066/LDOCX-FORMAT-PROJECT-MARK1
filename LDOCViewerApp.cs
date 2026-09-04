@@ -32,18 +32,17 @@ namespace LDOCViewer
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
                 
                 // Locate Viewer HTML
-                string viewerPath = Path.Combine(baseDir, "index.html");
+                // 1. If running from repo root, prioritize isolated viewer in packages/ldoc-viewer/index.html
+                string viewerPath = Path.Combine(baseDir, "packages", "ldoc-viewer", "index.html");
                 if (!File.Exists(viewerPath))
                 {
-                    viewerPath = Path.Combine(baseDir, "packages", "ldoc-viewer", "index.html");
-                }
-                if (!File.Exists(viewerPath))
-                {
+                    // 2. If dedicated viewer.html exists
                     viewerPath = Path.Combine(baseDir, "viewer.html");
                 }
                 if (!File.Exists(viewerPath))
                 {
-                    viewerPath = Path.Combine(baseDir, "live-studio.html");
+                    // 3. If running inside standalone unzipped packages/ldoc-viewer
+                    viewerPath = Path.Combine(baseDir, "index.html");
                 }
 
                 if (!File.Exists(viewerPath))

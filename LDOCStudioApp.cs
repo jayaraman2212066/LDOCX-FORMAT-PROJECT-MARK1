@@ -35,15 +35,19 @@ namespace LDOCStudio
                 string editorPath = Path.Combine(baseDir, "live-studio.html");
                 if (!File.Exists(editorPath))
                 {
+                    editorPath = Path.Combine(baseDir, "packages", "ldoc-studio", "index.html");
+                }
+                if (!File.Exists(editorPath))
+                {
+                    editorPath = Path.Combine(baseDir, "index.html");
+                }
+                if (!File.Exists(editorPath))
+                {
                     editorPath = Path.Combine(baseDir, "studio.html");
                 }
                 if (!File.Exists(editorPath))
                 {
                     editorPath = Path.Combine(baseDir, "app", "viewer", "live-studio.html");
-                }
-                if (!File.Exists(editorPath))
-                {
-                    editorPath = Path.Combine(baseDir, "packages", "ldoc-editor", "index.html");
                 }
 
                 if (!File.Exists(editorPath))

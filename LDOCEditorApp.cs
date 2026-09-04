@@ -32,20 +32,17 @@ namespace LDOCEditor
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
                 
                 // Locate Editor HTML:
-                // 1. Check local directory (when packaged inside packages/ldoc-editor or standalone folder)
-                string editorPath = Path.Combine(baseDir, "index.html");
+                // 1. If running from repo root, prioritize isolated editor in packages/ldoc-editor/index.html
+                string editorPath = Path.Combine(baseDir, "packages", "ldoc-editor", "index.html");
                 if (!File.Exists(editorPath))
                 {
-                    // 2. Check packages/ldoc-editor/index.html (when executed from repository root)
-                    editorPath = Path.Combine(baseDir, "packages", "ldoc-editor", "index.html");
+                    // 2. If dedicated editor.html exists
+                    editorPath = Path.Combine(baseDir, "editor.html");
                 }
                 if (!File.Exists(editorPath))
                 {
-                    editorPath = Path.Combine(baseDir, "studio.html");
-                }
-                if (!File.Exists(editorPath))
-                {
-                    editorPath = Path.Combine(baseDir, "live-studio.html");
+                    // 3. If running inside standalone unzipped packages/ldoc-editor
+                    editorPath = Path.Combine(baseDir, "index.html");
                 }
 
                 if (!File.Exists(editorPath))
