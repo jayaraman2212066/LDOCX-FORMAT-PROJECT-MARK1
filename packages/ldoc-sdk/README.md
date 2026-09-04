@@ -65,5 +65,5 @@ console.log("Document loaded:", parsed.title);
 ## License
 
 Licensed under the [Apache License, Version 2.0](LICENSE).  
-Copyright (c) 2026 **Jayaraman K**. All Rights Reserved.  
-*Trademarks "LDOC", "LDOCX", and "Living Document Format" are proprietary to Jayaraman K.*
+Copyright (c) 2026 **J-AI-ENTERPRISES**. All Rights Reserved.  
+*Trademarks "LDOC", "LDOCX", and "Living Document Format" are proprietary to J-AI-ENTERPRISES.*
