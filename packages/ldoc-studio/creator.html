@@ -2861,7 +2861,7 @@ body.creator-split-50-50 #creator-preview-pane {
 
 <!-- Native Desktop Menu Bar (Antigravity Style) -->
 <div id="desktop-menubar">
-  <div class="dmenu-brand" onclick="location.href='live-studio.html'" title="Return to LDOC Studio Workspace" style="background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.4);cursor:pointer">
+  <div class="dmenu-brand" onclick="location.href='index.html'" title="Return to LDOC Studio Workspace" style="background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.4);cursor:pointer">
     <img src="ldoc_logo.png" alt="LDOC">
     <span style="color:#fef08a;font-weight:700">← Back to Studio</span>
   </div>
@@ -2879,7 +2879,7 @@ body.creator-split-50-50 #creator-preview-pane {
         <div class="dmenu-entry" onclick="buildDoc()"><span>▶ Build &amp; Open in Studio</span><span class="hotkey">Ctrl+B</span></div>
         <div class="dmenu-entry" onclick="downloadDoc()"><span>⬇ Download .ldocx Package</span><span class="hotkey">Ctrl+D</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="location.href='live-studio.html'"><span>🖥️ Switch to Studio</span></div>
+        <div class="dmenu-entry" onclick="location.href='index.html'"><span>🖥️ Switch to Studio</span></div>
         <div class="dmenu-entry" onclick="window.close()"><span>✕ Exit Creator</span><span class="hotkey">Alt+F4</span></div>
       </div>
     </div>
@@ -7299,7 +7299,7 @@ async function buildDoc(){
       }
       toast('✓ Built! Launching in Studio…','ok');
       setTimeout(() => {
-        let targetUrl = 'live-studio.html?load=transfer';
+        let targetUrl = 'index.html?load=transfer';
         if (window.location.protocol !== 'file:' && window.location.pathname.includes('/creator') && !window.location.pathname.endsWith('.html')) {
           targetUrl = '/live-studio?load=transfer';
         }

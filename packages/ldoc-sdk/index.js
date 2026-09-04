@@ -43,9 +43,38 @@ async function parse(fileInput) {
   if (!JSZip) throw new Error('JSZip dependency required to parse .ldocx');
   const zip = await JSZip.loadAsync(fileInput);
   const docFile = zip.file('document.json') || zip.file('document.jsonld');
-  if (!docFile) throw new Error('Missing document.json in .ldocx container');
-  const text = await docFile.async('text');
-  return JSON.parse(text);
+  if (docFile) {
+    const text = await docFile.async('text');
+    return JSON.parse(text);
+  }
+  // Multi-file layout container support
+  const manifestFile = zip.file('manifest.json');
+  if (manifestFile) {
+    const manifestText = await manifestFile.async('text');
+    const manifest = JSON.parse(manifestText);
+    const pages = [];
+    const pageFiles = [];
+    zip.forEach((path, file) => {
+      if (!file.dir && /pages\/.*(content|layout|\d+)\.json$/i.test(path)) {
+        pageFiles.push(file);
+      }
+    });
+    pageFiles.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+    for (const pFile of pageFiles) {
+      try {
+        const pText = await pFile.async('text');
+        const pJson = JSON.parse(pText);
+        pages.push(pJson);
+      } catch (e) {}
+    }
+    return {
+      title: manifest.title || manifest.name || 'Living Document',
+      schema_version: manifest.schema_version || SCHEMA_VERSION,
+      metadata: manifest,
+      pages: pages.length > 0 ? pages : [{ id: 'page_1', title: 'Page 1', blocks: [] }]
+    };
+  }
+  throw new Error('Missing document.json or manifest.json in .ldocx container');
 }
 
 async function serialize(ast, assetsMap = {}) {
