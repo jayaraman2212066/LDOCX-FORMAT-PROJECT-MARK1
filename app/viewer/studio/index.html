@@ -865,13 +865,13 @@ body.mode-paper .page-paper-layer {
 .ed-page-item.active{background:rgba(245,158,11,.12);border-left-color:var(--gold);color:var(--gold)}
 .ed-page-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:0 2px;margin-left:auto}
 .ed-page-del:hover{color:#f87171}
-#ed-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#ed-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;height:100%}
 #ed-meta{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;gap:10px;align-items:center;flex-shrink:0;flex-wrap:wrap}
 #ed-meta label{font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase}
 #ed-meta input{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 9px;font-size:13px}
 #ed-meta input:focus{outline:none;border-color:var(--gold)}
-#ed-body{flex:1;display:flex;overflow:hidden}
-#ed-blocks-panel{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+#ed-body{flex:1;display:flex;overflow:hidden;min-height:0}
+#ed-blocks-panel{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:var(--bg);min-height:0}
 #ed-blocks-panel::-webkit-scrollbar{width:4px}
 #ed-blocks-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 .ed-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;transition:border-color .15s}
@@ -884,7 +884,7 @@ body.mode-paper .page-paper-layer {
 .ed-block-up{position:absolute;top:10px;right:52px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px}
 .ed-block-dn{position:absolute;top:10px;right:32px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px}
 .ed-block-up:hover,.ed-block-dn:hover{color:var(--gold)}
-#ed-add-bar{background:var(--surface);border-top:1px solid var(--border);padding:8px 14px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0}
+#ed-add-bar{background:var(--surface);border-top:1px solid var(--border);padding:8px 14px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;z-index:5}
 .add-block-btn{background:var(--surface2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;transition:all .12s}
 .add-block-btn:hover{background:rgba(245,158,11,.15);border-color:var(--gold);color:var(--gold)}
 #ed-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:14px}
@@ -8957,8 +8957,24 @@ function edRenderBlocks() {
 
   if (!page.blocks.length) {
     const e = document.createElement('div');
-    e.style.cssText = 'color:var(--text3);font-size:13px;text-align:center;padding:30px;background:var(--surface);border-radius:10px;border:1px dashed var(--border)';
-    e.textContent = 'This page has no blocks. Use the toolbar below to add headings, 3D models, audio, video, or interactive elements.';
+    e.style.cssText = 'color:var(--text3);font-size:13px;text-align:center;padding:24px 20px;background:var(--surface);border-radius:12px;border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;gap:14px';
+    e.innerHTML = `
+      <div style="font-weight:600;color:var(--text2)">This page has no blocks yet. Click an element below to add it immediately:</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:680px">
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('heading')">🏷️ + Heading</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('paragraph')">📝 + Text</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_video')">🎬 + Video / YouTube</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('button')">⚡ + Button</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('3d_model')">📦 + 3D Model</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_audio')">🎵 + Audio</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_image')">🖼️ + Image</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('table')">📊 + Table</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('quote')">📜 + Quote</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('code')">💻 + Code</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('water_effect')">🌊 + Water Waves</button>
+        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(245,158,11,.4);color:#f59e0b" onclick="edAddBlock('particles')">✨ + Particles</button>
+      </div>
+    `;
     panel.appendChild(e);
     return;
   }
@@ -10914,7 +10930,6 @@ async function downloadCurrentDocument() {
 }
 
 window.initFormatPopover();
-</script>
 
 // ── ⌨️ Global Viewer Shortcuts ─────────────────────────────
 window.addEventListener('keydown', (e) => {
@@ -10931,6 +10946,7 @@ window.addEventListener('keydown', (e) => {
     return;
   }
 });
+</script>
 
 
 <!-- ── VS Code Modern Status Bar ── -->
