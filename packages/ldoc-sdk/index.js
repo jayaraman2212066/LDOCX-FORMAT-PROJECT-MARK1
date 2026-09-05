@@ -13,10 +13,14 @@ try {
   JSZip = require('jszip');
 } catch (e) {
   try {
-    JSZip = require('../../jszip.min.js');
-  } catch (e2) {
-    if (typeof window !== 'undefined' && window.JSZip) {
-      JSZip = window.JSZip;
+    JSZip = require('./jszip.min.js');
+  } catch (e1) {
+    try {
+      JSZip = require('../../jszip.min.js');
+    } catch (e2) {
+      if (typeof window !== 'undefined' && window.JSZip) {
+        JSZip = window.JSZip;
+      }
     }
   }
 }

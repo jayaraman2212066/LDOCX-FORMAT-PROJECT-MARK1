@@ -23,6 +23,10 @@
   "dependencies": {
     "jszip": "^3.10.1"
   },
+  "bin": {
+    "ldocx": "./bin/ldocx.js",
+    "ldoc": "./bin/ldocx.js"
+  },
   "scripts": {
     "test": "node test.js"
   }
