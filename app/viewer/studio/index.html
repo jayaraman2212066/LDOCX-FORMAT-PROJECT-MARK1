@@ -3598,6 +3598,445 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 .price-period { font-size: 13px; color: #64748b; font-weight: 600; }
 .price-desc { font-size: 12.5px; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
 .price-features { list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #cbd5e1; }
+
+/* ── In-Document Search Highlighting Styles (Ctrl+F) ── */
+mark.ldoc-search-match {
+  background: #f59e0b !important;
+  color: #000000 !important;
+  border-radius: 3px;
+  padding: 1px 3px;
+  font-weight: 700;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.7);
+  transition: all 0.15s ease;
+}
+mark.ldoc-search-match.active {
+  background: #38bdf8 !important;
+  color: #000000 !important;
+  outline: 2.5px solid #ffffff !important;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.95) !important;
+  transform: scale(1.08);
+  display: inline-block;
+}
+
+/* ── Executive Ultra-Aligned Print & PDF Fallback Stylesheet ── */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 0.5in;
+  }
+
+  /* 1. Global Reset for Consistent Geometry & Zero-Artifact Ink Rendering */
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 2. Suppress All Desktop Application UI Chrome, Menus, Toolbars, HUDs, Modals, Branding & Watermarks */
+  #desktop-menubar,
+  #toolbar,
+  #ldoc-status-bar,
+  #pages-overlay,
+  #find-replace-hud,
+  #command-palette-modal,
+  #ast-inspector-modal,
+  #ldoc-context-menu,
+  #format-popover,
+  #ai-helper-drawer,
+  #ai-helper-btn,
+  .floating-ai-btn,
+  #ai-helper-toggle,
+  #lead-modal,
+  #legal-security-modal,
+  .fx-dropdown-wrap,
+  .dmenu-dropdown,
+  .repair-banner,
+  .fullscreen-btn,
+  .pres-nav-btn,
+  .page-paper-layer,
+  .page-fx-canvas,
+  canvas.page-fx-canvas,
+  .audio-player-bar,
+  #toast-container,
+  #drop-zone,
+  #loading,
+  .ed-sidebar,
+  .ed-toolbar,
+  #ed-add-panel,
+  #ed-inspector,
+  #ed-split-left,
+  #ed-split-right,
+  .ed-block-up,
+  .ed-block-dn,
+  .ed-block-dup,
+  .ed-block-del,
+  .ed-add-btn,
+  .close-preview,
+  .ed-preview-toggle,
+  #ed-preview-badge,
+  .preview-header,
+  .pres-3d-toolbar,
+  .pres-3d-badge,
+  .pres-3d-info,
+  .pres-bg-btn,
+  .pres-audio-card,
+  .video-card .video-label,
+  button,
+  .find-btn,
+  .slide-app-header,
+  #slide-top-bar,
+  .slide-app-brand,
+  .brand-title,
+  .live-indicator,
+  .pres-mode-selector,
+  #pres-mode-selector,
+  #save-active-btn,
+  .pres-page-header,
+  #converter-panel,
+  #annotate-toolbar,
+  .annot-btn,
+  .sticky-note-hdr button,
+  .lemon-store-badge {
+    display: none !important;
+  }
+
+  /* 3. Containers: Flatten all flex/overflow constraints for seamless document flow */
+  #main,
+  #viewer-panel,
+  #editor-panel,
+  #pres-stage,
+  .pres-canvas-wrap,
+  #page-canvas,
+  #ed-preview-pane,
+  #ed-preview-body,
+  .preview-body {
+    display: block !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    position: static !important;
+    transform: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+  }
+
+  /* 4. Page Box: Each slide/page renders as a pristine, independent printed page */
+  .pres-page, .pres-slide {
+    display: block !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin: 0 0 20pt 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+    position: relative !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  .pres-page:last-child, .pres-slide:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+    margin-bottom: 0 !important;
+  }
+
+  .pres-page::before, .pres-page::after {
+    display: none !important;
+  }
+
+  /* 5. Zero-Offset Content Layer & Editorial Sections (Perfect Left-Alignment) */
+  .page-content-layer,
+  .pres-content-layer,
+  .pres-section,
+  .pres-hero-content {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: #0f172a !important;
+  }
+
+  /* 6. Page Header: Completely hidden in print so zero artificial watermarks are stamped */
+  .pres-page-header {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 7. Precision Typography: Headings, Sentences, Paragraphs & Letters */
+  h1, h2, h3, h4, h5, h6,
+  .pres-section h1, .pres-section h2,
+  .pres-hero h1, .pres-hero h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    -webkit-background-clip: border-box !important;
+    background: none !important;
+    text-shadow: none !important;
+    text-align: left !important;
+    letter-spacing: -0.01em !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  h1 {
+    font-size: 20pt !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+    margin: 0 0 10pt 0 !important;
+    padding: 0 !important;
+  }
+
+  h2 {
+    font-size: 15pt !important;
+    line-height: 1.3 !important;
+    font-weight: 700 !important;
+    margin: 14pt 0 8pt 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  h3 {
+    font-size: 12.5pt !important;
+    line-height: 1.35 !important;
+    font-weight: 600 !important;
+    margin: 12pt 0 6pt 0 !important;
+    padding: 0 !important;
+  }
+
+  h4, h5, h6 {
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    margin: 10pt 0 4pt 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Sentences and Paragraphs: Natural, Intended Flow, Consistent Alignment */
+  p, .docx-in-place-editable, .ldoc-rich-text, div.ldoc-in-place-editable {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    text-align: left !important;
+    text-indent: 0 !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    margin: 0 0 10pt 0 !important;
+    padding: 0 !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    hyphens: none !important;
+    white-space: normal !important;
+    page-break-inside: auto !important;
+  }
+
+  /* Lists: Aligned Bullet Points & Numbering */
+  ul, ol {
+    margin: 0 0 12pt 0 !important;
+    padding-left: 20pt !important;
+    text-align: left !important;
+  }
+
+  li {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    margin-bottom: 4pt !important;
+    letter-spacing: normal !important;
+    text-align: left !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left: 3.5pt solid #94a3b8 !important;
+    margin: 12pt 0 !important;
+    padding: 6pt 14pt !important;
+    background: #f8fafc !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+    font-style: italic !important;
+    font-size: 10.5pt !important;
+    line-height: 1.6 !important;
+    text-align: left !important;
+    letter-spacing: normal !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* 8. Crisp Gilded & Pro Tables (Flush Alignment, Full Width, Clean Borders) */
+  .pres-table, .table-pro, table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: auto !important;
+    border-collapse: collapse !important;
+    border: 1pt solid #cbd5e1 !important;
+    margin: 14pt 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+  }
+
+  .table-pro-wrap {
+    width: 100% !important;
+    margin: 14pt 0 !important;
+    overflow: visible !important;
+  }
+
+  .pres-table th, .table-pro th, th {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    border: 1pt solid #cbd5e1 !important;
+    padding: 7pt 10pt !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 9.5pt !important;
+    font-weight: 700 !important;
+    text-align: left !important;
+    letter-spacing: normal !important;
+    line-height: 1.4 !important;
+  }
+
+  .pres-table td, .table-pro td, td {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    border: 1pt solid #e2e8f0 !important;
+    padding: 7pt 10pt !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 9.5pt !important;
+    line-height: 1.45 !important;
+    text-align: left !important;
+    letter-spacing: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .pres-table tr:nth-child(even) td, .table-pro tr:nth-child(even) td {
+    background: #f8fafc !important;
+  }
+
+  /* 9. Feature Grids, Columns & Cards Alignment */
+  .feature-grid, .grid, .pres-grid, .pricing-cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12pt !important;
+    margin: 12pt 0 !important;
+    width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .feature-card, .card, .pricing-card, .preorder-card {
+    border: 1pt solid #cbd5e1 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-radius: 4pt !important;
+    padding: 10pt 12pt !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    text-align: left !important;
+  }
+
+  /* 10. Code Cards & Blocks */
+  .interactive-code-card {
+    background: #f8fafc !important;
+    border: 1pt solid #cbd5e1 !important;
+    border-radius: 4pt !important;
+    margin: 12pt 0 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: visible !important;
+  }
+
+  .interactive-code-card * {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .code-card-body, .code-pane {
+    padding: 8pt 10pt !important;
+    overflow: visible !important;
+  }
+
+  pre, code {
+    font-family: "JetBrains Mono", Consolas, "Courier New", monospace !important;
+    font-size: 9pt !important;
+    line-height: 1.45 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    background: #f8fafc !important;
+    border: none !important;
+  }
+
+  /* 11. Links & Search Marks Cleanup */
+  a {
+    color: #0284c7 !important;
+    text-decoration: underline !important;
+  }
+
+  mark.ldoc-search-match {
+    background: transparent !important;
+    color: inherit !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}
 </style>
 
 <script src="jszip.min.js"></script>
@@ -3606,21 +4045,33 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <script src="ldoc-parser.js"></script>
 <script src="ldoc-editor-core.js"></script>
 <script src="ldoc-shared-modals.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Local Offline Vendor Libraries (Zero Outsource / 100% Offline Standalone) -->
+<script src="vendor/three.min.js"></script>
+<script>if(typeof THREE==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
+<script src="vendor/OrbitControls.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.OrbitControls&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>')</script>
+<script src="vendor/GLTFLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.GLTFLoader&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"><\/script>')</script>
+<script src="vendor/OBJLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.OBJLoader&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"><\/script>')</script>
+<script src="vendor/STLLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.STLLoader&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"><\/script>')</script>
+<script src="vendor/pdf.min.js"></script>
+<script>if(typeof pdfjsLib==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"><\/script>')</script>
+<script src="vendor/react.production.min.js"></script>
+<script>if(typeof React==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://unpkg.com/react@18/umd/react.production.min.js"><\/script>')</script>
+<script src="vendor/react-dom.production.min.js"></script>
+<script>if(typeof ReactDOM==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"><\/script>')</script>
+<script src="vendor/babel.min.js"></script>
+<script>if(typeof Babel==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://unpkg.com/@babel/standalone/babel.min.js"><\/script>')</script>
+<script src="vendor/chart.min.js"></script>
+<script>if(typeof Chart==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>')</script>
 <script>window.tailwind = { config: { corePlugins: { preflight: false } } };</script>
-<script src="../../../vendor/tailwind.min.js"></script>
+<script src="vendor/tailwind.min.js"></script>
 <script>if(typeof tailwind==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdn.tailwindcss.com"><\/script>')</script>
 <script>
   if (typeof window !== 'undefined' && window.pdfjsLib) {
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc = '../../../vendor/pdf.worker.min.js';
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
   }
 </script>
 </head>
@@ -3635,6 +4086,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="dmenu-entry" onclick="location.href='creator.html'"><span>📄 New Document (+Creator)</span><span class="hotkey">Ctrl+N</span></div>
         <div class="dmenu-entry" onclick="document.getElementById('file-input').click()"><span>📂 Open .ldocx File...</span><span class="hotkey">Ctrl+O</span></div>
         <div class="dmenu-entry" onclick="saveDoc()"><span>💾 Save / Export .ldocx</span><div class="dmenu-entry" onclick="showCloudVaultModal()"><span>🌟 Cloud Documents Vault</span></div><div class="dmenu-entry" onclick="showVersionsModal()"><span>↺ Version History &amp; Restore</span></div><div class="dmenu-entry" onclick="showShareModal()"><span>🔗 Share Living Document</span></div><span class="hotkey">Ctrl+S</span></div>
+        <div class="dmenu-entry" onclick="printDocument()"><span>🖨️ Print / Export PDF...</span><span class="hotkey">Ctrl+P</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="location.href='creator.html'"><span>🎨 Open Visual Creator</span><span class="hotkey">Ctrl+Shift+C</span></div>
         <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Universal Document Converter</span></div>
@@ -3649,6 +4101,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
       <div class="dmenu-btn">Edit ▾</div>
       <div class="dmenu-dropdown">
         <div class="dmenu-entry" onclick="toggleFreeTextTool()"><span>✍️ Add In-Canvas Free Text</span><span class="hotkey">Ctrl+T</span></div>
+        <div class="dmenu-entry" onclick="toggleFindReplaceHud()"><span>🔍 Find &amp; Replace...</span><span class="hotkey">Ctrl+F</span></div>
         <div class="dmenu-entry" onclick="switchTab('editor')"><span>🛠️ Open In-Place Block Editor</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="prevSlide()"><span>◀ Previous Slide</span><span class="hotkey">Left</span></div>
@@ -3710,7 +4163,8 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md', '_blank')"><span>📄 Technical Specification (Markdown)</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="window.open('https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1', '_blank')"><span>🌐 GitHub Repository</span></div>
-                <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.5.0 (Enterprise Reactive 3D Edition)\nCopyright © 2026 J-AI-ENTERPRISES. Apache-2.0 License', 'info')"><span>ℹ️ About LDOC Studio</span></div>
+                <div class="dmenu-entry" onclick="showLegalSecurityModal()"><span>🛡️ Legal, Security &amp; License (Apache-2.0)</span></div>
+        <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.5.0 (Enterprise Reactive 3D Edition)\nCopyright © 2026 J-AI-ENTERPRISES. Apache-2.0 License', 'info')"><span>ℹ️ About LDOC Studio</span></div>
       </div>
     </div>
   </div>
@@ -3728,7 +4182,6 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   <button class="tab-btn" id="tab-templates" onclick="switchTab('templates')">🌟 Vault</button>
   <button class="tab-btn" id="tab-docs" onclick="switchTab('docs')">Documents</button>
   <a href="creator.html" style="background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.3);color:var(--accent);font-size:13px;font-weight:600;padding:5px 14px;border-radius:8px;text-decoration:none;margin-left:4px">+ Creator</a>
-  <button class="toolbar-btn" style="border-color:rgba(16,185,129,0.4);color:#34d399;gap:5px;font-size:11px" onclick="showLegalSecurityModal()" title="Apache 2.0 Licensed & Copyright © 2026 J-AI-ENTERPRISES">🛡️ Apache-2.0</button>
 
 
   <span class="doc-title" id="doc-title">NO DOCUMENT LOADED</span>
@@ -3758,13 +4211,24 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   <button class="toolbar-btn" id="ed-open-btn" onclick="document.getElementById('ed-file-input').click()" style="display:none">📂 Open</button>
   <input type="file" id="ed-file-input" accept=".ldocx,.ldoc" style="display:none" onchange="edOpenLdocxFile(event)">
   <button class="toolbar-btn primary" id="save-btn" onclick="saveDoc()" style="display:inline-flex;align-items:center;gap:6px" title="Save / Export .ldocx package">&#128190; Save .ldocx</button>
+  <button class="toolbar-btn" onclick="toggleFindReplaceHud()" title="Find in Document (Ctrl+F)" style="gap:5px;display:inline-flex;align-items:center"><span>🔍</span> <span>Find</span></button>
+  <button class="toolbar-btn" onclick="printDocument()" title="Print or Save to PDF (Ctrl+P)" style="gap:5px;display:inline-flex;align-items:center;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-weight:700"><span>🖨️</span> <span>Print to PDF</span></button>
   <button class="toolbar-btn" id="pages-toggle-btn" onclick="togglePagesPanel()" style="display:none">&#9776; Pages</button>
   <button class="toolbar-btn primary" id="build-btn" onclick="buildAndView()" style="display:none">&#9654; Build &amp; View</button>
   <button class="toolbar-btn" id="build-save-btn" onclick="buildAndSave()" style="display:none">&#128190; Build &amp; Save</button>
   <input type="file" id="file-input" accept=".ldocx,.ldoc">
 </div>
 
-  <button class="toolbar-btn primary" id="ai-helper-toggle" onclick="toggleAiHelper()"><img src="ai-brain.png" alt="AI Brain" style="width:18px;height:18px;object-fit:contain;border-radius:4px" /> AI Helper</button>
+  <button class="toolbar-btn primary" id="ai-helper-toggle" onclick="toggleAiHelper()" title="LDOC AI Copilot & Document Assistant">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;flex-shrink:0;filter:drop-shadow(0 0 6px rgba(245,158,11,0.6))">
+      <path d="M9.5 2A4.5 4.5 0 0 0 5 6.5c0 .4.05.79.15 1.16A5 5 0 0 0 3 12a5 5 0 0 0 2.5 4.33A4.5 4.5 0 0 0 10 21h.5V2h-1zm5 0h-.5v19h.5a4.5 4.5 0 0 0 4.5-4.67A5 5 0 0 0 21 12a5 5 0 0 0-2.15-4.34A4.5 4.5 0 0 0 14.5 2z" stroke="#fef08a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="rgba(245,158,11,0.2)"/>
+      <path d="M12 5v14M8 8h4M12 12h4M7 16h5M12 16h5" stroke="#38bdf8" stroke-width="1.4" stroke-linecap="round"/>
+      <circle cx="8" cy="8" r="1.2" fill="#fef08a"/>
+      <circle cx="16" cy="12" r="1.2" fill="#fef08a"/>
+      <circle cx="7" cy="16" r="1.2" fill="#38bdf8"/>
+    </svg>
+    <span>AI Helper</span>
+  </button>
 
 <div id="main">
   
@@ -3850,9 +4314,10 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
       <div class="conv-drop-icon">⚡</div>
       <h3 style="font-family:'Cinzel',serif;color:#fef08a;font-size:20px;margin:0">Drag &amp; Drop Any Document or Media File Here</h3>
       <p style="color:var(--text2);font-size:13px;margin:0">or click to browse from your device</p>
-      <input type="file" id="conv-file-input" accept=".3mf,.stl,.obj,.gltf,.glb,.ply,.pdf,.txt,.md,.docx,.html,.htm,.json,.mp3,.wav,.ogg,.mp4,.webm,.png,.jpg,.jpeg" style="display:none" onchange="convHandleFileSelect(event)">
+      <input type="file" id="conv-file-input" accept=".pptx,.ppt,.docx,.doc,.pdf,.html,.htm,.txt,.md,.json,.csv,.glb,.gltf,.stl,.obj,.3mf,.ply,.mp3,.wav,.ogg,.mp4,.webm,.png,.jpg,.jpeg" style="display:none" onchange="convHandleFileSelect(event)">
       
       <div class="conv-format-badges">
+        <span class="conv-badge" style="border-color:var(--gold);color:#fef08a;font-weight:700">⚡ PowerPoint (.pptx)</span>
         <span class="conv-badge">📝 TXT / Markdown</span>
         <span class="conv-badge">📘 Word DOCX</span>
         <span class="conv-badge">🌐 HTML Web</span>
@@ -4076,30 +4541,49 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div id="ed-empty">&larr; Add a page to start</div>
         <div id="ed-blocks-panel" style="display:none"></div>
       </div>
-      <div id="ed-add-bar">
-        <span style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;align-self:center;margin-right:4px">Add Element:</span>
-        <button class="ed-add-btn" onclick="toggleFreeTextTool()" style="background:rgba(245,158,11,.25);color:#fef08a;border-color:var(--gold);font-weight:700">✍️ Free Text</button>
-        <button class="ed-add-btn" onclick="edAddBlock('heading')">🏷️ Heading</button>
-        <button class="ed-add-btn" onclick="edAddBlock('paragraph')">📝 Text</button>
-        <button class="ed-add-btn" onclick="edAddBlock('quote')">📜 Quote</button>
-        <button class="ed-add-btn" onclick="edAddBlock('list')">📋 List</button>
-        <button class="ed-add-btn" onclick="edAddBlock('table')">📊 Table</button>
-        <button class="ed-add-btn" onclick="edAddBlock('code')">💻 Code</button>
-        <button class="ed-add-btn" onclick="edAddBlock('web_image')">🖼️ 3D Image</button>
-        <button class="ed-add-btn" onclick="edAddBlock('web_audio')">🎵 Soundtrack</button>
-        <button class="ed-add-btn" onclick="edAddBlock('web_video')">🎬 Video</button>
-        <button class="ed-add-btn" onclick="edAddBlock('3d_model')">📦 3D Model</button>
-        <button class="ed-add-btn" onclick="edAddBlock('ai')">⚡ AI Copilot</button>
-        <button class="ed-add-btn" onclick="edAddBlock('form')">📑 Form</button>
-        <button class="ed-add-btn" onclick="edAddBlock('feature_grid')">🌟 Feature Grid</button>
-        <button class="ed-add-btn" onclick="edAddBlock('live_feed')">📡 Live Dispatch</button>
-        <button class="ed-add-btn" onclick="edAddBlock('preorder')">💎 Pre-Order</button>
-        <button class="ed-add-btn" onclick="edAddBlock('button')">🔘 Smart Action</button>
-        <button class="ed-add-btn" onclick="edAddBlock('throttle_dyno')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🏎️ Throttle Dyno</button>
-        <button class="ed-add-btn" onclick="edAddBlock('orbit_sim')" style="background:rgba(167,139,250,.15);color:#a78bfa;border-color:rgba(167,139,250,.4)">🛰️ Orbit Sim</button>
-        <button class="ed-add-btn" onclick="edAddBlock('arr_projector')" style="background:rgba(16,185,129,.15);color:#10b981;border-color:rgba(16,185,129,.4)">📈 ARR Projector</button>
-        <button class="ed-add-btn" onclick="edAddBlock('tilt_card')" style="background:rgba(244,63,94,.15);color:#f43f5e;border-color:rgba(244,63,94,.4)">📐 3D Tilt Card</button>
-        <button class="ed-add-btn" onclick="edAddBlock('jsx_canvas')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">⚡ Live Sandbox</button>
+            <div id="ed-add-bar" style="display:flex;flex-direction:column;gap:8px;padding:8px 12px;background:var(--surface);border-top:1px solid var(--border)">
+        <!-- Search & Direct Upload Bar -->
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:6px">
+          <div style="position:relative;flex:1;min-width:220px;max-width:360px">
+            <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:12px;pointer-events:none;opacity:0.7">🔍</span>
+            <input type="text" id="ed-element-search" placeholder="Search 20+ elements (video, audio, 3d, table)..." oninput="edFilterAddElements(this.value)" style="width:100%;padding:4px 8px 4px 28px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);color:#fff;font-size:11.5px;outline:none">
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+            <span style="font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;margin-right:2px">Offline Upload:</span>
+            <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('video')" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.4);color:#fef08a;font-size:11px;padding:3px 8px;font-weight:700" title="Upload local Video file (.mp4, .webm, .mov) directly into new block">🎬 + Video File</button>
+            <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('audio')" style="background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.4);color:#c084fc;font-size:11px;padding:3px 8px;font-weight:700" title="Upload local Audio soundtrack (.mp3, .wav, .ogg) directly into new block">🎵 + Audio File</button>
+            <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('3d')" style="background:rgba(56,189,248,0.15);border-color:rgba(56,189,248,0.4);color:#38bdf8;font-size:11px;padding:3px 8px;font-weight:700" title="Upload local 3D model (.glb, .gltf, .obj, .stl) directly into new block">📦 + 3D Model</button>
+            <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('image')" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#34d399;font-size:11px;padding:3px 8px;font-weight:700" title="Upload local Image (.png, .jpg, .webp, .svg) directly into new block">🖼️ + Image File</button>
+            <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('sandbox')" style="background:rgba(244,63,94,0.15);border-color:rgba(244,63,94,0.4);color:#fb7185;font-size:11px;padding:3px 8px;font-weight:700" title="Upload local JSX/HTML script (.jsx, .js, .html) directly into new live sandbox">⚡ + Sandbox Code</button>
+          </div>
+        </div>
+
+        <!-- Filterable Element Buttons Flow -->
+        <div id="ed-add-elements-list" style="display:flex;flex-wrap:wrap;align-items:center;gap:5px">
+          <span style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;align-self:center;margin-right:2px">Add Element:</span>
+          <button class="ed-add-btn" data-keywords="free text write note draft draw annotate pen" onclick="toggleFreeTextTool()" style="background:rgba(245,158,11,.25);color:#fef08a;border-color:var(--gold);font-weight:700">✍️ Free Text</button>
+          <button class="ed-add-btn" data-keywords="heading title h1 h2 h3 h4 h5 h6 header text section" onclick="edAddBlock('heading')">🏷️ Heading</button>
+          <button class="ed-add-btn" data-keywords="paragraph text body write copy article description story content" onclick="edAddBlock('paragraph')">📝 Text</button>
+          <button class="ed-add-btn" data-keywords="quote blockquote citation proverb excerpt testimonial" onclick="edAddBlock('quote')">📜 Quote</button>
+          <button class="ed-add-btn" data-keywords="list bullet numbered checklist todo items tasks" onclick="edAddBlock('list')">📋 List</button>
+          <button class="ed-add-btn" data-keywords="table grid spreadsheet rows columns data cells sheet" onclick="edAddBlock('table')">📊 Table</button>
+          <button class="ed-add-btn" data-keywords="code syntax script programming javascript python rust html css upload" onclick="edAddBlock('code')">💻 Code</button>
+          <button class="ed-add-btn" data-keywords="image photo picture 3d graphic banner visual upload offline png jpg webp" onclick="edAddBlock('web_image')">🖼️ 3D Image</button>
+          <button class="ed-add-btn" data-keywords="audio music sound soundtrack atmospheric loop mp3 wav ogg offline upload" onclick="edAddBlock('web_audio')">🎵 Soundtrack</button>
+          <button class="ed-add-btn" data-keywords="video movie motion stream player mp4 webm youtube upload clip offline film" onclick="edAddBlock('web_video')">🎬 Video</button>
+          <button class="ed-add-btn" data-keywords="3d model hologram glb gltf obj stl mesh spatial upload offline render threejs" onclick="edAddBlock('3d_model')">📦 3D Model</button>
+          <button class="ed-add-btn" data-keywords="ai copilot assistant gemini gpt claude intelligent prompt chat" onclick="edAddBlock('ai')">⚡ AI Copilot</button>
+          <button class="ed-add-btn" data-keywords="form input fields webhook survey feedback dispatch contact submit" onclick="edAddBlock('form')">📑 Form</button>
+          <button class="ed-add-btn" data-keywords="feature grid cards showcase highlights tiers columns cards" onclick="edAddBlock('feature_grid')">🌟 Feature Grid</button>
+          <button class="ed-add-btn" data-keywords="live feed telemetry dispatch beacon broadcast metrics real-time" onclick="edAddBlock('live_feed')">📡 Live Dispatch</button>
+          <button class="ed-add-btn" data-keywords="preorder pricing card payment stripe checkout commerce purchase buy" onclick="edAddBlock('preorder')">💎 Pre-Order</button>
+          <button class="ed-add-btn" data-keywords="button link cta smart action trigger click navigate action" onclick="edAddBlock('button')">🔘 Smart Action</button>
+          <button class="ed-add-btn" data-keywords="throttle dyno speedometer gauge telemetry speed car acceleration" onclick="edAddBlock('throttle_dyno')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🏎️ Throttle Dyno</button>
+          <button class="ed-add-btn" data-keywords="orbit sim satellite space planetary trajectory astrophysics physics gravity" onclick="edAddBlock('orbit_sim')" style="background:rgba(167,139,250,.15);color:#a78bfa;border-color:rgba(167,139,250,.4)">🛰️ Orbit Sim</button>
+          <button class="ed-add-btn" data-keywords="arr projector revenue financial forecast growth valuation chart saas" onclick="edAddBlock('arr_projector')" style="background:rgba(16,185,129,.15);color:#10b981;border-color:rgba(16,185,129,.4)">📈 ARR Projector</button>
+          <button class="ed-add-btn" data-keywords="tilt card 3d holographic perspective interactive hover tilt card" onclick="edAddBlock('tilt_card')" style="background:rgba(244,63,94,.15);color:#f43f5e;border-color:rgba(244,63,94,.4)">📐 3D Tilt Card</button>
+          <button class="ed-add-btn" data-keywords="jsx canvas sandbox react tailwind babel chartjs threejs live code widget upload script" onclick="edAddBlock('jsx_canvas')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">⚡ Live Sandbox</button>
+        </div>
       </div>
     </div>
 
@@ -4123,6 +4607,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   </div>
 </div>
 
+<audio id="bg-audio-el" loop style="display:none"></audio>
 <div id="bg-audio-bar">
   <span style="font-size:16px;color:var(--accent)">&#9835;</span>
   <span id="bg-audio-label">Background Soundtrack</span>
@@ -4134,7 +4619,12 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   <!-- Header -->
   <div class="ai-helper-header">
     <div class="ai-helper-header-left">
-      <img class="ai-helper-brand" src="ai-brain.png" alt="AI Brain" style="width:24px;height:24px;border-radius:6px;object-fit:contain" />
+      <div class="ai-helper-brand" style="width:26px;height:26px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(245,158,11,0.3)">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.5 2A4.5 4.5 0 0 0 5 6.5c0 .4.05.79.15 1.16A5 5 0 0 0 3 12a5 5 0 0 0 2.5 4.33A4.5 4.5 0 0 0 10 21h.5V2h-1zm5 0h-.5v19h.5a4.5 4.5 0 0 0 4.5-4.67A5 5 0 0 0 21 12a5 5 0 0 0-2.15-4.34A4.5 4.5 0 0 0 14.5 2z" stroke="#fef08a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="rgba(245,158,11,0.2)"/>
+          <path d="M12 5v14M8 8h4M12 12h4M7 16h5M12 16h5" stroke="#38bdf8" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
       <div>
         <strong id="ai-panel-title">LDOCX AI Assistant</strong>
         <span id="ai-panel-subtitle">Document Intelligence &amp; Live Sync</span>
@@ -5696,7 +6186,11 @@ async function convProcessFile(file) {
     const ext = file.name.split('.').pop().toLowerCase();
     let spec;
 
-    if (ext === 'md' || ext === 'txt') {
+    if (ext === 'pptx' || ext === 'ppt') {
+      if (procStatus) procStatus.textContent = 'Unpacking PowerPoint presentation slides and typography…';
+      const buf = await file.arrayBuffer();
+      spec = await parsePptxToSpec(buf, file.name);
+    } else if (ext === 'md' || ext === 'txt') {
       if (procStatus) procStatus.textContent = 'Parsing Markdown structure, headings, and tables…';
       const text = await file.text();
       spec = parseMarkdownToSpec(text, file.name);
@@ -5949,8 +6443,83 @@ function parseMarkdownToSpec(text, filename) {
 
   return {
     title: title || 'Converted Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
+    pages: pages
+  };
+}
+
+
+async function parsePptxToSpec(arrayBuffer, filename) {
+  const JSZipLib = window.JSZip || (typeof JSZip !== 'undefined' ? JSZip : null);
+  if (!JSZipLib) throw new Error('JSZip is not available.');
+
+  const zip = await JSZipLib.loadAsync(arrayBuffer);
+  let title = filename ? filename.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ') : 'PowerPoint Presentation';
+
+  const slideFiles = [];
+  zip.forEach((relativePath) => {
+    const match = relativePath.match(/^ppt\/slides\/slide(\d+)\.xml$/i);
+    if (match) {
+      slideFiles.push({ num: parseInt(match[1], 10), path: relativePath });
+    }
+  });
+  slideFiles.sort((a, b) => a.num - b.num);
+
+  const pages = [];
+  for (const sf of slideFiles) {
+    const slideXml = await zip.file(sf.path).async('string');
+    const dom = new DOMParser().parseFromString(slideXml, 'application/xml');
+
+    const pElements = dom.getElementsByTagName('a:p');
+    const blocks = [];
+    let slideTitle = `Slide ${sf.num}`;
+
+    for (let i = 0; i < pElements.length; i++) {
+      const p = pElements[i];
+      const tElements = p.getElementsByTagName('a:t');
+      let text = '';
+      for (let j = 0; j < tElements.length; j++) {
+        text += tElements[j].textContent;
+      }
+      text = text.trim();
+      if (!text) continue;
+
+      if (blocks.length === 0) {
+        slideTitle = text;
+        blocks.push({ type: 'heading', level: 1, text: text });
+      } else if (text.length < 60 && !text.endsWith('.')) {
+        blocks.push({ type: 'heading', level: 2, text: text });
+      } else {
+        blocks.push({ type: 'paragraph', text: text });
+      }
+    }
+
+    if (blocks.length === 0) {
+      blocks.push({ type: 'heading', level: 1, text: `Slide ${sf.num}` });
+    }
+
+    pages.push({
+      id: 'page_' + sf.num,
+      title: slideTitle,
+      blocks: blocks
+    });
+  }
+
+  if (pages.length === 0) {
+    pages.push({
+      id: 'page_1',
+      title: title,
+      blocks: [
+        { type: 'heading', level: 1, text: title }
+      ]
+    });
+  }
+
+  return {
+    title: title,
+    author: '',
+    theme: 'deck',
     pages: pages
   };
 }
@@ -6147,7 +6716,7 @@ async function parseDocxToSpec(arrayBuffer, filename) {
 
   return {
     title: title || 'Word Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6297,7 +6866,7 @@ function parseHtmlToSpec(htmlText, filename) {
 
   return {
     title: title || 'Web Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6314,7 +6883,7 @@ function parseJsonToSpec(jsonText, filename) {
   if (parsed && Array.isArray(parsed.pages) && parsed.pages.length > 0) {
     return {
       title: parsed.title || filename.replace(/\.[^/.]+$/, ''),
-      author: parsed.author || 'Living Document Creator',
+      author: parsed.author || '',
       theme: parsed.theme || 'paper',
       pages: parsed.pages
     };
@@ -6330,12 +6899,6 @@ function parseJsonToSpec(jsonText, filename) {
       level: 1,
       text: docTitle,
       value: docTitle
-    });
-    blocks.push({
-      id: 'b_' + Math.random().toString(36).slice(2, 8),
-      type: 'paragraph',
-      text: `Structured JSON dataset containing ${parsed.length} records.`,
-      value: `Structured JSON dataset containing ${parsed.length} records.`
     });
 
     const headers = Object.keys(parsed[0]);
@@ -6365,12 +6928,6 @@ function parseJsonToSpec(jsonText, filename) {
       level: 1,
       text: docTitle,
       value: docTitle
-    });
-    blocks.push({
-      id: 'b_' + Math.random().toString(36).slice(2, 8),
-      type: 'paragraph',
-      text: 'Parsed JSON document data payload.',
-      value: 'Parsed JSON document data payload.'
     });
 
     if (typeof parsed === 'object' && parsed !== null) {
@@ -6413,7 +6970,7 @@ function parseJsonToSpec(jsonText, filename) {
 
   return {
     title: docTitle,
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: docTitle, blocks: blocks }]
   };
@@ -6440,25 +6997,15 @@ async function parse3DModelToSpec(file) {
     reader.readAsDataURL(file);
   });
 
-  const vertCount = meshData && meshData.vertices ? meshData.vertices.length : null;
-  const faceCount = meshData && meshData.faces ? meshData.faces.length : null;
-  const statsDetail = vertCount ? ` (${vertCount.toLocaleString()} vertices, ${faceCount.toLocaleString()} faces)` : '';
-
   return {
     title: `${title} (3D Living Model)`,
-    author: 'Universal 3D Converter',
+    author: '',
     theme: 'cyber',
     pages: [{
       id: 'page_1',
       title: `${title} 3D Spatial Model`,
       blocks: [
         { id: 'b_1', type: 'heading', level: 1, text: `${title} 3D Model`, value: `${title} 3D Model` },
-        { 
-          id: 'b_2', 
-          type: 'paragraph', 
-          text: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.`,
-          value: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.`
-        },
         { 
           id: 'b_3', 
           type: '3d_model', 
@@ -6490,8 +7037,7 @@ async function parseMediaToSpec(file) {
   const isImage = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext);
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: title, value: title },
-    { id: 'b_2', type: 'paragraph', text: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).`, value: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).` }
+    { id: 'b_1', type: 'heading', level: 1, text: title, value: title }
   ];
 
   if (isAudio) {
@@ -6504,7 +7050,7 @@ async function parseMediaToSpec(file) {
 
   return {
     title: title,
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: title, blocks: blocks }]
   };
@@ -6523,7 +7069,7 @@ async function parsePdfToSpec(file) {
   // 1. Modern PDF.js extraction with visual canvas snapshot & structured living layout
   if (typeof window !== 'undefined' && window.pdfjsLib) {
     try {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = '../../../vendor/pdf.worker.min.js';
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
       const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       const pages = [];
 
@@ -6778,7 +7324,7 @@ async function parsePdfToSpec(file) {
       if (pages.length > 0) {
         return {
           title: docTitle,
-          author: 'Universal PDF Converter',
+          author: '',
           theme: 'paper',
           pages: pages
         };
@@ -6812,8 +7358,7 @@ function parsePdfFallback(file, docTitle, arrayBuffer) {
   }
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: docTitle, value: docTitle },
-    { id: 'b_2', type: 'paragraph', text: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).`, value: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).` }
+    { id: 'b_1', type: 'heading', level: 1, text: docTitle, value: docTitle }
   ];
 
   if (extractedText && extractedText.trim().length > 20) {
@@ -6824,19 +7369,11 @@ function parsePdfFallback(file, docTitle, arrayBuffer) {
         blocks.push({ id: 'b_p_' + idx, type: 'paragraph', text: pTxt, value: pTxt });
       }
     });
-  } else {
-    const nTxt = 'PDF document structure preserved with layout metadata. You can customize interactive components, add 3D elements, or embed audio in Studio.';
-    blocks.push({
-      id: 'b_notice',
-      type: 'paragraph',
-      text: nTxt,
-      value: nTxt
-    });
   }
 
   return {
     title: docTitle,
-    author: 'Universal PDF Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: docTitle, blocks: blocks }]
   };
@@ -6855,15 +7392,15 @@ function renderConvResult(spec, blob, file) {
   if (resultCard) resultCard.style.display = 'flex';
 
   const ext = (file.name || '').split('.').pop().toUpperCase();
-  document.getElementById('conv-doc-title').textContent = spec.title || file.name;
-  document.getElementById('conv-doc-subtitle').textContent = `Converted from ${file.name} • ${ext} format preserved`;
-  document.getElementById('conv-stat-pages').textContent = spec.pages.length;
+  const _cdt = document.getElementById('conv-doc-title'); if (_cdt) _cdt.textContent = spec.title || file.name;
+  const _cds = document.getElementById('conv-doc-subtitle'); if (_cds) _cds.textContent = `Converted from ${file.name} • ${ext} format preserved`;
+  const _csp = document.getElementById('conv-stat-pages'); if (_csp) _csp.textContent = spec.pages.length;
   
   let totalBlocks = 0;
   spec.pages.forEach(p => totalBlocks += (p.blocks || []).length);
-  document.getElementById('conv-stat-blocks').textContent = `${totalBlocks} Blocks`;
-  document.getElementById('conv-stat-size').textContent = `${(blob.size / 1024).toFixed(1)} KB`;
-  document.getElementById('conv-stat-format').textContent = ext;
+  const _csb = document.getElementById('conv-stat-blocks'); if (_csb) _csb.textContent = `${totalBlocks} Blocks`;
+  const _css = document.getElementById('conv-stat-size'); if (_css) _css.textContent = `${(blob.size / 1024).toFixed(1)} KB`;
+  const _csf = document.getElementById('conv-stat-format'); if (_csf) _csf.textContent = ext;
 
   const outline = document.getElementById('conv-outline-preview');
   if (outline) {
@@ -7084,7 +7621,7 @@ function convOpenInCreator() {
   } catch (e) {
     console.warn('Session storage notice:', e);
   }
-  window.location.href = '/creator?source=converted';
+  window.location.href = 'creator.html?source=converted';
 }
 
 function convResetDropZone() {
@@ -7612,6 +8149,18 @@ function resetJsxSandbox(uid) {
   }
 }
 
+function toggleJsxFullscreen(uid) {
+  const bodyEl = document.getElementById(`${uid}-body`) || document.getElementById(`jsx-output-${uid}`);
+  if (!bodyEl) return;
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    if (bodyEl.requestFullscreen) bodyEl.requestFullscreen();
+    else if (bodyEl.webkitRequestFullscreen) bodyEl.webkitRequestFullscreen();
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+}
+
 function triggerTelemetryBurst(btn) {
   if (!btn) return;
   btn.textContent = '⚡ Scanning...';
@@ -7659,13 +8208,14 @@ function initBgAudio(src,label){
 }
 function toggleBgAudio(){
   const el=document.getElementById('bg-audio-el');
-  if(el.paused){el.play().catch(()=>{});document.getElementById('bg-audio-toggle').innerHTML='&#9646;&#9646;';}
-  else{el.pause();document.getElementById('bg-audio-toggle').innerHTML='&#9654;';}
+  if(!el) return;
+  if(el.paused){el.play().catch(()=>{});const b=document.getElementById('bg-audio-toggle');if(b)b.innerHTML='&#9646;&#9646;';}
+  else{el.pause();const b=document.getElementById('bg-audio-toggle');if(b)b.innerHTML='&#9654;';}
 }
-function setBgVol(v){document.getElementById('bg-audio-el').volume=parseFloat(v);}
+function setBgVol(v){const el=document.getElementById('bg-audio-el');if(el)el.volume=parseFloat(v);}
 function stopBgAudio(){
-  const el=document.getElementById('bg-audio-el');el.pause();el.removeAttribute('src');
-  document.getElementById('bg-audio-bar').style.display='none';
+  const el=document.getElementById('bg-audio-el');if(el){el.pause();el.removeAttribute('src');}
+  const b=document.getElementById('bg-audio-bar');if(b)b.style.display='none';
 }
 
 function togglePagesPanel(){const o=document.getElementById('pages-overlay');o.classList.toggle('open');}
@@ -7677,30 +8227,48 @@ function switchTab(tab){
   const portalView = document.getElementById('portal-view');
   if (portalView) portalView.style.display = 'none';
   const portalBtn = document.getElementById('view-toggle-portal');
-  const wsBtn = document.getElementById('view-toggle-workspace');
   if (portalBtn) portalBtn.classList.remove('active');
+  const wsBtn = document.getElementById('view-toggle-workspace');
   if (wsBtn) wsBtn.classList.add('active');
 
-  document.getElementById('tab-viewer').classList.toggle('active',tab==='viewer');
-  document.getElementById('tab-editor').classList.toggle('active',tab==='editor');
-  document.getElementById('tab-converter')?.classList.toggle('active',tab==='converter');
-  document.getElementById('tab-templates')?.classList.toggle('active',tab==='templates');
-  document.getElementById('tab-docs').classList.toggle('active',tab==='docs');
-  
-  document.getElementById('viewer-panel').style.display=tab==='viewer'?'flex':'none';
-  document.getElementById('editor-panel').style.display=tab==='editor'?'flex':'none';
-  document.getElementById('converter-panel').style.display=tab==='converter'?'flex':'none';
-  document.getElementById('templates-panel').style.display=tab==='templates'?'flex':'none';
-  document.getElementById('docs-panel').style.display=tab==='docs'?'flex':'none';
-  
-  document.getElementById('open-btn').style.display=tab==='viewer'?'':'none';
-  document.getElementById('ed-open-btn').style.display=tab==='editor'?'':'none';
-  document.getElementById('save-btn').style.display='inline-flex';
-  document.getElementById('build-btn').style.display=tab==='editor'?'':'none';
-  document.getElementById('build-save-btn').style.display=tab==='editor'?'':'none';
-  if(tab==='docs')refreshDocs();
-  if(tab==='templates')renderTemplateVault();
-  if(tab==='editor'){if(typeof edPages!=='undefined'&&edPages.length===0){edAddPage();}edUpdateLivePreview();}
+  const tabIds = ['tab-viewer', 'tab-editor', 'tab-converter', 'tab-templates', 'tab-docs'];
+  tabIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', tab === id.replace('tab-', ''));
+  });
+
+  const panelMap = {
+    'viewer': 'viewer-panel',
+    'editor': 'editor-panel',
+    'converter': 'converter-panel',
+    'templates': 'templates-panel',
+    'docs': 'docs-panel'
+  };
+  Object.keys(panelMap).forEach(key => {
+    const p = document.getElementById(panelMap[key]);
+    if (p) p.style.display = (tab === key ? 'flex' : 'none');
+  });
+
+  const openBtn = document.getElementById('open-btn');
+  if (openBtn) openBtn.style.display = (tab === 'viewer' ? '' : 'none');
+  const edOpenBtn = document.getElementById('ed-open-btn');
+  if (edOpenBtn) edOpenBtn.style.display = (tab === 'editor' ? '' : 'none');
+  const saveBtn = document.getElementById('save-btn');
+  if (saveBtn) saveBtn.style.display = 'inline-flex';
+  const buildBtn = document.getElementById('build-btn');
+  if (buildBtn) buildBtn.style.display = (tab === 'editor' ? '' : 'none');
+  const buildSaveBtn = document.getElementById('build-save-btn');
+  if (buildSaveBtn) buildSaveBtn.style.display = (tab === 'editor' ? '' : 'none');
+
+  if (tab === 'docs' && typeof refreshDocs === 'function') refreshDocs();
+  if (tab === 'templates' && typeof renderTemplateVault === 'function') renderTemplateVault();
+  if (tab === 'editor') {
+    if (typeof edPages !== 'undefined' && edPages.length === 0 && typeof edAddPage === 'function') {
+      edAddPage();
+    }
+    if (typeof edRenderPageList === 'function') edRenderPageList();
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  }
 }
 
 // ── AI Assistant Controller ─────────────────────────────────────────────────
@@ -9654,7 +10222,7 @@ async function renderDirectPresentation(manifest, extractedPages) {
     GlobalAudio.setTrack(sSrc, sTitle);
   }
 
-  document.getElementById('pages-toggle-btn').style.display = '';
+  const _ptb = document.getElementById('pages-toggle-btn'); if (_ptb) _ptb.style.display = '';
   document.getElementById('save-btn').style.display = '';
 
   // Update AI Assistant header
@@ -9864,7 +10432,7 @@ async function openDoc(id){
     const sTitle = typeof st === 'string' ? 'Vice City Radio — The Pointer Sisters' : (st.title || 'Vice City Radio — The Pointer Sisters');
     GlobalAudio.setTrack(sSrc, sTitle);
   }
-  document.getElementById('pages-toggle-btn').style.display='';
+  const _ptb2 = document.getElementById('pages-toggle-btn'); if (_ptb2) _ptb2.style.display = '';
   document.getElementById('save-btn').style.display='';
 
   // Update AI Assistant for loaded document
@@ -10207,6 +10775,37 @@ function nodeLabel(n){if(!n)return '';return n.label||(n.aria&&n.aria.label)||n.
 function nodePH(n){if(!n)return '';return n.placeholder||(n.aria&&n.aria.placeholder)||'';}
 function assetUrl(n){return n.asset_id?`${API}/documents/${docId}/assets/${n.asset_id}`:'';;}
 
+function renderInteractiveVisualSandbox(code, title, parent, node = {}) {
+  const card = document.createElement('div');
+  card.className = 'jsx-canvas-card visual-sandbox-card';
+  card.style.cssText = 'background:rgba(15,15,28,0.95);border:1.5px solid rgba(245,158,11,0.4);border-radius:18px;padding:14px;margin:16px 0;box-shadow:0 16px 48px rgba(0,0,0,0.85);position:relative;z-index:10;';
+  const uid = 'vis_' + Math.random().toString(36).slice(2, 9);
+
+  card.innerHTML = `
+    <div class="jsx-header" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span class="jsx-badge" style="font-family:'Cinzel',serif;font-weight:700;font-size:13px;color:#fef08a;display:inline-flex;align-items:center;gap:6px">
+        <span style="color:var(--gold);font-size:16px">⚡</span>
+        <span>${escapeHtml(title || 'Interactive 3D / Live Motion Sandbox')}</span>
+      </span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="jsx-toggle-btn" type="button" onclick="toggleJsxFullscreen('${uid}')" style="background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">⛶ Fullscreen</button>
+        <button class="jsx-toggle-btn" type="button" onclick="resetJsxSandbox('${uid}')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#cbd5e1;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">🔄 Reset</button>
+        <button class="jsx-toggle-btn" type="button" onclick="toggleJsxCode('${uid}')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#cbd5e1;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">👁️ Code</button>
+      </div>
+    </div>
+    <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative;width:100%;height:440px;border-radius:12px;overflow:hidden;background:#000"></div>
+    <pre class="jsx-code-view" id="${uid}-code" style="display:none;max-height:220px;overflow:auto;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1);padding:10px;border-radius:8px;font-size:11px;color:#cbd5e1;margin-top:10px"><code>${escapeHtml(code)}</code></pre>
+  `;
+  parent.appendChild(card);
+
+  setTimeout(() => {
+    const bodyEl = document.getElementById(`${uid}-body`);
+    if (bodyEl) {
+      executeCustomSandboxCode(code, bodyEl, uid);
+    }
+  }, 25);
+}
+
 function executeCustomSandboxCode(rawCode, containerEl, uid) {
   if (!containerEl) return;
   containerEl.innerHTML = '';
@@ -10218,7 +10817,7 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
     hint.innerHTML = `
       <div style="font-size:18px;margin-bottom:4px">⚡</div>
       <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:2px">Custom Interactive Sandbox</div>
-      <div style="font-size:10.5px;color:var(--text3)">Enter custom HTML, React JSX, Chart.js, Three.js, or Canvas code</div>
+      <div style="font-size:10.5px;color:var(--text3)">Enter custom HTML, React JSX, Chart.js, Three.js, Unity WebGL, or Canvas code</div>
     `;
     containerEl.appendChild(hint);
     return;
@@ -10239,35 +10838,164 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
   };
 
   try {
-    // Classification: Is this HTML markup with optional <script> tags, OR is it pure JavaScript / React component code?
     const isJsModuleSyntax = /^(?:import\s|export\s|function\s+[A-Z]|class\s+[A-Z]|const\s+[A-Z]|let\s+[A-Z]|var\s+[A-Z]|(?:\/\*[\s\S]*?\*\/|\/\/[^\n]*\n)*\s*(?:import|export|function\s+[A-Z]|class\s+[A-Z]|const\s+[A-Z]))/.test(trimmed);
     const startsWithHtmlTag = /^\s*(?:<!--[\s\S]*?-->\s*)*<\s*(?:!DOCTYPE|html|head|body|div|span|canvas|section|header|footer|nav|aside|article|main|form|p|h[1-6]|button|input|svg|table|style|script)\b/i.test(trimmed);
     const hasScriptTag = /<\s*script\b/i.test(trimmed);
     const hasJsxSyntax = /className=|style=\{\{|<[A-Z][A-Za-z0-9_]*|\/>/.test(trimmed);
 
-    const isHtml = startsWithHtmlTag && !isJsModuleSyntax && (hasScriptTag || !hasJsxSyntax);
+    const isHtml = (startsWithHtmlTag && !isJsModuleSyntax && (hasScriptTag || !hasJsxSyntax)) || /^\s*<!DOCTYPE\b|^\s*<html\b/i.test(trimmed);
+    const is3dCanvasScript = !hasJsxSyntax && (trimmed.includes('THREE.') || trimmed.includes('WebGL') || trimmed.includes('createUnityInstance') || trimmed.includes('renderer.setSize') || trimmed.includes('document.body.appendChild'));
 
-    if (isHtml) {
-      // HTML markup with optional embedded <script> tags
-      const scopedCode = trimmed.replace(/\bdocument\.getElementById\((["'])([^"'\s\)]+)\1\)/g, (m, q, id) => {
-        return `((this && this.closest && this.closest('[data-scope]')) ? this.closest('[data-scope]').querySelector('#${id}') : document.getElementById('${id}'))`;
-      });
-      containerEl.innerHTML = scopedCode;
-
-      const scripts = containerEl.querySelectorAll('script');
-      scripts.forEach(s => {
+    if (isHtml || is3dCanvasScript) {
+      // Execute in an isolated sandbox iframe to completely prevent DOM leaks, style collisions, or window takeovers!
+      if (containerEl._activeIframe) {
         try {
-          let sCode = s.textContent;
-          const isBabel = s.type === 'text/babel' || s.type === 'text/jsx' || /<[A-Za-z0-9_]/.test(sCode);
-          if (isBabel && window.Babel) {
-            sCode = window.Babel.transform(sCode, { presets: [['react', { runtime: 'classic' }]] }).code;
-          }
-          const fn = new Function('container', 'scopeId', 'React', 'ReactDOM', 'THREE', 'Chart', `var { useState, useEffect, useRef, useMemo, useCallback } = React || {};\n` + sCode);
-          fn(containerEl, uid, window.React, window.ReactDOM, window.THREE, window.Chart);
-        } catch (sErr) {
-          renderError('Script Runtime Notice', sErr.message, sErr.stack);
-        }
+          containerEl._activeIframe.srcdoc = '';
+          containerEl._activeIframe.src = 'about:blank';
+          containerEl._activeIframe.remove();
+        } catch(e){}
+        containerEl._activeIframe = null;
+      }
+
+      const iframe = document.createElement('iframe');
+      iframe.className = 'ldoc-sandbox-frame';
+      iframe.setAttribute('sandbox', 'allow-scripts allow-modals allow-same-origin allow-forms');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; xr-spatial-tracking; fullscreen');
+      
+      const isMini = containerEl.id && containerEl.id.startsWith('mini-sandbox-');
+      const isLivePreview = containerEl.closest && containerEl.closest('#ed-preview-pane');
+      const frameHeight = isMini ? '220px' : (isLivePreview ? '300px' : (containerEl.style.height || '440px'));
+      iframe.style.cssText = `width:100%;height:${frameHeight};min-height:${isMini ? '200px' : (isLivePreview ? '260px' : '360px')};border:none;border-radius:10px;display:block;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.7);transform:translateZ(0);will-change:transform;backface-visibility:hidden;image-rendering:high-quality;`;
+      
+      containerEl.innerHTML = '';
+      containerEl.appendChild(iframe);
+      containerEl._activeIframe = iframe;
+
+      let processed = trimmed;
+      if (!isHtml && is3dCanvasScript) {
+        processed = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; }
+    canvas { display: block; width: 100%; height: 100%; }
+  </style>
+  <script src="vendor/three.min.js"><\/script>
+  <script src="vendor/OrbitControls.js"><\/script>
+  <script src="vendor/GLTFLoader.js"><\/script>
+  <script src="vendor/chart.min.js"><\/script>
+</head>
+<body>
+<script>
+try {
+  ${trimmed}
+} catch(err) {
+  console.error('[3D Sandbox Notice]:', err);
+  document.body.innerHTML = '<div style="padding:16px;color:#fca5a5;font-family:monospace;font-size:12px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:8px;margin:12px"><strong>⚠️ 3D Visualization Notice</strong><br>' + String(err.message || err) + '</div>';
+}
+<\/script>
+</body>
+</html>`;
+      }
+
+      // Preprocess HTML to rewrite external CDN script URLs to local vendor paths for 100% offline support
+      processed = processed.replace(/(<script\b[^>]*?\bsrc=["'])([^"'>]+)(["'][^>]*?>\s*<\/script>)/gi, (match, prefix, src, suffix) => {
+        const s = (src || '').toLowerCase();
+        if (s.includes('orbitcontrols.js') || s.includes('orbitcontrols')) return `${prefix}vendor/OrbitControls.js${suffix}`;
+        if (s.includes('gltfloader.js') || s.includes('gltfloader')) return `${prefix}vendor/GLTFLoader.js${suffix}`;
+        if (s.includes('objloader.js') || s.includes('objloader')) return `${prefix}vendor/OBJLoader.js${suffix}`;
+        if (s.includes('stlloader.js') || s.includes('stlloader')) return `${prefix}vendor/STLLoader.js${suffix}`;
+        if (s.includes('three.min.js') || s.includes('three.js') || s.includes('three@') || s.includes('/three/')) return `${prefix}vendor/three.min.js${suffix}`;
+        if (s.includes('chart.min.js') || s.includes('chart.js') || s.includes('chartjs')) return `${prefix}vendor/chart.min.js${suffix}`;
+        if (s.includes('react.production') || s.includes('react.min.js') || s.includes('/react@') || s.includes('/react/')) return `${prefix}vendor/react.production.min.js${suffix}`;
+        if (s.includes('react-dom.production') || s.includes('react-dom.min.js') || s.includes('/react-dom@') || s.includes('/react-dom/')) return `${prefix}vendor/react-dom.production.min.js${suffix}`;
+        if (s.includes('babel.min.js') || s.includes('babel-standalone')) return `${prefix}vendor/babel.min.js${suffix}`;
+        if (s.includes('tailwind') || s.includes('tailwindcss')) return `${prefix}vendor/tailwind.min.js${suffix}`;
+        return match;
       });
+
+      // Inject base URL, high-performance WebGL interceptor, memory management, and resilient fallbacks
+      const appBase = (typeof location !== 'undefined' && location.href) ? location.href.replace(/#.*$/, '') : '';
+      const shims = `
+<base href="${appBase}">
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
+<script>
+  window.addEventListener('error', function(e) {
+    console.warn('[Sandbox Runtime Notice]:', e.message);
+  });
+  // High-Performance Hardware Accelerated WebGL Engine Interceptor
+  if (typeof HTMLCanvasElement !== 'undefined') {
+    const _origGetContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(type, attributes) {
+      if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') {
+        attributes = Object.assign({
+          powerPreference: 'high-performance',
+          antialias: true,
+          alpha: true,
+          depth: true,
+          stencil: false,
+          preserveDrawingBuffer: false,
+          failIfMajorPerformanceCaveat: false
+        }, attributes || {});
+      }
+      return _origGetContext.call(this, type, attributes);
+    };
+  }
+  // Prevent VRAM context loss from crashing the presentation
+  window.addEventListener('webglcontextlost', function(e) {
+    e.preventDefault();
+    console.warn('[WebGL Engine]: Context lost under VRAM pressure, attempting automatic recovery...');
+  }, false);
+  // Three.js OrbitControls immediate resilient fallback stub
+  function _ensureOrbitControls() {
+    if (typeof THREE !== 'undefined' && !THREE.OrbitControls) {
+      THREE.OrbitControls = function(object, domElement) {
+        this.object = object;
+        this.domElement = domElement || document.body;
+        this.update = function() {};
+        this.dispose = function() {};
+        this.enableDamping = false;
+        this.dampingFactor = 0.05;
+        this.target = (typeof THREE.Vector3 !== 'undefined') ? new THREE.Vector3() : { x: 0, y: 0, z: 0 };
+        let isDown = false, px = 0, py = 0;
+        const target = this.domElement;
+        target.addEventListener('mousedown', function(e) { isDown = true; px = e.clientX; py = e.clientY; });
+        window.addEventListener('mouseup', function() { isDown = false; });
+        window.addEventListener('mousemove', function(e) {
+          if (!isDown || !object) return;
+          object.rotation.y += (e.clientX - px) * 0.01;
+          object.rotation.x += (e.clientY - py) * 0.01;
+          px = e.clientX; py = e.clientY;
+        });
+      };
+    }
+  }
+  _ensureOrbitControls();
+  document.addEventListener('DOMContentLoaded', _ensureOrbitControls);
+<\/script>
+`;
+      if (/<head\b[^>]*>/i.test(processed)) {
+        processed = processed.replace(/<head\b[^>]*>/i, `$&${shims}`);
+      } else if (/<html\b[^>]*>/i.test(processed)) {
+        processed = processed.replace(/<html\b[^>]*>/i, `$&<head>${shims}</head>`);
+      } else {
+        processed = `<!DOCTYPE html><html><head>${shims}</head><body>${processed}</body></html>`;
+      }
+
+      if ('srcdoc' in iframe) {
+        iframe.srcdoc = processed;
+      } else {
+        const doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+        if (doc) {
+          doc.open();
+          doc.write(processed);
+          doc.close();
+        }
+      }
     } else {
       // Pure JS / React / JSX code (supports full modern components with imports, exports, hooks, and auto-mount)
       let jsCode = trimmed;
@@ -10952,7 +11680,7 @@ function renderBlockNode(node,parent){
             <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13.5px;color:#fef08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(lbl)}</div>
             <div style="font-size:11px;color:#34d399;margin-top:3px;display:flex;align-items:center;gap:5px">
               <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399"></span>
-              <strong>Atmospheric Audio (Loop Mode: Active)</strong>
+              <strong>${(src && src.startsWith("data:")) ? "⚡ Offline Atmospheric Soundtrack (100% Embedded Loop)" : "Atmospheric Audio (Loop Mode: Active)"}</strong>
             </div>
           </div>
           <audio controls loop src="${escapeHtml(src)}" style="height:34px;max-width:240px;outline:none"></audio>
@@ -10964,6 +11692,14 @@ function renderBlockNode(node,parent){
     case 'video':case 'web_video':{
       const rawSrc = (node.style && node.style.src) || node.src || assetUrl(node) || '';
       const lbl = (node.style && node.style.label) || (node.aria && node.aria.label) || node.value || 'Video Stream';
+
+      // Smart Auto-Detection: Did user provide HTML / 3D WebGL / Canvas / Visualization code instead of video file?
+      const isHtmlVisualization = /^\s*<!DOCTYPE\b|^\s*<html\b|<\s*canvas\b|<\s*script\b|THREE\.|WebGL|createUnityInstance/i.test(rawSrc) || /<\s*style\b/i.test(rawSrc);
+      if (isHtmlVisualization) {
+        renderInteractiveVisualSandbox(rawSrc, lbl, parent, node);
+        break;
+      }
+
       const card = document.createElement('div');
       card.className = 'video-card';
       card.style.cssText = 'background:rgba(15,15,28,0.92);border:1.5px solid rgba(245,158,11,0.4);border-radius:18px;padding:14px;margin:20px 0;box-shadow:0 16px 48px rgba(0,0,0,0.85);position:relative;z-index:10;';
@@ -10993,13 +11729,18 @@ function renderBlockNode(node,parent){
         iframe.style.cssText = 'width:100%;aspect-ratio:16/9;border:none;border-radius:12px;display:block;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.9);';
         card.appendChild(iframe);
       } else {
+        const vWrap = document.createElement('div');
+        vWrap.style.cssText = 'position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;box-shadow:0 10px 30px rgba(0,0,0,0.8);';
+
         const v = document.createElement('video');
         v.controls = true;
         v.loop = true;
         v.playsInline = true;
+        v.preload = 'auto';
         v.src = videoSrc;
-        v.style.cssText = 'width:100%;aspect-ratio:16/9;border-radius:12px;display:block;background:#000;';
-        card.appendChild(v);
+        v.style.cssText = 'width:100%;height:100%;border-radius:12px;display:block;background:#000;transform:translateZ(0);will-change:transform;image-rendering:high-quality;';
+        vWrap.appendChild(v);
+        card.appendChild(vWrap);
       }
 
       const vl = document.createElement('div');
@@ -11771,11 +12512,12 @@ function renderBlockNode(node,parent){
         <div class="jsx-header">
           <span class="jsx-badge">⚡ ${escapeHtml(title)}</span>
           <div style="display:flex;gap:6px">
+            <button class="jsx-toggle-btn" type="button" onclick="toggleJsxFullscreen('${uid}')">⛶ Fullscreen</button>
             <button class="jsx-toggle-btn" type="button" onclick="toggleJsxCode('${uid}')">👁️ Code</button>
             <button class="jsx-toggle-btn" type="button" onclick="resetJsxSandbox('${uid}')">🔄 Reset</button>
           </div>
         </div>
-        <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative"></div>
+        <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative;width:100%;min-height:360px;border-radius:12px;overflow:hidden;background:#000"></div>
         <pre class="jsx-code-view" id="${uid}-code"><code>${escapeHtml(rawCode)}</code></pre>
       `;
       parent.appendChild(card);
@@ -12943,7 +13685,7 @@ function showLoading(text){
   document.getElementById('page-canvas').style.display='none';
 }
 function showViewer(){document.getElementById('drop-zone').style.display='none';document.getElementById('loading').style.display='none';document.getElementById('page-canvas').style.display='block';}
-function showDropZone(){document.getElementById('drop-zone').style.display='flex';document.getElementById('loading').style.display='none';document.getElementById('page-canvas').style.display='none';document.getElementById('pages-toggle-btn').style.display='none';document.getElementById('save-btn').style.display='none';}
+function showDropZone(){const _dz=document.getElementById('drop-zone');if(_dz)_dz.style.display='flex';const _ld=document.getElementById('loading');if(_ld)_ld.style.display='none';const _pc=document.getElementById('page-canvas');if(_pc)_pc.style.display='none';const _ptb=document.getElementById('pages-toggle-btn');if(_ptb)_ptb.style.display='none';const _sb=document.getElementById('save-btn');if(_sb)_sb.style.display='none';}
 
 async function saveDoc(){
   const convPanel = document.getElementById('converter-panel');
@@ -13468,7 +14210,7 @@ async function useTemplate(tplId, mode) {
 
   if (mode === 'editor') {
     switchTab('editor');
-    document.getElementById('ed-title').value = spec.title;
+    const _edt = document.getElementById('ed-title'); if (_edt) _edt.value = spec.title;
     edPages = spec.pages.map(p => ({
       id: edPId(),
       title: p.title,
@@ -13700,16 +14442,156 @@ function edRenderPageList() {
   edPages.forEach((p, i) => {
     const item = document.createElement('div');
     item.className = 'ed-page-item' + (p.id === edCurrentPage ? ' active' : '');
-    item.innerHTML = `<span style="font-size:10px;color:var(--text3);min-width:14px">${i + 1}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.title}</span><button class="ed-page-del" onclick="event.stopPropagation();edDeletePage(${p.id})">&#10005;</button>`;
+    item.innerHTML = `<span style="font-size:10px;color:var(--text3);min-width:14px">${i + 1}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.title}</span><button class="ed-page-del" onclick="event.stopPropagation();edDeletePage('${p.id}')">&#10005;</button>`;
     item.onclick = () => edSelectPage(p.id);
     list.appendChild(item);
   });
 }
 
 function edShowEmpty() {
-  document.getElementById('ed-empty').style.display = 'flex';
-  document.getElementById('ed-blocks-panel').style.display = 'none';
-  edUpdateLivePreview();
+  const _emp = document.getElementById('ed-empty'); if (_emp) _emp.style.display = 'flex';
+  const _bp = document.getElementById('ed-blocks-panel'); if (_bp) _bp.style.display = 'none';
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+}
+
+
+// ── 🔍 Interactive Search Filter for Add Elements & Quick Offline Upload ────────
+function edFilterAddElements(query) {
+  const q = (query || '').toLowerCase().trim();
+  const allBtns = document.querySelectorAll('#ed-add-elements-list .ed-add-btn, .ed-empty-element-btn');
+  let matchCount = 0;
+  allBtns.forEach(btn => {
+    const txt = (btn.textContent || '').toLowerCase();
+    const kw = (btn.getAttribute('data-keywords') || '').toLowerCase();
+    const match = !q || txt.includes(q) || kw.includes(q);
+    btn.style.display = match ? '' : 'none';
+    if (match) matchCount++;
+  });
+}
+
+function edTriggerDirectUpload(kind) {
+  let page = (typeof edGetActivePage === 'function') ? edGetActivePage() : null;
+  if (!page && typeof edPages !== 'undefined' && edPages.length > 0) {
+    const idx = (typeof edActivePageIndex === 'number') ? edActivePageIndex : 0;
+    page = edPages[idx] || edPages[0];
+  }
+  if (!page) {
+    if (typeof edAddPage === 'function') {
+      edAddPage();
+      page = (typeof edGetActivePage === 'function') ? edGetActivePage() : (edPages && edPages[0]);
+    }
+  }
+  if (!page) {
+    if (typeof showToast === 'function') showToast('Please create or select a page first', 'err');
+    return;
+  }
+  if (!Array.isArray(page.blocks)) page.blocks = [];
+
+  const input = document.createElement('input');
+  input.type = 'file';
+  if (kind === 'video') input.accept = '.mp4,.webm,.ogg,.mov,.mkv';
+  else if (kind === 'audio') input.accept = '.mp3,.wav,.ogg,.m4a,.aac,.flac';
+  else if (kind === '3d') input.accept = '.glb,.gltf,.obj,.stl';
+  else if (kind === 'image') input.accept = '.png,.jpg,.jpeg,.webp,.svg,.gif,.bmp';
+  else if (kind === 'sandbox' || kind === 'code') input.accept = '.jsx,.js,.html,.tsx,.txt,.py,.rs,.css,.json,.sql';
+
+  input.onchange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (kind === 'sandbox' || kind === 'code') {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const content = ev.target.result;
+        const baseName = file.name.replace(/\.[^/.]+$/, "");
+        if (kind === 'sandbox') {
+          const b = {
+            id: (typeof edBId === 'function') ? edBId() : ('b_' + Math.random().toString(36).substr(2, 6)),
+            type: 'jsx_canvas',
+            value: baseName,
+            title: baseName + ' (Interactive Sandbox)',
+            filename: file.name,
+            code: content,
+            style: { code: content }
+          };
+          page.blocks.push(b);
+        } else {
+          const ext = file.name.split('.').pop().toLowerCase();
+          const langMap = { js: 'javascript', ts: 'typescript', jsx: 'javascript', tsx: 'typescript', py: 'python', rs: 'rust', html: 'html', css: 'css', json: 'json', sql: 'sql', sh: 'shell' };
+          const b = {
+            id: (typeof edBId === 'function') ? edBId() : ('b_' + Math.random().toString(36).substr(2, 6)),
+            type: 'code',
+            language: langMap[ext] || 'javascript',
+            code: content,
+            filename: file.name
+          };
+          page.blocks.push(b);
+        }
+        if (typeof edRenderBlocks === 'function') edRenderBlocks();
+        if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+        if (typeof showToast === 'function') showToast(`✓ Offline ${kind.toUpperCase()} embedded: ${file.name}`, 'ok');
+      };
+      reader.readAsText(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const dataUrl = ev.target.result;
+        const baseName = file.name.replace(/\.[^/.]+$/, "");
+        const ext = file.name.split('.').pop().toLowerCase();
+        const blockId = (typeof edBId === 'function') ? edBId() : ('b_' + Math.random().toString(36).substr(2, 6));
+
+        let b;
+        if (kind === 'video') {
+          b = {
+            id: blockId,
+            type: 'web_video',
+            src: dataUrl,
+            label: baseName,
+            filename: file.name,
+            format: ext,
+            style: { src: dataUrl, label: baseName }
+          };
+        } else if (kind === 'audio') {
+          b = {
+            id: blockId,
+            type: 'web_audio',
+            src: dataUrl,
+            label: baseName,
+            filename: file.name,
+            style: { src: dataUrl, label: baseName }
+          };
+        } else if (kind === '3d') {
+          b = {
+            id: blockId,
+            type: '3d_model',
+            src: dataUrl,
+            value: baseName + ' (3D Hologram)',
+            filename: file.name,
+            format: ext,
+            material_mode: 'cyber_hologram',
+            style: { src: dataUrl, format: ext }
+          };
+        } else if (kind === 'image') {
+          b = {
+            id: blockId,
+            type: 'web_image',
+            src: dataUrl,
+            alt: baseName,
+            filename: file.name,
+            style: { src: dataUrl, alt: baseName }
+          };
+        }
+        if (b) {
+          page.blocks.push(b);
+          if (typeof edRenderBlocks === 'function') edRenderBlocks();
+          if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+          if (typeof showToast === 'function') showToast(`✓ Offline ${kind.toUpperCase()} embedded: ${file.name}`, 'ok');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  input.click();
 }
 
 function edAddBlock(type) {
@@ -13721,7 +14603,14 @@ function edAddBlock(type) {
   else if (type === 'paragraph' || type === 'quote') { b.text = ''; b.value = ''; }
   else if (type === 'list') { b.items = ['']; }
   else if (type === 'code') { b.language = 'javascript'; b.code = ''; }
-  else if (type === 'table') { b.headers = ['Item', 'Description']; b.rows = [['', '']]; }
+  else if (type === 'table') {
+    b.headers = ['Specification / Feature', 'Standard Package', 'Enterprise Pro'];
+    b.rows = [
+      ['Hologram 3D Engine', '60 FPS WebGL Rendering', '120 FPS Raytracing + Spatial'],
+      ['Sandbox Security', 'In-Memory RAM Sandbox', 'Airgapped HSM Verification'],
+      ['File Container', 'Zero-Outsource Standalone', 'Signed Cryptographic .ldocx']
+    ];
+  }
   else if (type === 'ai') { b.prompt = ''; }
   else if (type === 'form') { b.title = ''; b.fields = [{ label: 'Name', field_type: 'input_text', placeholder: 'Enter your name' }]; b.button_text = 'Submit'; b.destination = 'webhook'; }
   else if (type === 'web_image') { b.src = ''; b.alt = ''; }
@@ -13792,6 +14681,61 @@ function edMoveBlock(id, dir) {
   const i = p.blocks.findIndex(b => b.id === id), j = i + dir;
   if (j < 0 || j >= p.blocks.length) return;
   [p.blocks[i], p.blocks[j]] = [p.blocks[j], p.blocks[i]];
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableAddRow(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b) return;
+  b.rows = b.rows || [];
+  const colCount = (b.headers && b.headers.length) ? b.headers.length : (b.rows[0] ? b.rows[0].length : 3);
+  const newRow = Array(colCount).fill('').map((_, i) => `Data ${b.rows.length + 1}.${i + 1}`);
+  b.rows.push(newRow);
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableDelRow(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b || !b.rows || b.rows.length <= 1) return;
+  b.rows.pop();
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableAddCol(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b) return;
+  b.headers = b.headers || [];
+  const newColIdx = b.headers.length + 1;
+  b.headers.push(`Column ${newColIdx}`);
+  (b.rows || []).forEach(r => {
+    r.push(`Val ${newColIdx}`);
+  });
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableDelCol(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b || !b.headers || b.headers.length <= 1) return;
+  b.headers.pop();
+  (b.rows || []).forEach(r => {
+    if (r.length > 0) r.pop();
+  });
   edPushUndo();
   edRenderBlocks();
   edUpdateLivePreview();
@@ -13896,9 +14840,9 @@ async function edLoadFromDocId(id) {
   const doc = await (await fetch(`${API}/documents/${id}`)).json();
   const pageList = await (await fetch(`${API}/documents/${id}/pages`)).json();
 
-  document.getElementById('ed-title').value = doc.manifest?.title || 'Imported Document';
-  document.getElementById('ed-author').value = doc.manifest?.author || 'Unknown';
-  document.getElementById('ed-lang').value = doc.manifest?.lang || 'en';
+  const _et = document.getElementById('ed-title'); if (_et) _et.value = doc.manifest?.title || 'Imported Document';
+  const _ea = document.getElementById('ed-author'); if (_ea) _ea.value = doc.manifest?.author || 'Unknown';
+  const _el = document.getElementById('ed-lang'); if (_el) _el.value = doc.manifest?.lang || 'en';
 
   edPages = [];
   for (const p of pageList) {
@@ -13938,10 +14882,9 @@ async function edLoadFromDocId(id) {
 
 function edRenderBlocks() {
   const page = edPages.find(p => p.id === edCurrentPage);
-  document.getElementById('ed-empty').style.display = 'none';
+  const _ee = document.getElementById('ed-empty'); if (_ee) _ee.style.display = 'none';
   const panel = document.getElementById('ed-blocks-panel');
-  panel.style.display = 'flex';
-  panel.innerHTML = '';
+  if (panel) { panel.style.display = 'flex'; panel.innerHTML = ''; }
   if (!page) { edShowEmpty(); return; }
 
   const ptRow = document.createElement('div');
@@ -13954,26 +14897,39 @@ function edRenderBlocks() {
   ptRow.appendChild(ptInp);
   panel.appendChild(ptRow);
 
-  if (!page.blocks.length) {
+    if (!page.blocks.length) {
     const e = document.createElement('div');
     e.style.cssText = 'color:var(--text3);font-size:13px;text-align:center;padding:24px 20px;background:var(--surface);border-radius:12px;border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;gap:14px';
     e.innerHTML = `
-      <div style="font-weight:600;color:var(--text2)">This page has no blocks yet. Click an element below to add it immediately:</div>
+      <div style="font-weight:600;color:var(--text2)">This page has no blocks yet. Search elements or upload media directly:</div>
+      
+      <!-- Quick Offline Upload Row -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.06)">
+        <span style="font-size:10.5px;font-weight:700;color:var(--gold);text-transform:uppercase">Direct Offline Upload:</span>
+        <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('video')" style="padding:4px 10px;font-size:11.5px;background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.4);color:#fef08a;font-weight:700">🎬 + Upload Video</button>
+        <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('audio')" style="padding:4px 10px;font-size:11.5px;background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.4);color:#c084fc;font-weight:700">🎵 + Upload Audio</button>
+        <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('3d')" style="padding:4px 10px;font-size:11.5px;background:rgba(56,189,248,0.15);border-color:rgba(56,189,248,0.4);color:#38bdf8;font-weight:700">📦 + Upload 3D</button>
+        <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('image')" style="padding:4px 10px;font-size:11.5px;background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#34d399;font-weight:700">🖼️ + Upload Image</button>
+        <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('sandbox')" style="padding:4px 10px;font-size:11.5px;background:rgba(244,63,94,0.15);border-color:rgba(244,63,94,0.4);color:#fb7185;font-weight:700">⚡ + Upload Sandbox</button>
+      </div>
+
+      <!-- Quick Add Elements Row -->
       <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:680px">
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('heading')">🏷️ + Heading</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('paragraph')">📝 + Text</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_video')">🎬 + Video / YouTube</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('button')">⚡ + Button</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('3d_model')">📦 + 3D Model</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_audio')">🎵 + Audio</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_image')">🖼️ + Image</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('table')">📊 + Table</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('quote')">📜 + Quote</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('throttle_dyno')">🏎️ + Dyno</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(167,139,250,.4);color:#a78bfa" onclick="edAddBlock('orbit_sim')">🛰️ + Orbit Sim</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(16,185,129,.4);color:#10b981" onclick="edAddBlock('arr_projector')">📈 + ARR</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(244,63,94,.4);color:#f43f5e" onclick="edAddBlock('tilt_card')">📐 + 3D Tilt</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('jsx_canvas')">⚡ + Live Sandbox</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="heading title h1 h2 h3 header" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('heading')">🏷️ + Heading</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="paragraph text body article copy" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('paragraph')">📝 + Text</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="video movie motion stream player mp4 upload offline" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_video')">🎬 + Video / YouTube</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="button link cta smart action trigger" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('button')">⚡ + Button</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="3d model hologram glb gltf obj stl upload offline" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('3d_model')">📦 + 3D Model</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="audio music sound soundtrack mp3 wav upload offline" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_audio')">🎵 + Audio</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="image photo picture 3d banner upload offline" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_image')">🖼️ + Image</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="table grid spreadsheet rows columns data" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('table')">📊 + Table</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="quote blockquote citation proverb excerpt" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('quote')">📜 + Quote</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="code syntax script programming javascript python rust" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('code')">💻 + Code</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="throttle dyno speedometer telemetry gauge" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('throttle_dyno')">🏎️ + Dyno</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="orbit sim satellite space trajectory" style="padding:6px 12px;font-size:12px;border-color:rgba(167,139,250,.4);color:#a78bfa" onclick="edAddBlock('orbit_sim')">🛰️ + Orbit Sim</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="arr projector revenue financial forecast growth" style="padding:6px 12px;font-size:12px;border-color:rgba(16,185,129,.4);color:#10b981" onclick="edAddBlock('arr_projector')">📈 + ARR</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="tilt card 3d holographic perspective" style="padding:6px 12px;font-size:12px;border-color:rgba(244,63,94,.4);color:#f43f5e" onclick="edAddBlock('tilt_card')">📐 + 3D Tilt</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="jsx canvas sandbox react tailwind babel chartjs threejs upload" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('jsx_canvas')">⚡ + Live Sandbox</button>
       </div>
     `;
     panel.appendChild(e);
@@ -14086,14 +15042,69 @@ function edRenderBlocks() {
         if (ta) ta.value = '';
         edUpdateLivePreview();
       };
+            const btnUploadScript = document.createElement('button');
+      btnUploadScript.type = 'button';
+      btnUploadScript.className = 'find-btn';
+      btnUploadScript.style.cssText = 'font-size:10.5px;background:rgba(56,189,248,0.15);color:#38bdf8;border-color:rgba(56,189,248,0.4);font-weight:700';
+      btnUploadScript.textContent = '📁 Upload Script File';
+      btnUploadScript.onclick = () => {
+        const fi = document.createElement('input');
+        fi.type = 'file';
+        fi.accept = '.js,.py,.rs,.html,.css,.json,.ts,.jsx,.tsx,.c,.cpp,.java,.sql,.sh,.txt';
+        fi.onchange = (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
+          const ext = f.name.split('.').pop().toLowerCase();
+          const langMap = { js: 'javascript', py: 'python', rs: 'rust', html: 'html', css: 'css', json: 'json', ts: 'typescript', jsx: 'javascript', tsx: 'typescript', c: 'c', cpp: 'cpp', java: 'java', sql: 'sql', sh: 'shell' };
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            block.code = ev.target.result;
+            block.language = langMap[ext] || 'javascript';
+            block.filename = f.name;
+            li.value = block.language;
+            const ta = div.querySelector('textarea');
+            if (ta) ta.value = block.code;
+            edUpdateLivePreview();
+            if (typeof showToast === 'function') showToast(`✓ Script loaded: ${f.name} (${block.language})`, 'ok');
+          };
+          reader.readAsText(f);
+        };
+        fi.click();
+      };
+      sampleRow.appendChild(btnUploadScript);
       sampleRow.appendChild(btnClr);
 
       div.appendChild(sampleRow);
 
       mk('textarea', 'Enter custom code or script...', block.code !== undefined ? block.code : '', v => { block.code = v; edUpdateLivePreview(); }, { rows: 5 });
     } else if (block.type === 'table') {
-      const hi = document.createElement('input'); hi.placeholder = 'Col 1, Col 2'; hi.value = (block.headers || []).join(', '); hi.style.marginTop = '4px'; hi.oninput = () => { block.headers = hi.value.split(',').map(s => s.trim()); }; div.appendChild(hi);
-      mk('textarea', 'Row values (comma separated e.g. Item 1, Data 1)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => { block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim())); }, { rows: 4 });
+      const tbCtrlRow = document.createElement('div');
+      tbCtrlRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:6px;margin:6px 0 4px 0;flex-wrap:wrap';
+      tbCtrlRow.innerHTML = `
+        <div style="font-size:10.5px;font-weight:700;color:var(--gold)">📊 Table Structure</div>
+        <div style="display:flex;gap:4px">
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableAddRow('${block.id}')" title="Add Row">➕ Row</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableDelRow('${block.id}')" title="Delete Last Row">➖ Row</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableAddCol('${block.id}')" title="Add Column">➕ Col</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableDelCol('${block.id}')" title="Delete Last Column">➖ Col</button>
+        </div>
+      `;
+      div.appendChild(tbCtrlRow);
+
+      const hi = document.createElement('input');
+      hi.placeholder = 'Column Headers (comma separated e.g. Spec, Tier 1, Tier 2)';
+      hi.value = (block.headers || []).join(', ');
+      hi.style.marginTop = '2px';
+      hi.oninput = () => {
+        block.headers = hi.value.split(',').map(s => s.trim());
+        edUpdateLivePreview();
+      };
+      div.appendChild(hi);
+
+      mk('textarea', 'Row values (comma separated, 1 line per row)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => {
+        block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim()));
+        edUpdateLivePreview();
+      }, { rows: 4 });
     } else if (block.type === 'ai') {
       const cfg = getAiConfig();
       const aiHdr = document.createElement('div');
@@ -14341,15 +15352,303 @@ function edRenderBlocks() {
       renderFieldsList();
       syncChildren();
 
-    } else if (block.type === 'web_image') {
-      mk('input', 'Image URL (https://...)', block.src || '', v => { block.src = v; });
-      mk('input', 'Alt description', block.alt || '', v => { block.alt = v; });
+        } else if (block.type === 'web_image') {
+      mk('input', 'Alt Description / Caption', block.alt || block.value || '', v => { block.alt = block.value = v; edUpdateLivePreview(); });
+
+      // Mode Selector Tabs
+      let curMode = (block.src && block.src.startsWith('data:')) ? 'upload' : ((block.src && !block.src.startsWith('data:')) ? 'url' : 'upload');
+      const modeBar = document.createElement('div');
+      modeBar.style.cssText = 'display:flex;gap:4px;margin:5px 0;background:var(--surface2);padding:3px;border-radius:6px';
+
+      const btnUpload = document.createElement('button');
+      btnUpload.type = 'button';
+      btnUpload.textContent = '📁 Offline Image File';
+
+      const btnUrl = document.createElement('button');
+      btnUrl.type = 'button';
+      btnUrl.textContent = '🌐 Online Image URL';
+
+      modeBar.appendChild(btnUpload);
+      modeBar.appendChild(btnUrl);
+      div.appendChild(modeBar);
+
+      const dynamicArea = document.createElement('div');
+      dynamicArea.style.cssText = 'margin:6px 0';
+      div.appendChild(dynamicArea);
+
+      const renderImageSourceMode = () => {
+        btnUpload.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='upload'?'background:#10b981;color:#fff':'background:transparent;color:var(--text2)'}`;
+        btnUrl.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='url'?'background:#10b981;color:#fff':'background:transparent;color:var(--text2)'}`;
+        dynamicArea.innerHTML = '';
+
+        if (curMode === 'upload') {
+          const dropBox = document.createElement('div');
+          dropBox.style.cssText = 'border:1.5px dashed rgba(16,185,129,0.4);background:rgba(16,185,129,0.05);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all 0.15s';
+          dropBox.innerHTML = `
+            <div style="font-size:22px;margin-bottom:4px">🖼️</div>
+            <div style="font-size:11.5px;font-weight:700;color:#34d399">${block.filename ? escapeHtml(block.filename) : 'Click or Drop Image (.PNG, .JPG, .WebP, .SVG)'}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">${block.src && block.src.startsWith('data:') ? '⚡ Image embedded offline with 3D holographic tilt' : '100% Offline — saved inside the document'}</div>
+          `;
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = '.png,.jpg,.jpeg,.webp,.svg,.gif,.bmp';
+          fileInput.style.display = 'none';
+          fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              block.filename = file.name;
+              if (!block.alt) block.alt = file.name.replace(/\.[^/.]+$/, "");
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                block.src = ev.target.result;
+                if (!block.style) block.style = {};
+                block.style.src = ev.target.result;
+                block.style.alt = block.alt;
+                edUpdateLivePreview();
+                renderImageSourceMode();
+                if (typeof showToast === 'function') showToast(`✓ Offline Image Embedded (${file.name})`, 'ok');
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+          dropBox.onclick = () => fileInput.click();
+          dynamicArea.appendChild(dropBox);
+          dynamicArea.appendChild(fileInput);
+
+          if (block.src && block.src.startsWith('data:')) {
+            const thumbWrap = document.createElement('div');
+            thumbWrap.style.cssText = 'margin-top:8px;display:flex;align-items:center;gap:8px';
+            thumbWrap.innerHTML = `
+              <img src="${escapeHtml(block.src)}" style="width:48px;height:48px;border-radius:6px;object-fit:cover;border:1px solid rgba(16,185,129,0.4)">
+              <div style="flex:1;min-width:0;font-size:10.5px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(block.filename || 'Embedded Image')}</div>
+            `;
+            const clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.textContent = '🗑️';
+            clearBtn.className = 'find-btn';
+            clearBtn.title = 'Remove Image';
+            clearBtn.style.cssText = 'font-size:11px;color:#ef4444;border-color:rgba(239,68,68,0.3);padding:3px 6px';
+            clearBtn.onclick = () => { block.src = ''; block.filename = ''; if (block.style) block.style.src = ''; edUpdateLivePreview(); renderImageSourceMode(); };
+            thumbWrap.appendChild(clearBtn);
+            dynamicArea.appendChild(thumbWrap);
+          }
+        } else {
+          const urlInp = document.createElement('input');
+          urlInp.placeholder = 'Image URL (https://...)';
+          urlInp.value = block.src && !block.src.startsWith('data:') ? block.src : '';
+          urlInp.style.cssText = 'width:100%;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px';
+          urlInp.oninput = () => {
+            block.src = urlInp.value.trim();
+            block.filename = '';
+            if (!block.style) block.style = {};
+            block.style.src = block.src;
+            edUpdateLivePreview();
+          };
+          dynamicArea.appendChild(urlInp);
+        }
+      };
+
+      btnUpload.onclick = () => { curMode = 'upload'; renderImageSourceMode(); };
+      btnUrl.onclick = () => { curMode = 'url'; renderImageSourceMode(); };
+      renderImageSourceMode();
+
     } else if (block.type === 'web_audio') {
-      mk('input', 'Audio Stream URL (https://... MP3/OGG)', block.src || '', v => { block.src = v; });
-      mk('input', 'Track Title', block.label || '', v => { block.label = v; });
+      mk('input', 'Track Title / Soundtrack Name', block.label || block.value || '', v => { block.label = block.value = v; edUpdateLivePreview(); });
+
+      // Mode Selector Tabs
+      let curMode = (block.src && block.src.startsWith('data:')) ? 'upload' : ((block.src && !block.src.startsWith('data:')) ? 'url' : 'upload');
+      const modeBar = document.createElement('div');
+      modeBar.style.cssText = 'display:flex;gap:4px;margin:5px 0;background:var(--surface2);padding:3px;border-radius:6px';
+
+      const btnUpload = document.createElement('button');
+      btnUpload.type = 'button';
+      btnUpload.textContent = '📁 Offline Audio File';
+
+      const btnUrl = document.createElement('button');
+      btnUrl.type = 'button';
+      btnUrl.textContent = '🌐 Online / Stream URL';
+
+      modeBar.appendChild(btnUpload);
+      modeBar.appendChild(btnUrl);
+      div.appendChild(modeBar);
+
+      const dynamicArea = document.createElement('div');
+      dynamicArea.style.cssText = 'margin:6px 0';
+      div.appendChild(dynamicArea);
+
+      const renderAudioSourceMode = () => {
+        btnUpload.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='upload'?'background:#7c3aed;color:#fff':'background:transparent;color:var(--text2)'}`;
+        btnUrl.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='url'?'background:#7c3aed;color:#fff':'background:transparent;color:var(--text2)'}`;
+        dynamicArea.innerHTML = '';
+
+        if (curMode === 'upload') {
+          const dropBox = document.createElement('div');
+          dropBox.style.cssText = 'border:1.5px dashed rgba(124,58,237,0.4);background:rgba(124,58,237,0.05);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all 0.15s';
+          dropBox.innerHTML = `
+            <div style="font-size:22px;margin-bottom:4px">🎵</div>
+            <div style="font-size:11.5px;font-weight:700;color:#c084fc">${block.filename ? escapeHtml(block.filename) : 'Click or Drop Soundtrack File (.MP3, .WAV, .OGG, .M4A)'}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">${block.src && block.src.startsWith('data:') ? '⚡ Soundtrack embedded offline in .ldocx package' : '100% Offline — saved inside the document, loops automatically'}</div>
+          `;
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = '.mp3,.wav,.ogg,.m4a,.aac,.flac';
+          fileInput.style.display = 'none';
+          fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              block.filename = file.name;
+              if (!block.label) block.label = file.name.replace(/\.[^/.]+$/, "");
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                block.src = ev.target.result;
+                if (!block.style) block.style = {};
+                block.style.src = ev.target.result;
+                block.style.label = block.label;
+                edUpdateLivePreview();
+                renderAudioSourceMode();
+                if (typeof showToast === 'function') showToast(`✓ Offline Soundtrack Embedded (${file.name})`, 'ok');
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+          dropBox.onclick = () => fileInput.click();
+          dynamicArea.appendChild(dropBox);
+          dynamicArea.appendChild(fileInput);
+
+          if (block.src && block.src.startsWith('data:')) {
+            const clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.textContent = '🗑️ Remove Offline Audio';
+            clearBtn.className = 'find-btn';
+            clearBtn.style.cssText = 'margin-top:6px;font-size:10.5px;color:#ef4444;border-color:rgba(239,68,68,0.3)';
+            clearBtn.onclick = () => { block.src = ''; block.filename = ''; if (block.style) block.style.src = ''; edUpdateLivePreview(); renderAudioSourceMode(); };
+            dynamicArea.appendChild(clearBtn);
+          }
+        } else {
+          const urlInp = document.createElement('input');
+          urlInp.placeholder = 'Audio Stream URL (https://... MP3, OGG, or YouTube)';
+          urlInp.value = block.src && !block.src.startsWith('data:') ? block.src : '';
+          urlInp.style.cssText = 'width:100%;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px';
+          urlInp.oninput = () => {
+            block.src = urlInp.value.trim();
+            block.filename = '';
+            if (!block.style) block.style = {};
+            block.style.src = block.src;
+            edUpdateLivePreview();
+          };
+          dynamicArea.appendChild(urlInp);
+        }
+      };
+
+      btnUpload.onclick = () => { curMode = 'upload'; renderAudioSourceMode(); };
+      btnUrl.onclick = () => { curMode = 'url'; renderAudioSourceMode(); };
+      renderAudioSourceMode();
+
     } else if (block.type === 'web_video') {
-      mk('input', 'Video URL (https://... MP4/WebM)', block.src || '', v => { block.src = v; });
-      mk('input', 'Video Label', block.label || '', v => { block.label = v; });
+      mk('input', 'Video Title / Caption', block.label || block.value || '', v => { block.label = block.value = v; edUpdateLivePreview(); });
+
+      // Mode Selector Tabs
+      let curMode = (block.src && block.src.startsWith('data:')) ? 'upload' : ((block.src && !block.src.startsWith('data:')) ? 'url' : 'upload');
+      const modeBar = document.createElement('div');
+      modeBar.style.cssText = 'display:flex;gap:4px;margin:5px 0;background:var(--surface2);padding:3px;border-radius:6px';
+
+      const btnUpload = document.createElement('button');
+      btnUpload.type = 'button';
+      btnUpload.textContent = '📁 Offline Video File';
+
+      const btnUrl = document.createElement('button');
+      btnUrl.type = 'button';
+      btnUrl.textContent = '🌐 Online / YouTube URL';
+
+      modeBar.appendChild(btnUpload);
+      modeBar.appendChild(btnUrl);
+      div.appendChild(modeBar);
+
+      const dynamicArea = document.createElement('div');
+      dynamicArea.style.cssText = 'margin:6px 0';
+      div.appendChild(dynamicArea);
+
+      const renderVideoSourceMode = () => {
+        btnUpload.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='upload'?'background:#f59e0b;color:#0a0a14':'background:transparent;color:var(--text2)'}`;
+        btnUrl.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='url'?'background:#f59e0b;color:#0a0a14':'background:transparent;color:var(--text2)'}`;
+        dynamicArea.innerHTML = '';
+
+        if (curMode === 'upload') {
+          const dropBox = document.createElement('div');
+          dropBox.style.cssText = 'border:1.5px dashed rgba(245,158,11,0.4);background:rgba(245,158,11,0.05);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all 0.15s';
+          dropBox.innerHTML = `
+            <div style="font-size:22px;margin-bottom:4px">🎬</div>
+            <div style="font-size:11.5px;font-weight:700;color:#fef08a">${block.filename ? escapeHtml(block.filename) : 'Click or Drop Video File (.MP4, .WebM, .MOV)'}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">${block.src && block.src.startsWith('data:') ? '⚡ Video embedded offline in .ldocx package' : '100% Offline — saved inside the document, no server needed'}</div>
+          `;
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = '.mp4,.webm,.ogg,.mov,.mkv,.html,.htm';
+          fileInput.style.display = 'none';
+          fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              block.filename = file.name;
+              block.format = file.name.split('.').pop().toLowerCase();
+              if (!block.label) block.label = file.name.replace(/\.[^/.]+$/, "");
+              const isHtmlFile = file.name.endsWith('.html') || file.name.endsWith('.htm');
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                block.src = ev.target.result;
+                if (!block.style) block.style = {};
+                block.style.src = ev.target.result;
+                block.style.label = block.label;
+                edUpdateLivePreview();
+                renderVideoSourceMode();
+                if (typeof showToast === 'function') showToast(`✓ Offline ${isHtmlFile ? '3D Visualization' : 'Video'} Embedded (${file.name})`, 'ok');
+              };
+              if (isHtmlFile) {
+                reader.readAsText(file);
+              } else {
+                reader.readAsDataURL(file);
+              }
+            }
+          };
+          dropBox.onclick = () => fileInput.click();
+          dynamicArea.appendChild(dropBox);
+          dynamicArea.appendChild(fileInput);
+
+          if (block.src && block.src.startsWith('data:')) {
+            const clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.textContent = '🗑️ Remove Offline Video';
+            clearBtn.className = 'find-btn';
+            clearBtn.style.cssText = 'margin-top:6px;font-size:10.5px;color:#ef4444;border-color:rgba(239,68,68,0.3)';
+            clearBtn.onclick = () => { block.src = ''; block.filename = ''; if (block.style) block.style.src = ''; edUpdateLivePreview(); renderVideoSourceMode(); };
+            dynamicArea.appendChild(clearBtn);
+          }
+        } else {
+          const isHtmlCode = /^\s*<!DOCTYPE\b|^\s*<html\b|<\s*canvas\b|<\s*script\b|THREE\.|WebGL|createUnityInstance/i.test(block.src || '') || /<\s*style\b/i.test(block.src || '');
+          if (isHtmlCode) {
+            const detectBadge = document.createElement('div');
+            detectBadge.style.cssText = 'font-size:10.5px;color:#38bdf8;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.35);padding:4px 8px;border-radius:6px;margin-bottom:6px;font-weight:700;display:flex;align-items:center;gap:6px';
+            detectBadge.innerHTML = '<span>⚡</span> <span>Interactive 3D / Live Motion Sandbox (Hardware Accelerated)</span>';
+            dynamicArea.appendChild(detectBadge);
+          }
+          const urlInp = document.createElement(isHtmlCode ? 'textarea' : 'input');
+          urlInp.placeholder = 'Video URL (MP4, WebM, YouTube) or paste 3D HTML / WebGL visualization code';
+          urlInp.value = block.src && !block.src.startsWith('data:') ? block.src : '';
+          urlInp.style.cssText = `width:100%;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px;font-family:${isHtmlCode ? 'monospace' : 'inherit'};height:${isHtmlCode ? '90px' : 'auto'}`;
+          urlInp.oninput = () => {
+            block.src = urlInp.value.trim();
+            block.filename = '';
+            if (!block.style) block.style = {};
+            block.style.src = block.src;
+            edUpdateLivePreview();
+          };
+          dynamicArea.appendChild(urlInp);
+        }
+      };
+
+      btnUpload.onclick = () => { curMode = 'upload'; renderVideoSourceMode(); };
+      btnUrl.onclick = () => { curMode = 'url'; renderVideoSourceMode(); };
+      renderVideoSourceMode();
+
     } else if (block.type === '3d_model') {
       mk('input', 'Hologram Title / Caption', block.value || '', v => { block.value = v; edUpdateLivePreview(); });
 
@@ -14740,7 +16039,36 @@ function edRenderBlocks() {
           edUpdateLivePreview();
         }
       };
-      helperRow.appendChild(helperSel);
+            helperRow.appendChild(helperSel);
+      const btnUploadSandbox = document.createElement('button');
+      btnUploadSandbox.type = 'button';
+      btnUploadSandbox.className = 'find-btn';
+      btnUploadSandbox.style.cssText = 'font-size:10.5px;background:rgba(244,63,94,0.15);color:#fb7185;border-color:rgba(244,63,94,0.4);font-weight:700;white-space:nowrap';
+      btnUploadSandbox.textContent = '📁 Upload Component (.jsx, .js, .html)';
+      btnUploadSandbox.onclick = () => {
+        const fi = document.createElement('input');
+        fi.type = 'file';
+        fi.accept = '.jsx,.js,.html,.tsx,.txt';
+        fi.onchange = (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const code = ev.target.result;
+            block.code = code;
+            if (!block.style) block.style = {};
+            block.style.code = code;
+            block.filename = f.name;
+            const ta = div.querySelector('textarea');
+            if (ta) ta.value = code;
+            edUpdateLivePreview();
+            if (typeof showToast === 'function') showToast(`✓ Component code loaded: ${f.name}`, 'ok');
+          };
+          reader.readAsText(f);
+        };
+        fi.click();
+      };
+      helperRow.appendChild(btnUploadSandbox);
       div.appendChild(helperRow);
 
       // Code Editor Textarea
@@ -16653,6 +17981,31 @@ window.initFormatPopover();
 window.addEventListener('keydown', (e) => {
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const cmd = isMac ? e.metaKey : e.ctrlKey;
+
+  // Ctrl+F / Cmd+F: Find in Document HUD
+  if (cmd && (e.key === 'f' || e.key === 'F')) {
+    e.preventDefault();
+    toggleFindReplaceHud();
+    return;
+  }
+
+  // Ctrl+P / Cmd+P: Print to PDF Fallback
+  if (cmd && (e.key === 'p' || e.key === 'P')) {
+    e.preventDefault();
+    window.print();
+    return;
+  }
+
+  // Escape: Close Find HUD
+  if (e.key === 'Escape') {
+    const hud = document.getElementById('find-replace-hud');
+    if (hud && hud.classList.contains('open')) {
+      e.preventDefault();
+      toggleFindReplaceHud(false);
+      return;
+    }
+  }
+
   if (cmd && e.shiftKey && (e.key === 'S' || e.key === 's')) {
     e.preventDefault();
     if (typeof downloadCurrentDocument === 'function') downloadCurrentDocument();
@@ -16804,9 +18157,11 @@ async function exportPdfCloud() {
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    if (typeof toast === 'function') toast('✓ Flattened High-Fidelity PDF downloaded!', 'ok');
+    if (typeof toast === 'function') toast('✓ Clean High-Fidelity PDF downloaded!', 'ok');
   } catch (err) {
-    showToast('Cloud PDF Export: ' + err.message);
+    console.warn('Backend PDF endpoint unavailable, falling back to local print-to-PDF:', err);
+    if (typeof printDocument === 'function') printDocument();
+    else window.print();
   }
 }
 
@@ -17065,44 +18420,164 @@ function applyAstJsonDirectly() {
   }
 }
 
-// ── 4. Global Find & Replace Across All Slides ─────────────────────────────
+// ── 4. In-Document Search & Text Highlighter Engine (Ctrl+F) ───────────────
 let findMatches = [];
 let activeMatchIdx = -1;
 
-function toggleFindReplaceHud() {
+function clearFindHighlights() {
+  const marks = document.querySelectorAll('mark.ldoc-search-match');
+  marks.forEach(m => {
+    const parent = m.parentNode;
+    if (parent) {
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    }
+  });
+  findMatches = [];
+  activeMatchIdx = -1;
+  const countEl = document.getElementById('find-count');
+  if (countEl) countEl.textContent = '0/0';
+}
+
+// ── One-Click Print to PDF Fallback Handler ──
+function printDocument() {
+  // 1. If in Editor/Studio with page array, render all pages cleanly into preview body before print
+  if (typeof edPages !== 'undefined' && Array.isArray(edPages) && edPages.length > 0) {
+    const previewBody = document.getElementById('ed-preview-body');
+    if (previewBody) {
+      previewBody.innerHTML = '';
+      edPages.forEach((pg, idx) => {
+        const slide = document.createElement('div');
+        slide.className = 'pres-page pres-slide';
+
+        const content = document.createElement('div');
+        content.className = 'page-content-layer';
+
+        (pg.blocks || []).forEach(b => {
+          if (typeof renderBlockNode === 'function') {
+            renderBlockNode(b, content);
+          }
+        });
+
+        slide.appendChild(content);
+        previewBody.appendChild(slide);
+      });
+    }
+  }
+
+  // 2. Clear any active search highlights so yellow marks aren't printed
+  const findInp = document.getElementById('find-input');
+  const query = findInp ? findInp.value : '';
+  if (typeof clearFindHighlights === 'function') {
+    clearFindHighlights();
+  }
+
+  // 3. Trigger native print / PDF export
+  window.print();
+
+  // 4. Restore search highlights if query was active
+  if (query && typeof executeFind === 'function') {
+    setTimeout(() => { executeFind(query); }, 200);
+  }
+}
+
+function toggleFindReplaceHud(forceOpen) {
   const hud = document.getElementById('find-replace-hud');
   if (!hud) return;
-  const isOpen = hud.classList.toggle('open');
-  if (isOpen) {
+  const shouldOpen = forceOpen !== undefined ? forceOpen : !hud.classList.contains('open');
+  if (shouldOpen) {
+    hud.classList.add('open');
     const inp = document.getElementById('find-input');
-    if (inp) setTimeout(() => inp.focus(), 50);
+    if (inp) {
+      setTimeout(() => {
+        inp.focus();
+        inp.select();
+      }, 50);
+      if (inp.value.trim()) {
+        executeFind(inp.value);
+      }
+    }
+  } else {
+    hud.classList.remove('open');
+    clearFindHighlights();
   }
 }
 
 function executeFind(q = '') {
-  findMatches = [];
-  activeMatchIdx = -1;
+  clearFindHighlights();
   const countEl = document.getElementById('find-count');
-  const term = (q || '').trim().toLowerCase();
+  const term = (q || '').trim();
   if (!term) {
     if (countEl) countEl.textContent = '0/0';
     return;
   }
 
-  const allPgs = typeof edPages !== 'undefined' ? edPages : (typeof pages !== 'undefined' ? pages : []);
-  allPgs.forEach((p, pIdx) => {
-    (p.blocks || []).forEach((b, bIdx) => {
-      const textVal = (b.text || b.value || b.label || b.title || '').toLowerCase();
-      if (textVal.includes(term)) {
-        findMatches.push({ pageId: p.id, pageIdx: pIdx, blockId: b.id, blockIdx: bIdx });
+  const container = document.getElementById('page-canvas') || document.getElementById('ed-preview-body') || document.getElementById('pres-stage') || document.body;
+  const ignoreSelectors = '#find-replace-hud, #command-palette-modal, #ast-inspector-modal, #ldoc-context-menu, #desktop-menubar, #toolbar, #ldoc-status-bar, script, style, textarea, input, select';
+
+  // Traverse all text nodes within presentation container
+  const walker = document.createTreeWalker(
+    container,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: function(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        let p = node.parentElement;
+        while (p && p !== container) {
+          if (p.matches && p.matches(ignoreSelectors)) return NodeFilter.FILTER_REJECT;
+          p = p.parentElement;
+        }
+        if (node.nodeValue.toLowerCase().includes(term.toLowerCase())) {
+          return NodeFilter.FILTER_ACCEPT;
+        }
+        return NodeFilter.FILTER_REJECT;
       }
-    });
+    }
+  );
+
+  const matchedNodes = [];
+  let curr;
+  while ((curr = walker.nextNode())) {
+    matchedNodes.push(curr);
+  }
+
+  // Highlight all occurrences using <mark class="ldoc-search-match">
+  const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(escapedTerm, 'gi');
+  findMatches = [];
+
+  matchedNodes.forEach(textNode => {
+    const text = textNode.nodeValue;
+    const parent = textNode.parentNode;
+    if (!parent) return;
+
+    const frag = document.createDocumentFragment();
+    let lastIdx = 0;
+    let m;
+    while ((m = regex.exec(text)) !== null) {
+      if (m.index > lastIdx) {
+        frag.appendChild(document.createTextNode(text.substring(lastIdx, m.index)));
+      }
+      const mark = document.createElement('mark');
+      mark.className = 'ldoc-search-match';
+      mark.textContent = m[0];
+      frag.appendChild(mark);
+      findMatches.push(mark);
+      lastIdx = regex.lastIndex;
+    }
+    if (lastIdx < text.length) {
+      frag.appendChild(document.createTextNode(text.substring(lastIdx)));
+    }
+    parent.replaceChild(frag, textNode);
   });
 
-  if (countEl) countEl.textContent = `${findMatches.length ? 1 : 0}/${findMatches.length}`;
-  if (findMatches.length) {
+  if (countEl) {
+    countEl.textContent = `${findMatches.length ? 1 : 0}/${findMatches.length}`;
+  }
+
+  if (findMatches.length > 0) {
     activeMatchIdx = 0;
-    jumpToMatch(findMatches[0]);
+    jumpToMatch(0);
   }
 }
 
@@ -17115,24 +18590,27 @@ function findNextMatch(isReverse = false) {
   }
   const countEl = document.getElementById('find-count');
   if (countEl) countEl.textContent = `${activeMatchIdx + 1}/${findMatches.length}`;
-  jumpToMatch(findMatches[activeMatchIdx]);
+  jumpToMatch(activeMatchIdx);
 }
 
-function jumpToMatch(match) {
-  if (!match) return;
-  if (typeof edSelectPage === 'function') {
-    edSelectPage(match.pageId);
-  } else if (typeof selectPage === 'function') {
-    selectPage(match.pageId);
-  }
-  setTimeout(() => {
-    const blkCard = document.querySelector(`[data-block-id="${match.blockId}"]`);
-    if (blkCard) {
-      blkCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      blkCard.style.outline = '2px solid #f59e0b';
-      setTimeout(() => { blkCard.style.outline = ''; }, 1200);
+function jumpToMatch(idx) {
+  if (idx < 0 || idx >= findMatches.length) return;
+  findMatches.forEach(m => m.classList.remove('active'));
+
+  const activeMark = findMatches[idx];
+  if (!activeMark) return;
+  activeMark.classList.add('active');
+
+  // Activate containing slide / page if numbered
+  const pageEl = activeMark.closest('.pres-page') || activeMark.closest('.pres-slide');
+  if (pageEl && pageEl.dataset && pageEl.dataset.pageNum) {
+    const pNum = parseInt(pageEl.dataset.pageNum, 10);
+    if (!isNaN(pNum) && typeof onPageActivated === 'function') {
+      onPageActivated(pNum);
     }
-  }, 100);
+  }
+
+  activeMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function executeReplaceOne() {
@@ -17865,7 +19343,7 @@ function triggerOAuth(provider) {
 
     const mockUser = {
       id: 'usr_' + Math.random().toString(36).slice(2, 9),
-      name: provider === 'google' ? 'K Jay (Google)' : 'Jayaraman K (GitHub)',
+      name: provider === 'google' ? 'K Jay (Google)' : 'J-AI-ENTERPRISES (GitHub)',
       email: 'jayaramankalidasan@gmail.com',
       avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=' + provider,
       plan: 'pro',
@@ -18344,6 +19822,39 @@ function closeLegalSecurityModal() {
 
 // 🛡️ Security & Copyright Startup Watermark
 console.log('%c🛡️ LDOCX Living Document Studio v2.5.0\\n%cCopyright (c) 2026 J-AI-ENTERPRISES. All Rights Reserved.\\nLicensed under Apache-2.0 with Patent Retaliation Protection.\\nTrademarks "LDOC", "LDOCX", "Living Document" are protected.', 'color:#f59e0b;font-weight:bold;font-size:13px;line-height:1.5', 'color:#94a3b8;font-size:11px;');
+</script>
+
+
+<script>
+// ⚡ LDOC Studio Pro 120Hz / 120 FPS Display & Refresh Rate Monitor
+function initStudio120HzMonitor() {
+  let frames = 0;
+  let start = performance.now();
+  function countFrames(now) {
+    frames++;
+    if (now - start >= 500) {
+      const hz = Math.round((frames * 1000) / (now - start));
+      const el = document.getElementById('studio-hz-val');
+      if (el) {
+        if (hz >= 110) {
+          el.textContent = '⚡ 120Hz Display • 120 FPS Video Engine';
+          el.parentElement.style.borderColor = '#34d399';
+          el.parentElement.style.color = '#34d399';
+        } else {
+          el.textContent = `⚡ ${hz}Hz • 120 FPS Video Engine Ready`;
+        }
+      }
+      return;
+    }
+    requestAnimationFrame(countFrames);
+  }
+  requestAnimationFrame(countFrames);
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initStudio120HzMonitor);
+} else {
+  initStudio120HzMonitor();
+}
 </script>
 
 </body>

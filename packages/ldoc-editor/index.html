@@ -3662,7 +3662,7 @@ mark.ldoc-search-match.active {
     print-color-adjust: exact !important;
   }
 
-  /* 2. Suppress All Desktop Application UI Chrome, Menus, Toolbars, HUDs, Modals */
+  /* 2. Suppress All Desktop Application UI Chrome, Menus, Toolbars, HUDs, Modals, Branding & Watermarks */
   #desktop-menubar,
   #toolbar,
   #ldoc-status-bar,
@@ -3673,6 +3673,9 @@ mark.ldoc-search-match.active {
   #ldoc-context-menu,
   #format-popover,
   #ai-helper-drawer,
+  #ai-helper-btn,
+  .floating-ai-btn,
+  #ai-helper-toggle,
   #lead-modal,
   #legal-security-modal,
   .fx-dropdown-wrap,
@@ -3709,7 +3712,21 @@ mark.ldoc-search-match.active {
   .pres-audio-card,
   .video-card .video-label,
   button,
-  .find-btn {
+  .find-btn,
+  .slide-app-header,
+  #slide-top-bar,
+  .slide-app-brand,
+  .brand-title,
+  .live-indicator,
+  .pres-mode-selector,
+  #pres-mode-selector,
+  #save-active-btn,
+  .pres-page-header,
+  #converter-panel,
+  #annotate-toolbar,
+  .annot-btn,
+  .sticky-note-hdr button,
+  .lemon-store-badge {
     display: none !important;
   }
 
@@ -3789,22 +3806,14 @@ mark.ldoc-search-match.active {
     color: #0f172a !important;
   }
 
-  /* 6. Page Header (Flush with Left & Right Content Margins) */
+  /* 6. Page Header: Completely hidden in print so zero artificial watermarks are stamped */
   .pres-page-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100% !important;
-    padding: 0 0 8pt 0 !important;
-    margin: 0 0 16pt 0 !important;
-    border-bottom: 1.5pt solid #cbd5e1 !important;
-    background: transparent !important;
-    color: #64748b !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 8.5pt !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5pt !important;
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    visibility: hidden !important;
   }
 
   /* 7. Precision Typography: Headings, Sentences, Paragraphs & Letters */
@@ -6357,7 +6366,7 @@ function parseMarkdownToSpec(text, filename) {
 
   return {
     title: title || 'Converted Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6386,17 +6395,11 @@ async function parseDocxToSpec(arrayBuffer, filename) {
         const target = relElements[r].getAttribute('Target');
         const type = relElements[r].getAttribute('Type') || '';
         if (type.includes('image') && target) {
-          const imgPath = target.startsWith('/') ? target.slice(1) : ('word/' + target.replace(/^\.\.\//, ''));
-          const imgFile = zip.file(imgPath);
-          if (imgFile) {
-            const base64 = await imgFile.async('base64');
-            const mime = imgPath.endsWith('.png') ? 'image/png' : imgPath.endsWith('.gif') ? 'image/gif' : 'image/jpeg';
-            imageMap[id] = `data:${mime};base64,${base64}`;
-          }
+          imageMap[id] = target.replace(/^word\//, '');
         }
       }
-    } catch (e) {
-      console.warn('DOCX image rels notice:', e);
+    } catch (rErr) {
+      console.warn('Could not parse DOCX relationships:', rErr);
     }
   }
 
@@ -6416,53 +6419,63 @@ async function parseDocxToSpec(arrayBuffer, filename) {
     }
   }
 
-  const body = dom.getElementsByTagName('w:body')[0];
-  if (!body) throw new Error('Invalid DOCX structure: w:body not found.');
+  const bodyElements = dom.getElementsByTagName('w:body');
+  const body = bodyElements.length > 0 ? bodyElements[0] : dom.documentElement;
+  const nodes = body.childNodes;
 
-  for (let node of body.children) {
+  for (let node of nodes) {
     const tagName = node.tagName || node.nodeName;
 
     if (tagName === 'w:p') {
-      const brs = node.getElementsByTagName('w:br');
-      for (let br of brs) {
-        if (br.getAttribute('w:type') === 'page') {
-          flushPage();
-          curPageTitle = `Page ${pages.length + 1}`;
-        }
+      const pPr = node.getElementsByTagName('w:pPr')[0];
+      const pStyle = pPr ? pPr.getElementsByTagName('w:pStyle')[0] : null;
+      const styleVal = pStyle ? pStyle.getAttribute('w:val') : '';
+      const numPr = pPr ? pPr.getElementsByTagName('w:numPr')[0] : null;
+
+      const pageBreak = node.getElementsByTagName('w:br');
+      let hasPageBreak = false;
+      for (let br of pageBreak) {
+        if (br.getAttribute('w:type') === 'page') hasPageBreak = true;
       }
-      if (node.getElementsByTagName('w:lastRenderedPageBreak').length > 0 && curBlocks.length > 2) {
+      if (hasPageBreak) {
         flushPage();
         curPageTitle = `Page ${pages.length + 1}`;
       }
 
-      const blips = node.getElementsByTagName('a:blip');
-      for (let blip of blips) {
-        const embedId = blip.getAttribute('r:embed');
-        if (embedId && imageMap[embedId]) {
-          curBlocks.push({
-            id: 'b_' + Math.random().toString(36).slice(2, 8),
-            type: 'web_image',
-            src: imageMap[embedId],
-            alt: 'Word Document Image'
-          });
+      const tEls = node.getElementsByTagName('w:t');
+      let pText = '';
+      for (let t of tEls) pText += t.textContent;
+      pText = pText.trim();
+
+      const drawings = node.getElementsByTagName('w:drawing');
+      for (let d of drawings) {
+        const blips = d.getElementsByTagName('a:blip');
+        for (let blip of blips) {
+          const embedId = blip.getAttribute('r:embed');
+          const imgPath = imageMap[embedId];
+          if (imgPath) {
+            const imgFile = zip.file('word/' + imgPath) || zip.file(imgPath);
+            if (imgFile) {
+              const mime = imgPath.endsWith('.png') ? 'image/png' : 'image/jpeg';
+              const imgBase64 = await imgFile.async('base64');
+              curBlocks.push({
+                id: 'b_' + Math.random().toString(36).slice(2, 8),
+                type: 'web_image',
+                src: `data:${mime};base64,${imgBase64}`,
+                alt: 'Document Image',
+                value: 'Document Image',
+                style: { src: `data:${mime};base64,${imgBase64}`, alt: 'Document Image' }
+              });
+            }
+          }
         }
       }
 
-      const tEls = node.getElementsByTagName('w:t');
-      let pText = '';
-      for (let t of tEls) {
-        pText += t.textContent;
-      }
-      pText = pText.trim();
       if (!pText) continue;
 
-      const pStyle = node.getElementsByTagName('w:pStyle')[0];
-      const styleVal = pStyle ? pStyle.getAttribute('w:val') || '' : '';
-      const numPr = node.getElementsByTagName('w:numPr')[0];
-
-      if (/Title/i.test(styleVal) || styleVal === '1' || /Heading1/i.test(styleVal)) {
-        if (pages.length === 0 && curBlocks.length === 0) {
-          title = pText;
+      if (/Heading1|Title/i.test(styleVal)) {
+        if (curBlocks.length > 3) {
+          flushPage();
           curPageTitle = pText;
         }
         curBlocks.push({
@@ -6472,7 +6485,7 @@ async function parseDocxToSpec(arrayBuffer, filename) {
           text: pText,
           value: pText
         });
-      } else if (/Heading2/i.test(styleVal) || styleVal === '2') {
+      } else if (/Heading2/i.test(styleVal)) {
         curBlocks.push({
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'heading',
@@ -6480,7 +6493,7 @@ async function parseDocxToSpec(arrayBuffer, filename) {
           text: pText,
           value: pText
         });
-      } else if (/Heading3/i.test(styleVal) || styleVal === '3') {
+      } else if (/Heading3/i.test(styleVal)) {
         curBlocks.push({
           id: 'b_' + Math.random().toString(36).slice(2, 8),
           type: 'heading',
@@ -6555,7 +6568,7 @@ async function parseDocxToSpec(arrayBuffer, filename) {
 
   return {
     title: title || 'Word Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6705,7 +6718,7 @@ function parseHtmlToSpec(htmlText, filename) {
 
   return {
     title: title || 'Web Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6722,7 +6735,7 @@ function parseJsonToSpec(jsonText, filename) {
   if (parsed && Array.isArray(parsed.pages) && parsed.pages.length > 0) {
     return {
       title: parsed.title || filename.replace(/\.[^/.]+$/, ''),
-      author: parsed.author || 'Living Document Creator',
+      author: parsed.author || '',
       theme: parsed.theme || 'paper',
       pages: parsed.pages
     };
@@ -6738,12 +6751,6 @@ function parseJsonToSpec(jsonText, filename) {
       level: 1,
       text: docTitle,
       value: docTitle
-    });
-    blocks.push({
-      id: 'b_' + Math.random().toString(36).slice(2, 8),
-      type: 'paragraph',
-      text: `Structured JSON dataset containing ${parsed.length} records.`,
-      value: `Structured JSON dataset containing ${parsed.length} records.`
     });
 
     const headers = Object.keys(parsed[0]);
@@ -6773,12 +6780,6 @@ function parseJsonToSpec(jsonText, filename) {
       level: 1,
       text: docTitle,
       value: docTitle
-    });
-    blocks.push({
-      id: 'b_' + Math.random().toString(36).slice(2, 8),
-      type: 'paragraph',
-      text: 'Parsed JSON document data payload.',
-      value: 'Parsed JSON document data payload.'
     });
 
     if (typeof parsed === 'object' && parsed !== null) {
@@ -6821,7 +6822,7 @@ function parseJsonToSpec(jsonText, filename) {
 
   return {
     title: docTitle,
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: docTitle, blocks: blocks }]
   };
@@ -6848,25 +6849,15 @@ async function parse3DModelToSpec(file) {
     reader.readAsDataURL(file);
   });
 
-  const vertCount = meshData && meshData.vertices ? meshData.vertices.length : null;
-  const faceCount = meshData && meshData.faces ? meshData.faces.length : null;
-  const statsDetail = vertCount ? ` (${vertCount.toLocaleString()} vertices, ${faceCount.toLocaleString()} faces)` : '';
-
   return {
     title: `${title} (3D Living Model)`,
-    author: 'Universal 3D Converter',
+    author: '',
     theme: 'cyber',
     pages: [{
       id: 'page_1',
       title: `${title} 3D Spatial Model`,
       blocks: [
         { id: 'b_1', type: 'heading', level: 1, text: `${title} 3D Model`, value: `${title} 3D Model` },
-        { 
-          id: 'b_2', 
-          type: 'paragraph', 
-          text: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.`,
-          value: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.`
-        },
         { 
           id: 'b_3', 
           type: '3d_model', 
@@ -6898,8 +6889,7 @@ async function parseMediaToSpec(file) {
   const isImage = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext);
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: title, value: title },
-    { id: 'b_2', type: 'paragraph', text: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).`, value: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).` }
+    { id: 'b_1', type: 'heading', level: 1, text: title, value: title }
   ];
 
   if (isAudio) {
@@ -6912,7 +6902,7 @@ async function parseMediaToSpec(file) {
 
   return {
     title: title,
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: title, blocks: blocks }]
   };
@@ -7186,7 +7176,7 @@ async function parsePdfToSpec(file) {
       if (pages.length > 0) {
         return {
           title: docTitle,
-          author: 'Universal PDF Converter',
+          author: '',
           theme: 'paper',
           pages: pages
         };
@@ -7220,8 +7210,7 @@ function parsePdfFallback(file, docTitle, arrayBuffer) {
   }
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: docTitle, value: docTitle },
-    { id: 'b_2', type: 'paragraph', text: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).`, value: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).` }
+    { id: 'b_1', type: 'heading', level: 1, text: docTitle, value: docTitle }
   ];
 
   if (extractedText && extractedText.trim().length > 20) {
@@ -7232,19 +7221,11 @@ function parsePdfFallback(file, docTitle, arrayBuffer) {
         blocks.push({ id: 'b_p_' + idx, type: 'paragraph', text: pTxt, value: pTxt });
       }
     });
-  } else {
-    const nTxt = 'PDF document structure preserved with layout metadata. You can customize interactive components, add 3D elements, or embed audio in Studio.';
-    blocks.push({
-      id: 'b_notice',
-      type: 'paragraph',
-      text: nTxt,
-      value: nTxt
-    });
   }
 
   return {
     title: docTitle,
-    author: 'Universal PDF Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: docTitle, blocks: blocks }]
   };
@@ -18027,7 +18008,7 @@ async function exportPdfCloud() {
     ? { title: document.getElementById('ed-title')?.value || 'Living Document', pages: edPages }
     : (typeof buildSpec === 'function' ? buildSpec() : { title: 'Living Document', pages: [] });
 
-  if (typeof toast === 'function') toast('⚡ Offloading PDF Flattening to Cloud Worker Nodes...', 'info');
+  if (typeof toast === 'function') toast('⚡ Preparing Clean High-Fidelity PDF Export...', 'info');
   try {
     const res = await fetch('/api/export/pdf', {
       method: 'POST',
@@ -18043,9 +18024,11 @@ async function exportPdfCloud() {
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    if (typeof toast === 'function') toast('✓ Flattened High-Fidelity PDF downloaded!', 'ok');
+    if (typeof toast === 'function') toast('✓ Clean High-Fidelity PDF downloaded!', 'ok');
   } catch (err) {
-    showToast('Cloud PDF Export: ' + err.message);
+    console.warn('Backend PDF endpoint unavailable, falling back to local print-to-PDF:', err);
+    if (typeof printDocument === 'function') printDocument();
+    else window.print();
   }
 }
 
@@ -18094,7 +18077,7 @@ const LDOC_COMMANDS = [
   { id: 'view_pres', cat: 'View', name: 'Launch Presentation Fullscreen', hotkey: 'F11', run: () => (typeof buildAndView === 'function' ? buildAndView() : switchTab('viewer')) },
   { id: 'find_replace', cat: 'Edit', name: 'Find & Replace Across Document', hotkey: 'Ctrl+F', run: () => toggleFindReplaceHud() },
   { id: 'inspect_ast', cat: 'Developer', name: 'Open Live Bidirectional AST JSON Inspector', hotkey: 'Ctrl+Shift+I', run: () => toggleAstInspector() },
-  { id: 'export_pdf', cat: 'Cloud Services', name: 'Export Flattened PDF (Headless Cloud Engine)', hotkey: 'Ctrl+Shift+E', run: () => exportPdfCloud() },
+  { id: 'export_pdf', cat: 'Document', name: 'Export Clean PDF / Print', hotkey: 'Ctrl+Shift+E', run: () => exportPdfCloud() },
   { id: 'optimize_3d_cloud', cat: 'Cloud Services', name: 'Compress 3D Mesh (<35k Draco Quantization)', hotkey: 'Ctrl+Shift+M', run: () => optimize3dCloud() },
   { id: 'verify_pkg_integrity', cat: 'Cloud Services', name: 'Verify Package Integrity & SHA-256 Signatures', run: () => verifyPackageIntegrityCloud() },
 
@@ -18318,11 +18301,6 @@ function printDocument() {
       edPages.forEach((pg, idx) => {
         const slide = document.createElement('div');
         slide.className = 'pres-page pres-slide';
-        
-        const header = document.createElement('div');
-        header.className = 'pres-page-header';
-        header.innerHTML = `<span>Page ${idx + 1} of ${edPages.length}</span> <span>${typeof escapeHtml === 'function' ? escapeHtml(pg.title || ('Page ' + (idx + 1))) : (pg.title || ('Page ' + (idx + 1)))}</span>`;
-        slide.appendChild(header);
 
         const content = document.createElement('div');
         content.className = 'page-content-layer';

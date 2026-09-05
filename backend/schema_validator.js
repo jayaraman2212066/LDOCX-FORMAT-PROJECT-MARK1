@@ -110,8 +110,8 @@ function convertToLdocx(rawInput, format = 'markdown') {
 
   return {
     schema_version: SCHEMA_VERSION,
-    title: pageTitle || 'Converted Living Document',
-    author: 'LDOC Universal Converter',
+    title: pageTitle || 'Document',
+    author: '',
     created_at: new Date().toISOString(),
     pages
   };

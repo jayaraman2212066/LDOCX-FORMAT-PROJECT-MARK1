@@ -3662,7 +3662,7 @@ mark.ldoc-search-match.active {
     print-color-adjust: exact !important;
   }
 
-  /* 2. Suppress All Desktop Application UI Chrome, Menus, Toolbars, HUDs, Modals */
+  /* 2. Suppress All Desktop Application UI Chrome, Menus, Toolbars, HUDs, Modals, Branding & Watermarks */
   #desktop-menubar,
   #toolbar,
   #ldoc-status-bar,
@@ -3673,6 +3673,9 @@ mark.ldoc-search-match.active {
   #ldoc-context-menu,
   #format-popover,
   #ai-helper-drawer,
+  #ai-helper-btn,
+  .floating-ai-btn,
+  #ai-helper-toggle,
   #lead-modal,
   #legal-security-modal,
   .fx-dropdown-wrap,
@@ -3709,7 +3712,21 @@ mark.ldoc-search-match.active {
   .pres-audio-card,
   .video-card .video-label,
   button,
-  .find-btn {
+  .find-btn,
+  .slide-app-header,
+  #slide-top-bar,
+  .slide-app-brand,
+  .brand-title,
+  .live-indicator,
+  .pres-mode-selector,
+  #pres-mode-selector,
+  #save-active-btn,
+  .pres-page-header,
+  #converter-panel,
+  #annotate-toolbar,
+  .annot-btn,
+  .sticky-note-hdr button,
+  .lemon-store-badge {
     display: none !important;
   }
 
@@ -3789,22 +3806,14 @@ mark.ldoc-search-match.active {
     color: #0f172a !important;
   }
 
-  /* 6. Page Header (Flush with Left & Right Content Margins) */
+  /* 6. Page Header: Completely hidden in print so zero artificial watermarks are stamped */
   .pres-page-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100% !important;
-    padding: 0 0 8pt 0 !important;
-    margin: 0 0 16pt 0 !important;
-    border-bottom: 1.5pt solid #cbd5e1 !important;
-    background: transparent !important;
-    color: #64748b !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 8.5pt !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5pt !important;
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    visibility: hidden !important;
   }
 
   /* 7. Precision Typography: Headings, Sentences, Paragraphs & Letters */
@@ -4049,6 +4058,8 @@ mark.ldoc-search-match.active {
 <!-- Local Offline Vendor Libraries (Zero Outsource / 100% Offline Standalone) -->
 <script src="vendor/three.min.js"></script>
 <script>if(typeof THREE==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
+<script src="vendor/OrbitControls.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.OrbitControls&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>')</script>
 <script src="vendor/GLTFLoader.js"></script>
 <script>if(typeof THREE!=='undefined'&&!THREE.GLTFLoader&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"><\/script>')</script>
 <script src="vendor/OBJLoader.js"></script>
@@ -4293,7 +4304,12 @@ mark.ldoc-search-match.active {
   <!-- Header -->
   <div class="ai-helper-header">
     <div class="ai-helper-header-left">
-      <img class="ai-helper-brand" src="ai-brain.png" alt="AI Brain" style="width:24px;height:24px;border-radius:6px;object-fit:contain" />
+      <div class="ai-helper-brand" style="width:26px;height:26px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(245,158,11,0.3)">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.5 2A4.5 4.5 0 0 0 5 6.5c0 .4.05.79.15 1.16A5 5 0 0 0 3 12a5 5 0 0 0 2.5 4.33A4.5 4.5 0 0 0 10 21h.5V2h-1zm5 0h-.5v19h.5a4.5 4.5 0 0 0 4.5-4.67A5 5 0 0 0 21 12a5 5 0 0 0-2.15-4.34A4.5 4.5 0 0 0 14.5 2z" stroke="#fef08a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="rgba(245,158,11,0.2)"/>
+          <path d="M12 5v14M8 8h4M12 12h4M7 16h5M12 16h5" stroke="#38bdf8" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
       <div>
         <strong id="ai-panel-title">LDOCX AI Assistant</strong>
         <span id="ai-panel-subtitle">Document Intelligence &amp; Live Sync</span>
@@ -6108,7 +6124,7 @@ function parseMarkdownToSpec(text, filename) {
 
   return {
     title: title || 'Converted Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6306,7 +6322,7 @@ async function parseDocxToSpec(arrayBuffer, filename) {
 
   return {
     title: title || 'Word Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6456,7 +6472,7 @@ function parseHtmlToSpec(htmlText, filename) {
 
   return {
     title: title || 'Web Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6473,7 +6489,7 @@ function parseJsonToSpec(jsonText, filename) {
   if (parsed && Array.isArray(parsed.pages) && parsed.pages.length > 0) {
     return {
       title: parsed.title || filename.replace(/\.[^/.]+$/, ''),
-      author: parsed.author || 'Living Document Creator',
+      author: parsed.author || '',
       theme: parsed.theme || 'paper',
       pages: parsed.pages
     };
@@ -6489,12 +6505,6 @@ function parseJsonToSpec(jsonText, filename) {
       level: 1,
       text: docTitle,
       value: docTitle
-    });
-    blocks.push({
-      id: 'b_' + Math.random().toString(36).slice(2, 8),
-      type: 'paragraph',
-      text: `Structured JSON dataset containing ${parsed.length} records.`,
-      value: `Structured JSON dataset containing ${parsed.length} records.`
     });
 
     const headers = Object.keys(parsed[0]);
@@ -6524,12 +6534,6 @@ function parseJsonToSpec(jsonText, filename) {
       level: 1,
       text: docTitle,
       value: docTitle
-    });
-    blocks.push({
-      id: 'b_' + Math.random().toString(36).slice(2, 8),
-      type: 'paragraph',
-      text: 'Parsed JSON document data payload.',
-      value: 'Parsed JSON document data payload.'
     });
 
     if (typeof parsed === 'object' && parsed !== null) {
@@ -6572,7 +6576,7 @@ function parseJsonToSpec(jsonText, filename) {
 
   return {
     title: docTitle,
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: docTitle, blocks: blocks }]
   };
@@ -6599,25 +6603,15 @@ async function parse3DModelToSpec(file) {
     reader.readAsDataURL(file);
   });
 
-  const vertCount = meshData && meshData.vertices ? meshData.vertices.length : null;
-  const faceCount = meshData && meshData.faces ? meshData.faces.length : null;
-  const statsDetail = vertCount ? ` (${vertCount.toLocaleString()} vertices, ${faceCount.toLocaleString()} faces)` : '';
-
   return {
     title: `${title} (3D Living Model)`,
-    author: 'Universal 3D Converter',
+    author: '',
     theme: 'cyber',
     pages: [{
       id: 'page_1',
       title: `${title} 3D Spatial Model`,
       blocks: [
         { id: 'b_1', type: 'heading', level: 1, text: `${title} 3D Model`, value: `${title} 3D Model` },
-        { 
-          id: 'b_2', 
-          type: 'paragraph', 
-          text: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.`,
-          value: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.`
-        },
         { 
           id: 'b_3', 
           type: '3d_model', 
@@ -6649,8 +6643,7 @@ async function parseMediaToSpec(file) {
   const isImage = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext);
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: title, value: title },
-    { id: 'b_2', type: 'paragraph', text: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).`, value: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).` }
+    { id: 'b_1', type: 'heading', level: 1, text: title, value: title }
   ];
 
   if (isAudio) {
@@ -6663,7 +6656,7 @@ async function parseMediaToSpec(file) {
 
   return {
     title: title,
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: title, blocks: blocks }]
   };
@@ -6937,7 +6930,7 @@ async function parsePdfToSpec(file) {
       if (pages.length > 0) {
         return {
           title: docTitle,
-          author: 'Universal PDF Converter',
+          author: '',
           theme: 'paper',
           pages: pages
         };
@@ -6971,8 +6964,7 @@ function parsePdfFallback(file, docTitle, arrayBuffer) {
   }
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: docTitle, value: docTitle },
-    { id: 'b_2', type: 'paragraph', text: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).`, value: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).` }
+    { id: 'b_1', type: 'heading', level: 1, text: docTitle, value: docTitle }
   ];
 
   if (extractedText && extractedText.trim().length > 20) {
@@ -6983,19 +6975,11 @@ function parsePdfFallback(file, docTitle, arrayBuffer) {
         blocks.push({ id: 'b_p_' + idx, type: 'paragraph', text: pTxt, value: pTxt });
       }
     });
-  } else {
-    const nTxt = 'PDF document structure preserved with layout metadata. You can customize interactive components, add 3D elements, or embed audio in Studio.';
-    blocks.push({
-      id: 'b_notice',
-      type: 'paragraph',
-      text: nTxt,
-      value: nTxt
-    });
   }
 
   return {
     title: docTitle,
-    author: 'Universal PDF Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: docTitle, blocks: blocks }]
   };
@@ -7768,6 +7752,18 @@ function resetJsxSandbox(uid) {
     if (typeof showToast === 'function') showToast('🔄 Sandbox reset to initial state', 'ok');
   } else if (bodyEl) {
     bodyEl.innerHTML = '<div style="color:#34d399;font-size:12px">✓ Component state reset</div>';
+  }
+}
+
+function toggleJsxFullscreen(uid) {
+  const bodyEl = document.getElementById(`${uid}-body`) || document.getElementById(`jsx-output-${uid}`);
+  if (!bodyEl) return;
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    if (bodyEl.requestFullscreen) bodyEl.requestFullscreen();
+    else if (bodyEl.webkitRequestFullscreen) bodyEl.webkitRequestFullscreen();
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
   }
 }
 
@@ -10391,6 +10387,37 @@ function nodeLabel(n){if(!n)return '';return n.label||(n.aria&&n.aria.label)||n.
 function nodePH(n){if(!n)return '';return n.placeholder||(n.aria&&n.aria.placeholder)||'';}
 function assetUrl(n){return n.asset_id?`${API}/documents/${docId}/assets/${n.asset_id}`:'';;}
 
+function renderInteractiveVisualSandbox(code, title, parent, node = {}) {
+  const card = document.createElement('div');
+  card.className = 'jsx-canvas-card visual-sandbox-card';
+  card.style.cssText = 'background:rgba(15,15,28,0.95);border:1.5px solid rgba(245,158,11,0.4);border-radius:18px;padding:14px;margin:16px 0;box-shadow:0 16px 48px rgba(0,0,0,0.85);position:relative;z-index:10;';
+  const uid = 'vis_' + Math.random().toString(36).slice(2, 9);
+
+  card.innerHTML = `
+    <div class="jsx-header" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span class="jsx-badge" style="font-family:'Cinzel',serif;font-weight:700;font-size:13px;color:#fef08a;display:inline-flex;align-items:center;gap:6px">
+        <span style="color:var(--gold);font-size:16px">⚡</span>
+        <span>${escapeHtml(title || 'Interactive 3D / Live Motion Sandbox')}</span>
+      </span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="jsx-toggle-btn" type="button" onclick="toggleJsxFullscreen('${uid}')" style="background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">⛶ Fullscreen</button>
+        <button class="jsx-toggle-btn" type="button" onclick="resetJsxSandbox('${uid}')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#cbd5e1;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">🔄 Reset</button>
+        <button class="jsx-toggle-btn" type="button" onclick="toggleJsxCode('${uid}')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#cbd5e1;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">👁️ Code</button>
+      </div>
+    </div>
+    <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative;width:100%;height:440px;border-radius:12px;overflow:hidden;background:#000"></div>
+    <pre class="jsx-code-view" id="${uid}-code" style="display:none;max-height:220px;overflow:auto;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1);padding:10px;border-radius:8px;font-size:11px;color:#cbd5e1;margin-top:10px"><code>${escapeHtml(code)}</code></pre>
+  `;
+  parent.appendChild(card);
+
+  setTimeout(() => {
+    const bodyEl = document.getElementById(`${uid}-body`);
+    if (bodyEl) {
+      executeCustomSandboxCode(code, bodyEl, uid);
+    }
+  }, 25);
+}
+
 function executeCustomSandboxCode(rawCode, containerEl, uid) {
   if (!containerEl) return;
   containerEl.innerHTML = '';
@@ -10402,7 +10429,7 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
     hint.innerHTML = `
       <div style="font-size:18px;margin-bottom:4px">⚡</div>
       <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:2px">Custom Interactive Sandbox</div>
-      <div style="font-size:10.5px;color:var(--text3)">Enter custom HTML, React JSX, Chart.js, Three.js, or Canvas code</div>
+      <div style="font-size:10.5px;color:var(--text3)">Enter custom HTML, React JSX, Chart.js, Three.js, Unity WebGL, or Canvas code</div>
     `;
     containerEl.appendChild(hint);
     return;
@@ -10423,35 +10450,164 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
   };
 
   try {
-    // Classification: Is this HTML markup with optional <script> tags, OR is it pure JavaScript / React component code?
     const isJsModuleSyntax = /^(?:import\s|export\s|function\s+[A-Z]|class\s+[A-Z]|const\s+[A-Z]|let\s+[A-Z]|var\s+[A-Z]|(?:\/\*[\s\S]*?\*\/|\/\/[^\n]*\n)*\s*(?:import|export|function\s+[A-Z]|class\s+[A-Z]|const\s+[A-Z]))/.test(trimmed);
     const startsWithHtmlTag = /^\s*(?:<!--[\s\S]*?-->\s*)*<\s*(?:!DOCTYPE|html|head|body|div|span|canvas|section|header|footer|nav|aside|article|main|form|p|h[1-6]|button|input|svg|table|style|script)\b/i.test(trimmed);
     const hasScriptTag = /<\s*script\b/i.test(trimmed);
     const hasJsxSyntax = /className=|style=\{\{|<[A-Z][A-Za-z0-9_]*|\/>/.test(trimmed);
 
-    const isHtml = startsWithHtmlTag && !isJsModuleSyntax && (hasScriptTag || !hasJsxSyntax);
+    const isHtml = (startsWithHtmlTag && !isJsModuleSyntax && (hasScriptTag || !hasJsxSyntax)) || /^\s*<!DOCTYPE\b|^\s*<html\b/i.test(trimmed);
+    const is3dCanvasScript = !hasJsxSyntax && (trimmed.includes('THREE.') || trimmed.includes('WebGL') || trimmed.includes('createUnityInstance') || trimmed.includes('renderer.setSize') || trimmed.includes('document.body.appendChild'));
 
-    if (isHtml) {
-      // HTML markup with optional embedded <script> tags
-      const scopedCode = trimmed.replace(/\bdocument\.getElementById\((["'])([^"'\s\)]+)\1\)/g, (m, q, id) => {
-        return `((this && this.closest && this.closest('[data-scope]')) ? this.closest('[data-scope]').querySelector('#${id}') : document.getElementById('${id}'))`;
-      });
-      containerEl.innerHTML = scopedCode;
-
-      const scripts = containerEl.querySelectorAll('script');
-      scripts.forEach(s => {
+    if (isHtml || is3dCanvasScript) {
+      // Execute in an isolated sandbox iframe to completely prevent DOM leaks, style collisions, or window takeovers!
+      if (containerEl._activeIframe) {
         try {
-          let sCode = s.textContent;
-          const isBabel = s.type === 'text/babel' || s.type === 'text/jsx' || /<[A-Za-z0-9_]/.test(sCode);
-          if (isBabel && window.Babel) {
-            sCode = window.Babel.transform(sCode, { presets: [['react', { runtime: 'classic' }]] }).code;
-          }
-          const fn = new Function('container', 'scopeId', 'React', 'ReactDOM', 'THREE', 'Chart', `var { useState, useEffect, useRef, useMemo, useCallback } = React || {};\n` + sCode);
-          fn(containerEl, uid, window.React, window.ReactDOM, window.THREE, window.Chart);
-        } catch (sErr) {
-          renderError('Script Runtime Notice', sErr.message, sErr.stack);
-        }
+          containerEl._activeIframe.srcdoc = '';
+          containerEl._activeIframe.src = 'about:blank';
+          containerEl._activeIframe.remove();
+        } catch(e){}
+        containerEl._activeIframe = null;
+      }
+
+      const iframe = document.createElement('iframe');
+      iframe.className = 'ldoc-sandbox-frame';
+      iframe.setAttribute('sandbox', 'allow-scripts allow-modals allow-same-origin allow-forms');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; xr-spatial-tracking; fullscreen');
+      
+      const isMini = containerEl.id && containerEl.id.startsWith('mini-sandbox-');
+      const isLivePreview = containerEl.closest && containerEl.closest('#ed-preview-pane');
+      const frameHeight = isMini ? '220px' : (isLivePreview ? '300px' : (containerEl.style.height || '440px'));
+      iframe.style.cssText = `width:100%;height:${frameHeight};min-height:${isMini ? '200px' : (isLivePreview ? '260px' : '360px')};border:none;border-radius:10px;display:block;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.7);transform:translateZ(0);will-change:transform;backface-visibility:hidden;image-rendering:high-quality;`;
+      
+      containerEl.innerHTML = '';
+      containerEl.appendChild(iframe);
+      containerEl._activeIframe = iframe;
+
+      let processed = trimmed;
+      if (!isHtml && is3dCanvasScript) {
+        processed = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; }
+    canvas { display: block; width: 100%; height: 100%; }
+  </style>
+  <script src="vendor/three.min.js"><\/script>
+  <script src="vendor/OrbitControls.js"><\/script>
+  <script src="vendor/GLTFLoader.js"><\/script>
+  <script src="vendor/chart.min.js"><\/script>
+</head>
+<body>
+<script>
+try {
+  ${trimmed}
+} catch(err) {
+  console.error('[3D Sandbox Notice]:', err);
+  document.body.innerHTML = '<div style="padding:16px;color:#fca5a5;font-family:monospace;font-size:12px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:8px;margin:12px"><strong>⚠️ 3D Visualization Notice</strong><br>' + String(err.message || err) + '</div>';
+}
+<\/script>
+</body>
+</html>`;
+      }
+
+      // Preprocess HTML to rewrite external CDN script URLs to local vendor paths for 100% offline support
+      processed = processed.replace(/(<script\b[^>]*?\bsrc=["'])([^"'>]+)(["'][^>]*?>\s*<\/script>)/gi, (match, prefix, src, suffix) => {
+        const s = (src || '').toLowerCase();
+        if (s.includes('orbitcontrols.js') || s.includes('orbitcontrols')) return `${prefix}vendor/OrbitControls.js${suffix}`;
+        if (s.includes('gltfloader.js') || s.includes('gltfloader')) return `${prefix}vendor/GLTFLoader.js${suffix}`;
+        if (s.includes('objloader.js') || s.includes('objloader')) return `${prefix}vendor/OBJLoader.js${suffix}`;
+        if (s.includes('stlloader.js') || s.includes('stlloader')) return `${prefix}vendor/STLLoader.js${suffix}`;
+        if (s.includes('three.min.js') || s.includes('three.js') || s.includes('three@') || s.includes('/three/')) return `${prefix}vendor/three.min.js${suffix}`;
+        if (s.includes('chart.min.js') || s.includes('chart.js') || s.includes('chartjs')) return `${prefix}vendor/chart.min.js${suffix}`;
+        if (s.includes('react.production') || s.includes('react.min.js') || s.includes('/react@') || s.includes('/react/')) return `${prefix}vendor/react.production.min.js${suffix}`;
+        if (s.includes('react-dom.production') || s.includes('react-dom.min.js') || s.includes('/react-dom@') || s.includes('/react-dom/')) return `${prefix}vendor/react-dom.production.min.js${suffix}`;
+        if (s.includes('babel.min.js') || s.includes('babel-standalone')) return `${prefix}vendor/babel.min.js${suffix}`;
+        if (s.includes('tailwind') || s.includes('tailwindcss')) return `${prefix}vendor/tailwind.min.js${suffix}`;
+        return match;
       });
+
+      // Inject base URL, high-performance WebGL interceptor, memory management, and resilient fallbacks
+      const appBase = (typeof location !== 'undefined' && location.href) ? location.href.replace(/#.*$/, '') : '';
+      const shims = `
+<base href="${appBase}">
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
+<script>
+  window.addEventListener('error', function(e) {
+    console.warn('[Sandbox Runtime Notice]:', e.message);
+  });
+  // High-Performance Hardware Accelerated WebGL Engine Interceptor
+  if (typeof HTMLCanvasElement !== 'undefined') {
+    const _origGetContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(type, attributes) {
+      if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') {
+        attributes = Object.assign({
+          powerPreference: 'high-performance',
+          antialias: true,
+          alpha: true,
+          depth: true,
+          stencil: false,
+          preserveDrawingBuffer: false,
+          failIfMajorPerformanceCaveat: false
+        }, attributes || {});
+      }
+      return _origGetContext.call(this, type, attributes);
+    };
+  }
+  // Prevent VRAM context loss from crashing the presentation
+  window.addEventListener('webglcontextlost', function(e) {
+    e.preventDefault();
+    console.warn('[WebGL Engine]: Context lost under VRAM pressure, attempting automatic recovery...');
+  }, false);
+  // Three.js OrbitControls immediate resilient fallback stub
+  function _ensureOrbitControls() {
+    if (typeof THREE !== 'undefined' && !THREE.OrbitControls) {
+      THREE.OrbitControls = function(object, domElement) {
+        this.object = object;
+        this.domElement = domElement || document.body;
+        this.update = function() {};
+        this.dispose = function() {};
+        this.enableDamping = false;
+        this.dampingFactor = 0.05;
+        this.target = (typeof THREE.Vector3 !== 'undefined') ? new THREE.Vector3() : { x: 0, y: 0, z: 0 };
+        let isDown = false, px = 0, py = 0;
+        const target = this.domElement;
+        target.addEventListener('mousedown', function(e) { isDown = true; px = e.clientX; py = e.clientY; });
+        window.addEventListener('mouseup', function() { isDown = false; });
+        window.addEventListener('mousemove', function(e) {
+          if (!isDown || !object) return;
+          object.rotation.y += (e.clientX - px) * 0.01;
+          object.rotation.x += (e.clientY - py) * 0.01;
+          px = e.clientX; py = e.clientY;
+        });
+      };
+    }
+  }
+  _ensureOrbitControls();
+  document.addEventListener('DOMContentLoaded', _ensureOrbitControls);
+<\/script>
+`;
+      if (/<head\b[^>]*>/i.test(processed)) {
+        processed = processed.replace(/<head\b[^>]*>/i, `$&${shims}`);
+      } else if (/<html\b[^>]*>/i.test(processed)) {
+        processed = processed.replace(/<html\b[^>]*>/i, `$&<head>${shims}</head>`);
+      } else {
+        processed = `<!DOCTYPE html><html><head>${shims}</head><body>${processed}</body></html>`;
+      }
+
+      if ('srcdoc' in iframe) {
+        iframe.srcdoc = processed;
+      } else {
+        const doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+        if (doc) {
+          doc.open();
+          doc.write(processed);
+          doc.close();
+        }
+      }
     } else {
       // Pure JS / React / JSX code (supports full modern components with imports, exports, hooks, and auto-mount)
       let jsCode = trimmed;
@@ -11148,6 +11304,14 @@ function renderBlockNode(node,parent){
     case 'video':case 'web_video':{
       const rawSrc = (node.style && node.style.src) || node.src || assetUrl(node) || '';
       const lbl = (node.style && node.style.label) || (node.aria && node.aria.label) || node.value || 'Video Stream';
+
+      // Smart Auto-Detection: Did user provide HTML / 3D WebGL / Canvas / Visualization code instead of video file?
+      const isHtmlVisualization = /^\s*<!DOCTYPE\b|^\s*<html\b|<\s*canvas\b|<\s*script\b|THREE\.|WebGL|createUnityInstance/i.test(rawSrc) || /<\s*style\b/i.test(rawSrc);
+      if (isHtmlVisualization) {
+        renderInteractiveVisualSandbox(rawSrc, lbl, parent, node);
+        break;
+      }
+
       const card = document.createElement('div');
       card.className = 'video-card';
       card.style.cssText = 'background:rgba(15,15,28,0.92);border:1.5px solid rgba(245,158,11,0.4);border-radius:18px;padding:14px;margin:20px 0;box-shadow:0 16px 48px rgba(0,0,0,0.85);position:relative;z-index:10;';
@@ -11956,11 +12120,12 @@ function renderBlockNode(node,parent){
         <div class="jsx-header">
           <span class="jsx-badge">⚡ ${escapeHtml(title)}</span>
           <div style="display:flex;gap:6px">
+            <button class="jsx-toggle-btn" type="button" onclick="toggleJsxFullscreen('${uid}')">⛶ Fullscreen</button>
             <button class="jsx-toggle-btn" type="button" onclick="toggleJsxCode('${uid}')">👁️ Code</button>
             <button class="jsx-toggle-btn" type="button" onclick="resetJsxSandbox('${uid}')">🔄 Reset</button>
           </div>
         </div>
-        <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative"></div>
+        <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative;width:100%;min-height:360px;border-radius:12px;overflow:hidden;background:#000"></div>
         <pre class="jsx-code-view" id="${uid}-code"><code>${escapeHtml(rawCode)}</code></pre>
       `;
       parent.appendChild(card);
@@ -16989,7 +17154,7 @@ async function exportPdfCloud() {
     ? { title: document.getElementById('ed-title')?.value || 'Living Document', pages: edPages }
     : (typeof buildSpec === 'function' ? buildSpec() : { title: 'Living Document', pages: [] });
 
-  if (typeof toast === 'function') toast('⚡ Offloading PDF Flattening to Cloud Worker Nodes...', 'info');
+  if (typeof toast === 'function') toast('⚡ Preparing Clean High-Fidelity PDF Export...', 'info');
   try {
     const res = await fetch('/api/export/pdf', {
       method: 'POST',
@@ -17005,9 +17170,11 @@ async function exportPdfCloud() {
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    if (typeof toast === 'function') toast('✓ Flattened High-Fidelity PDF downloaded!', 'ok');
+    if (typeof toast === 'function') toast('✓ Clean High-Fidelity PDF downloaded!', 'ok');
   } catch (err) {
-    showToast('Cloud PDF Export: ' + err.message);
+    console.warn('Backend PDF endpoint unavailable, falling back to local print-to-PDF:', err);
+    if (typeof printDocument === 'function') printDocument();
+    else window.print();
   }
 }
 
@@ -17056,7 +17223,7 @@ const LDOC_COMMANDS = [
   { id: 'view_pres', cat: 'View', name: 'Launch Presentation Fullscreen', hotkey: 'F11', run: () => (typeof buildAndView === 'function' ? buildAndView() : switchTab('viewer')) },
   { id: 'find_replace', cat: 'Edit', name: 'Find & Replace Across Document', hotkey: 'Ctrl+F', run: () => toggleFindReplaceHud() },
   { id: 'inspect_ast', cat: 'Developer', name: 'Open Live Bidirectional AST JSON Inspector', hotkey: 'Ctrl+Shift+I', run: () => toggleAstInspector() },
-  { id: 'export_pdf', cat: 'Cloud Services', name: 'Export Flattened PDF (Headless Cloud Engine)', hotkey: 'Ctrl+Shift+E', run: () => exportPdfCloud() },
+  { id: 'export_pdf', cat: 'Document', name: 'Export Clean PDF / Print', hotkey: 'Ctrl+Shift+E', run: () => exportPdfCloud() },
   { id: 'optimize_3d_cloud', cat: 'Cloud Services', name: 'Compress 3D Mesh (<35k Draco Quantization)', hotkey: 'Ctrl+Shift+M', run: () => optimize3dCloud() },
   { id: 'verify_pkg_integrity', cat: 'Cloud Services', name: 'Verify Package Integrity & SHA-256 Signatures', run: () => verifyPackageIntegrityCloud() },
 
@@ -17295,11 +17462,6 @@ function printDocument() {
       edPages.forEach((pg, idx) => {
         const slide = document.createElement('div');
         slide.className = 'pres-page pres-slide';
-        
-        const header = document.createElement('div');
-        header.className = 'pres-page-header';
-        header.innerHTML = `<span>Page ${idx + 1} of ${edPages.length}</span> <span>${typeof escapeHtml === 'function' ? escapeHtml(pg.title || ('Page ' + (idx + 1))) : (pg.title || ('Page ' + (idx + 1)))}</span>`;
-        slide.appendChild(header);
 
         const content = document.createElement('div');
         content.className = 'page-content-layer';

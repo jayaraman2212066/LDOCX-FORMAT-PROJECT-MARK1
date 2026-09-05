@@ -3652,7 +3652,7 @@ mark.ldoc-search-match.active {
     print-color-adjust: exact !important;
   }
 
-  /* 2. Suppress All Desktop Application UI Chrome, Menus, Toolbars, HUDs, Modals */
+  /* 2. Suppress All Desktop Application UI Chrome, Menus, Toolbars, HUDs, Modals, Branding & Watermarks */
   #desktop-menubar,
   #toolbar,
   #ldoc-status-bar,
@@ -3663,6 +3663,9 @@ mark.ldoc-search-match.active {
   #ldoc-context-menu,
   #format-popover,
   #ai-helper-drawer,
+  #ai-helper-btn,
+  .floating-ai-btn,
+  #ai-helper-toggle,
   #lead-modal,
   #legal-security-modal,
   .fx-dropdown-wrap,
@@ -3699,7 +3702,21 @@ mark.ldoc-search-match.active {
   .pres-audio-card,
   .video-card .video-label,
   button,
-  .find-btn {
+  .find-btn,
+  .slide-app-header,
+  #slide-top-bar,
+  .slide-app-brand,
+  .brand-title,
+  .live-indicator,
+  .pres-mode-selector,
+  #pres-mode-selector,
+  #save-active-btn,
+  .pres-page-header,
+  #converter-panel,
+  #annotate-toolbar,
+  .annot-btn,
+  .sticky-note-hdr button,
+  .lemon-store-badge {
     display: none !important;
   }
 
@@ -3779,22 +3796,14 @@ mark.ldoc-search-match.active {
     color: #0f172a !important;
   }
 
-  /* 6. Page Header (Flush with Left & Right Content Margins) */
+  /* 6. Page Header: Completely hidden in print so zero artificial watermarks are stamped */
   .pres-page-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100% !important;
-    padding: 0 0 8pt 0 !important;
-    margin: 0 0 16pt 0 !important;
-    border-bottom: 1.5pt solid #cbd5e1 !important;
-    background: transparent !important;
-    color: #64748b !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 8.5pt !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5pt !important;
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    visibility: hidden !important;
   }
 
   /* 7. Precision Typography: Headings, Sentences, Paragraphs & Letters */
@@ -6434,7 +6443,7 @@ function parseMarkdownToSpec(text, filename) {
 
   return {
     title: title || 'Converted Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6488,7 +6497,6 @@ async function parsePptxToSpec(arrayBuffer, filename) {
 
     if (blocks.length === 0) {
       blocks.push({ type: 'heading', level: 1, text: `Slide ${sf.num}` });
-      blocks.push({ type: 'paragraph', text: 'Converted presentation slide content.' });
     }
 
     pages.push({
@@ -6503,15 +6511,14 @@ async function parsePptxToSpec(arrayBuffer, filename) {
       id: 'page_1',
       title: title,
       blocks: [
-        { type: 'heading', level: 1, text: title },
-        { type: 'paragraph', text: 'Converted PowerPoint presentation content.' }
+        { type: 'heading', level: 1, text: title }
       ]
     });
   }
 
   return {
     title: title,
-    author: 'Universal PPTX Converter',
+    author: '',
     theme: 'deck',
     pages: pages
   };
@@ -6709,7 +6716,7 @@ async function parseDocxToSpec(arrayBuffer, filename) {
 
   return {
     title: title || 'Word Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6859,7 +6866,7 @@ function parseHtmlToSpec(htmlText, filename) {
 
   return {
     title: title || 'Web Document',
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: pages
   };
@@ -6876,7 +6883,7 @@ function parseJsonToSpec(jsonText, filename) {
   if (parsed && Array.isArray(parsed.pages) && parsed.pages.length > 0) {
     return {
       title: parsed.title || filename.replace(/\.[^/.]+$/, ''),
-      author: parsed.author || 'Living Document Creator',
+      author: parsed.author || '',
       theme: parsed.theme || 'paper',
       pages: parsed.pages
     };
@@ -6892,12 +6899,6 @@ function parseJsonToSpec(jsonText, filename) {
       level: 1,
       text: docTitle,
       value: docTitle
-    });
-    blocks.push({
-      id: 'b_' + Math.random().toString(36).slice(2, 8),
-      type: 'paragraph',
-      text: `Structured JSON dataset containing ${parsed.length} records.`,
-      value: `Structured JSON dataset containing ${parsed.length} records.`
     });
 
     const headers = Object.keys(parsed[0]);
@@ -6927,12 +6928,6 @@ function parseJsonToSpec(jsonText, filename) {
       level: 1,
       text: docTitle,
       value: docTitle
-    });
-    blocks.push({
-      id: 'b_' + Math.random().toString(36).slice(2, 8),
-      type: 'paragraph',
-      text: 'Parsed JSON document data payload.',
-      value: 'Parsed JSON document data payload.'
     });
 
     if (typeof parsed === 'object' && parsed !== null) {
@@ -6975,7 +6970,7 @@ function parseJsonToSpec(jsonText, filename) {
 
   return {
     title: docTitle,
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: docTitle, blocks: blocks }]
   };
@@ -7002,25 +6997,15 @@ async function parse3DModelToSpec(file) {
     reader.readAsDataURL(file);
   });
 
-  const vertCount = meshData && meshData.vertices ? meshData.vertices.length : null;
-  const faceCount = meshData && meshData.faces ? meshData.faces.length : null;
-  const statsDetail = vertCount ? ` (${vertCount.toLocaleString()} vertices, ${faceCount.toLocaleString()} faces)` : '';
-
   return {
     title: `${title} (3D Living Model)`,
-    author: 'Universal 3D Converter',
+    author: '',
     theme: 'cyber',
     pages: [{
       id: 'page_1',
       title: `${title} 3D Spatial Model`,
       blocks: [
         { id: 'b_1', type: 'heading', level: 1, text: `${title} 3D Model`, value: `${title} 3D Model` },
-        { 
-          id: 'b_2', 
-          type: 'paragraph', 
-          text: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.`,
-          value: `Interactive spatial 3D model asset (${ext.toUpperCase()} format, ${(file.size / 1024).toFixed(1)} KB${statsDetail}). Auto-spin orbit, WebGL lighting, and interactive controls active.`
-        },
         { 
           id: 'b_3', 
           type: '3d_model', 
@@ -7052,8 +7037,7 @@ async function parseMediaToSpec(file) {
   const isImage = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'].includes(ext);
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: title, value: title },
-    { id: 'b_2', type: 'paragraph', text: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).`, value: `Living media presentation: ${filename} (${(file.size / 1024).toFixed(1)} KB).` }
+    { id: 'b_1', type: 'heading', level: 1, text: title, value: title }
   ];
 
   if (isAudio) {
@@ -7066,7 +7050,7 @@ async function parseMediaToSpec(file) {
 
   return {
     title: title,
-    author: 'Universal Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: title, blocks: blocks }]
   };
@@ -7340,7 +7324,7 @@ async function parsePdfToSpec(file) {
       if (pages.length > 0) {
         return {
           title: docTitle,
-          author: 'Universal PDF Converter',
+          author: '',
           theme: 'paper',
           pages: pages
         };
@@ -7374,8 +7358,7 @@ function parsePdfFallback(file, docTitle, arrayBuffer) {
   }
 
   const blocks = [
-    { id: 'b_1', type: 'heading', level: 1, text: docTitle, value: docTitle },
-    { id: 'b_2', type: 'paragraph', text: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).`, value: `Imported PDF document (${(file.size / 1024).toFixed(1)} KB).` }
+    { id: 'b_1', type: 'heading', level: 1, text: docTitle, value: docTitle }
   ];
 
   if (extractedText && extractedText.trim().length > 20) {
@@ -7386,19 +7369,11 @@ function parsePdfFallback(file, docTitle, arrayBuffer) {
         blocks.push({ id: 'b_p_' + idx, type: 'paragraph', text: pTxt, value: pTxt });
       }
     });
-  } else {
-    const nTxt = 'PDF document structure preserved with layout metadata. You can customize interactive components, add 3D elements, or embed audio in Studio.';
-    blocks.push({
-      id: 'b_notice',
-      type: 'paragraph',
-      text: nTxt,
-      value: nTxt
-    });
   }
 
   return {
     title: docTitle,
-    author: 'Universal PDF Converter',
+    author: '',
     theme: 'paper',
     pages: [{ id: 'page_1', title: docTitle, blocks: blocks }]
   };
@@ -18182,9 +18157,11 @@ async function exportPdfCloud() {
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    if (typeof toast === 'function') toast('✓ Flattened High-Fidelity PDF downloaded!', 'ok');
+    if (typeof toast === 'function') toast('✓ Clean High-Fidelity PDF downloaded!', 'ok');
   } catch (err) {
-    showToast('Cloud PDF Export: ' + err.message);
+    console.warn('Backend PDF endpoint unavailable, falling back to local print-to-PDF:', err);
+    if (typeof printDocument === 'function') printDocument();
+    else window.print();
   }
 }
 
@@ -18472,11 +18449,6 @@ function printDocument() {
       edPages.forEach((pg, idx) => {
         const slide = document.createElement('div');
         slide.className = 'pres-page pres-slide';
-        
-        const header = document.createElement('div');
-        header.className = 'pres-page-header';
-        header.innerHTML = `<span>Page ${idx + 1} of ${edPages.length}</span> <span>${typeof escapeHtml === 'function' ? escapeHtml(pg.title || ('Page ' + (idx + 1))) : (pg.title || ('Page ' + (idx + 1)))}</span>`;
-        slide.appendChild(header);
 
         const content = document.createElement('div');
         content.className = 'page-content-layer';

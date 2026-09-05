@@ -2854,6 +2854,265 @@ body.creator-split-50-50 #creator-preview-pane {
   max-height: calc(100vh - 140px) !important;
 }
 
+/* ══════════════════════════════════════════════════════════════════════════════
+   HIGH-FIDELITY PRINT & PDF EXPORT ENGINE (@media print)
+   Suppresses all creator IDE chrome, toolbars, drawers, buttons, and watermarks.
+   Renders clean, professional white pages with perfect typography.
+   ══════════════════════════════════════════════════════════════════════════════ */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 2. Suppress All UI Chrome, Toolbars, Sidebars, Modals & Watermarks */
+  #desktop-menubar,
+  #tb,
+  #drawer-backdrop,
+  #mobile-view-switcher,
+  #left,
+  #center,
+  #right,
+  .creator-splitter,
+  .preview-header,
+  #page-title-bar,
+  #no-page,
+  #add-bar,
+  #status-bar,
+  #annotate-toolbar,
+  .annot-btn,
+  .sticky-note-hdr button,
+  .lemon-store-badge,
+  .floating-ai-btn,
+  #ai-helper-drawer,
+  #ai-helper-btn,
+  #ai-helper-toggle,
+  #toast-container,
+  button,
+  .btn,
+  .drawer-close-btn,
+  .pres-mode-selector,
+  .pres-nav-btn,
+  .pres-3d-toolbar,
+  .pres-3d-badge,
+  .pres-3d-info,
+  .pres-bg-btn,
+  .pres-audio-card,
+  .video-card .video-label,
+  .pres-page-header,
+  .slide-app-header,
+  #slide-top-bar,
+  .live-indicator,
+  #save-active-btn,
+  .modal-overlay,
+  .fx-wizard-overlay,
+  .dmenu-dropdown {
+    display: none !important;
+  }
+
+  /* 3. Flatten Containers */
+  #main,
+  #creator-preview-pane,
+  #creator-preview-body,
+  .preview-body {
+    display: block !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    position: static !important;
+    transform: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+  }
+
+  /* 4. Page Box: Each slide renders as an independent, clean printed page */
+  .pres-page, .pres-slide {
+    display: block !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin: 0 0 20pt 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+    position: relative !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  .pres-page:last-child, .pres-slide:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+    margin-bottom: 0 !important;
+  }
+
+  .pres-page::before, .pres-page::after {
+    display: none !important;
+  }
+
+  .page-content-layer,
+  .pres-content-layer,
+  .pres-section,
+  .pres-hero-content {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: #0f172a !important;
+  }
+
+  .pres-page-header {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Typography */
+  h1, h2, h3, h4, h5, h6,
+  .pres-section h1, .pres-section h2,
+  .pres-hero h1, .pres-hero h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    -webkit-background-clip: border-box !important;
+    background: none !important;
+    text-shadow: none !important;
+    text-align: left !important;
+    letter-spacing: -0.01em !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  h1 { font-size: 20pt !important; line-height: 1.25 !important; font-weight: 800 !important; margin: 0 0 10pt 0 !important; }
+  h2 { font-size: 15pt !important; line-height: 1.3 !important; font-weight: 700 !important; margin: 14pt 0 8pt 0 !important; }
+  h3 { font-size: 12.5pt !important; line-height: 1.35 !important; font-weight: 600 !important; margin: 12pt 0 6pt 0 !important; }
+  h4, h5, h6 { font-size: 11pt !important; line-height: 1.4 !important; font-weight: 600 !important; margin: 10pt 0 4pt 0 !important; }
+
+  p, .docx-in-place-editable, .ldoc-rich-text, div.ldoc-in-place-editable {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    text-align: left !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    margin: 0 0 10pt 0 !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    hyphens: none !important;
+  }
+
+  ul, ol { margin: 0 0 12pt 0 !important; padding-left: 20pt !important; text-align: left !important; }
+  li { font-size: 11pt !important; line-height: 1.6 !important; color: #1e293b !important; margin-bottom: 4pt !important; }
+  blockquote { border-left: 3.5pt solid #94a3b8 !important; margin: 12pt 0 !important; padding: 6pt 14pt !important; background: #f8fafc !important; color: #334155 !important; font-style: italic !important; }
+
+  .pres-table, .table-pro, table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border: 1pt solid #cbd5e1 !important;
+    margin: 14pt 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    background: #ffffff !important;
+  }
+  .pres-table th, .table-pro th, th {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    border: 1pt solid #cbd5e1 !important;
+    padding: 7pt 10pt !important;
+    font-size: 9.5pt !important;
+    font-weight: 700 !important;
+  }
+  .pres-table td, .table-pro td, td {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    border: 1pt solid #e2e8f0 !important;
+    padding: 7pt 10pt !important;
+    font-size: 9.5pt !important;
+  }
+  .pres-table tr:nth-child(even) td, .table-pro tr:nth-child(even) td { background: #f8fafc !important; }
+
+  .feature-grid, .grid, .pres-grid, .pricing-cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12pt !important;
+    margin: 12pt 0 !important;
+    page-break-inside: avoid !important;
+  }
+  .feature-card, .card, .pricing-card, .preorder-card {
+    border: 1pt solid #cbd5e1 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    padding: 10pt 12pt !important;
+    page-break-inside: avoid !important;
+  }
+
+  .interactive-code-card {
+    background: #f8fafc !important;
+    border: 1pt solid #cbd5e1 !important;
+    margin: 12pt 0 !important;
+    page-break-inside: avoid !important;
+  }
+  pre, code {
+    font-family: "JetBrains Mono", Consolas, "Courier New", monospace !important;
+    font-size: 9pt !important;
+    line-height: 1.45 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    background: #f8fafc !important;
+    border: none !important;
+  }
+  a { color: #0284c7 !important; text-decoration: underline !important; }
+}
 </style>
   
 </head>
@@ -2861,10 +3120,11 @@ body.creator-split-50-50 #creator-preview-pane {
 
 <!-- Native Desktop Menu Bar (Antigravity Style) -->
 <div id="desktop-menubar">
-  <a href="/models" class="dmenu-brand" style="text-decoration:none;margin-right:4px">🏛️ Models Hub</a>
-    <a href="/" class="dmenu-brand" style="text-decoration:none;margin-right:8px">🌐 Developer Portal</a>
-    <div class="dmenu-brand" onclick="toast('LDOCX Document Creator v2.4.0 (Enterprise Reactive 3D Edition)', 'info')">
+  <div class="dmenu-brand" onclick="location.href='index.html'" title="Return to LDOC Studio Workspace" style="background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.4);cursor:pointer">
     <img src="ldoc_logo.png" alt="LDOC">
+    <span style="color:#fef08a;font-weight:700">← Back to Studio</span>
+  </div>
+  <div class="dmenu-brand" onclick="toast('LDOC Living Document Creator v2.5.0', 'info')">
     <span>LDOC Creator</span>
   </div>
   <div class="dmenu-items">
@@ -2878,7 +3138,7 @@ body.creator-split-50-50 #creator-preview-pane {
         <div class="dmenu-entry" onclick="buildDoc()"><span>▶ Build &amp; Open in Studio</span><span class="hotkey">Ctrl+B</span></div>
         <div class="dmenu-entry" onclick="downloadDoc()"><span>⬇ Download .ldocx Package</span><span class="hotkey">Ctrl+D</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="location.href='/live-studio'"><span>🖥️ Switch to Studio Viewer</span></div>
+        <div class="dmenu-entry" onclick="location.href='index.html'"><span>🖥️ Switch to Studio</span></div>
         <div class="dmenu-entry" onclick="window.close()"><span>✕ Exit Creator</span><span class="hotkey">Alt+F4</span></div>
       </div>
     </div>
@@ -2933,7 +3193,7 @@ body.creator-split-50-50 #creator-preview-pane {
       <div class="dmenu-dropdown">
         <div class="dmenu-entry" onclick="location.reload()"><span>🔄 Reload Window</span><span class="hotkey">Ctrl+R</span></div>
         <div class="dmenu-entry" onclick="toggleAiHelper()"><span>🧠 AI Document Copilot</span><span class="hotkey">Ctrl+Shift+H</span></div>
-        <div class="dmenu-entry" onclick="location.href='/live-studio'"><span>🖥️ Open Studio Viewer</span></div>
+        <div class="dmenu-entry" onclick="location.href='index.html'"><span>🖥️ Open Studio Viewer</span></div>
       </div>
     </div>
 
@@ -2955,9 +3215,9 @@ body.creator-split-50-50 #creator-preview-pane {
     <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 10px rgba(167,139,250,.45)">
     <span class="logo">LDOC</span>
   </div>
-  <a href="/live-studio" class="nav-link">Studio</a>
-  <a href="/creator" class="nav-link active">Creator</a>
-  <a href="/live-studio?tab=converter" class="nav-link">⚡ Converter</a>
+  <a href="index.html" class="nav-link">Studio</a>
+  <a href="creator.html" class="nav-link active">Creator</a>
+  <a href="index.html?tab=converter" class="nav-link">⚡ Converter</a>
 
   <!-- Floating Dynamic Popup Drawer Toggles -->
   <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);padding:3px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.12);margin-left:6px">
@@ -3335,11 +3595,28 @@ body.creator-split-50-50 #creator-preview-pane {
   </div>
 </div>
 
-<button id="ai-helper-toggle" onclick="toggleAiHelper()"><img src="ai-brain.png" alt="AI Brain" style="width:18px;height:18px;object-fit:contain;border-radius:4px" /> <span>AI Helper</span></button>
+<button id="ai-helper-toggle" onclick="toggleAiHelper()" title="LDOC AI Copilot & Document Assistant">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;flex-shrink:0;filter:drop-shadow(0 0 6px rgba(245,158,11,0.6))">
+    <path d="M9.5 2A4.5 4.5 0 0 0 5 6.5c0 .4.05.79.15 1.16A5 5 0 0 0 3 12a5 5 0 0 0 2.5 4.33A4.5 4.5 0 0 0 10 21h.5V2h-1zm5 0h-.5v19h.5a4.5 4.5 0 0 0 4.5-4.67A5 5 0 0 0 21 12a5 5 0 0 0-2.15-4.34A4.5 4.5 0 0 0 14.5 2z" stroke="#fef08a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="rgba(245,158,11,0.2)"/>
+    <path d="M12 5v14M8 8h4M12 12h4M7 16h5M12 16h5" stroke="#38bdf8" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="8" cy="8" r="1.2" fill="#fef08a"/>
+    <circle cx="16" cy="12" r="1.2" fill="#fef08a"/>
+    <circle cx="7" cy="16" r="1.2" fill="#38bdf8"/>
+  </svg>
+  <span>AI Helper</span>
+</button>
 
 <div id="ai-helper-panel">
   <div class="ai-hdr">
-    <div style="display:flex;align-items:center;gap:8px"><img src="ai-brain.png" alt="AI" style="width:22px;height:22px;object-fit:contain;border-radius:4px" /><h3 style="margin:0;font-size:14px;color:#fef08a;font-family:'Cinzel',serif">AI Creator Assistant</h3></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:24px;height:24px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(245,158,11,0.3)">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.5 2A4.5 4.5 0 0 0 5 6.5c0 .4.05.79.15 1.16A5 5 0 0 0 3 12a5 5 0 0 0 2.5 4.33A4.5 4.5 0 0 0 10 21h.5V2h-1zm5 0h-.5v19h.5a4.5 4.5 0 0 0 4.5-4.67A5 5 0 0 0 21 12a5 5 0 0 0-2.15-4.34A4.5 4.5 0 0 0 14.5 2z" stroke="#fef08a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="rgba(245,158,11,0.2)"/>
+          <path d="M12 5v14M8 8h4M12 12h4M7 16h5M12 16h5" stroke="#38bdf8" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 style="margin:0;font-size:14px;color:#fef08a;font-family:'Cinzel',serif">AI Creator Assistant</h3>
+    </div>
     <button style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px" onclick="toggleAiHelper()">✕</button>
   </div>
   <div class="ai-messages" id="ai-msgs">
@@ -5200,9 +5477,77 @@ function createVideoPlayerHtml(src, label = '', autoplay = false, height = '220p
     `;
   }
 
+  const isHtmlVis = /^\s*<!DOCTYPE\b|^\s*<html\b|<\s*canvas\b|<\s*script\b|THREE\.|WebGL/i.test(src) || /<\s*style\b/i.test(src);
+  if (isHtmlVis) {
+    let processed = src.replace(/(<script\b[^>]*?\bsrc=["'])([^"'>]+)(["'][^>]*?>\s*<\/script>)/gi, (match, prefix, s, suffix) => {
+      const lower = (s || '').toLowerCase();
+      if (lower.includes('orbitcontrols.js') || lower.includes('orbitcontrols')) return `${prefix}vendor/OrbitControls.js${suffix}`;
+      if (lower.includes('gltfloader.js') || lower.includes('gltfloader')) return `${prefix}vendor/GLTFLoader.js${suffix}`;
+      if (lower.includes('objloader.js') || lower.includes('objloader')) return `${prefix}vendor/OBJLoader.js${suffix}`;
+      if (lower.includes('stlloader.js') || lower.includes('stlloader')) return `${prefix}vendor/STLLoader.js${suffix}`;
+      if (lower.includes('three.min.js') || lower.includes('three.js') || lower.includes('three@') || lower.includes('/three/')) return `${prefix}vendor/three.min.js${suffix}`;
+      if (lower.includes('chart.min.js') || lower.includes('chart.js')) return `${prefix}vendor/chart.min.js${suffix}`;
+      return match;
+    });
+    const appBase = (typeof location !== 'undefined' && location.href) ? location.href.replace(/#.*$/, '') : '';
+    const shims = `
+<base href="${appBase}">
+<style>html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; } canvas { display: block; width: 100%; height: 100%; }</style>
+<script>
+window.addEventListener('error', function(e) { console.warn('[Sandbox catch]:', e.message); });
+if (typeof HTMLCanvasElement !== 'undefined') {
+  const _origGetContext = HTMLCanvasElement.prototype.getContext;
+  HTMLCanvasElement.prototype.getContext = function(type, attributes) {
+    if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') {
+      attributes = Object.assign({
+        powerPreference: 'high-performance',
+        antialias: true,
+        alpha: true,
+        depth: true,
+        stencil: false,
+        preserveDrawingBuffer: false,
+        failIfMajorPerformanceCaveat: false
+      }, attributes || {});
+    }
+    return _origGetContext.call(this, type, attributes);
+  };
+}
+function _ensureOrbitControls() {
+  if (typeof THREE !== 'undefined' && !THREE.OrbitControls) {
+    THREE.OrbitControls = function(obj, dom) {
+      this.object = obj; this.domElement = dom || document.body; this.update = function() {}; this.dispose = function() {};
+      this.enableDamping = false; this.dampingFactor = 0.05;
+      this.target = (typeof THREE.Vector3 !== 'undefined') ? new THREE.Vector3() : { x: 0, y: 0, z: 0 };
+      let down = false, px = 0, py = 0; const target = this.domElement;
+      target.addEventListener('mousedown', function(e) { down = true; px = e.clientX; py = e.clientY; });
+      window.addEventListener('mouseup', function() { down = false; });
+      window.addEventListener('mousemove', function(e) { if (!down || !obj) return; obj.rotation.y += (e.clientX - px) * 0.01; obj.rotation.x += (e.clientY - py) * 0.01; px = e.clientX; py = e.clientY; });
+    };
+  }
+}
+_ensureOrbitControls();
+document.addEventListener('DOMContentLoaded', _ensureOrbitControls);
+<\/script>
+`;
+    if (/<head\b[^>]*>/i.test(processed)) processed = processed.replace(/<head\b[^>]*>/i, `$&${shims}`);
+    else if (/<html\b[^>]*>/i.test(processed)) processed = processed.replace(/<html\b[^>]*>/i, `$&<head>${shims}</head>`);
+    else processed = `<!DOCTYPE html><html><head>${shims}</head><body>${processed}</body></html>`;
+
+    return `
+      <div style="border-radius:12px;overflow:hidden;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.85);position:relative">
+        <iframe srcdoc="${escapeHtml(processed)}" 
+                title="${escapeHtml(label || 'Interactive 3D / Live Motion Sandbox')}"
+                style="width:100%;height:${height === '160px' ? '220px' : '360px'};border:none;display:block;background:#000;transform:translateZ(0);will-change:transform;backface-visibility:hidden"
+                sandbox="allow-scripts allow-modals allow-same-origin allow-forms"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; xr-spatial-tracking; fullscreen"></iframe>
+        ${label ? `<div style="font-size:11px;color:var(--text2);padding:6px 12px;background:rgba(0,0,0,0.7);display:flex;align-items:center;gap:6px"><span>⚡</span> <strong>${escapeHtml(label)}</strong> <span style="margin-left:auto;color:#38bdf8;font-family:monospace">Interactive 3D Sandbox</span></div>` : ''}
+      </div>
+    `;
+  }
+
   return `
-    <div style="border-radius:12px;overflow:hidden;background:#000;box-shadow:0 8px 24px rgba(0,0,0,0.7)">
-      <video controls playsinline ${autoplay ? 'autoplay muted' : ''} src="${escapeHtml(src)}" style="width:100%;max-height:${height};display:block"></video>
+    <div style="border-radius:12px;overflow:hidden;background:#000;box-shadow:0 8px 24px rgba(0,0,0,0.7);position:relative">
+      <video controls playsinline preload="auto" ${autoplay ? 'autoplay muted' : ''} src="${escapeHtml(src)}" style="width:100%;max-height:${height};display:block;transform:translateZ(0);will-change:transform;image-rendering:high-quality;"></video>
       ${label ? `<div style="font-size:11px;color:var(--text2);padding:6px 12px;background:rgba(0,0,0,0.6)">🎬 ${escapeHtml(label)}</div>` : ''}
     </div>
   `;
@@ -7282,7 +7627,7 @@ async function buildDoc(){
 
     if (serverOk && docId) {
       toast('Built! Opening in Studio…','ok');
-      setTimeout(()=>window.open(`/live-studio?doc=${docId}`,'_blank'),600);
+      setTimeout(()=>window.open(`index.html?doc=${docId}`,'_blank'),600);
       return;
     }
 
@@ -7298,9 +7643,9 @@ async function buildDoc(){
       }
       toast('✓ Built! Launching in Studio…','ok');
       setTimeout(() => {
-        let targetUrl = 'live-studio.html?load=transfer';
+        let targetUrl = 'index.html?load=transfer';
         if (window.location.protocol !== 'file:' && window.location.pathname.includes('/creator') && !window.location.pathname.endsWith('.html')) {
-          targetUrl = '/live-studio?load=transfer';
+          targetUrl = 'index.html?load=transfer';
         }
         window.location.href = targetUrl;
       }, 500);
@@ -8413,7 +8758,7 @@ window.LDocAnnotate = {
   },
 
   exportPdf() {
-    window.print();
+    printDocument();
   }
 };
 
@@ -8867,13 +9212,40 @@ window.addEventListener('DOMContentLoaded', () => {
 // ═════════════════════════════════════════════════════════════════════════════
 
 
+// ── Clean One-Click Print / PDF Handler ──────────────────────────────────────
+function printDocument() {
+  if (typeof pages !== 'undefined' && Array.isArray(pages) && pages.length > 0) {
+    const body = document.getElementById('creator-preview-body');
+    if (body) {
+      body.innerHTML = '';
+      pages.forEach((pg, idx) => {
+        const slideDiv = document.createElement('div');
+        slideDiv.className = 'pres-page pres-slide';
+        const contentLayer = document.createElement('div');
+        contentLayer.className = 'page-content-layer';
+        (pg.blocks || []).forEach(b => {
+          if (typeof renderCreatorSlideBlock === 'function') {
+            renderCreatorSlideBlock(b, contentLayer);
+          }
+        });
+        slideDiv.appendChild(contentLayer);
+        body.appendChild(slideDiv);
+      });
+    }
+  }
+  window.print();
+  if (typeof updateCreatorLivePreview === 'function') {
+    setTimeout(updateCreatorLivePreview, 500);
+  }
+}
+
 // ── Secure Cloud Service Invocations ────────────────────────────────────────
 async function exportPdfCloud() {
-  const spec = typeof edPages !== 'undefined'
-    ? { title: document.getElementById('ed-title')?.value || 'Living Document', pages: edPages }
-    : (typeof buildSpec === 'function' ? buildSpec() : { title: 'Living Document', pages: [] });
+  const spec = typeof buildSpec === 'function'
+    ? buildSpec()
+    : { title: document.getElementById('m-title')?.value || 'Living Document', pages: (typeof pages !== 'undefined' ? pages : []) };
 
-  if (typeof toast === 'function') toast('⚡ Offloading PDF Flattening to Cloud Worker Nodes...', 'info');
+  if (typeof toast === 'function') toast('⚡ Preparing Clean High-Fidelity PDF Export...', 'info');
   try {
     const res = await fetch('/api/export/pdf', {
       method: 'POST',
@@ -8889,9 +9261,11 @@ async function exportPdfCloud() {
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    if (typeof toast === 'function') toast('✓ Flattened High-Fidelity PDF downloaded!', 'ok');
+    if (typeof toast === 'function') toast('✓ Clean High-Fidelity PDF downloaded!', 'ok');
   } catch (err) {
-    toast('Cloud PDF Export: ' + err.message);
+    console.warn('Backend PDF endpoint unavailable, falling back to local print-to-PDF:', err);
+    if (typeof printDocument === 'function') printDocument();
+    else window.print();
   }
 }
 
@@ -8940,7 +9314,7 @@ const LDOC_COMMANDS = [
   { id: 'view_pres', cat: 'View', name: 'Launch Presentation Fullscreen', hotkey: 'F11', run: () => (typeof buildAndView === 'function' ? buildAndView() : switchTab('viewer')) },
   { id: 'find_replace', cat: 'Edit', name: 'Find & Replace Across Document', hotkey: 'Ctrl+F', run: () => toggleFindReplaceHud() },
   { id: 'inspect_ast', cat: 'Developer', name: 'Open Live Bidirectional AST JSON Inspector', hotkey: 'Ctrl+Shift+I', run: () => toggleAstInspector() },
-  { id: 'export_pdf', cat: 'Cloud Services', name: 'Export Flattened PDF (Headless Cloud Engine)', hotkey: 'Ctrl+Shift+E', run: () => exportPdfCloud() },
+  { id: 'export_pdf', cat: 'Document', name: 'Export Clean PDF / Print', hotkey: 'Ctrl+Shift+E', run: () => exportPdfCloud() },
   { id: 'optimize_3d_cloud', cat: 'Cloud Services', name: 'Compress 3D Mesh (<35k Draco Quantization)', hotkey: 'Ctrl+Shift+M', run: () => optimize3dCloud() },
   { id: 'verify_pkg_integrity', cat: 'Cloud Services', name: 'Verify Package Integrity & SHA-256 Signatures', run: () => verifyPackageIntegrityCloud() },
 
@@ -9933,7 +10307,7 @@ function triggerOAuth(provider) {
 
     const mockUser = {
       id: 'usr_' + Math.random().toString(36).slice(2, 9),
-      name: provider === 'google' ? 'K Jay (Google)' : 'Jayaraman K (GitHub)',
+      name: provider === 'google' ? 'K Jay (Google)' : 'J-AI-ENTERPRISES (GitHub)',
       email: 'jayaramankalidasan@gmail.com',
       avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=' + provider,
       plan: 'pro',
