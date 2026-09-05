@@ -95,7 +95,7 @@ namespace LDOCStudio
                     ProcessStartInfo psi = new ProcessStartInfo();
                     psi.FileName = edgePath;
                     psi.Arguments = string.Format(
-                        "--app=\"{0}\" --allow-file-access-from-files --enable-file-cookies --window-size=1540,960",
+                        "--app=\"{0}\" --allow-file-access-from-files --enable-file-cookies --window-size=1540,960 --disable-frame-rate-limit --enable-gpu-rasterization --enable-zero-copy --ignore-gpu-blocklist --enable-hardware-overlays --force-high-performance-gpu --enable-features=VaapiVideoDecoder,CanvasOopRasterization",
                         url
                     );
                     psi.UseShellExecute = false;
