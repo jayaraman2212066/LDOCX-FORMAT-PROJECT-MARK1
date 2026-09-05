@@ -5221,6 +5221,7 @@ function createVideoPlayerHtml(src, label = '', autoplay = false, height = '220p
   const isHtmlVis = /^\s*<!DOCTYPE\b|^\s*<html\b|<\s*canvas\b|<\s*script\b|THREE\.|WebGL/i.test(src) || /<\s*style\b/i.test(src);
   if (isHtmlVis) {
     let processed = src.replace(/(<script\b[^>]*?\bsrc=["'])([^"'>]+)(["'][^>]*?>\s*<\/script>)/gi, (match, prefix, s, suffix) => {
+      const lower = (s || '').toLowerCase();
       if (lower.includes('orbitcontrols.js') || lower.includes('orbitcontrols')) return `${prefix}vendor/OrbitControls.js${suffix}`;
       if (lower.includes('gltfloader.js') || lower.includes('gltfloader')) return `${prefix}vendor/GLTFLoader.js${suffix}`;
       if (lower.includes('objloader.js') || lower.includes('objloader')) return `${prefix}vendor/OBJLoader.js${suffix}`;
@@ -5229,21 +5230,44 @@ function createVideoPlayerHtml(src, label = '', autoplay = false, height = '220p
       if (lower.includes('chart.min.js') || lower.includes('chart.js')) return `${prefix}vendor/chart.min.js${suffix}`;
       return match;
     });
+    const appBase = (typeof location !== 'undefined' && location.href) ? location.href.replace(/#.*$/, '') : '';
     const shims = `
+<base href="${appBase}">
 <style>html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; } canvas { display: block; width: 100%; height: 100%; }</style>
 <script>
 window.addEventListener('error', function(e) { console.warn('[Sandbox catch]:', e.message); });
-document.addEventListener('DOMContentLoaded', function() {
+if (typeof HTMLCanvasElement !== 'undefined') {
+  const _origGetContext = HTMLCanvasElement.prototype.getContext;
+  HTMLCanvasElement.prototype.getContext = function(type, attributes) {
+    if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') {
+      attributes = Object.assign({
+        powerPreference: 'high-performance',
+        antialias: true,
+        alpha: true,
+        depth: true,
+        stencil: false,
+        preserveDrawingBuffer: false,
+        failIfMajorPerformanceCaveat: false
+      }, attributes || {});
+    }
+    return _origGetContext.call(this, type, attributes);
+  };
+}
+function _ensureOrbitControls() {
   if (typeof THREE !== 'undefined' && !THREE.OrbitControls) {
     THREE.OrbitControls = function(obj, dom) {
       this.object = obj; this.domElement = dom || document.body; this.update = function() {}; this.dispose = function() {};
+      this.enableDamping = false; this.dampingFactor = 0.05;
+      this.target = (typeof THREE.Vector3 !== 'undefined') ? new THREE.Vector3() : { x: 0, y: 0, z: 0 };
       let down = false, px = 0, py = 0; const target = this.domElement;
       target.addEventListener('mousedown', function(e) { down = true; px = e.clientX; py = e.clientY; });
       window.addEventListener('mouseup', function() { down = false; });
       window.addEventListener('mousemove', function(e) { if (!down || !obj) return; obj.rotation.y += (e.clientX - px) * 0.01; obj.rotation.x += (e.clientY - py) * 0.01; px = e.clientX; py = e.clientY; });
     };
   }
-});
+}
+_ensureOrbitControls();
+document.addEventListener('DOMContentLoaded', _ensureOrbitControls);
 <\/script>
 `;
     if (/<head\b[^>]*>/i.test(processed)) processed = processed.replace(/<head\b[^>]*>/i, `$&${shims}`);
@@ -5254,9 +5278,9 @@ document.addEventListener('DOMContentLoaded', function() {
       <div style="border-radius:12px;overflow:hidden;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.85);position:relative">
         <iframe srcdoc="${escapeHtml(processed)}" 
                 title="${escapeHtml(label || 'Interactive 3D / Live Motion Sandbox')}"
-                style="width:100%;height:${height === '160px' ? '220px' : '360px'};border:none;display:block;background:#000"
+                style="width:100%;height:${height === '160px' ? '220px' : '360px'};border:none;display:block;background:#000;transform:translateZ(0);will-change:transform;backface-visibility:hidden"
                 sandbox="allow-scripts allow-modals allow-same-origin allow-forms"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; xr-spatial-tracking; fullscreen"></iframe>
         ${label ? `<div style="font-size:11px;color:var(--text2);padding:6px 12px;background:rgba(0,0,0,0.7);display:flex;align-items:center;gap:6px"><span>⚡</span> <strong>${escapeHtml(label)}</strong> <span style="margin-left:auto;color:#38bdf8;font-family:monospace">Interactive 3D Sandbox</span></div>` : ''}
       </div>
     `;

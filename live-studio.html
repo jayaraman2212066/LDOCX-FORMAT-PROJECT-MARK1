@@ -10873,18 +10873,28 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
 
     if (isHtml || is3dCanvasScript) {
       // Execute in an isolated sandbox iframe to completely prevent DOM leaks, style collisions, or window takeovers!
+      if (containerEl._activeIframe) {
+        try {
+          containerEl._activeIframe.srcdoc = '';
+          containerEl._activeIframe.src = 'about:blank';
+          containerEl._activeIframe.remove();
+        } catch(e){}
+        containerEl._activeIframe = null;
+      }
+
       const iframe = document.createElement('iframe');
       iframe.className = 'ldoc-sandbox-frame';
       iframe.setAttribute('sandbox', 'allow-scripts allow-modals allow-same-origin allow-forms');
-      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; xr-spatial-tracking; fullscreen');
       
       const isMini = containerEl.id && containerEl.id.startsWith('mini-sandbox-');
       const isLivePreview = containerEl.closest && containerEl.closest('#ed-preview-pane');
       const frameHeight = isMini ? '220px' : (isLivePreview ? '300px' : (containerEl.style.height || '440px'));
-      iframe.style.cssText = `width:100%;height:${frameHeight};min-height:${isMini ? '200px' : (isLivePreview ? '260px' : '360px')};border:none;border-radius:10px;display:block;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.7);`;
+      iframe.style.cssText = `width:100%;height:${frameHeight};min-height:${isMini ? '200px' : (isLivePreview ? '260px' : '360px')};border:none;border-radius:10px;display:block;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.7);transform:translateZ(0);will-change:transform;backface-visibility:hidden;image-rendering:high-quality;`;
       
       containerEl.innerHTML = '';
       containerEl.appendChild(iframe);
+      containerEl._activeIframe = iframe;
 
       let processed = trimmed;
       if (!isHtml && is3dCanvasScript) {
@@ -10916,6 +10926,7 @@ try {
 
       // Preprocess HTML to rewrite external CDN script URLs to local vendor paths for 100% offline support
       processed = processed.replace(/(<script\b[^>]*?\bsrc=["'])([^"'>]+)(["'][^>]*?>\s*<\/script>)/gi, (match, prefix, src, suffix) => {
+        const s = (src || '').toLowerCase();
         if (s.includes('orbitcontrols.js') || s.includes('orbitcontrols')) return `${prefix}vendor/OrbitControls.js${suffix}`;
         if (s.includes('gltfloader.js') || s.includes('gltfloader')) return `${prefix}vendor/GLTFLoader.js${suffix}`;
         if (s.includes('objloader.js') || s.includes('objloader')) return `${prefix}vendor/OBJLoader.js${suffix}`;
@@ -10929,8 +10940,10 @@ try {
         return match;
       });
 
-      // Inject robust fallback shims and error handler inside the iframe
+      // Inject base URL, high-performance WebGL interceptor, memory management, and resilient fallbacks
+      const appBase = (typeof location !== 'undefined' && location.href) ? location.href.replace(/#.*$/, '') : '';
       const shims = `
+<base href="${appBase}">
 <style>
   html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; }
   canvas { display: block; width: 100%; height: 100%; }
@@ -10939,14 +10952,40 @@ try {
   window.addEventListener('error', function(e) {
     console.warn('[Sandbox Runtime Notice]:', e.message);
   });
-  // Three.js OrbitControls resilient fallback stub
-  document.addEventListener('DOMContentLoaded', function() {
+  // High-Performance Hardware Accelerated WebGL Engine Interceptor
+  if (typeof HTMLCanvasElement !== 'undefined') {
+    const _origGetContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(type, attributes) {
+      if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') {
+        attributes = Object.assign({
+          powerPreference: 'high-performance',
+          antialias: true,
+          alpha: true,
+          depth: true,
+          stencil: false,
+          preserveDrawingBuffer: false,
+          failIfMajorPerformanceCaveat: false
+        }, attributes || {});
+      }
+      return _origGetContext.call(this, type, attributes);
+    };
+  }
+  // Prevent VRAM context loss from crashing the presentation
+  window.addEventListener('webglcontextlost', function(e) {
+    e.preventDefault();
+    console.warn('[WebGL Engine]: Context lost under VRAM pressure, attempting automatic recovery...');
+  }, false);
+  // Three.js OrbitControls immediate resilient fallback stub
+  function _ensureOrbitControls() {
     if (typeof THREE !== 'undefined' && !THREE.OrbitControls) {
       THREE.OrbitControls = function(object, domElement) {
         this.object = object;
         this.domElement = domElement || document.body;
         this.update = function() {};
         this.dispose = function() {};
+        this.enableDamping = false;
+        this.dampingFactor = 0.05;
+        this.target = (typeof THREE.Vector3 !== 'undefined') ? new THREE.Vector3() : { x: 0, y: 0, z: 0 };
         let isDown = false, px = 0, py = 0;
         const target = this.domElement;
         target.addEventListener('mousedown', function(e) { isDown = true; px = e.clientX; py = e.clientY; });
@@ -10959,7 +10998,9 @@ try {
         });
       };
     }
-  });
+  }
+  _ensureOrbitControls();
+  document.addEventListener('DOMContentLoaded', _ensureOrbitControls);
 <\/script>
 `;
       if (/<head\b[^>]*>/i.test(processed)) {
