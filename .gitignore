@@ -35,3 +35,8 @@ Thumbs.db
 _backups/
 *.tmp
 *.temp
+
+# Commercial LDOC Studio Packages (Local-only, proprietary, never deploy or commit)
+*studio-windows.zip
+packages/ldoc-studio/*.zip
+dist/*studio*.zip

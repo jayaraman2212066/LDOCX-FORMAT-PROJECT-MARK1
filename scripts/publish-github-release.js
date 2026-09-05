@@ -97,6 +97,12 @@ async function run() {
 
 The Next-Generation interactive, verifiable, 3D/multimodal document format designed to bridge the gap between static documents (PDF/DOCX) and modern interactive applications.
 
+### 🚀 What's New in v2.5.0:
+- 🖨️ **100% Watermark-Free Publication & PDF Print Engine**: Zero watermarks, zero promotional banners, and zero artificial author stamps. Clean multi-page printing on standard A4 canvas.
+- ⚡ **Discrete GPU WebGL Hardware Acceleration**: Dedicated discrete GPU allocation (\`powerPreference: 'high-performance'\`) with automated VRAM lifecycle management for ultra-smooth 60+ FPS 3D rendering.
+- 🔄 **Clean Universal Converters**: Lossless AST ingestion from PDF, Word (.docx), PowerPoint (.pptx), HTML, JSON, and 3D files without boilerplate notice text or artificial branding.
+- 🛡️ **Cryptographic SHA-256 Merkle Verification**: Real-time per-block hash verification and instant tamper alerts.
+
 ### 📦 Free Multi-Platform Distribution Downloads
 
 #### 🪟 Windows (Desktop)
@@ -118,7 +124,7 @@ The Next-Generation interactive, verifiable, 3D/multimodal document format desig
 - **npm**: \`npm install ldoc-sdk\`
 
 ---
-*Built with ❤️ by J-AI-ENTERPRISES. Commercial LDOC Studio remains proprietary and separate.*`;
+*Built with ❤️ for the open-source community. All packages above are 100% Free & Open-Source. Commercial LDOC Studio enterprise package remains local-only and proprietary.*`;
 
   // 1. Check if release already exists
   let release = null;

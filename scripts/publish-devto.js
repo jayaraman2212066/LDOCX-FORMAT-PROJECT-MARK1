@@ -70,10 +70,12 @@ my-report.ldocx
 \`\`\`
 
 ### Key Capabilities:
-1. **Interactive 3D & WebGL Embedded Directly in Pages**: Rotate, pan, and zoom CAD models, molecular structures, or architectural mockups right inside your document canvas.
-2. **Deterministic Cryptographic Verification**: Every section contains an SHA-256 block hash. Changes to text or assets invalidate signatures immediately.
-3. **Cross-Platform Native Runtimes**: Zero heavyweight runtimes. Fast, hardware-accelerated rendering on Windows, Linux, iOS, and Web.
-4. **Developer-First SDK**: Complete Node.js / TypeScript SDK for parsing, validating, and generating \`.ldocx\` files programmatically.
+1. **Interactive 3D & WebGL Embedded Directly in Pages**: Rotate, pan, and zoom CAD models, molecular structures, or architectural mockups right inside your document canvas with discrete high-performance GPU hardware acceleration.
+2. **100% Watermark-Free Clean PDF & Print Export**: Generate publication-grade, unbranded PDFs and paper prints directly in your browser or desktop WebView with zero promotional stamps, banners, or watermarks.
+3. **Deterministic Cryptographic Verification**: Every section contains an SHA-256 block hash. Changes to text or assets invalidate signatures immediately.
+4. **Clean Universal Converters**: Lossless AST ingestion from PDF, Word (.docx), PowerPoint (.pptx), HTML, JSON, and 3D files without boilerplate notice text or artificial author stamps.
+5. **Cross-Platform Native Runtimes**: Zero heavyweight runtimes. Fast, hardware-accelerated rendering on Windows, Linux, iOS, and Web.
+6. **Developer-First SDK**: Complete Node.js / TypeScript SDK for parsing, validating, and generating \`.ldocx\` files programmatically.
 
 ---
 
