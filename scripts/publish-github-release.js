@@ -130,8 +130,12 @@ The Next-Generation interactive, verifiable, 3D/multimodal document format desig
   let release = null;
   try {
     const existing = await githubRequest('GET', `/repos/${OWNER}/${REPO}/releases/tags/${tagName}`);
-    console.log(`ℹ️ Release ${tagName} already exists (ID: ${existing.id}).`);
-    release = existing;
+    console.log(`ℹ️ Release ${tagName} already exists (ID: ${existing.id}). Updating metadata...`);
+    release = await githubRequest('PATCH', `/repos/${OWNER}/${REPO}/releases/${existing.id}`, {
+      name: releaseName,
+      body: releaseBody
+    });
+    console.log(`✅ Release metadata updated successfully!`);
   } catch (err) {
     console.log(`Creating fresh release ${tagName}...`);
     release = await githubRequest('POST', `/repos/${OWNER}/${REPO}/releases`, {
@@ -159,9 +163,11 @@ The Next-Generation interactive, verifiable, 3D/multimodal document format desig
     { name: 'ldoc-editor-ios.zip', path: path.join(rootDir, 'ios-dist', 'ldoc-editor-ios.zip') }
   ];
 
-  // Get existing assets to avoid duplicates
+  // Get existing assets to detect changes
   const existingAssets = release.assets || [];
-  const existingMap = new Map(existingAssets.map(a => [a.name, a.id]));
+  const existingMap = new Map(existingAssets.map(a => [a.name, a]));
+
+  const forceUpload = process.argv.includes('--force');
 
   for (const file of filesToUpload) {
     if (!fs.existsSync(file.path)) {
@@ -172,12 +178,22 @@ The Next-Generation interactive, verifiable, 3D/multimodal document format desig
     const stat = fs.statSync(file.path);
     const sizeMb = (stat.size / (1024 * 1024)).toFixed(2);
 
-    if (existingMap.has(file.name)) {
-      console.log(`⏩ Asset ${file.name} already uploaded. Skipping.`);
-      continue;
+    const existingAsset = existingMap.get(file.name);
+    if (existingAsset) {
+      if (existingAsset.size === stat.size && !forceUpload) {
+        console.log(`⏩ Asset ${file.name} is already up to date (${sizeMb} MB). Skipping.`);
+        continue;
+      }
+      console.log(`🔄 Asset ${file.name} size changed (remote: ${existingAsset.size} bytes, local: ${stat.size} bytes). Deleting old asset...`);
+      try {
+        await githubRequest('DELETE', `/repos/${OWNER}/${REPO}/releases/assets/${existingAsset.id}`);
+        console.log(`   🗑️ Deleted old asset ${file.name} (ID: ${existingAsset.id})`);
+      } catch (delErr) {
+        console.warn(`   ⚠️ Warning deleting old asset ${file.name}: ${delErr.message}`);
+      }
     }
 
-    console.log(`⬆️ Uploading ${file.name} (${sizeMb} MB)...`);
+    console.log(`⬆️ Uploading fresh ${file.name} (${sizeMb} MB)...`);
     const fileBuffer = fs.readFileSync(file.path);
     const uploadUrl = `https://uploads.github.com/repos/${OWNER}/${REPO}/releases/${release.id}/assets?name=${encodeURIComponent(file.name)}`;
 
@@ -186,7 +202,7 @@ The Next-Generation interactive, verifiable, 3D/multimodal document format desig
         'Content-Type': 'application/octet-stream',
         'Content-Length': fileBuffer.length
       });
-      console.log(`   ✅ Uploaded: ${file.name}`);
+      console.log(`   ✅ Uploaded fresh: ${file.name} (${sizeMb} MB)`);
     } catch (uploadErr) {
       console.error(`   ❌ Failed to upload ${file.name}:`, uploadErr.message);
     }

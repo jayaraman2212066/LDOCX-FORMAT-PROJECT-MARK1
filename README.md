@@ -17,14 +17,14 @@ All standalone viewers, editors, command-line utilities, and developer SDKs are 
 
 | Platform | Free Package | Download Link | Description |
 | :--- | :--- | :--- | :--- |
-| **🪟 Windows** | **3D Viewer** | [**ldoc-viewer-windows.zip**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-viewer-windows.zip) (~3.71 MB) | Standalone hardware-accelerated 3D document viewer |
-| **🪟 Windows** | **Document Editor** | [**ldoc-editor-windows.zip**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-editor-windows.zip) (~3.72 MB) | Lightweight WYSIWYG living document editor |
+| **🪟 Windows** | **3D Viewer** | [**ldoc-viewer-windows.zip**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-viewer-windows.zip) (~4.07 MB) | Standalone hardware-accelerated 3D document viewer |
+| **🪟 Windows** | **Document Editor** | [**ldoc-editor-windows.zip**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-editor-windows.zip) (~4.08 MB) | Lightweight WYSIWYG living document editor |
 | **🪟 Windows** | **Universal Setup** | [**setup.exe**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/setup.exe) (~187 KB) | 1-Click native Windows desktop launcher & installer |
 | **🪟 Windows** | **SDK Setup** | [**ldoc-sdk-setup.exe**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-sdk-setup.exe) (~187 KB) | Windows SDK tools and shell integration |
-| **🐧 Linux** | **Native Viewer** | [**ldoc-viewer-linux.tar.gz**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-viewer-linux.tar.gz) (~3.59 MB) | Portable standalone viewer for Ubuntu, Debian, Fedora, Arch |
-| **🐧 Linux** | **Native Editor** | [**ldoc-editor-linux.tar.gz**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-editor-linux.tar.gz) (~3.60 MB) | Portable standalone editor for Linux workstations |
-| **🍎 iOS** | **Touch Viewer** | [**ldoc-viewer-ios.zip**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-viewer-ios.zip) (~3.60 MB) | Touch-optimized native viewer for iPad and iPhone |
-| **🍎 iOS** | **Touch Editor** | [**ldoc-editor-ios.zip**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-editor-ios.zip) (~3.61 MB) | Mobile document creator & editor for iOS devices |
+| **🐧 Linux** | **Native Viewer** | [**ldoc-viewer-linux.tar.gz**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-viewer-linux.tar.gz) (~3.60 MB) | Portable standalone viewer for Ubuntu, Debian, Fedora, Arch |
+| **🐧 Linux** | **Native Editor** | [**ldoc-editor-linux.tar.gz**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-editor-linux.tar.gz) (~3.61 MB) | Portable standalone editor for Linux workstations |
+| **🍎 iOS** | **Touch Viewer** | [**ldoc-viewer-ios.zip**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-viewer-ios.zip) (~3.61 MB) | Touch-optimized native viewer for iPad and iPhone |
+| **🍎 iOS** | **Touch Editor** | [**ldoc-editor-ios.zip**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-editor-ios.zip) (~3.62 MB) | Mobile document creator & editor for iOS devices |
 | **💻 Developers** | **Core SDK Bundle** | [**ldoc-dev-sdk.zip**](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/download/v2.5.0-free/ldoc-dev-sdk.zip) (~62 KB) | Core AST parser, validator, and Node.js toolkit |
 | **🌐 npm Registry** | **Node.js / TS** | `npm install ldoc-sdk` | Official JavaScript/TypeScript SDK on [npmjs.com/package/ldoc-sdk](https://www.npmjs.com/package/ldoc-sdk) |
 
