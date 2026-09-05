@@ -3598,6 +3598,436 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 .price-period { font-size: 13px; color: #64748b; font-weight: 600; }
 .price-desc { font-size: 12.5px; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
 .price-features { list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #cbd5e1; }
+
+/* ── In-Document Search Highlighting Styles (Ctrl+F) ── */
+mark.ldoc-search-match {
+  background: #f59e0b !important;
+  color: #000000 !important;
+  border-radius: 3px;
+  padding: 1px 3px;
+  font-weight: 700;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.7);
+  transition: all 0.15s ease;
+}
+mark.ldoc-search-match.active {
+  background: #38bdf8 !important;
+  color: #000000 !important;
+  outline: 2.5px solid #ffffff !important;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.95) !important;
+  transform: scale(1.08);
+  display: inline-block;
+}
+
+/* ── Executive Ultra-Aligned Print & PDF Fallback Stylesheet ── */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 0.5in;
+  }
+
+  /* 1. Global Reset for Consistent Geometry & Zero-Artifact Ink Rendering */
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 2. Suppress All Desktop Application UI Chrome, Menus, Toolbars, HUDs, Modals */
+  #desktop-menubar,
+  #toolbar,
+  #ldoc-status-bar,
+  #pages-overlay,
+  #find-replace-hud,
+  #command-palette-modal,
+  #ast-inspector-modal,
+  #ldoc-context-menu,
+  #format-popover,
+  #ai-helper-drawer,
+  #lead-modal,
+  #legal-security-modal,
+  .fx-dropdown-wrap,
+  .dmenu-dropdown,
+  .repair-banner,
+  .fullscreen-btn,
+  .pres-nav-btn,
+  .page-paper-layer,
+  .page-fx-canvas,
+  canvas.page-fx-canvas,
+  .audio-player-bar,
+  #toast-container,
+  #drop-zone,
+  #loading,
+  .ed-sidebar,
+  .ed-toolbar,
+  #ed-add-panel,
+  #ed-inspector,
+  #ed-split-left,
+  #ed-split-right,
+  .ed-block-up,
+  .ed-block-dn,
+  .ed-block-dup,
+  .ed-block-del,
+  .ed-add-btn,
+  .close-preview,
+  .ed-preview-toggle,
+  #ed-preview-badge,
+  .preview-header,
+  .pres-3d-toolbar,
+  .pres-3d-badge,
+  .pres-3d-info,
+  .pres-bg-btn,
+  .pres-audio-card,
+  .video-card .video-label,
+  button,
+  .find-btn {
+    display: none !important;
+  }
+
+  /* 3. Containers: Flatten all flex/overflow constraints for seamless document flow */
+  #main,
+  #viewer-panel,
+  #editor-panel,
+  #pres-stage,
+  .pres-canvas-wrap,
+  #page-canvas,
+  #ed-preview-pane,
+  #ed-preview-body,
+  .preview-body {
+    display: block !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    position: static !important;
+    transform: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+  }
+
+  /* 4. Page Box: Each slide/page renders as a pristine, independent printed page */
+  .pres-page, .pres-slide {
+    display: block !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin: 0 0 20pt 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+    position: relative !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+
+  .pres-page:last-child, .pres-slide:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+    margin-bottom: 0 !important;
+  }
+
+  .pres-page::before, .pres-page::after {
+    display: none !important;
+  }
+
+  /* 5. Zero-Offset Content Layer & Editorial Sections (Perfect Left-Alignment) */
+  .page-content-layer,
+  .pres-content-layer,
+  .pres-section,
+  .pres-hero-content {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: #0f172a !important;
+  }
+
+  /* 6. Page Header (Flush with Left & Right Content Margins) */
+  .pres-page-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 0 0 8pt 0 !important;
+    margin: 0 0 16pt 0 !important;
+    border-bottom: 1.5pt solid #cbd5e1 !important;
+    background: transparent !important;
+    color: #64748b !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 8.5pt !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5pt !important;
+  }
+
+  /* 7. Precision Typography: Headings, Sentences, Paragraphs & Letters */
+  h1, h2, h3, h4, h5, h6,
+  .pres-section h1, .pres-section h2,
+  .pres-hero h1, .pres-hero h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    -webkit-background-clip: border-box !important;
+    background: none !important;
+    text-shadow: none !important;
+    text-align: left !important;
+    letter-spacing: -0.01em !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  h1 {
+    font-size: 20pt !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+    margin: 0 0 10pt 0 !important;
+    padding: 0 !important;
+  }
+
+  h2 {
+    font-size: 15pt !important;
+    line-height: 1.3 !important;
+    font-weight: 700 !important;
+    margin: 14pt 0 8pt 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  h3 {
+    font-size: 12.5pt !important;
+    line-height: 1.35 !important;
+    font-weight: 600 !important;
+    margin: 12pt 0 6pt 0 !important;
+    padding: 0 !important;
+  }
+
+  h4, h5, h6 {
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    margin: 10pt 0 4pt 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Sentences and Paragraphs: Natural, Intended Flow, Consistent Alignment */
+  p, .docx-in-place-editable, .ldoc-rich-text, div.ldoc-in-place-editable {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    text-align: left !important;
+    text-indent: 0 !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    margin: 0 0 10pt 0 !important;
+    padding: 0 !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    hyphens: none !important;
+    white-space: normal !important;
+    page-break-inside: auto !important;
+  }
+
+  /* Lists: Aligned Bullet Points & Numbering */
+  ul, ol {
+    margin: 0 0 12pt 0 !important;
+    padding-left: 20pt !important;
+    text-align: left !important;
+  }
+
+  li {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    margin-bottom: 4pt !important;
+    letter-spacing: normal !important;
+    text-align: left !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left: 3.5pt solid #94a3b8 !important;
+    margin: 12pt 0 !important;
+    padding: 6pt 14pt !important;
+    background: #f8fafc !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+    font-style: italic !important;
+    font-size: 10.5pt !important;
+    line-height: 1.6 !important;
+    text-align: left !important;
+    letter-spacing: normal !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* 8. Crisp Gilded & Pro Tables (Flush Alignment, Full Width, Clean Borders) */
+  .pres-table, .table-pro, table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: auto !important;
+    border-collapse: collapse !important;
+    border: 1pt solid #cbd5e1 !important;
+    margin: 14pt 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+  }
+
+  .table-pro-wrap {
+    width: 100% !important;
+    margin: 14pt 0 !important;
+    overflow: visible !important;
+  }
+
+  .pres-table th, .table-pro th, th {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    border: 1pt solid #cbd5e1 !important;
+    padding: 7pt 10pt !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 9.5pt !important;
+    font-weight: 700 !important;
+    text-align: left !important;
+    letter-spacing: normal !important;
+    line-height: 1.4 !important;
+  }
+
+  .pres-table td, .table-pro td, td {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    border: 1pt solid #e2e8f0 !important;
+    padding: 7pt 10pt !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 9.5pt !important;
+    line-height: 1.45 !important;
+    text-align: left !important;
+    letter-spacing: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .pres-table tr:nth-child(even) td, .table-pro tr:nth-child(even) td {
+    background: #f8fafc !important;
+  }
+
+  /* 9. Feature Grids, Columns & Cards Alignment */
+  .feature-grid, .grid, .pres-grid, .pricing-cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12pt !important;
+    margin: 12pt 0 !important;
+    width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .feature-card, .card, .pricing-card, .preorder-card {
+    border: 1pt solid #cbd5e1 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-radius: 4pt !important;
+    padding: 10pt 12pt !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    text-align: left !important;
+  }
+
+  /* 10. Code Cards & Blocks */
+  .interactive-code-card {
+    background: #f8fafc !important;
+    border: 1pt solid #cbd5e1 !important;
+    border-radius: 4pt !important;
+    margin: 12pt 0 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: visible !important;
+  }
+
+  .interactive-code-card * {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .code-card-body, .code-pane {
+    padding: 8pt 10pt !important;
+    overflow: visible !important;
+  }
+
+  pre, code {
+    font-family: "JetBrains Mono", Consolas, "Courier New", monospace !important;
+    font-size: 9pt !important;
+    line-height: 1.45 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    background: #f8fafc !important;
+    border: none !important;
+  }
+
+  /* 11. Links & Search Marks Cleanup */
+  a {
+    color: #0284c7 !important;
+    text-decoration: underline !important;
+  }
+
+  mark.ldoc-search-match {
+    background: transparent !important;
+    color: inherit !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}
 </style>
 
 <script src="jszip.min.js"></script>
@@ -3606,15 +4036,25 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <script src="ldoc-parser.js"></script>
 <script src="ldoc-editor-core.js"></script>
 <script src="ldoc-shared-modals.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Local Offline Vendor Libraries (Zero Outsource / 100% Offline Standalone) -->
+<script src="vendor/three.min.js"></script>
+<script>if(typeof THREE==='undefined')document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
+<script src="vendor/GLTFLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.GLTFLoader)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"><\/script>')</script>
+<script src="vendor/OBJLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.OBJLoader)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"><\/script>')</script>
+<script src="vendor/STLLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.STLLoader)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"><\/script>')</script>
+<script src="vendor/pdf.min.js"></script>
+<script>if(typeof pdfjsLib==='undefined')document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"><\/script>')</script>
+<script src="vendor/react.production.min.js"></script>
+<script>if(typeof React==='undefined')document.write('<script src="https://unpkg.com/react@18/umd/react.production.min.js"><\/script>')</script>
+<script src="vendor/react-dom.production.min.js"></script>
+<script>if(typeof ReactDOM==='undefined')document.write('<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"><\/script>')</script>
+<script src="vendor/babel.min.js"></script>
+<script>if(typeof Babel==='undefined')document.write('<script src="https://unpkg.com/@babel/standalone/babel.min.js"><\/script>')</script>
+<script src="vendor/chart.min.js"></script>
+<script>if(typeof Chart==='undefined')document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>')</script>
 <script>window.tailwind = { config: { corePlugins: { preflight: false } } };</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -3634,6 +4074,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="dmenu-entry" onclick="location.href='creator.html'"><span>📄 New Document (+Creator)</span><span class="hotkey">Ctrl+N</span></div>
         <div class="dmenu-entry" onclick="document.getElementById('file-input').click()"><span>📂 Open .ldocx File...</span><span class="hotkey">Ctrl+O</span></div>
         <div class="dmenu-entry" onclick="saveDoc()"><span>💾 Save / Export .ldocx</span><div class="dmenu-entry" onclick="showCloudVaultModal()"><span>🌟 Cloud Documents Vault</span></div><div class="dmenu-entry" onclick="showVersionsModal()"><span>↺ Version History &amp; Restore</span></div><div class="dmenu-entry" onclick="showShareModal()"><span>🔗 Share Living Document</span></div><span class="hotkey">Ctrl+S</span></div>
+        <div class="dmenu-entry" onclick="printDocument()"><span>🖨️ Print / Export PDF...</span><span class="hotkey">Ctrl+P</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="location.href='creator.html'"><span>🎨 Open Visual Creator</span><span class="hotkey">Ctrl+Shift+C</span></div>
         <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Universal Document Converter</span></div>
@@ -3648,6 +4089,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
       <div class="dmenu-btn">Edit ▾</div>
       <div class="dmenu-dropdown">
         <div class="dmenu-entry" onclick="toggleFreeTextTool()"><span>✍️ Add In-Canvas Free Text</span><span class="hotkey">Ctrl+T</span></div>
+        <div class="dmenu-entry" onclick="toggleFindReplaceHud()"><span>🔍 Find &amp; Replace...</span><span class="hotkey">Ctrl+F</span></div>
         <div class="dmenu-entry" onclick="switchTab('editor')"><span>🛠️ Open In-Place Block Editor</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="prevSlide()"><span>◀ Previous Slide</span><span class="hotkey">Left</span></div>
@@ -3757,6 +4199,8 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   <button class="toolbar-btn" id="ed-open-btn" onclick="document.getElementById('ed-file-input').click()" style="display:none">📂 Open</button>
   <input type="file" id="ed-file-input" accept=".ldocx,.ldoc" style="display:none" onchange="edOpenLdocxFile(event)">
   <button class="toolbar-btn primary" id="save-btn" onclick="saveDoc()" style="display:inline-flex;align-items:center;gap:6px" title="Save / Export .ldocx package">&#128190; Save .ldocx</button>
+  <button class="toolbar-btn" onclick="toggleFindReplaceHud()" title="Find in Document (Ctrl+F)" style="gap:5px;display:inline-flex;align-items:center"><span>🔍</span> <span>Find</span></button>
+  <button class="toolbar-btn" onclick="printDocument()" title="Print or Save to PDF (Ctrl+P)" style="gap:5px;display:inline-flex;align-items:center;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-weight:700"><span>🖨️</span> <span>Print to PDF</span></button>
   <button class="toolbar-btn" id="pages-toggle-btn" onclick="togglePagesPanel()" style="display:none">&#9776; Pages</button>
   <button class="toolbar-btn primary" id="build-btn" onclick="buildAndView()" style="display:none">&#9654; Build &amp; View</button>
   <button class="toolbar-btn" id="build-save-btn" onclick="buildAndSave()" style="display:none">&#128190; Build &amp; Save</button>
@@ -3849,9 +4293,10 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
       <div class="conv-drop-icon">⚡</div>
       <h3 style="font-family:'Cinzel',serif;color:#fef08a;font-size:20px;margin:0">Drag &amp; Drop Any Document or Media File Here</h3>
       <p style="color:var(--text2);font-size:13px;margin:0">or click to browse from your device</p>
-      <input type="file" id="conv-file-input" accept=".3mf,.stl,.obj,.gltf,.glb,.ply,.pdf,.txt,.md,.docx,.html,.htm,.json,.mp3,.wav,.ogg,.mp4,.webm,.png,.jpg,.jpeg" style="display:none" onchange="convHandleFileSelect(event)">
+      <input type="file" id="conv-file-input" accept=".pptx,.ppt,.docx,.doc,.pdf,.html,.htm,.txt,.md,.json,.csv,.glb,.gltf,.stl,.obj,.3mf,.ply,.mp3,.wav,.ogg,.mp4,.webm,.png,.jpg,.jpeg" style="display:none" onchange="convHandleFileSelect(event)">
       
       <div class="conv-format-badges">
+        <span class="conv-badge" style="border-color:var(--gold);color:#fef08a;font-weight:700">⚡ PowerPoint (.pptx)</span>
         <span class="conv-badge">📝 TXT / Markdown</span>
         <span class="conv-badge">📘 Word DOCX</span>
         <span class="conv-badge">🌐 HTML Web</span>
@@ -5696,7 +6141,11 @@ async function convProcessFile(file) {
     const ext = file.name.split('.').pop().toLowerCase();
     let spec;
 
-    if (ext === 'md' || ext === 'txt') {
+    if (ext === 'pptx' || ext === 'ppt') {
+      if (procStatus) procStatus.textContent = 'Unpacking PowerPoint presentation slides and typography…';
+      const buf = await file.arrayBuffer();
+      spec = await parsePptxToSpec(buf, file.name);
+    } else if (ext === 'md' || ext === 'txt') {
       if (procStatus) procStatus.textContent = 'Parsing Markdown structure, headings, and tables…';
       const text = await file.text();
       spec = parseMarkdownToSpec(text, file.name);
@@ -5951,6 +6400,83 @@ function parseMarkdownToSpec(text, filename) {
     title: title || 'Converted Document',
     author: 'Universal Converter',
     theme: 'paper',
+    pages: pages
+  };
+}
+
+
+async function parsePptxToSpec(arrayBuffer, filename) {
+  const JSZipLib = window.JSZip || (typeof JSZip !== 'undefined' ? JSZip : null);
+  if (!JSZipLib) throw new Error('JSZip is not available.');
+
+  const zip = await JSZipLib.loadAsync(arrayBuffer);
+  let title = filename ? filename.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ') : 'PowerPoint Presentation';
+
+  const slideFiles = [];
+  zip.forEach((relativePath) => {
+    const match = relativePath.match(/^ppt\/slides\/slide(\d+)\.xml$/i);
+    if (match) {
+      slideFiles.push({ num: parseInt(match[1], 10), path: relativePath });
+    }
+  });
+  slideFiles.sort((a, b) => a.num - b.num);
+
+  const pages = [];
+  for (const sf of slideFiles) {
+    const slideXml = await zip.file(sf.path).async('string');
+    const dom = new DOMParser().parseFromString(slideXml, 'application/xml');
+
+    const pElements = dom.getElementsByTagName('a:p');
+    const blocks = [];
+    let slideTitle = `Slide ${sf.num}`;
+
+    for (let i = 0; i < pElements.length; i++) {
+      const p = pElements[i];
+      const tElements = p.getElementsByTagName('a:t');
+      let text = '';
+      for (let j = 0; j < tElements.length; j++) {
+        text += tElements[j].textContent;
+      }
+      text = text.trim();
+      if (!text) continue;
+
+      if (blocks.length === 0) {
+        slideTitle = text;
+        blocks.push({ type: 'heading', level: 1, text: text });
+      } else if (text.length < 60 && !text.endsWith('.')) {
+        blocks.push({ type: 'heading', level: 2, text: text });
+      } else {
+        blocks.push({ type: 'paragraph', text: text });
+      }
+    }
+
+    if (blocks.length === 0) {
+      blocks.push({ type: 'heading', level: 1, text: `Slide ${sf.num}` });
+      blocks.push({ type: 'paragraph', text: 'Converted presentation slide content.' });
+    }
+
+    pages.push({
+      id: 'page_' + sf.num,
+      title: slideTitle,
+      blocks: blocks
+    });
+  }
+
+  if (pages.length === 0) {
+    pages.push({
+      id: 'page_1',
+      title: title,
+      blocks: [
+        { type: 'heading', level: 1, text: title },
+        { type: 'paragraph', text: 'Converted PowerPoint presentation content.' }
+      ]
+    });
+  }
+
+  return {
+    title: title,
+    author: 'Universal PPTX Converter',
+    theme: 'deck',
     pages: pages
   };
 }
@@ -7084,7 +7610,7 @@ function convOpenInCreator() {
   } catch (e) {
     console.warn('Session storage notice:', e);
   }
-  window.location.href = '/creator?source=converted';
+  window.location.href = 'creator.html?source=converted';
 }
 
 function convResetDropZone() {
@@ -13740,7 +14266,14 @@ function edAddBlock(type) {
   else if (type === 'paragraph' || type === 'quote') { b.text = ''; b.value = ''; }
   else if (type === 'list') { b.items = ['']; }
   else if (type === 'code') { b.language = 'javascript'; b.code = ''; }
-  else if (type === 'table') { b.headers = ['Item', 'Description']; b.rows = [['', '']]; }
+  else if (type === 'table') {
+    b.headers = ['Specification / Feature', 'Standard Package', 'Enterprise Pro'];
+    b.rows = [
+      ['Hologram 3D Engine', '60 FPS WebGL Rendering', '120 FPS Raytracing + Spatial'],
+      ['Sandbox Security', 'In-Memory RAM Sandbox', 'Airgapped HSM Verification'],
+      ['File Container', 'Zero-Outsource Standalone', 'Signed Cryptographic .ldocx']
+    ];
+  }
   else if (type === 'ai') { b.prompt = ''; }
   else if (type === 'form') { b.title = ''; b.fields = [{ label: 'Name', field_type: 'input_text', placeholder: 'Enter your name' }]; b.button_text = 'Submit'; b.destination = 'webhook'; }
   else if (type === 'web_image') { b.src = ''; b.alt = ''; }
@@ -13811,6 +14344,61 @@ function edMoveBlock(id, dir) {
   const i = p.blocks.findIndex(b => b.id === id), j = i + dir;
   if (j < 0 || j >= p.blocks.length) return;
   [p.blocks[i], p.blocks[j]] = [p.blocks[j], p.blocks[i]];
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableAddRow(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b) return;
+  b.rows = b.rows || [];
+  const colCount = (b.headers && b.headers.length) ? b.headers.length : (b.rows[0] ? b.rows[0].length : 3);
+  const newRow = Array(colCount).fill('').map((_, i) => `Data ${b.rows.length + 1}.${i + 1}`);
+  b.rows.push(newRow);
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableDelRow(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b || !b.rows || b.rows.length <= 1) return;
+  b.rows.pop();
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableAddCol(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b) return;
+  b.headers = b.headers || [];
+  const newColIdx = b.headers.length + 1;
+  b.headers.push(`Column ${newColIdx}`);
+  (b.rows || []).forEach(r => {
+    r.push(`Val ${newColIdx}`);
+  });
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableDelCol(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b || !b.headers || b.headers.length <= 1) return;
+  b.headers.pop();
+  (b.rows || []).forEach(r => {
+    if (r.length > 0) r.pop();
+  });
   edPushUndo();
   edRenderBlocks();
   edUpdateLivePreview();
@@ -14110,8 +14698,33 @@ function edRenderBlocks() {
 
       mk('textarea', 'Enter custom code or script...', block.code !== undefined ? block.code : '', v => { block.code = v; edUpdateLivePreview(); }, { rows: 5 });
     } else if (block.type === 'table') {
-      const hi = document.createElement('input'); hi.placeholder = 'Col 1, Col 2'; hi.value = (block.headers || []).join(', '); hi.style.marginTop = '4px'; hi.oninput = () => { block.headers = hi.value.split(',').map(s => s.trim()); }; div.appendChild(hi);
-      mk('textarea', 'Row values (comma separated e.g. Item 1, Data 1)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => { block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim())); }, { rows: 4 });
+      const tbCtrlRow = document.createElement('div');
+      tbCtrlRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:6px;margin:6px 0 4px 0;flex-wrap:wrap';
+      tbCtrlRow.innerHTML = `
+        <div style="font-size:10.5px;font-weight:700;color:var(--gold)">📊 Table Structure</div>
+        <div style="display:flex;gap:4px">
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableAddRow('${block.id}')" title="Add Row">➕ Row</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableDelRow('${block.id}')" title="Delete Last Row">➖ Row</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableAddCol('${block.id}')" title="Add Column">➕ Col</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableDelCol('${block.id}')" title="Delete Last Column">➖ Col</button>
+        </div>
+      `;
+      div.appendChild(tbCtrlRow);
+
+      const hi = document.createElement('input');
+      hi.placeholder = 'Column Headers (comma separated e.g. Spec, Tier 1, Tier 2)';
+      hi.value = (block.headers || []).join(', ');
+      hi.style.marginTop = '2px';
+      hi.oninput = () => {
+        block.headers = hi.value.split(',').map(s => s.trim());
+        edUpdateLivePreview();
+      };
+      div.appendChild(hi);
+
+      mk('textarea', 'Row values (comma separated, 1 line per row)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => {
+        block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim()));
+        edUpdateLivePreview();
+      }, { rows: 4 });
     } else if (block.type === 'ai') {
       const cfg = getAiConfig();
       const aiHdr = document.createElement('div');
@@ -16671,6 +17284,31 @@ window.initFormatPopover();
 window.addEventListener('keydown', (e) => {
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const cmd = isMac ? e.metaKey : e.ctrlKey;
+
+  // Ctrl+F / Cmd+F: Find in Document HUD
+  if (cmd && (e.key === 'f' || e.key === 'F')) {
+    e.preventDefault();
+    toggleFindReplaceHud();
+    return;
+  }
+
+  // Ctrl+P / Cmd+P: Print to PDF Fallback
+  if (cmd && (e.key === 'p' || e.key === 'P')) {
+    e.preventDefault();
+    window.print();
+    return;
+  }
+
+  // Escape: Close Find HUD
+  if (e.key === 'Escape') {
+    const hud = document.getElementById('find-replace-hud');
+    if (hud && hud.classList.contains('open')) {
+      e.preventDefault();
+      toggleFindReplaceHud(false);
+      return;
+    }
+  }
+
   if (cmd && e.shiftKey && (e.key === 'S' || e.key === 's')) {
     e.preventDefault();
     if (typeof downloadCurrentDocument === 'function') downloadCurrentDocument();
@@ -17083,44 +17721,169 @@ function applyAstJsonDirectly() {
   }
 }
 
-// ── 4. Global Find & Replace Across All Slides ─────────────────────────────
+// ── 4. In-Document Search & Text Highlighter Engine (Ctrl+F) ───────────────
 let findMatches = [];
 let activeMatchIdx = -1;
 
-function toggleFindReplaceHud() {
+function clearFindHighlights() {
+  const marks = document.querySelectorAll('mark.ldoc-search-match');
+  marks.forEach(m => {
+    const parent = m.parentNode;
+    if (parent) {
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    }
+  });
+  findMatches = [];
+  activeMatchIdx = -1;
+  const countEl = document.getElementById('find-count');
+  if (countEl) countEl.textContent = '0/0';
+}
+
+// ── One-Click Print to PDF Fallback Handler ──
+function printDocument() {
+  // 1. If in Editor/Studio with page array, render all pages cleanly into preview body before print
+  if (typeof edPages !== 'undefined' && Array.isArray(edPages) && edPages.length > 0) {
+    const previewBody = document.getElementById('ed-preview-body');
+    if (previewBody) {
+      previewBody.innerHTML = '';
+      edPages.forEach((pg, idx) => {
+        const slide = document.createElement('div');
+        slide.className = 'pres-page pres-slide';
+        
+        const header = document.createElement('div');
+        header.className = 'pres-page-header';
+        header.innerHTML = `<span>Page ${idx + 1} of ${edPages.length}</span> <span>${typeof escapeHtml === 'function' ? escapeHtml(pg.title || ('Page ' + (idx + 1))) : (pg.title || ('Page ' + (idx + 1)))}</span>`;
+        slide.appendChild(header);
+
+        const content = document.createElement('div');
+        content.className = 'page-content-layer';
+
+        (pg.blocks || []).forEach(b => {
+          if (typeof renderBlockNode === 'function') {
+            renderBlockNode(b, content);
+          }
+        });
+
+        slide.appendChild(content);
+        previewBody.appendChild(slide);
+      });
+    }
+  }
+
+  // 2. Clear any active search highlights so yellow marks aren't printed
+  const findInp = document.getElementById('find-input');
+  const query = findInp ? findInp.value : '';
+  if (typeof clearFindHighlights === 'function') {
+    clearFindHighlights();
+  }
+
+  // 3. Trigger native print / PDF export
+  window.print();
+
+  // 4. Restore search highlights if query was active
+  if (query && typeof executeFind === 'function') {
+    setTimeout(() => { executeFind(query); }, 200);
+  }
+}
+
+function toggleFindReplaceHud(forceOpen) {
   const hud = document.getElementById('find-replace-hud');
   if (!hud) return;
-  const isOpen = hud.classList.toggle('open');
-  if (isOpen) {
+  const shouldOpen = forceOpen !== undefined ? forceOpen : !hud.classList.contains('open');
+  if (shouldOpen) {
+    hud.classList.add('open');
     const inp = document.getElementById('find-input');
-    if (inp) setTimeout(() => inp.focus(), 50);
+    if (inp) {
+      setTimeout(() => {
+        inp.focus();
+        inp.select();
+      }, 50);
+      if (inp.value.trim()) {
+        executeFind(inp.value);
+      }
+    }
+  } else {
+    hud.classList.remove('open');
+    clearFindHighlights();
   }
 }
 
 function executeFind(q = '') {
-  findMatches = [];
-  activeMatchIdx = -1;
+  clearFindHighlights();
   const countEl = document.getElementById('find-count');
-  const term = (q || '').trim().toLowerCase();
+  const term = (q || '').trim();
   if (!term) {
     if (countEl) countEl.textContent = '0/0';
     return;
   }
 
-  const allPgs = typeof edPages !== 'undefined' ? edPages : (typeof pages !== 'undefined' ? pages : []);
-  allPgs.forEach((p, pIdx) => {
-    (p.blocks || []).forEach((b, bIdx) => {
-      const textVal = (b.text || b.value || b.label || b.title || '').toLowerCase();
-      if (textVal.includes(term)) {
-        findMatches.push({ pageId: p.id, pageIdx: pIdx, blockId: b.id, blockIdx: bIdx });
+  const container = document.getElementById('page-canvas') || document.getElementById('ed-preview-body') || document.getElementById('pres-stage') || document.body;
+  const ignoreSelectors = '#find-replace-hud, #command-palette-modal, #ast-inspector-modal, #ldoc-context-menu, #desktop-menubar, #toolbar, #ldoc-status-bar, script, style, textarea, input, select';
+
+  // Traverse all text nodes within presentation container
+  const walker = document.createTreeWalker(
+    container,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: function(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        let p = node.parentElement;
+        while (p && p !== container) {
+          if (p.matches && p.matches(ignoreSelectors)) return NodeFilter.FILTER_REJECT;
+          p = p.parentElement;
+        }
+        if (node.nodeValue.toLowerCase().includes(term.toLowerCase())) {
+          return NodeFilter.FILTER_ACCEPT;
+        }
+        return NodeFilter.FILTER_REJECT;
       }
-    });
+    }
+  );
+
+  const matchedNodes = [];
+  let curr;
+  while ((curr = walker.nextNode())) {
+    matchedNodes.push(curr);
+  }
+
+  // Highlight all occurrences using <mark class="ldoc-search-match">
+  const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(escapedTerm, 'gi');
+  findMatches = [];
+
+  matchedNodes.forEach(textNode => {
+    const text = textNode.nodeValue;
+    const parent = textNode.parentNode;
+    if (!parent) return;
+
+    const frag = document.createDocumentFragment();
+    let lastIdx = 0;
+    let m;
+    while ((m = regex.exec(text)) !== null) {
+      if (m.index > lastIdx) {
+        frag.appendChild(document.createTextNode(text.substring(lastIdx, m.index)));
+      }
+      const mark = document.createElement('mark');
+      mark.className = 'ldoc-search-match';
+      mark.textContent = m[0];
+      frag.appendChild(mark);
+      findMatches.push(mark);
+      lastIdx = regex.lastIndex;
+    }
+    if (lastIdx < text.length) {
+      frag.appendChild(document.createTextNode(text.substring(lastIdx)));
+    }
+    parent.replaceChild(frag, textNode);
   });
 
-  if (countEl) countEl.textContent = `${findMatches.length ? 1 : 0}/${findMatches.length}`;
-  if (findMatches.length) {
+  if (countEl) {
+    countEl.textContent = `${findMatches.length ? 1 : 0}/${findMatches.length}`;
+  }
+
+  if (findMatches.length > 0) {
     activeMatchIdx = 0;
-    jumpToMatch(findMatches[0]);
+    jumpToMatch(0);
   }
 }
 
@@ -17133,24 +17896,27 @@ function findNextMatch(isReverse = false) {
   }
   const countEl = document.getElementById('find-count');
   if (countEl) countEl.textContent = `${activeMatchIdx + 1}/${findMatches.length}`;
-  jumpToMatch(findMatches[activeMatchIdx]);
+  jumpToMatch(activeMatchIdx);
 }
 
-function jumpToMatch(match) {
-  if (!match) return;
-  if (typeof edSelectPage === 'function') {
-    edSelectPage(match.pageId);
-  } else if (typeof selectPage === 'function') {
-    selectPage(match.pageId);
-  }
-  setTimeout(() => {
-    const blkCard = document.querySelector(`[data-block-id="${match.blockId}"]`);
-    if (blkCard) {
-      blkCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      blkCard.style.outline = '2px solid #f59e0b';
-      setTimeout(() => { blkCard.style.outline = ''; }, 1200);
+function jumpToMatch(idx) {
+  if (idx < 0 || idx >= findMatches.length) return;
+  findMatches.forEach(m => m.classList.remove('active'));
+
+  const activeMark = findMatches[idx];
+  if (!activeMark) return;
+  activeMark.classList.add('active');
+
+  // Activate containing slide / page if numbered
+  const pageEl = activeMark.closest('.pres-page') || activeMark.closest('.pres-slide');
+  if (pageEl && pageEl.dataset && pageEl.dataset.pageNum) {
+    const pNum = parseInt(pageEl.dataset.pageNum, 10);
+    if (!isNaN(pNum) && typeof onPageActivated === 'function') {
+      onPageActivated(pNum);
     }
-  }, 100);
+  }
+
+  activeMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function executeReplaceOne() {

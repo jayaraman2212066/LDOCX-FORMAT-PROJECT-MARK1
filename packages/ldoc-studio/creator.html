@@ -2934,7 +2934,7 @@ body.creator-split-50-50 #creator-preview-pane {
       <div class="dmenu-dropdown">
         <div class="dmenu-entry" onclick="location.reload()"><span>🔄 Reload Window</span><span class="hotkey">Ctrl+R</span></div>
         <div class="dmenu-entry" onclick="toggleAiHelper()"><span>🧠 AI Document Copilot</span><span class="hotkey">Ctrl+Shift+H</span></div>
-        <div class="dmenu-entry" onclick="location.href='/live-studio'"><span>🖥️ Open Studio Viewer</span></div>
+        <div class="dmenu-entry" onclick="location.href='index.html'"><span>🖥️ Open Studio Viewer</span></div>
       </div>
     </div>
 
@@ -2956,9 +2956,9 @@ body.creator-split-50-50 #creator-preview-pane {
     <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 10px rgba(167,139,250,.45)">
     <span class="logo">LDOC</span>
   </div>
-  <a href="/live-studio" class="nav-link">Studio</a>
-  <a href="/creator" class="nav-link active">Creator</a>
-  <a href="/live-studio?tab=converter" class="nav-link">⚡ Converter</a>
+  <a href="index.html" class="nav-link">Studio</a>
+  <a href="creator.html" class="nav-link active">Creator</a>
+  <a href="index.html?tab=converter" class="nav-link">⚡ Converter</a>
 
   <!-- Floating Dynamic Popup Drawer Toggles -->
   <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);padding:3px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.12);margin-left:6px">
@@ -7283,7 +7283,7 @@ async function buildDoc(){
 
     if (serverOk && docId) {
       toast('Built! Opening in Studio…','ok');
-      setTimeout(()=>window.open(`/live-studio?doc=${docId}`,'_blank'),600);
+      setTimeout(()=>window.open(`index.html?doc=${docId}`,'_blank'),600);
       return;
     }
 
@@ -7301,7 +7301,7 @@ async function buildDoc(){
       setTimeout(() => {
         let targetUrl = 'index.html?load=transfer';
         if (window.location.protocol !== 'file:' && window.location.pathname.includes('/creator') && !window.location.pathname.endsWith('.html')) {
-          targetUrl = '/live-studio?load=transfer';
+          targetUrl = 'index.html?load=transfer';
         }
         window.location.href = targetUrl;
       }, 500);

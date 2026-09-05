@@ -4293,9 +4293,10 @@ mark.ldoc-search-match.active {
       <div class="conv-drop-icon">⚡</div>
       <h3 style="font-family:'Cinzel',serif;color:#fef08a;font-size:20px;margin:0">Drag &amp; Drop Any Document or Media File Here</h3>
       <p style="color:var(--text2);font-size:13px;margin:0">or click to browse from your device</p>
-      <input type="file" id="conv-file-input" accept=".3mf,.stl,.obj,.gltf,.glb,.ply,.pdf,.txt,.md,.docx,.html,.htm,.json,.mp3,.wav,.ogg,.mp4,.webm,.png,.jpg,.jpeg" style="display:none" onchange="convHandleFileSelect(event)">
+      <input type="file" id="conv-file-input" accept=".pptx,.ppt,.docx,.doc,.pdf,.html,.htm,.txt,.md,.json,.csv,.glb,.gltf,.stl,.obj,.3mf,.ply,.mp3,.wav,.ogg,.mp4,.webm,.png,.jpg,.jpeg" style="display:none" onchange="convHandleFileSelect(event)">
       
       <div class="conv-format-badges">
+        <span class="conv-badge" style="border-color:var(--gold);color:#fef08a;font-weight:700">⚡ PowerPoint (.pptx)</span>
         <span class="conv-badge">📝 TXT / Markdown</span>
         <span class="conv-badge">📘 Word DOCX</span>
         <span class="conv-badge">🌐 HTML Web</span>
@@ -6140,7 +6141,11 @@ async function convProcessFile(file) {
     const ext = file.name.split('.').pop().toLowerCase();
     let spec;
 
-    if (ext === 'md' || ext === 'txt') {
+    if (ext === 'pptx' || ext === 'ppt') {
+      if (procStatus) procStatus.textContent = 'Unpacking PowerPoint presentation slides and typography…';
+      const buf = await file.arrayBuffer();
+      spec = await parsePptxToSpec(buf, file.name);
+    } else if (ext === 'md' || ext === 'txt') {
       if (procStatus) procStatus.textContent = 'Parsing Markdown structure, headings, and tables…';
       const text = await file.text();
       spec = parseMarkdownToSpec(text, file.name);
@@ -6395,6 +6400,83 @@ function parseMarkdownToSpec(text, filename) {
     title: title || 'Converted Document',
     author: 'Universal Converter',
     theme: 'paper',
+    pages: pages
+  };
+}
+
+
+async function parsePptxToSpec(arrayBuffer, filename) {
+  const JSZipLib = window.JSZip || (typeof JSZip !== 'undefined' ? JSZip : null);
+  if (!JSZipLib) throw new Error('JSZip is not available.');
+
+  const zip = await JSZipLib.loadAsync(arrayBuffer);
+  let title = filename ? filename.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ') : 'PowerPoint Presentation';
+
+  const slideFiles = [];
+  zip.forEach((relativePath) => {
+    const match = relativePath.match(/^ppt\/slides\/slide(\d+)\.xml$/i);
+    if (match) {
+      slideFiles.push({ num: parseInt(match[1], 10), path: relativePath });
+    }
+  });
+  slideFiles.sort((a, b) => a.num - b.num);
+
+  const pages = [];
+  for (const sf of slideFiles) {
+    const slideXml = await zip.file(sf.path).async('string');
+    const dom = new DOMParser().parseFromString(slideXml, 'application/xml');
+
+    const pElements = dom.getElementsByTagName('a:p');
+    const blocks = [];
+    let slideTitle = `Slide ${sf.num}`;
+
+    for (let i = 0; i < pElements.length; i++) {
+      const p = pElements[i];
+      const tElements = p.getElementsByTagName('a:t');
+      let text = '';
+      for (let j = 0; j < tElements.length; j++) {
+        text += tElements[j].textContent;
+      }
+      text = text.trim();
+      if (!text) continue;
+
+      if (blocks.length === 0) {
+        slideTitle = text;
+        blocks.push({ type: 'heading', level: 1, text: text });
+      } else if (text.length < 60 && !text.endsWith('.')) {
+        blocks.push({ type: 'heading', level: 2, text: text });
+      } else {
+        blocks.push({ type: 'paragraph', text: text });
+      }
+    }
+
+    if (blocks.length === 0) {
+      blocks.push({ type: 'heading', level: 1, text: `Slide ${sf.num}` });
+      blocks.push({ type: 'paragraph', text: 'Converted presentation slide content.' });
+    }
+
+    pages.push({
+      id: 'page_' + sf.num,
+      title: slideTitle,
+      blocks: blocks
+    });
+  }
+
+  if (pages.length === 0) {
+    pages.push({
+      id: 'page_1',
+      title: title,
+      blocks: [
+        { type: 'heading', level: 1, text: title },
+        { type: 'paragraph', text: 'Converted PowerPoint presentation content.' }
+      ]
+    });
+  }
+
+  return {
+    title: title,
+    author: 'Universal PPTX Converter',
+    theme: 'deck',
     pages: pages
   };
 }
@@ -7528,7 +7610,7 @@ function convOpenInCreator() {
   } catch (e) {
     console.warn('Session storage notice:', e);
   }
-  window.location.href = '/creator?source=converted';
+  window.location.href = 'creator.html?source=converted';
 }
 
 function convResetDropZone() {

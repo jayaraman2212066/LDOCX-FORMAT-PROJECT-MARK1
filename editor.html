@@ -959,7 +959,7 @@ body.mode-paper .page-paper-layer {
 .ai-helper-send:hover{opacity:.9}
 
 /* ── Editor Panel Styles ───────────────────────────────────────────────────── */
-#editor-panel{display:none;flex:1;overflow:hidden;flex-direction:row}
+#editor-panel{display:flex;flex:1;overflow:hidden;flex-direction:row}
 #ed-pages{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
 #ed-pages-header{padding:12px 16px 10px;font-family:'Cinzel',serif;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 #ed-page-list{flex:1;overflow-y:auto;padding:6px 0}
@@ -3599,6 +3599,25 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 .price-desc { font-size: 12.5px; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
 .price-features { list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #cbd5e1; }
 
+/* ── In-Document Search Highlighting Styles (Ctrl+F) ── */
+mark.ldoc-search-match {
+  background: #f59e0b !important;
+  color: #000000 !important;
+  border-radius: 3px;
+  padding: 1px 3px;
+  font-weight: 700;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.7);
+  transition: all 0.15s ease;
+}
+mark.ldoc-search-match.active {
+  background: #38bdf8 !important;
+  color: #000000 !important;
+  outline: 2.5px solid #ffffff !important;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.95) !important;
+  transform: scale(1.08);
+  display: inline-block;
+}
+
 /* ── Executive Ultra-Aligned Print & PDF Fallback Stylesheet ── */
 @media print {
   @page {
@@ -4017,15 +4036,25 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <script src="ldoc-parser.js"></script>
 <script src="ldoc-editor-core.js"></script>
 <script src="ldoc-shared-modals.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Local Offline Vendor Libraries (Zero Outsource / 100% Offline Standalone) -->
+<script src="vendor/three.min.js"></script>
+<script>if(typeof THREE==='undefined')document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
+<script src="vendor/GLTFLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.GLTFLoader)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"><\/script>')</script>
+<script src="vendor/OBJLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.OBJLoader)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"><\/script>')</script>
+<script src="vendor/STLLoader.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.STLLoader)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"><\/script>')</script>
+<script src="vendor/pdf.min.js"></script>
+<script>if(typeof pdfjsLib==='undefined')document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"><\/script>')</script>
+<script src="vendor/react.production.min.js"></script>
+<script>if(typeof React==='undefined')document.write('<script src="https://unpkg.com/react@18/umd/react.production.min.js"><\/script>')</script>
+<script src="vendor/react-dom.production.min.js"></script>
+<script>if(typeof ReactDOM==='undefined')document.write('<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"><\/script>')</script>
+<script src="vendor/babel.min.js"></script>
+<script>if(typeof Babel==='undefined')document.write('<script src="https://unpkg.com/@babel/standalone/babel.min.js"><\/script>')</script>
+<script src="vendor/chart.min.js"></script>
+<script>if(typeof Chart==='undefined')document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>')</script>
 <script>window.tailwind = { config: { corePlugins: { preflight: false } } };</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -4049,6 +4078,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="dmenu-entry" onclick="if(typeof edPages!=='undefined'){edPages=[];edAddPage();switchTab('editor');}"><span>📄 New Living Document</span><span class="hotkey">Ctrl+N</span></div>
         <div class="dmenu-entry" onclick="document.getElementById('ed-file-input').click()"><span>📂 Open .ldocx File...</span><span class="hotkey">Ctrl+O</span></div>
         <div class="dmenu-entry" onclick="saveDoc()"><span>💾 Save / Export .ldocx</span><span class="hotkey">Ctrl+S</span></div>
+        <div class="dmenu-entry" onclick="printDocument()"><span>🖨️ Print / Export PDF...</span><span class="hotkey">Ctrl+P</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Universal Document Converter</span></div>
         <div class="dmenu-divider"></div>
@@ -4062,6 +4092,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
       <div class="dmenu-dropdown">
         <div class="dmenu-entry" onclick="switchTab('editor')"><span>🛠️ Open In-Place Block Editor</span></div>
         <div class="dmenu-entry" onclick="toggleFreeTextTool()"><span>✍️ Add In-Canvas Free Text</span><span class="hotkey">Ctrl+T</span></div>
+        <div class="dmenu-entry" onclick="toggleFindReplaceHud()"><span>🔍 Find &amp; Replace...</span><span class="hotkey">Ctrl+F</span></div>
         <div class="dmenu-entry" onclick="if(typeof edAddPage==='function'){edAddPage();switchTab('editor');}"><span>➕ Add New Section / Slide</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-section-hdr">Integrated Creative Studios</div>
@@ -4089,7 +4120,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="dmenu-entry" onclick="switchTab('editor')"><span>✏️ Block Editor Mode</span></div>
         <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Document Converter</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="togglePagesPanel()"><span>📑 Pages Overview Panel</span><span class="hotkey">Ctrl+P</span></div>
+        <div class="dmenu-entry" onclick="togglePagesPanel()"><span>📑 Pages Overview Panel</span><span class="hotkey">Ctrl+Shift+P</span></div>
         <div class="dmenu-entry" onclick="toggle3DPerspectiveTilt()"><span>📐 Toggle 3D Perspective Tilt</span><span class="hotkey">Ctrl+M</span></div>
         <div class="dmenu-entry" onclick="if(document.fullscreenElement){document.exitFullscreen()}else{document.documentElement.requestFullscreen()}"><span>⛶ Toggle Fullscreen</span><span class="hotkey">F11</span></div>
       </div>
@@ -4114,8 +4145,8 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   </div>
   <button class="tab-btn active" id="tab-editor" onclick="switchTab('editor')">✏️ Editor</button>
   <button class="tab-btn" id="tab-converter" onclick="switchTab('converter')">⚡ Convert</button>
-  <button id="tab-templates" style="display:none"></button>
-  <button id="tab-viewer" style="display:none"></button>
+  
+  
 
   <button class="toolbar-btn" id="ed-open-btn" onclick="document.getElementById('ed-file-input').click()" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--gold);font-weight:700">📂 Open</button>
   <input type="file" id="ed-file-input" accept=".ldocx,.ldoc" style="display:none" onchange="edOpenLdocxFile(event)">
@@ -4125,6 +4156,8 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   <button class="toolbar-btn primary" id="build-btn" onclick="buildAndView()" style="background:linear-gradient(135deg,rgba(16,185,129,.3),rgba(5,150,105,.4));border-color:#10b981;color:#a7f3d0;font-weight:700">▶ Build &amp; View</button>
   <button class="toolbar-btn" id="build-save-btn" onclick="buildAndSave()" style="display:none">&#128190; Build &amp; Save</button>
   <button class="toolbar-btn" id="pages-toggle-btn" onclick="togglePagesPanel()">📑 Pages</button>
+  <button class="toolbar-btn" onclick="toggleFindReplaceHud()" title="Find in Document (Ctrl+F)" style="gap:5px;display:inline-flex;align-items:center"><span>🔍</span> <span>Find</span></button>
+  <button class="toolbar-btn" onclick="printDocument()" title="Print or Save to PDF (Ctrl+P)" style="gap:5px;display:inline-flex;align-items:center;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-weight:700"><span>🖨️</span> <span>Print to PDF</span></button>
 
   <span class="doc-title" id="doc-title" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">No document loaded</span>
   <span id="validation-badge"></span>
@@ -4152,394 +4185,9 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <div id="main">
   
 <!-- Flagship Portal View (LM Studio & Visual Studio Style) -->
-<div id="portal-view" style="display:none">
 
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     LDOC STUDIO FLAGSHIP SHOWCASE PORTAL (LM STUDIO & VISUAL STUDIO STYLE)
-     ═══════════════════════════════════════════════════════════════════════════ -->
-<section id="ldoc-portal-hero" class="portal-section">
-  <!-- Hero Section -->
-  <div class="portal-container">
-    <div class="portal-badge">
-      <span class="portal-badge-dot"></span>
-      <span>INTRODUCING .LDOCX — THE NEXT GENERATION DOCUMENT ARCHITECTURE</span>
-    </div>
-    <h1 class="portal-hero-title">The Studio for Living Documents.</h1>
-    <p class="portal-hero-subtitle">
-      PDF was designed in 1993 for flat paper printouts. <strong>.ldocx</strong> is designed for the modern interactive web. Run live executable code, dynamic data charts, spatial 3D WebGL models, interactive forms, and audio soundtracks — packaged in a self-contained, secure container that runs locally without plugins.
-    </p>
 
-    <!-- Main Hero CTA Actions -->
-    <div class="portal-hero-actions">
-      <a href="#downloads-section" class="portal-btn primary-glow">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-        <span>Download LDOC Studio for Windows</span>
-        <span class="portal-btn-sub">v2.5.0 • 64-bit • Free</span>
-      </a>
-      <a href="/creator" class="portal-btn secondary">
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
-        <span>Launch Web Studio in Browser</span>
-      </a>
-      <div class="portal-cli-pill" onclick="navigator.clipboard.writeText('npm install @ldoc/sdk');showToast('Copied to clipboard: npm install @ldoc/sdk', 'ok')">
-        <code>$ npm i @ldoc/sdk</code>
-        <span class="copy-icon">📋</span>
-      </div>
-    </div>
 
-    <!-- Live Interactive Hero Document Sandbox (LM Studio Style Playground) -->
-    <div class="portal-sandbox-card">
-      <div class="sandbox-header">
-        <div class="sandbox-tabs">
-          <button class="sandbox-tab active" onclick="switchSandboxTab('chart')">📊 Reactive Data Charts</button>
-          <button class="sandbox-tab" onclick="switchSandboxTab('3d')">🔮 Spatial 3D WebGL</button>
-          <button class="sandbox-tab" onclick="switchSandboxTab('code')">⚡ Live Code Execution</button>
-          <button class="sandbox-tab" onclick="switchSandboxTab('doc')">📝 Living Document</button>
-        </div>
-        <div class="sandbox-status">
-          <span class="sync-dot"></span>
-          <span>● LDOCX Runtime 2.5.0 Active (Client-Side Sandboxed)</span>
-        </div>
-      </div>
-
-      <div class="sandbox-body">
-        <!-- Tab 1: Reactive Data Chart -->
-        <div id="sandbox-pane-chart" class="sandbox-pane active">
-          <div style="display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:center">
-            <div>
-              <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:4px">Annual ARR Trajectory & Net Retention Model</div>
-              <div style="font-size:12px;color:#94a3b8;margin-bottom:14px">Drag the growth rate slider below to re-calculate revenue projection in real time.</div>
-              <canvas id="sandbox-chart-canvas" width="480" height="200" style="width:100%;height:200px;background:#0b0f19;border-radius:10px;border:1px solid rgba(255,255,255,0.08)"></canvas>
-            </div>
-            <div style="background:#161b22;padding:16px;border-radius:10px;border:1px solid rgba(255,255,255,0.08)">
-              <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:8px">Interactive Parameters</div>
-              <label style="font-size:12px;color:#e2e8f0;display:block;margin-bottom:4px">Annual Growth Factor: <b id="growth-val" style="color:#f59e0b">65%</b></label>
-              <input type="range" id="growth-slider" min="20" max="150" value="65" style="width:100%;accent-color:#f59e0b" oninput="updateSandboxChart(this.value)">
-              <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);font-size:11.5px;color:#cbd5e1">
-                Projected 2026 Run Rate: <b id="projected-arr" style="color:#10b981;font-size:15px;display:block;margin-top:2px">$48.6M ARR</b>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab 2: 3D Spatial WebGL Model -->
-        <div id="sandbox-pane-3d" class="sandbox-pane">
-          <div style="text-align:center;padding:10px">
-            <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px">Interactive 3D WebGL Hologram (No Plugins Required)</div>
-            <div style="font-size:12px;color:#94a3b8;margin-bottom:10px">Drag mouse to orbit geometry in 3D space. Press button to toggle wireframe.</div>
-            <canvas id="sandbox-3d-canvas" width="560" height="220" style="width:100%;max-width:560px;height:220px;background:#05070c;border-radius:10px;margin:0 auto;display:block;border:1px solid rgba(245,158,11,0.2)"></canvas>
-            <div style="margin-top:10px;display:flex;gap:10px;justify-content:center">
-              <button class="portal-btn-sm" onclick="toggle3DWireframe()">Toggle Wireframe</button>
-              <button class="portal-btn-sm" onclick="reset3DCamera()">Reset Camera</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab 3: Live Code Execution -->
-        <div id="sandbox-pane-code" class="sandbox-pane">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-            <div style="background:#0b0f19;border-radius:8px;padding:12px;border:1px solid rgba(255,255,255,0.08);font-family:monospace;font-size:12px;color:#cbd5e1">
-              <div style="color:#64748b;margin-bottom:6px">// Python / JavaScript Executable Block in .ldocx</div>
-              <div style="color:#ec4899">import</div> numpy <div style="color:#ec4899">as</div> np<br>
-              <div style="color:#ec4899">import</div> matplotlib.pyplot <div style="color:#ec4899">as</div> plt<br><br>
-              x = np.linspace(0, 10, 100)<br>
-              y = np.sin(x) * np.exp(-x / 5)<br>
-              plt.plot(x, y, color=<span style="color:#f59e0b">'#f59e0b'</span>)<br>
-              plt.title(<span style="color:#10b981">'Damped Quantum Oscillation'</span>)<br>
-              plt.show()
-              <button class="portal-btn-sm primary" style="margin-top:12px;width:100%" onclick="runSandboxCode()">▶ Execute in Living Document</button>
-            </div>
-            <div id="sandbox-code-output" style="background:#0b0f19;border-radius:8px;padding:12px;border:1px solid rgba(52,211,153,0.3);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
-              <div style="font-size:12px;color:#10b981;font-weight:700">✓ Execution Successful (0.014s)</div>
-              <canvas id="sandbox-plot-canvas" width="220" height="110" style="margin-top:8px"></canvas>
-              <div style="font-size:10.5px;color:#94a3b8;margin-top:6px">Interactive plot rendered locally via HTML5 Vector Engine</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab 4: Living Document -->
-        <div id="sandbox-pane-doc" class="sandbox-pane">
-          <div style="background:linear-gradient(135deg,#161b22,#0d1117);padding:20px;border-radius:10px;border:1.5px solid rgba(245,158,11,0.3)">
-            <div style="font-size:12px;color:#f59e0b;font-weight:800;letter-spacing:1px;text-transform:uppercase">LIVING DOCUMENT SPECIFICATION 2.5.0</div>
-            <h2 style="font-size:22px;color:#fff;margin:6px 0 8px 0">Next-Generation Dynamic Documents</h2>
-            <p style="font-size:13.5px;color:#cbd5e1;line-height:1.6">
-              Unlike static PDF pages that trap data in unalterable raster pixels, .ldocx files are living software envelopes. Readers can filter tables, simulate outcomes, orbit 3D engineering components, and submit responses directly from within the document.
-            </p>
-            <div style="display:flex;gap:10px;margin-top:14px">
-              <a href="/creator" class="portal-btn-sm primary" style="text-decoration:none">✏️ Open in Visual Studio Editor</a>
-              <button class="portal-btn-sm" onclick="showShareModal()">🔗 Share Document</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     OS MULTI-PLATFORM DOWNLOAD HUB (LM STUDIO STYLE)
-     ═══════════════════════════════════════════════════════════════════════════ -->
-<section id="downloads-section" class="portal-section" style="background:#090d16;border-top:1px solid rgba(255,255,255,0.08);border-bottom:1px solid rgba(255,255,255,0.08)">
-  <div class="portal-container">
-    <div style="text-align:center;margin-bottom:36px">
-      <h2 style="font-size:30px;color:#fff;font-weight:900;margin-bottom:8px">Download LDOC Studio</h2>
-      <p style="font-size:14.5px;color:#94a3b8;max-width:650px;margin:0 auto">
-        Native desktop performance with zero cloud latency. Available across all major operating systems, or run directly in your browser.
-      </p>
-    </div>
-
-    <div class="portal-os-grid">
-      <!-- Windows -->
-      <div class="portal-os-card featured">
-        <div class="os-badge">RECOMMENDED</div>
-        <div class="os-icon">🪟</div>
-        <div class="os-title">Windows</div>
-        <div class="os-version">v2.5.0 • x64 &amp; ARM64</div>
-        <div class="os-reqs">Windows 10 / 11 (64-bit)</div>
-        <a href="/app/ldoc-studio-windows-x64.zip" class="portal-btn primary-glow" style="width:100%;margin-top:14px;text-decoration:none">
-          <span>⬇ Download for Windows</span>
-        </a>
-        <div style="font-size:11px;color:#64748b;margin-top:8px">Includes Native Draco 3D &amp; PDF Engine</div>
-      </div>
-
-      <!-- macOS -->
-      <div class="portal-os-card">
-        <div class="os-icon">🍏</div>
-        <div class="os-title">macOS</div>
-        <div class="os-version">v2.5.0 • Universal DMG</div>
-        <div class="os-reqs">Apple Silicon (M1/M2/M3/M4) &amp; Intel</div>
-        <button class="portal-btn secondary" style="width:100%;margin-top:14px" onclick="showToast('macOS DMG downloaded package starting...', 'info')">
-          <span>⬇ Download for macOS</span>
-        </button>
-        <div style="font-size:11px;color:#64748b;margin-top:8px">macOS Monterey 12.0+ or later</div>
-      </div>
-
-      <!-- Linux -->
-      <div class="portal-os-card">
-        <div class="os-icon">🐧</div>
-        <div class="os-title">Linux</div>
-        <div class="os-version">v2.5.0 • AppImage &amp; .deb</div>
-        <div class="os-reqs">Ubuntu, Debian, Fedora, Arch</div>
-        <button class="portal-btn secondary" style="width:100%;margin-top:14px" onclick="showToast('Linux AppImage download starting...', 'info')">
-          <span>⬇ Download for Linux</span>
-        </button>
-        <div style="font-size:11px;color:#64748b;margin-top:8px">Standalone x86_64 AppImage</div>
-      </div>
-
-      <!-- Web Studio -->
-      <div class="portal-os-card">
-        <div class="os-icon">🌐</div>
-        <div class="os-title">Web Studio</div>
-        <div class="os-version">Cloud Edge Edition</div>
-        <div class="os-reqs">Chrome, Edge, Safari, Firefox</div>
-        <a href="/creator" class="portal-btn secondary" style="width:100%;margin-top:14px;text-decoration:none">
-          <span>🚀 Launch Web Studio</span>
-        </a>
-        <div style="font-size:11px;color:#64748b;margin-top:8px">Instant access • No install needed</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     20-POINT COMPARATIVE MATRIX: .LDOCX VS PDF & OTHERS
-     ═══════════════════════════════════════════════════════════════════════════ -->
-<section class="portal-section">
-  <div class="portal-container">
-    <div style="text-align:center;margin-bottom:32px">
-      <div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#f59e0b;text-transform:uppercase">FORMAT SPECIFICATION MATRIX</div>
-      <h2 style="font-size:28px;color:#fff;font-weight:900;margin-top:4px">Why .ldocx Dominates Legacy Document Formats</h2>
-      <p style="font-size:14px;color:#94a3b8;max-width:650px;margin:0 auto">A 20-point architectural comparison showing why living documents surpass static PDFs, Word docs, and proprietary notebooks.</p>
-    </div>
-
-    <div class="matrix-table-container">
-      <table class="matrix-table">
-        <thead>
-          <tr>
-            <th style="width:34%">Feature / Capability</th>
-            <th class="col-ldocx">🌟 .ldocx (LDOC Studio)</th>
-            <th>📄 PDF (Adobe)</th>
-            <th>📝 Word (.docx)</th>
-            <th>📓 Jupyter Notebook</th>
-            <th>🎮 Unity 3D</th>
-          </tr>
-        </thead>
-        <tbody id="matrix-tbody">
-          <!-- Populated by JS -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     DEVELOPER SDK & CLI SHOWCASE (VISUAL STUDIO STYLE)
-     ═══════════════════════════════════════════════════════════════════════════ -->
-<section class="portal-section" style="background:#070a12;border-top:1px solid rgba(255,255,255,0.08)">
-  <div class="portal-container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center">
-      <div>
-        <div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#a78bfa;text-transform:uppercase">OPEN-SOURCE DEVELOPER ECOSYSTEM</div>
-        <h2 style="font-size:28px;color:#fff;font-weight:900;margin:6px 0 12px 0">Build, Parse &amp; Automate with @ldoc/sdk</h2>
-        <p style="font-size:14px;color:#94a3b8;line-height:1.6;margin-bottom:18px">
-          The decoupled open-source <strong>@ldoc/sdk</strong> gives developers programmatic control to generate living documents in CI/CD pipelines, extract structured AST data, validate against Schema 2.5.0, and verify SHA-256 integrity checksums.
-        </p>
-        <ul style="list-style:none;padding:0;margin:0 0 20px 0;display:flex;flex-direction:column;gap:10px;font-size:13px;color:#cbd5e1">
-          <li style="display:flex;align-items:center;gap:8px"><span style="color:#10b981">✓</span> Zero UI dependencies — clean, lightweight, works in Node &amp; Edge</li>
-          <li style="display:flex;align-items:center;gap:8px"><span style="color:#10b981">✓</span> Full Round-Trip ZIP Serialization &amp; Cryptographic Checksumming</li>
-          <li style="display:flex;align-items:center;gap:8px"><span style="color:#10b981">✓</span> Canonical JSON Schema 2.5.0 Enforcement</li>
-        </ul>
-        <div style="display:flex;gap:10px">
-          <button class="portal-btn primary-glow" onclick="showToast('NPM Package @ldoc/sdk v2.5.0 ready!', 'info')">Install via NPM</button>
-          <button class="portal-btn secondary" onclick="showToast('Opening SPEC.md container documentation...', 'info')">View SPEC.md</button>
-        </div>
-      </div>
-
-      <div style="background:#0c101b;border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:20px;box-shadow:0 12px 40px rgba(0,0,0,0.6)">
-        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:10px;margin-bottom:14px">
-          <span style="font-family:monospace;font-size:12px;color:#a78bfa">example_pipeline.js</span>
-          <span style="font-size:11px;color:#64748b">Node.js 18+ / ESM</span>
-        </div>
-        <pre style="margin:0;font-family:monospace;font-size:12.5px;color:#cbd5e1;line-height:1.6;overflow-x:auto"><code><span style="color:#ec4899">import</span> { parse, serialize, validate } <span style="color:#ec4899">from</span> <span style="color:#f59e0b">'@ldoc/sdk'</span>;
-<span style="color:#ec4899">import</span> fs <span style="color:#ec4899">from</span> <span style="color:#f59e0b">'fs'</span>;
-
-<span style="color:#64748b">// 1. Parse .ldocx container</span>
-<span style="color:#60a5fa">const</span> buffer = fs.readFileSync(<span style="color:#f59e0b">'report.ldocx'</span>);
-<span style="color:#60a5fa">const</span> doc = <span style="color:#ec4899">await</span> parse(buffer);
-
-<span style="color:#64748b">// 2. Inject reactive Python chart block</span>
-doc.pages[<span style="color:#f59e0b">0</span>].blocks.push({
-  type: <span style="color:#f59e0b">'chart'</span>,
-  title: <span style="color:#f59e0b">'Q3 Financial Telemetry'</span>,
-  data: [<span style="color:#f59e0b">14.2</span>, <span style="color:#f59e0b">18.9</span>, <span style="color:#f59e0b">24.5</span>]
-});
-
-<span style="color:#64748b">// 3. Validate and re-serialize with SHA-256</span>
-validate(doc);
-<span style="color:#60a5fa">const</span> compiled = <span style="color:#ec4899">await</span> serialize(doc);
-fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, compiled);
-<span style="color:#10b981">console</span>.log(<span style="color:#f59e0b">'✓ Living Document serialized successfully!'</span>);</code></pre>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     TRANSPARENT PRICING & LEMON SQUEEZY STORE SECTION
-     ═══════════════════════════════════════════════════════════════════════════ -->
-<section id="pricing-section" class="portal-section" style="background:#0a0e1a;border-top:1px solid rgba(255,255,255,0.08)">
-  <div class="portal-container">
-    <div style="text-align:center;margin-bottom:36px">
-      <div class="lemon-store-badge">🍋 Official Monetization via Lemon Squeezy (ONLINE APP)</div>
-      <h2 style="font-size:30px;color:#fff;font-weight:900;margin:6px 0 8px 0">Simple, Transparent Pricing</h2>
-      <p style="font-size:14px;color:#94a3b8;max-width:600px;margin:0 auto">Free forever for personal and open-source creators. Upgrade for desktop IDE compilation, cloud synchronization, and AI copilot power.</p>
-    </div>
-
-    <div class="portal-pricing-grid">
-      <!-- Community -->
-      <div class="portal-price-card">
-        <div class="price-tier-name">COMMUNITY</div>
-        <div class="price-amount">$0 <span class="price-period">forever</span></div>
-        <p class="price-desc">Complete open-source toolkit for individuals and researchers.</p>
-        <ul class="price-features">
-          <li>✓ Open-Source @ldoc/sdk parser &amp; serializer</li>
-          <li>✓ WebGL 3D Viewer &amp; Slide Mode</li>
-          <li>✓ Client-Side Local .ldocx Export</li>
-          <li>✓ Unlimited Local Document Viewing</li>
-        </ul>
-        <a href="/creator" class="portal-btn secondary" style="width:100%;margin-top:auto;text-decoration:none">Launch Free Web Studio</a>
-      </div>
-
-      <!-- Pro Creator -->
-      <div class="portal-price-card featured">
-        <div class="price-badge">MOST POPULAR</div>
-        <div class="price-tier-name" style="color:#f59e0b">PRO STUDIO</div>
-        <div class="price-amount">$29 <span class="price-period">/ month</span></div>
-        <p class="price-desc">For creators, researchers, and professionals who need full power.</p>
-        <ul class="price-features">
-          <li>✓ <strong>Everything in Community</strong></li>
-          <li>✓ <strong>Full Desktop IDE</strong> (Windows, Mac, Linux)</li>
-          <li>✓ <strong>3D Draco Mesh Compression</strong> (<35k optimization)</li>
-          <li>✓ <strong>Server Headless PDF Flattening Engine</strong></li>
-          <li>✓ <strong>Unlimited Cloud Document Vault &amp; History</strong></li>
-          <li>✓ <strong>Server-Side AI Copilot (Gemini 3.6 Flash)</strong></li>
-        </ul>
-        <button class="portal-btn primary-glow" style="width:100%;margin-top:auto" onclick="initiateLemonCheckout('pro')">Upgrade to Pro Studio</button>
-      </div>
-
-      <!-- Enterprise Team -->
-      <div class="portal-price-card">
-        <div class="price-tier-name">ENTERPRISE TEAM</div>
-        <div class="price-amount">$99 <span class="price-period">/ month</span> <span style="font-size:13px;color:#34d399;font-weight:700">($999 / year)</span></div>
-        <p class="price-desc">For organizations deploying living documents at enterprise scale.</p>
-        <ul class="price-features">
-          <li>✓ <strong>Everything in Pro Studio</strong></li>
-          <li>✓ <strong>Multi-Seat Team License</strong> (Up to 25 seats)</li>
-          <li>✓ <strong>Custom Domain Publishing</strong></li>
-          <li>✓ <strong>Dedicated Gmail / SMTP Lead Routing</strong></li>
-          <li>✓ <strong>SSO Authentication &amp; 99.9% Uptime SLA</strong></li>
-        </ul>
-        <button class="portal-btn secondary" style="width:100%;margin-top:auto" onclick="showLeadModal()">Contact Enterprise Sales</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-</div>
-
-<div id="viewer-panel" style="display:flex" style="display:flex;flex:1;overflow:hidden;position:relative">
-    <canvas id="fx-bg-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
-    <div id="content-area" style="position:relative;z-index:1">
-      <div class="slide-app-header" id="slide-top-bar">
-        <div class="slide-app-brand">
-          <img src="ldoc_logo.png" alt="LDOC Logo">
-          <span class="brand-title">LDOC Living Document Presentation</span>
-          <span class="live-indicator">ACTIVE</span>
-        </div>
-
-        <!-- 🎭 Visual Artifact Presentation Mode Selector -->
-              <div class="pres-mode-selector" id="pres-mode-selector">
-        <button class="mode-pill-btn active" id="mode-paper" onclick="setPresentationMode('paper')" title="📜 Tactile Paper">📜 Paper</button>
-        <button class="mode-pill-btn" id="mode-glass" onclick="setPresentationMode('glass')" title="💎 Glass Cards">💎 Glass</button>
-        <button class="mode-pill-btn" id="mode-deck" onclick="setPresentationMode('deck')" title="🎬 Keynote Deck">🎬 Deck</button>
-        <button class="mode-pill-btn" id="mode-gazette" onclick="setPresentationMode('gazette')" title="📰 Gazette">📰 Gazette</button>
-        <button class="mode-pill-btn" id="mode-cyber" onclick="setPresentationMode('cyber')" title="⚡ Cyber Terminal">⚡ Cyber</button>
-        <button class="mode-pill-btn" id="mode-velvet" onclick="setPresentationMode('velvet')" title="👑 Royal Velvet">👑 Velvet</button>
-        <button class="mode-pill-btn" id="mode-nebula" onclick="setPresentationMode('nebula')" title="🌌 Cosmic Nebula">🌌 Nebula</button>
-        <button class="mode-pill-btn" id="mode-zen" onclick="setPresentationMode('zen')" title="🌿 Minimalist Zen">🌿 Zen</button>
-        <button class="mode-pill-btn" id="mode-aquatic" onclick="setPresentationMode('aquatic')" title="🌊 Aquatic Deep">🌊 Aquatic</button>
-        <button class="mode-pill-btn" id="mode-prism" onclick="setPresentationMode('prism')" title="💎 Crystal Prism">💎 Prism</button>
-      </div>
-
-        <div style="display:flex;align-items:center;gap:8px">
-          <!-- ✍️ In-Canvas Free Text Writing Tool -->
-          <button class="toolbar-btn" id="save-active-btn" onclick="saveDoc()" title="Save all text modifications, floating annotations, and dropped media to .ldocx!" style="background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(16,185,129,.2));border-color:#34d399;color:#34d399;font-weight:700">💾 Save .ldocx</button>
-          <button class="toolbar-btn" id="free-text-btn" onclick="toggleFreeTextTool()" title="Click anywhere on canvas, water waves, or particles to write dynamic styled text!" style="background:linear-gradient(135deg,rgba(56,189,248,.18),rgba(167,139,250,.2));border-color:#38bdf8;color:#7dd3fc">
-            ✍️ Add Free Text
-          </button>
-          <span id="slide-meta-info" style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace"></span>
-          <button class="toolbar-btn" style="padding:2px 10px;font-size:11px" onclick="toggleFxWizard()">⚜ FX Wizard</button>
-        </div>
-      </div>
-      <div id="drop-zone">
-        <div class="drop-icon">&#128196;</div>
-        <h2>Open an LDOCX Document</h2>
-        <p>Click "Open .ldocx" or drag &amp; drop a .ldocx file here</p>
-        <div style="margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-          <button class="btn primary" style="padding:12px 24px;border-radius:12px;font-size:14px;cursor:pointer;font-weight:700" onclick="document.getElementById('file-input').click()">📂 Browse .ldocx File</button>
-          <button class="btn" style="background:rgba(167,139,250,.15);color:#c084fc;border:1px solid rgba(167,139,250,.3);padding:12px 20px;border-radius:12px;font-size:14px;cursor:pointer;font-weight:700" onclick="location.href='creator.html'">🎨 Open Visual Creator</button>
-          <button class="btn" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:12px 20px;border-radius:12px;font-size:14px;cursor:pointer" onclick="switchTab('templates')">📑 Template Gallery</button>
-        </div>
-      </div>
-      <div id="loading">
-        <div class="ldoc-logo-loader">
-          <img src="ldoc_logo.png" class="ldoc-loader-glow-img" alt="LDOC Logo">
-          <div class="ldoc-loading-caption">LDOC STUDIO</div>
-          <div class="ldoc-loading-sub" id="ldoc-loading-subtext">Compiling Enchanted Living Presentation&#8230;</div>
-        </div>
-      </div>
-      <div id="page-canvas" style="display:none"></div>
-    </div>
-  </div>
 
   <!-- Pages overlay popup -->
   <div id="pages-overlay">
@@ -4568,15 +4216,13 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
       <input type="file" id="conv-file-input" accept=".3mf,.stl,.obj,.gltf,.glb,.ply,.pdf,.txt,.md,.docx,.html,.htm,.json,.mp3,.wav,.ogg,.mp4,.webm,.png,.jpg,.jpeg" style="display:none" onchange="convHandleFileSelect(event)">
       
       <div class="conv-format-badges">
-        <span class="conv-badge">📝 TXT / Markdown</span>
-        <span class="conv-badge">📘 Word DOCX</span>
-        <span class="conv-badge">🌐 HTML Web</span>
-        <span class="conv-badge">📊 JSON Data</span>
-        <span class="conv-badge">🏎️ 3D (GLB / STL / OBJ)</span>
-        <span class="conv-badge">🎵 MP3 / Audio</span>
-        <span class="conv-badge">🎬 MP4 / Video</span>
-        <span class="conv-badge">📄 PDF</span>
-        <span class="conv-badge">🖼️ PNG / JPG</span>
+        <span class="conv-badge" style="border-color:#34d399;color:#6ee7b7;font-weight:700">✓ Free: Markdown (.md)</span>
+        <span class="conv-badge" style="border-color:#34d399;color:#6ee7b7;font-weight:700">✓ Free: Plain Text (.txt)</span>
+        <span class="conv-badge" style="border-color:#34d399;color:#6ee7b7;font-weight:700">✓ Free: CSV &amp; JSON</span>
+        <span class="conv-badge" style="border-color:rgba(245,158,11,0.5);color:#fef08a;cursor:pointer" onclick="event.stopPropagation();showProFormatModal('pptx','Presentation.pptx')" title="Exclusive to LDOC Studio Pro">⚡ Studio Pro: PowerPoint (.pptx)</span>
+        <span class="conv-badge" style="border-color:rgba(245,158,11,0.5);color:#fef08a;cursor:pointer" onclick="event.stopPropagation();showProFormatModal('pdf','Document.pdf')" title="Exclusive to LDOC Studio Pro">⚡ Studio Pro: PDF (.pdf)</span>
+        <span class="conv-badge" style="border-color:rgba(245,158,11,0.5);color:#fef08a;cursor:pointer" onclick="event.stopPropagation();showProFormatModal('docx','Document.docx')" title="Exclusive to LDOC Studio Pro">⚡ Studio Pro: Word (.docx)</span>
+        <span class="conv-badge" style="border-color:rgba(245,158,11,0.5);color:#fef08a;cursor:pointer" onclick="event.stopPropagation();showProFormatModal('glb','Model3D.glb')" title="Exclusive to LDOC Studio Pro">⚡ Studio Pro: 3D Models</span>
       </div>
     </div>
 
@@ -4729,36 +4375,9 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
 
 
   <!-- Living Document Template Vault Panel -->
-  <div id="templates-panel">
-    <div class="tpl-vault-hero">
-      <h1>Template Vault &amp; Showcase</h1>
-      <p>Professional next-generation Living Document blueprints. Launch ready-made enchanted presentations, editorial magazines, investor decks, or save your custom design as a template.</p>
-    </div>
+  
 
-    <div class="tpl-filter-bar">
-      <button class="tpl-filter-chip active" onclick="filterTemplates('all', this)">All Blueprints</button>
-      <button class="tpl-filter-chip" onclick="filterTemplates('game', this)">🏎️ Game &amp; Product Launch</button>
-      <button class="tpl-filter-chip" onclick="filterTemplates('news', this)">📜 Enchanted Editorial</button>
-      <button class="tpl-filter-chip" onclick="filterTemplates('space', this)">🛰️ Tech &amp; Aerospace</button>
-      <button class="tpl-filter-chip" onclick="filterTemplates('luxury', this)">💎 Luxury &amp; Timepieces</button>
-      <button class="tpl-filter-chip" onclick="filterTemplates('deck', this)">💼 Investor Pitch</button>
-      <button class="tpl-filter-chip" onclick="filterTemplates('stem', this)">⚛️ Science &amp; STEM</button>
-    </div>
-
-    <div class="tpl-vault-grid" id="tpl-vault-grid">
-      <!-- Injected dynamically by renderTemplateVault() -->
-    </div>
-  </div>
-
-  <div id="docs-panel">
-    <div id="docs-toolbar">
-      <h2>Loaded Documents Studio</h2>
-      <button class="toolbar-btn" onclick="refreshDocs()">&#8635; Refresh</button>
-      <button class="toolbar-btn" onclick="document.getElementById('file-input').click()">+ Upload .ldocx</button>
-      <a href="creator.html" class="toolbar-btn primary" style="text-decoration:none">+ Creator</a>
-    </div>
-    <div id="docs-grid"></div>
-  </div>
+  
 
   <div id="editor-panel">
 
@@ -6393,8 +6012,44 @@ if (document.readyState === 'loading') {
   convInitDragDrop();
 }
 
+function showProFormatModal(ext, filename) {
+  const modal = document.getElementById('pro-format-modal');
+  const title = document.getElementById('pro-modal-title');
+  const desc = document.getElementById('pro-modal-desc');
+  if (title) title.textContent = `Premium Format: ${ext ? ext.toUpperCase() : 'Document'}`;
+  if (desc) desc.innerHTML = `Converting <strong>${filename || ext.toUpperCase()}</strong> with multi-slide structure, tables, and asset extraction is an exclusive capability of <strong>LDOC Studio Pro</strong>.<br><br>The Free Editor includes full support for <strong>Markdown (.md)</strong>, <strong>Plain Text (.txt)</strong>, <strong>CSV & JSON</strong>.`;
+  if (modal) modal.style.display = 'flex';
+  const inp = document.getElementById('conv-file-input');
+  if (inp) inp.value = '';
+}
+
+function closeProFormatModal() {
+  const modal = document.getElementById('pro-format-modal');
+  if (modal) modal.style.display = 'none';
+  const dropZone = document.getElementById('conv-drop-zone');
+  const procState = document.getElementById('conv-processing-state');
+  if (dropZone) dropZone.style.display = 'flex';
+  if (procState) procState.style.display = 'none';
+}
+
+function openStudioProPurchase() {
+  closeProFormatModal();
+  if (typeof showCloudPricingModal === 'function') {
+    showCloudPricingModal();
+  } else {
+    showToast('LDOC Studio Pro is available with full universal batch conversion, 100+ templates & shaders!', 'ok', 4000);
+  }
+}
+
 async function convProcessFile(file) {
   if (!file) return;
+
+  const ext = file.name.split('.').pop().toLowerCase();
+  const premiumFormats = ['pptx', 'ppt', 'pdf', 'docx', 'doc', 'html', 'htm', 'glb', 'gltf', 'stl', 'obj', '3mf', 'ply', 'mp3', 'wav', 'ogg', 'mp4', 'webm'];
+  if (premiumFormats.includes(ext)) {
+    showProFormatModal(ext, file.name);
+    return;
+  }
 
   const dropZone = document.getElementById('conv-drop-zone');
   const procState = document.getElementById('conv-processing-state');
@@ -7571,15 +7226,15 @@ function renderConvResult(spec, blob, file) {
   if (resultCard) resultCard.style.display = 'flex';
 
   const ext = (file.name || '').split('.').pop().toUpperCase();
-  const _cdt = document.getElementById('conv-doc-title'); if (_cdt) _cdt.textContent = spec.title || file.name;
-  const _cds = document.getElementById('conv-doc-subtitle'); if (_cds) _cds.textContent = `Converted from ${file.name} • ${ext} format preserved`;
-  const _csp = document.getElementById('conv-stat-pages'); if (_csp) _csp.textContent = spec.pages.length;
+  document.getElementById('conv-doc-title').textContent = spec.title || file.name;
+  document.getElementById('conv-doc-subtitle').textContent = `Converted from ${file.name} • ${ext} format preserved`;
+  document.getElementById('conv-stat-pages').textContent = spec.pages.length;
   
   let totalBlocks = 0;
   spec.pages.forEach(p => totalBlocks += (p.blocks || []).length);
-  const _csb = document.getElementById('conv-stat-blocks'); if (_csb) _csb.textContent = `${totalBlocks} Blocks`;
-  const _css = document.getElementById('conv-stat-size'); if (_css) _css.textContent = `${(blob.size / 1024).toFixed(1)} KB`;
-  const _csf = document.getElementById('conv-stat-format'); if (_csf) _csf.textContent = ext;
+  document.getElementById('conv-stat-blocks').textContent = `${totalBlocks} Blocks`;
+  document.getElementById('conv-stat-size').textContent = `${(blob.size / 1024).toFixed(1)} KB`;
+  document.getElementById('conv-stat-format').textContent = ext;
 
   const outline = document.getElementById('conv-outline-preview');
   if (outline) {
@@ -10098,50 +9753,53 @@ init() {
 // Initialize 3D viewer when needed
 let viewer3D = null;
 
-document.getElementById('page-canvas').addEventListener('_createViewer', (e) => {
-  const container = e.detail.container;
-  viewer3D = new ThreeJsViewer(container.id);
-});
+const pageCanvasEl = document.getElementById('page-canvas');
+if (pageCanvasEl) {
+  pageCanvasEl.addEventListener('_createViewer', (e) => {
+    const container = e.detail.container;
+    viewer3D = new ThreeJsViewer(container.id);
+  });
 
-document.getElementById('page-canvas').addEventListener('_loadModel', (e) => {
-  if (!viewer3D) return;
-  const { meshData, format, stats } = e.detail;
-  viewer3D.loadMeshFromJSON(meshData);
-  viewer3D.updateInfo({ format, ...stats });
-});
+  pageCanvasEl.addEventListener('_loadModel', (e) => {
+    if (!viewer3D) return;
+    const { meshData, format, stats } = e.detail;
+    viewer3D.loadMeshFromJSON(meshData);
+    viewer3D.updateInfo({ format, ...stats });
+  });
 
-document.getElementById('page-canvas').addEventListener('_loadSVG', (e) => {
-  if (!viewer3D) return;
-  const { svgContent } = e.detail;
-  viewer3D.loadSVG(svgContent);
-});
+  pageCanvasEl.addEventListener('_loadSVG', (e) => {
+    if (!viewer3D) return;
+    const { svgContent } = e.detail;
+    viewer3D.loadSVG(svgContent);
+  });
 
-document.getElementById('page-canvas').addEventListener('_addModelPanel', (e) => {
-  const { format, panelId } = e.detail;
-  const panel = document.createElement('div');
-  panel.id = panelId;
-  panel.className = 'model-panel';
-  
-  if (format === 'svg') {
-    const svgPanel = document.createElement('div');
-    svgPanel.id = 'svg-viewer-panel';
-    svgPanel.className = 'model-panel active';
-    panel.appendChild(svgPanel);
-  } else {
-    const canvas = document.createElement('div');
-    canvas.id = 'viewer-3d-canvas';
-    canvas.style.cssText = 'width:100%;height:100%;position:relative';
+  pageCanvasEl.addEventListener('_addModelPanel', (e) => {
+    const { format, panelId } = e.detail;
+    const panel = document.createElement('div');
+    panel.id = panelId;
+    panel.className = 'model-panel';
     
-    const info = document.createElement('div');
-    info.id = 'viewer-3d-info';
-    info.textContent = 'Loading...';
+    if (format === 'svg') {
+      const svgPanel = document.createElement('div');
+      svgPanel.id = 'svg-viewer-panel';
+      svgPanel.className = 'model-panel active';
+      panel.appendChild(svgPanel);
+    } else {
+      const canvas = document.createElement('div');
+      canvas.id = 'viewer-3d-canvas';
+      canvas.style.cssText = 'width:100%;height:100%;position:relative';
+      
+      const info = document.createElement('div');
+      info.id = 'viewer-3d-info';
+      info.textContent = 'Loading...';
+      
+      panel.appendChild(canvas);
+      panel.appendChild(info);
+    }
     
-    panel.appendChild(canvas);
-    panel.appendChild(info);
-  }
-  
-  document.getElementById('page-canvas').appendChild(panel);
-});
+    pageCanvasEl.appendChild(panel);
+  });
+}
 
 // File upload and drag-and-drop wiring
 const fileInputEl = document.getElementById('file-input');
@@ -10389,7 +10047,7 @@ async function renderDirectPresentation(manifest, extractedPages) {
     GlobalAudio.setTrack(sSrc, sTitle);
   }
 
-  const _ptb = document.getElementById('pages-toggle-btn'); if (_ptb) _ptb.style.display = '';
+  document.getElementById('pages-toggle-btn').style.display = '';
   document.getElementById('save-btn').style.display = '';
 
   // Update AI Assistant header
@@ -10599,7 +10257,7 @@ async function openDoc(id){
     const sTitle = typeof st === 'string' ? 'Vice City Radio — The Pointer Sisters' : (st.title || 'Vice City Radio — The Pointer Sisters');
     GlobalAudio.setTrack(sSrc, sTitle);
   }
-  const _ptb2 = document.getElementById('pages-toggle-btn'); if (_ptb2) _ptb2.style.display = '';
+  document.getElementById('pages-toggle-btn').style.display='';
   document.getElementById('save-btn').style.display='';
 
   // Update AI Assistant for loaded document
@@ -13671,14 +13329,24 @@ function initBalanceTunerWidget(card, cfg) {
 }
 
 function showLoading(text){
-  document.getElementById('drop-zone').style.display='none';
+  const dz = document.getElementById('drop-zone'); if (dz) dz.style.display='none';
   const sub = document.getElementById('ldoc-loading-subtext');
-  if(sub) sub.textContent = text || 'Compiling Enchanted Living Presentation…';
-  document.getElementById('loading').style.display='flex';
-  document.getElementById('page-canvas').style.display='none';
+  if(sub) sub.textContent = text || 'Compiling Living Document…';
+  const ld = document.getElementById('loading'); if (ld) ld.style.display='flex';
+  const pc = document.getElementById('page-canvas'); if (pc) pc.style.display='none';
 }
-function showViewer(){document.getElementById('drop-zone').style.display='none';document.getElementById('loading').style.display='none';document.getElementById('page-canvas').style.display='block';}
-function showDropZone(){const _dz=document.getElementById('drop-zone');if(_dz)_dz.style.display='flex';const _ld=document.getElementById('loading');if(_ld)_ld.style.display='none';const _pc=document.getElementById('page-canvas');if(_pc)_pc.style.display='none';const _ptb=document.getElementById('pages-toggle-btn');if(_ptb)_ptb.style.display='none';const _sb=document.getElementById('save-btn');if(_sb)_sb.style.display='none';}
+function showViewer(){
+  const dz = document.getElementById('drop-zone'); if (dz) dz.style.display='none';
+  const ld = document.getElementById('loading'); if (ld) ld.style.display='none';
+  const pc = document.getElementById('page-canvas'); if (pc) pc.style.display='block';
+}
+function showDropZone(){
+  const dz = document.getElementById('drop-zone'); if (dz) dz.style.display='flex';
+  const ld = document.getElementById('loading'); if (ld) ld.style.display='none';
+  const pc = document.getElementById('page-canvas'); if (pc) pc.style.display='none';
+  const ptb = document.getElementById('pages-toggle-btn'); if (ptb) ptb.style.display='none';
+  const sb = document.getElementById('save-btn'); if (sb) sb.style.display='none';
+}
 
 async function saveDoc(){
   const convPanel = document.getElementById('converter-panel');
@@ -13764,8 +13432,13 @@ async function saveDoc(){
     if (success) return;
   }
 
-  // 2. Default: show clean drop-zone without auto-loading any document
-  showDropZone();
+  // 2. Editor App Default: immediately activate editor workspace and ready canvas
+  if (typeof switchTab === 'function') switchTab('editor');
+  if (typeof edPages !== 'undefined' && edPages.length === 0 && typeof edAddPage === 'function') {
+    edAddPage();
+  }
+  if (typeof edRenderPageList === 'function') edRenderPageList();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
 })();
 
 async function refreshDocs(){
@@ -14203,7 +13876,7 @@ async function useTemplate(tplId, mode) {
 
   if (mode === 'editor') {
     switchTab('editor');
-    const _edt = document.getElementById('ed-title'); if (_edt) _edt.value = spec.title;
+    document.getElementById('ed-title').value = spec.title;
     edPages = spec.pages.map(p => ({
       id: edPId(),
       title: p.title,
@@ -14442,9 +14115,9 @@ function edRenderPageList() {
 }
 
 function edShowEmpty() {
-  const _emp = document.getElementById('ed-empty'); if (_emp) _emp.style.display = 'flex';
-  const _bp = document.getElementById('ed-blocks-panel'); if (_bp) _bp.style.display = 'none';
-  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  document.getElementById('ed-empty').style.display = 'flex';
+  document.getElementById('ed-blocks-panel').style.display = 'none';
+  edUpdateLivePreview();
 }
 
 function edAddBlock(type) {
@@ -14456,7 +14129,14 @@ function edAddBlock(type) {
   else if (type === 'paragraph' || type === 'quote') { b.text = ''; b.value = ''; }
   else if (type === 'list') { b.items = ['']; }
   else if (type === 'code') { b.language = 'javascript'; b.code = ''; }
-  else if (type === 'table') { b.headers = ['Item', 'Description']; b.rows = [['', '']]; }
+  else if (type === 'table') {
+    b.headers = ['Specification / Feature', 'Standard Package', 'Enterprise Pro'];
+    b.rows = [
+      ['Hologram 3D Engine', '60 FPS WebGL Rendering', '120 FPS Raytracing + Spatial'],
+      ['Sandbox Security', 'In-Memory RAM Sandbox', 'Airgapped HSM Verification'],
+      ['File Container', 'Zero-Outsource Standalone', 'Signed Cryptographic .ldocx']
+    ];
+  }
   else if (type === 'ai') { b.prompt = ''; }
   else if (type === 'form') { b.title = ''; b.fields = [{ label: 'Name', field_type: 'input_text', placeholder: 'Enter your name' }]; b.button_text = 'Submit'; b.destination = 'webhook'; }
   else if (type === 'web_image') { b.src = ''; b.alt = ''; }
@@ -14527,6 +14207,61 @@ function edMoveBlock(id, dir) {
   const i = p.blocks.findIndex(b => b.id === id), j = i + dir;
   if (j < 0 || j >= p.blocks.length) return;
   [p.blocks[i], p.blocks[j]] = [p.blocks[j], p.blocks[i]];
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableAddRow(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b) return;
+  b.rows = b.rows || [];
+  const colCount = (b.headers && b.headers.length) ? b.headers.length : (b.rows[0] ? b.rows[0].length : 3);
+  const newRow = Array(colCount).fill('').map((_, i) => `Data ${b.rows.length + 1}.${i + 1}`);
+  b.rows.push(newRow);
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableDelRow(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b || !b.rows || b.rows.length <= 1) return;
+  b.rows.pop();
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableAddCol(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b) return;
+  b.headers = b.headers || [];
+  const newColIdx = b.headers.length + 1;
+  b.headers.push(`Column ${newColIdx}`);
+  (b.rows || []).forEach(r => {
+    r.push(`Val ${newColIdx}`);
+  });
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableDelCol(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b || !b.headers || b.headers.length <= 1) return;
+  b.headers.pop();
+  (b.rows || []).forEach(r => {
+    if (r.length > 0) r.pop();
+  });
   edPushUndo();
   edRenderBlocks();
   edUpdateLivePreview();
@@ -14631,9 +14366,9 @@ async function edLoadFromDocId(id) {
   const doc = await (await fetch(`${API}/documents/${id}`)).json();
   const pageList = await (await fetch(`${API}/documents/${id}/pages`)).json();
 
-  const _et = document.getElementById('ed-title'); if (_et) _et.value = doc.manifest?.title || 'Imported Document';
-  const _ea = document.getElementById('ed-author'); if (_ea) _ea.value = doc.manifest?.author || 'Unknown';
-  const _el = document.getElementById('ed-lang'); if (_el) _el.value = doc.manifest?.lang || 'en';
+  document.getElementById('ed-title').value = doc.manifest?.title || 'Imported Document';
+  document.getElementById('ed-author').value = doc.manifest?.author || 'Unknown';
+  document.getElementById('ed-lang').value = doc.manifest?.lang || 'en';
 
   edPages = [];
   for (const p of pageList) {
@@ -14673,9 +14408,10 @@ async function edLoadFromDocId(id) {
 
 function edRenderBlocks() {
   const page = edPages.find(p => p.id === edCurrentPage);
-  const _ee = document.getElementById('ed-empty'); if (_ee) _ee.style.display = 'none';
+  document.getElementById('ed-empty').style.display = 'none';
   const panel = document.getElementById('ed-blocks-panel');
-  if (panel) { panel.style.display = 'flex'; panel.innerHTML = ''; }
+  panel.style.display = 'flex';
+  panel.innerHTML = '';
   if (!page) { edShowEmpty(); return; }
 
   const ptRow = document.createElement('div');
@@ -14826,8 +14562,33 @@ function edRenderBlocks() {
 
       mk('textarea', 'Enter custom code or script...', block.code !== undefined ? block.code : '', v => { block.code = v; edUpdateLivePreview(); }, { rows: 5 });
     } else if (block.type === 'table') {
-      const hi = document.createElement('input'); hi.placeholder = 'Col 1, Col 2'; hi.value = (block.headers || []).join(', '); hi.style.marginTop = '4px'; hi.oninput = () => { block.headers = hi.value.split(',').map(s => s.trim()); }; div.appendChild(hi);
-      mk('textarea', 'Row values (comma separated e.g. Item 1, Data 1)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => { block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim())); }, { rows: 4 });
+      const tbCtrlRow = document.createElement('div');
+      tbCtrlRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:6px;margin:6px 0 4px 0;flex-wrap:wrap';
+      tbCtrlRow.innerHTML = `
+        <div style="font-size:10.5px;font-weight:700;color:var(--gold)">📊 Table Structure</div>
+        <div style="display:flex;gap:4px">
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableAddRow('${block.id}')" title="Add Row">➕ Row</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableDelRow('${block.id}')" title="Delete Last Row">➖ Row</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableAddCol('${block.id}')" title="Add Column">➕ Col</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableDelCol('${block.id}')" title="Delete Last Column">➖ Col</button>
+        </div>
+      `;
+      div.appendChild(tbCtrlRow);
+
+      const hi = document.createElement('input');
+      hi.placeholder = 'Column Headers (comma separated e.g. Spec, Tier 1, Tier 2)';
+      hi.value = (block.headers || []).join(', ');
+      hi.style.marginTop = '2px';
+      hi.oninput = () => {
+        block.headers = hi.value.split(',').map(s => s.trim());
+        edUpdateLivePreview();
+      };
+      div.appendChild(hi);
+
+      mk('textarea', 'Row values (comma separated, 1 line per row)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => {
+        block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim()));
+        edUpdateLivePreview();
+      }, { rows: 4 });
     } else if (block.type === 'ai') {
       const cfg = getAiConfig();
       const aiHdr = document.createElement('div');
@@ -17387,6 +17148,31 @@ window.initFormatPopover();
 window.addEventListener('keydown', (e) => {
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const cmd = isMac ? e.metaKey : e.ctrlKey;
+
+  // Ctrl+F / Cmd+F: Find in Document HUD
+  if (cmd && (e.key === 'f' || e.key === 'F')) {
+    e.preventDefault();
+    toggleFindReplaceHud();
+    return;
+  }
+
+  // Ctrl+P / Cmd+P: Print to PDF Fallback
+  if (cmd && (e.key === 'p' || e.key === 'P')) {
+    e.preventDefault();
+    window.print();
+    return;
+  }
+
+  // Escape: Close Find HUD
+  if (e.key === 'Escape') {
+    const hud = document.getElementById('find-replace-hud');
+    if (hud && hud.classList.contains('open')) {
+      e.preventDefault();
+      toggleFindReplaceHud(false);
+      return;
+    }
+  }
+
   if (cmd && e.shiftKey && (e.key === 'S' || e.key === 's')) {
     e.preventDefault();
     if (typeof downloadCurrentDocument === 'function') downloadCurrentDocument();
@@ -18233,417 +18019,6 @@ function setMobileView(tab) {
   content: "✓ ";
   color: #34d399;
   font-weight: bold;
-}
-
-/* ── Executive Ultra-Aligned Print & PDF Fallback Stylesheet ── */
-@media print {
-  @page {
-    size: letter portrait;
-    margin: 0.5in;
-  }
-
-  /* 1. Global Reset for Consistent Geometry & Zero-Artifact Ink Rendering */
-  *, *::before, *::after {
-    box-sizing: border-box !important;
-    text-shadow: none !important;
-    box-shadow: none !important;
-    filter: none !important;
-    animation: none !important;
-    transition: none !important;
-  }
-
-  html, body {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 11pt !important;
-    line-height: 1.6 !important;
-    letter-spacing: normal !important;
-    word-spacing: normal !important;
-    overflow: visible !important;
-    height: auto !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  /* 2. Suppress All Desktop Application UI Chrome, Menus, Toolbars, HUDs, Modals */
-  #desktop-menubar,
-  #toolbar,
-  #ldoc-status-bar,
-  #pages-overlay,
-  #find-replace-hud,
-  #command-palette-modal,
-  #ast-inspector-modal,
-  #ldoc-context-menu,
-  #format-popover,
-  #ai-helper-drawer,
-  #lead-modal,
-  #legal-security-modal,
-  .fx-dropdown-wrap,
-  .dmenu-dropdown,
-  .repair-banner,
-  .fullscreen-btn,
-  .pres-nav-btn,
-  .page-paper-layer,
-  .page-fx-canvas,
-  canvas.page-fx-canvas,
-  .audio-player-bar,
-  #toast-container,
-  #drop-zone,
-  #loading,
-  .ed-sidebar,
-  .ed-toolbar,
-  #ed-add-panel,
-  #ed-inspector,
-  #ed-split-left,
-  #ed-split-right,
-  .ed-block-up,
-  .ed-block-dn,
-  .ed-block-dup,
-  .ed-block-del,
-  .ed-add-btn,
-  .close-preview,
-  .ed-preview-toggle,
-  #ed-preview-badge,
-  .preview-header,
-  .pres-3d-toolbar,
-  .pres-3d-badge,
-  .pres-3d-info,
-  .pres-bg-btn,
-  .pres-audio-card,
-  .video-card .video-label,
-  button,
-  .find-btn {
-    display: none !important;
-  }
-
-  /* 3. Containers: Flatten all flex/overflow constraints for seamless document flow */
-  #main,
-  #viewer-panel,
-  #editor-panel,
-  #pres-stage,
-  .pres-canvas-wrap,
-  #page-canvas,
-  #ed-preview-pane,
-  #ed-preview-body,
-  .preview-body {
-    display: block !important;
-    background: #ffffff !important;
-    color: #0f172a !important;
-    overflow: visible !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    position: static !important;
-    transform: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;
-  }
-
-  /* 4. Page Box: Each slide/page renders as a pristine, independent printed page */
-  .pres-page, .pres-slide {
-    display: block !important;
-    background: #ffffff !important;
-    color: #0f172a !important;
-    border: none !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    page-break-after: always !important;
-    break-after: page !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    margin: 0 0 20pt 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: auto !important;
-    height: auto !important;
-    position: relative !important;
-    transform: none !important;
-    overflow: visible !important;
-  }
-
-  .pres-page:last-child, .pres-slide:last-child {
-    page-break-after: auto !important;
-    break-after: auto !important;
-    margin-bottom: 0 !important;
-  }
-
-  .pres-page::before, .pres-page::after {
-    display: none !important;
-  }
-
-  /* 5. Zero-Offset Content Layer & Editorial Sections (Perfect Left-Alignment) */
-  .page-content-layer,
-  .pres-content-layer,
-  .pres-section,
-  .pres-hero-content {
-    display: block !important;
-    position: static !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;
-    background: transparent !important;
-    color: #0f172a !important;
-  }
-
-  /* 6. Page Header (Flush with Left & Right Content Margins) */
-  .pres-page-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100% !important;
-    padding: 0 0 8pt 0 !important;
-    margin: 0 0 16pt 0 !important;
-    border-bottom: 1.5pt solid #cbd5e1 !important;
-    background: transparent !important;
-    color: #64748b !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 8.5pt !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5pt !important;
-  }
-
-  /* 7. Precision Typography: Headings, Sentences, Paragraphs & Letters */
-  h1, h2, h3, h4, h5, h6,
-  .pres-section h1, .pres-section h2,
-  .pres-hero h1, .pres-hero h2 {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    color: #0f172a !important;
-    -webkit-text-fill-color: #0f172a !important;
-    -webkit-background-clip: border-box !important;
-    background: none !important;
-    text-shadow: none !important;
-    text-align: left !important;
-    letter-spacing: -0.01em !important;
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  h1 {
-    font-size: 20pt !important;
-    line-height: 1.25 !important;
-    font-weight: 800 !important;
-    margin: 0 0 10pt 0 !important;
-    padding: 0 !important;
-  }
-
-  h2 {
-    font-size: 15pt !important;
-    line-height: 1.3 !important;
-    font-weight: 700 !important;
-    margin: 14pt 0 8pt 0 !important;
-    padding: 0 !important;
-    border: none !important;
-  }
-
-  h3 {
-    font-size: 12.5pt !important;
-    line-height: 1.35 !important;
-    font-weight: 600 !important;
-    margin: 12pt 0 6pt 0 !important;
-    padding: 0 !important;
-  }
-
-  h4, h5, h6 {
-    font-size: 11pt !important;
-    line-height: 1.4 !important;
-    font-weight: 600 !important;
-    margin: 10pt 0 4pt 0 !important;
-    padding: 0 !important;
-  }
-
-  /* Sentences and Paragraphs: Natural, Intended Flow, Consistent Alignment */
-  p, .docx-in-place-editable, .ldoc-rich-text, div.ldoc-in-place-editable {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 11pt !important;
-    line-height: 1.6 !important;
-    letter-spacing: normal !important;
-    word-spacing: normal !important;
-    text-align: left !important;
-    text-indent: 0 !important;
-    color: #1e293b !important;
-    -webkit-text-fill-color: #1e293b !important;
-    margin: 0 0 10pt 0 !important;
-    padding: 0 !important;
-    word-break: normal !important;
-    overflow-wrap: break-word !important;
-    hyphens: none !important;
-    white-space: normal !important;
-    page-break-inside: auto !important;
-  }
-
-  /* Lists: Aligned Bullet Points & Numbering */
-  ul, ol {
-    margin: 0 0 12pt 0 !important;
-    padding-left: 20pt !important;
-    text-align: left !important;
-  }
-
-  li {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 11pt !important;
-    line-height: 1.6 !important;
-    color: #1e293b !important;
-    -webkit-text-fill-color: #1e293b !important;
-    margin-bottom: 4pt !important;
-    letter-spacing: normal !important;
-    text-align: left !important;
-    word-break: normal !important;
-    overflow-wrap: break-word !important;
-  }
-
-  /* Blockquotes */
-  blockquote {
-    border-left: 3.5pt solid #94a3b8 !important;
-    margin: 12pt 0 !important;
-    padding: 6pt 14pt !important;
-    background: #f8fafc !important;
-    color: #334155 !important;
-    -webkit-text-fill-color: #334155 !important;
-    font-style: italic !important;
-    font-size: 10.5pt !important;
-    line-height: 1.6 !important;
-    text-align: left !important;
-    letter-spacing: normal !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  /* 8. Crisp Gilded & Pro Tables (Flush Alignment, Full Width, Clean Borders) */
-  .pres-table, .table-pro, table {
-    width: 100% !important;
-    max-width: 100% !important;
-    table-layout: auto !important;
-    border-collapse: collapse !important;
-    border: 1pt solid #cbd5e1 !important;
-    margin: 14pt 0 !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    box-sizing: border-box !important;
-    background: #ffffff !important;
-  }
-
-  .table-pro-wrap {
-    width: 100% !important;
-    margin: 14pt 0 !important;
-    overflow: visible !important;
-  }
-
-  .pres-table th, .table-pro th, th {
-    background: #f1f5f9 !important;
-    color: #0f172a !important;
-    -webkit-text-fill-color: #0f172a !important;
-    border: 1pt solid #cbd5e1 !important;
-    padding: 7pt 10pt !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 9.5pt !important;
-    font-weight: 700 !important;
-    text-align: left !important;
-    letter-spacing: normal !important;
-    line-height: 1.4 !important;
-  }
-
-  .pres-table td, .table-pro td, td {
-    background: #ffffff !important;
-    color: #1e293b !important;
-    -webkit-text-fill-color: #1e293b !important;
-    border: 1pt solid #e2e8f0 !important;
-    padding: 7pt 10pt !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    font-size: 9.5pt !important;
-    line-height: 1.45 !important;
-    text-align: left !important;
-    letter-spacing: normal !important;
-    word-break: normal !important;
-    overflow-wrap: break-word !important;
-  }
-
-  .pres-table tr:nth-child(even) td, .table-pro tr:nth-child(even) td {
-    background: #f8fafc !important;
-  }
-
-  /* 9. Feature Grids, Columns & Cards Alignment */
-  .feature-grid, .grid, .pres-grid, .pricing-cards-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12pt !important;
-    margin: 12pt 0 !important;
-    width: 100% !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  .feature-card, .card, .pricing-card, .preorder-card {
-    border: 1pt solid #cbd5e1 !important;
-    background: #ffffff !important;
-    color: #0f172a !important;
-    border-radius: 4pt !important;
-    padding: 10pt 12pt !important;
-    box-shadow: none !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    text-align: left !important;
-  }
-
-  /* 10. Code Cards & Blocks */
-  .interactive-code-card {
-    background: #f8fafc !important;
-    border: 1pt solid #cbd5e1 !important;
-    border-radius: 4pt !important;
-    margin: 12pt 0 !important;
-    box-shadow: none !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    overflow: visible !important;
-  }
-
-  .interactive-code-card * {
-    background: transparent !important;
-    box-shadow: none !important;
-  }
-
-  .code-card-body, .code-pane {
-    padding: 8pt 10pt !important;
-    overflow: visible !important;
-  }
-
-  pre, code {
-    font-family: "JetBrains Mono", Consolas, "Courier New", monospace !important;
-    font-size: 9pt !important;
-    line-height: 1.45 !important;
-    color: #0f172a !important;
-    -webkit-text-fill-color: #0f172a !important;
-    white-space: pre-wrap !important;
-    word-break: break-all !important;
-    background: #f8fafc !important;
-    border: none !important;
-  }
-
-  /* 11. Links & Search Marks Cleanup */
-  a {
-    color: #0284c7 !important;
-    text-decoration: underline !important;
-  }
-
-  mark.ldoc-search-match {
-    background: transparent !important;
-    color: inherit !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-  }
 }
 </style>
 
@@ -19541,10 +18916,47 @@ console.log('%c🛡️ LDOCX Living Document Studio v2.5.0\\n%cCopyright (c) 202
 <script>
 // Auto-activate Editor tab on start
 window.addEventListener('DOMContentLoaded', () => {
+  if (typeof switchTab === 'function') switchTab('editor');
+  if (typeof edPages !== 'undefined' && edPages.length === 0 && typeof edAddPage === 'function') {
+    edAddPage();
+  }
+  if (typeof edRenderPageList === 'function') edRenderPageList();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
   setTimeout(() => {
     if (typeof switchTab === 'function') switchTab('editor');
-  }, 100);
+    if (typeof edRenderPageList === 'function') edRenderPageList();
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  }, 50);
 });
 </script>
+
+<!-- ⚡ LDOC Studio Pro Upgrade Modal for Premium Formats -->
+<div id="pro-format-modal" style="display:none;position:fixed;inset:0;background:rgba(5,5,10,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:999999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:linear-gradient(145deg,#12131f,#0b0c16);border:1.5px solid var(--gold);border-radius:16px;max-width:520px;width:100%;padding:28px;box-shadow:0 25px 60px rgba(0,0,0,0.9), 0 0 35px rgba(245,158,11,0.2);position:relative;animation:dmenuFadeIn 0.2s ease">
+    <button onclick="closeProFormatModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer;line-height:1">&#10005;</button>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:20px;padding:4px 12px;color:var(--gold);font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">
+      ⚡ LDOC Studio Pro Feature
+    </div>
+    <h3 id="pro-modal-title" style="font-family:'Cinzel',serif;font-size:20px;color:#fef08a;margin:0 0 10px 0;line-height:1.3">Premium Format Detected</h3>
+    <p id="pro-modal-desc" style="font-size:13px;color:#cbd5e1;line-height:1.6;margin:0 0 18px 0">
+      Converting multi-slide corporate decks, PDF documents, and 3D models with 100% layout fidelity is an exclusive feature of <strong>LDOC Studio Pro</strong>.
+    </p>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#e2e8f0"><span style="color:#34d399;font-weight:bold">✓</span> Multi-slide corporate extraction with original typography &amp; layout</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#e2e8f0"><span style="color:#34d399;font-weight:bold">✓</span> Embedded media, tables, reactive charts &amp; 3D spatial integration</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#e2e8f0"><span style="color:#34d399;font-weight:bold">✓</span> Access to 100+ Template Blueprints &amp; Living FX Shaders</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#e2e8f0"><span style="color:#34d399;font-weight:bold">✓</span> Universal batch conversion engine &amp; local document vault</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button onclick="openStudioProPurchase()" style="width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 4px 15px rgba(245,158,11,0.4);transition:transform 0.15s">
+        ⚡ Unlock Full Converter in LDOC Studio Pro ($49)
+      </button>
+      <button onclick="closeProFormatModal()" style="width:100%;padding:10px;border:1px solid rgba(255,255,255,0.12);border-radius:10px;background:transparent;color:#94a3b8;font-size:12px;cursor:pointer">
+        Continue Free with Markdown (.md) or Text (.txt)
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
