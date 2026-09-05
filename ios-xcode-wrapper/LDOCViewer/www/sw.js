@@ -1,7 +1,7 @@
-// LDOC Free Viewer — Offline iOS Service Worker
+// LDOC Free Living Document Suite — 100% Offline Airplane Mode Service Worker
 // Copyright (c) 2026 J-AI-ENTERPRISES. All Rights Reserved.
 
-const CACHE_NAME = 'ldoc-viewer-v2.5.0';
+const CACHE_NAME = 'ldoc-suite-offline-v2.6.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -14,16 +14,25 @@ const ASSETS_TO_CACHE = [
   './ldoc-editor-core.js',
   './ldoc-shared-modals.js',
   './vendor/three.min.js',
-  './vendor/orbit-controls.js',
+  './vendor/GLTFLoader.js',
+  './vendor/OBJLoader.js',
+  './vendor/STLLoader.js',
+  './vendor/pdf.min.js',
+  './vendor/pdf.worker.min.js',
+  './vendor/react.production.min.js',
+  './vendor/react-dom.production.min.js',
+  './vendor/babel.min.js',
+  './vendor/chart.min.js',
+  './vendor/tailwind.min.js',
   './manifest.webmanifest'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS_TO_CACHE).catch(err => {
-        console.warn('[ServiceWorker] Some assets skipped caching:', err);
-      });
+      return Promise.allSettled(
+        ASSETS_TO_CACHE.map(url => cache.add(url).catch(e => console.warn('[SW] Cache skip:', url)))
+      );
     }).then(() => self.skipWaiting())
   );
 });
