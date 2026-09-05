@@ -3598,6 +3598,181 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 .price-period { font-size: 13px; color: #64748b; font-weight: 600; }
 .price-desc { font-size: 12.5px; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
 .price-features { list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #cbd5e1; }
+
+/* ── In-Document Search Highlighting Styles (Ctrl+F) ── */
+mark.ldoc-search-match {
+  background: #f59e0b !important;
+  color: #000000 !important;
+  border-radius: 3px;
+  padding: 1px 3px;
+  font-weight: 700;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.7);
+  transition: all 0.15s ease;
+}
+mark.ldoc-search-match.active {
+  background: #38bdf8 !important;
+  color: #000000 !important;
+  outline: 2.5px solid #ffffff !important;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.95) !important;
+  transform: scale(1.08);
+  display: inline-block;
+}
+
+/* ── One-Click Print to PDF Fallback Stylesheet ── */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 0.5in;
+  }
+
+  /* Suppress all desktop application chrome, menus, HUDs, overlays, audio player */
+  #desktop-menubar,
+  #toolbar,
+  #ldoc-status-bar,
+  #pages-overlay,
+  #find-replace-hud,
+  #command-palette-modal,
+  #ast-inspector-modal,
+  #ldoc-context-menu,
+  #format-popover,
+  #ai-helper-drawer,
+  #lead-modal,
+  #legal-security-modal,
+  .fx-dropdown-wrap,
+  .dmenu-dropdown,
+  .repair-banner,
+  .fullscreen-btn,
+  .pres-nav-btn,
+  .page-paper-layer,
+  .page-fx-canvas,
+  canvas.page-fx-canvas,
+  .audio-player-bar,
+  #toast-container,
+  .ed-sidebar,
+  .ed-toolbar,
+  #ed-add-panel,
+  #ed-inspector,
+  #ed-split-left,
+  #ed-split-right,
+  .ed-block-up,
+  .ed-block-dn,
+  .ed-block-dup,
+  .ed-block-del,
+  .ed-add-btn {
+    display: none !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    font-size: 11pt !important;
+  }
+
+  #main, #viewer-panel, #pres-stage, .pres-canvas-wrap, #page-canvas, #ed-preview-pane, #ed-preview-body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    position: static !important;
+    transform: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Render each slide as a standalone, pristine printed page */
+  .pres-page, .pres-slide {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin: 0 0 24pt 0 !important;
+    padding: 24pt !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    transform: none !important;
+  }
+
+  .pres-page:last-child, .pres-slide:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .page-content-layer, .pres-content-layer {
+    position: static !important;
+    color: #0f172a !important;
+  }
+
+  /* High contrast print typography */
+  h1, h2, h3, h4, h5, h6, .pres-page-header {
+    color: #0f172a !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  p, li, td, th, div, span {
+    color: #1e293b !important;
+  }
+
+  /* Crisp table formatting for standard PDF / print */
+  .pres-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    margin: 12pt 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .pres-table th {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 8pt 12pt !important;
+    font-weight: 700 !important;
+  }
+
+  .pres-table td {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 8pt 12pt !important;
+  }
+
+  .pres-table tr:nth-child(even) td {
+    background: #f8fafc !important;
+  }
+
+  /* Code block formatting */
+  .interactive-code-card, pre, code {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  pre code {
+    color: #0f172a !important;
+  }
+
+  a {
+    color: #0284c7 !important;
+    text-decoration: underline !important;
+  }
+}
 </style>
 
 <script src="jszip.min.js"></script>
@@ -3646,6 +3821,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
       <div class="dmenu-btn">File ▾</div>
       <div class="dmenu-dropdown">
         <div class="dmenu-entry" onclick="document.getElementById('file-input').click()"><span>📂 Open .ldocx File...</span><span class="hotkey">Ctrl+O</span></div>
+        <div class="dmenu-entry" onclick="window.print()"><span>🖨️ Print / Export PDF...</span><span class="hotkey">Ctrl+P</span></div>
         <div class="dmenu-entry" onclick="location.reload()"><span>🔄 Reload Document</span><span class="hotkey">Ctrl+R</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="window.close()"><span>✕ Exit Reader</span><span class="hotkey">Alt+F4</span></div>
@@ -3661,9 +3837,11 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="dmenu-entry" onclick="setPresentationMode('deck')"><span>🎬 Keynote Slide Deck</span></div>
         <div class="dmenu-entry" onclick="setPresentationMode('gazette')"><span>📰 Living Editorial Gazette</span></div>
         <div class="dmenu-divider"></div>
+        <div class="dmenu-entry" onclick="toggleFindReplaceHud()"><span>🔍 Find in Document...</span><span class="hotkey">Ctrl+F</span></div>
+        <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="prevSlide()"><span>◀ Previous Slide</span><span class="hotkey">Left</span></div>
         <div class="dmenu-entry" onclick="nextSlide()"><span>▶ Next Slide</span><span class="hotkey">Right</span></div>
-        <div class="dmenu-entry" onclick="togglePagesPanel()"><span>📑 Pages Overview Panel</span><span class="hotkey">Ctrl+P</span></div>
+        <div class="dmenu-entry" onclick="togglePagesPanel()"><span>📑 Pages Overview Panel</span><span class="hotkey">Ctrl+Shift+P</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="toggle3DPerspectiveTilt()"><span>📐 Toggle 3D Perspective Tilt</span><span class="hotkey">Ctrl+M</span></div>
         <div class="dmenu-entry" onclick="toggleLivingMotion()"><span>🪄 Toggle Living Animations</span></div>
@@ -3712,6 +3890,8 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   </div>
   
   <button class="toolbar-btn" onclick="togglePagesPanel()" title="Pages Overview Grid">📑 Pages</button>
+  <button class="toolbar-btn" onclick="toggleFindReplaceHud()" title="Find in Document (Ctrl+F)" style="gap:5px;display:inline-flex;align-items:center"><span>🔍</span> <span>Find</span></button>
+  <button class="toolbar-btn" onclick="window.print()" title="Print or Save to PDF (Ctrl+P)" style="gap:5px;display:inline-flex;align-items:center;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-weight:700"><span>🖨️</span> <span>Print to PDF</span></button>
 
   <span class="doc-title" id="doc-title" style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">No document loaded</span>
   <span id="validation-badge"></span>
@@ -16371,6 +16551,31 @@ window.initFormatPopover();
 window.addEventListener('keydown', (e) => {
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const cmd = isMac ? e.metaKey : e.ctrlKey;
+
+  // Ctrl+F / Cmd+F: Find in Document HUD
+  if (cmd && (e.key === 'f' || e.key === 'F')) {
+    e.preventDefault();
+    toggleFindReplaceHud();
+    return;
+  }
+
+  // Ctrl+P / Cmd+P: Print to PDF Fallback
+  if (cmd && (e.key === 'p' || e.key === 'P')) {
+    e.preventDefault();
+    window.print();
+    return;
+  }
+
+  // Escape: Close Find HUD
+  if (e.key === 'Escape') {
+    const hud = document.getElementById('find-replace-hud');
+    if (hud && hud.classList.contains('open')) {
+      e.preventDefault();
+      toggleFindReplaceHud(false);
+      return;
+    }
+  }
+
   if (cmd && e.shiftKey && (e.key === 'S' || e.key === 's')) {
     e.preventDefault();
     if (typeof downloadCurrentDocument === 'function') downloadCurrentDocument();
@@ -16446,19 +16651,15 @@ window.addEventListener('keydown', (e) => {
   </div>
 </div>
 
-<!-- ── Global Find & Replace HUD ── -->
+<!-- ── Global Find HUD ── -->
 <div id="find-replace-hud">
   <div class="find-row">
+    <span style="font-size:14px;color:#f59e0b">🔍</span>
     <input type="text" id="find-input" placeholder="Find in document..." oninput="executeFind(this.value)" onkeydown="if(event.key==='Enter')findNextMatch(event.shiftKey)">
-    <span id="find-count" style="font-size:10.5px;color:#8b949e;white-space:nowrap">0/0</span>
+    <span id="find-count" style="font-size:11px;font-weight:700;color:#38bdf8;white-space:nowrap;padding:2px 6px;background:rgba(56,189,248,0.15);border-radius:4px">0/0</span>
     <button class="find-btn" onclick="findNextMatch(true)" title="Previous Match (Shift+Enter)">▲</button>
     <button class="find-btn" onclick="findNextMatch(false)" title="Next Match (Enter)">▼</button>
-    <button class="find-btn" onclick="toggleFindReplaceHud()" title="Close (Escape)">✕</button>
-  </div>
-  <div class="find-row" id="replace-row" style="display:flex">
-    <input type="text" id="replace-input" placeholder="Replace with...">
-    <button class="find-btn" onclick="executeReplaceOne()" title="Replace Match">Replace</button>
-    <button class="find-btn" onclick="executeReplaceAll()" title="Replace All Matches">All</button>
+    <button class="find-btn" onclick="toggleFindReplaceHud(false)" title="Close (Escape)">✕</button>
   </div>
 </div>
 
@@ -16783,44 +16984,122 @@ function applyAstJsonDirectly() {
   }
 }
 
-// ── 4. Global Find & Replace Across All Slides ─────────────────────────────
+// ── 4. In-Document Search & Text Highlighter Engine (Ctrl+F) ───────────────
 let findMatches = [];
 let activeMatchIdx = -1;
 
-function toggleFindReplaceHud() {
+function clearFindHighlights() {
+  const marks = document.querySelectorAll('mark.ldoc-search-match');
+  marks.forEach(m => {
+    const parent = m.parentNode;
+    if (parent) {
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    }
+  });
+  findMatches = [];
+  activeMatchIdx = -1;
+  const countEl = document.getElementById('find-count');
+  if (countEl) countEl.textContent = '0/0';
+}
+
+function toggleFindReplaceHud(forceOpen) {
   const hud = document.getElementById('find-replace-hud');
   if (!hud) return;
-  const isOpen = hud.classList.toggle('open');
-  if (isOpen) {
+  const shouldOpen = forceOpen !== undefined ? forceOpen : !hud.classList.contains('open');
+  if (shouldOpen) {
+    hud.classList.add('open');
     const inp = document.getElementById('find-input');
-    if (inp) setTimeout(() => inp.focus(), 50);
+    if (inp) {
+      setTimeout(() => {
+        inp.focus();
+        inp.select();
+      }, 50);
+      if (inp.value.trim()) {
+        executeFind(inp.value);
+      }
+    }
+  } else {
+    hud.classList.remove('open');
+    clearFindHighlights();
   }
 }
 
 function executeFind(q = '') {
-  findMatches = [];
-  activeMatchIdx = -1;
+  clearFindHighlights();
   const countEl = document.getElementById('find-count');
-  const term = (q || '').trim().toLowerCase();
+  const term = (q || '').trim();
   if (!term) {
     if (countEl) countEl.textContent = '0/0';
     return;
   }
 
-  const allPgs = typeof edPages !== 'undefined' ? edPages : (typeof pages !== 'undefined' ? pages : []);
-  allPgs.forEach((p, pIdx) => {
-    (p.blocks || []).forEach((b, bIdx) => {
-      const textVal = (b.text || b.value || b.label || b.title || '').toLowerCase();
-      if (textVal.includes(term)) {
-        findMatches.push({ pageId: p.id, pageIdx: pIdx, blockId: b.id, blockIdx: bIdx });
+  const container = document.getElementById('page-canvas') || document.getElementById('pres-stage') || document.getElementById('main') || document.body;
+  const ignoreSelectors = '#find-replace-hud, #command-palette-modal, #ast-inspector-modal, #ldoc-context-menu, #desktop-menubar, #toolbar, #ldoc-status-bar, script, style, textarea, input, select';
+
+  // Traverse all text nodes within presentation container
+  const walker = document.createTreeWalker(
+    container,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: function(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        let p = node.parentElement;
+        while (p && p !== container) {
+          if (p.matches && p.matches(ignoreSelectors)) return NodeFilter.FILTER_REJECT;
+          p = p.parentElement;
+        }
+        if (node.nodeValue.toLowerCase().includes(term.toLowerCase())) {
+          return NodeFilter.FILTER_ACCEPT;
+        }
+        return NodeFilter.FILTER_REJECT;
       }
-    });
+    }
+  );
+
+  const matchedNodes = [];
+  let curr;
+  while ((curr = walker.nextNode())) {
+    matchedNodes.push(curr);
+  }
+
+  // Highlight all occurrences using <mark class="ldoc-search-match">
+  const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(escapedTerm, 'gi');
+  findMatches = [];
+
+  matchedNodes.forEach(textNode => {
+    const text = textNode.nodeValue;
+    const parent = textNode.parentNode;
+    if (!parent) return;
+
+    const frag = document.createDocumentFragment();
+    let lastIdx = 0;
+    let m;
+    while ((m = regex.exec(text)) !== null) {
+      if (m.index > lastIdx) {
+        frag.appendChild(document.createTextNode(text.substring(lastIdx, m.index)));
+      }
+      const mark = document.createElement('mark');
+      mark.className = 'ldoc-search-match';
+      mark.textContent = m[0];
+      frag.appendChild(mark);
+      findMatches.push(mark);
+      lastIdx = regex.lastIndex;
+    }
+    if (lastIdx < text.length) {
+      frag.appendChild(document.createTextNode(text.substring(lastIdx)));
+    }
+    parent.replaceChild(frag, textNode);
   });
 
-  if (countEl) countEl.textContent = `${findMatches.length ? 1 : 0}/${findMatches.length}`;
-  if (findMatches.length) {
+  if (countEl) {
+    countEl.textContent = `${findMatches.length ? 1 : 0}/${findMatches.length}`;
+  }
+
+  if (findMatches.length > 0) {
     activeMatchIdx = 0;
-    jumpToMatch(findMatches[0]);
+    jumpToMatch(0);
   }
 }
 
@@ -16833,24 +17112,27 @@ function findNextMatch(isReverse = false) {
   }
   const countEl = document.getElementById('find-count');
   if (countEl) countEl.textContent = `${activeMatchIdx + 1}/${findMatches.length}`;
-  jumpToMatch(findMatches[activeMatchIdx]);
+  jumpToMatch(activeMatchIdx);
 }
 
-function jumpToMatch(match) {
-  if (!match) return;
-  if (typeof edSelectPage === 'function') {
-    edSelectPage(match.pageId);
-  } else if (typeof selectPage === 'function') {
-    selectPage(match.pageId);
-  }
-  setTimeout(() => {
-    const blkCard = document.querySelector(`[data-block-id="${match.blockId}"]`);
-    if (blkCard) {
-      blkCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      blkCard.style.outline = '2px solid #f59e0b';
-      setTimeout(() => { blkCard.style.outline = ''; }, 1200);
+function jumpToMatch(idx) {
+  if (idx < 0 || idx >= findMatches.length) return;
+  findMatches.forEach(m => m.classList.remove('active'));
+
+  const activeMark = findMatches[idx];
+  if (!activeMark) return;
+  activeMark.classList.add('active');
+
+  // Activate containing slide / page if numbered
+  const pageEl = activeMark.closest('.pres-page') || activeMark.closest('.pres-slide');
+  if (pageEl && pageEl.dataset && pageEl.dataset.pageNum) {
+    const pNum = parseInt(pageEl.dataset.pageNum, 10);
+    if (!isNaN(pNum) && typeof onPageActivated === 'function') {
+      onPageActivated(pNum);
     }
-  }, 100);
+  }
+
+  activeMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function executeReplaceOne() {

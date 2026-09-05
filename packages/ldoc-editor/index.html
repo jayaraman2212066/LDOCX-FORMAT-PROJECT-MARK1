@@ -3598,6 +3598,181 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 .price-period { font-size: 13px; color: #64748b; font-weight: 600; }
 .price-desc { font-size: 12.5px; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
 .price-features { list-style: none; padding: 0; margin: 0 0 24px 0; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #cbd5e1; }
+
+/* ── In-Document Search Highlighting Styles (Ctrl+F) ── */
+mark.ldoc-search-match {
+  background: #f59e0b !important;
+  color: #000000 !important;
+  border-radius: 3px;
+  padding: 1px 3px;
+  font-weight: 700;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.7);
+  transition: all 0.15s ease;
+}
+mark.ldoc-search-match.active {
+  background: #38bdf8 !important;
+  color: #000000 !important;
+  outline: 2.5px solid #ffffff !important;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.95) !important;
+  transform: scale(1.08);
+  display: inline-block;
+}
+
+/* ── One-Click Print to PDF Fallback Stylesheet ── */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 0.5in;
+  }
+
+  /* Suppress all desktop application chrome, editor sidebars, tools, HUDs */
+  #desktop-menubar,
+  #toolbar,
+  #ldoc-status-bar,
+  #pages-overlay,
+  #find-replace-hud,
+  #command-palette-modal,
+  #ast-inspector-modal,
+  #ldoc-context-menu,
+  #format-popover,
+  #ai-helper-drawer,
+  #lead-modal,
+  #legal-security-modal,
+  .fx-dropdown-wrap,
+  .dmenu-dropdown,
+  .repair-banner,
+  .fullscreen-btn,
+  .pres-nav-btn,
+  .page-paper-layer,
+  .page-fx-canvas,
+  canvas.page-fx-canvas,
+  .audio-player-bar,
+  #toast-container,
+  .ed-sidebar,
+  .ed-toolbar,
+  #ed-add-panel,
+  #ed-inspector,
+  #ed-split-left,
+  #ed-split-right,
+  .ed-block-up,
+  .ed-block-dn,
+  .ed-block-dup,
+  .ed-block-del,
+  .ed-add-btn {
+    display: none !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    font-size: 11pt !important;
+  }
+
+  #main, #viewer-panel, #pres-stage, .pres-canvas-wrap, #page-canvas, #ed-preview-pane, #ed-preview-body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    position: static !important;
+    transform: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Render each slide as a clean printable page */
+  .pres-page, .pres-slide {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin: 0 0 24pt 0 !important;
+    padding: 24pt !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    transform: none !important;
+  }
+
+  .pres-page:last-child, .pres-slide:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .page-content-layer, .pres-content-layer {
+    position: static !important;
+    color: #0f172a !important;
+  }
+
+  /* High contrast print typography */
+  h1, h2, h3, h4, h5, h6, .pres-page-header {
+    color: #0f172a !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  p, li, td, th, div, span {
+    color: #1e293b !important;
+  }
+
+  /* Crisp table formatting for standard PDF / print */
+  .pres-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    margin: 12pt 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .pres-table th {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 8pt 12pt !important;
+    font-weight: 700 !important;
+  }
+
+  .pres-table td {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 8pt 12pt !important;
+  }
+
+  .pres-table tr:nth-child(even) td {
+    background: #f8fafc !important;
+  }
+
+  /* Interactive cards and code blocks */
+  .interactive-code-card, pre, code {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  pre code {
+    color: #0f172a !important;
+  }
+
+  a {
+    color: #0284c7 !important;
+    text-decoration: underline !important;
+  }
+}
 </style>
 
 <script src="jszip.min.js"></script>
@@ -3648,6 +3823,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="dmenu-entry" onclick="if(typeof edPages!=='undefined'){edPages=[];edAddPage();switchTab('editor');}"><span>📄 New Living Document</span><span class="hotkey">Ctrl+N</span></div>
         <div class="dmenu-entry" onclick="document.getElementById('ed-file-input').click()"><span>📂 Open .ldocx File...</span><span class="hotkey">Ctrl+O</span></div>
         <div class="dmenu-entry" onclick="saveDoc()"><span>💾 Save / Export .ldocx</span><span class="hotkey">Ctrl+S</span></div>
+        <div class="dmenu-entry" onclick="window.print()"><span>🖨️ Print / Export PDF...</span><span class="hotkey">Ctrl+P</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Universal Document Converter</span></div>
         <div class="dmenu-divider"></div>
@@ -3661,6 +3837,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
       <div class="dmenu-dropdown">
         <div class="dmenu-entry" onclick="switchTab('editor')"><span>🛠️ Open In-Place Block Editor</span></div>
         <div class="dmenu-entry" onclick="toggleFreeTextTool()"><span>✍️ Add In-Canvas Free Text</span><span class="hotkey">Ctrl+T</span></div>
+        <div class="dmenu-entry" onclick="toggleFindReplaceHud()"><span>🔍 Find &amp; Replace...</span><span class="hotkey">Ctrl+F</span></div>
         <div class="dmenu-entry" onclick="if(typeof edAddPage==='function'){edAddPage();switchTab('editor');}"><span>➕ Add New Section / Slide</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-section-hdr">Integrated Creative Studios</div>
@@ -3688,7 +3865,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
         <div class="dmenu-entry" onclick="switchTab('editor')"><span>✏️ Block Editor Mode</span></div>
         <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Document Converter</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="togglePagesPanel()"><span>📑 Pages Overview Panel</span><span class="hotkey">Ctrl+P</span></div>
+        <div class="dmenu-entry" onclick="togglePagesPanel()"><span>📑 Pages Overview Panel</span><span class="hotkey">Ctrl+Shift+P</span></div>
         <div class="dmenu-entry" onclick="toggle3DPerspectiveTilt()"><span>📐 Toggle 3D Perspective Tilt</span><span class="hotkey">Ctrl+M</span></div>
         <div class="dmenu-entry" onclick="if(document.fullscreenElement){document.exitFullscreen()}else{document.documentElement.requestFullscreen()}"><span>⛶ Toggle Fullscreen</span><span class="hotkey">F11</span></div>
       </div>
@@ -3724,6 +3901,8 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   <button class="toolbar-btn primary" id="build-btn" onclick="buildAndView()" style="background:linear-gradient(135deg,rgba(16,185,129,.3),rgba(5,150,105,.4));border-color:#10b981;color:#a7f3d0;font-weight:700">▶ Build &amp; View</button>
   <button class="toolbar-btn" id="build-save-btn" onclick="buildAndSave()" style="display:none">&#128190; Build &amp; Save</button>
   <button class="toolbar-btn" id="pages-toggle-btn" onclick="togglePagesPanel()">📑 Pages</button>
+  <button class="toolbar-btn" onclick="toggleFindReplaceHud()" title="Find in Document (Ctrl+F)" style="gap:5px;display:inline-flex;align-items:center"><span>🔍</span> <span>Find</span></button>
+  <button class="toolbar-btn" onclick="window.print()" title="Print or Save to PDF (Ctrl+P)" style="gap:5px;display:inline-flex;align-items:center;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-weight:700"><span>🖨️</span> <span>Print to PDF</span></button>
 
   <span class="doc-title" id="doc-title" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">No document loaded</span>
   <span id="validation-badge"></span>
@@ -13623,7 +13802,14 @@ function edAddBlock(type) {
   else if (type === 'paragraph' || type === 'quote') { b.text = ''; b.value = ''; }
   else if (type === 'list') { b.items = ['']; }
   else if (type === 'code') { b.language = 'javascript'; b.code = ''; }
-  else if (type === 'table') { b.headers = ['Item', 'Description']; b.rows = [['', '']]; }
+  else if (type === 'table') {
+    b.headers = ['Specification / Feature', 'Standard Package', 'Enterprise Pro'];
+    b.rows = [
+      ['Hologram 3D Engine', '60 FPS WebGL Rendering', '120 FPS Raytracing + Spatial'],
+      ['Sandbox Security', 'In-Memory RAM Sandbox', 'Airgapped HSM Verification'],
+      ['File Container', 'Zero-Outsource Standalone', 'Signed Cryptographic .ldocx']
+    ];
+  }
   else if (type === 'ai') { b.prompt = ''; }
   else if (type === 'form') { b.title = ''; b.fields = [{ label: 'Name', field_type: 'input_text', placeholder: 'Enter your name' }]; b.button_text = 'Submit'; b.destination = 'webhook'; }
   else if (type === 'web_image') { b.src = ''; b.alt = ''; }
@@ -13694,6 +13880,61 @@ function edMoveBlock(id, dir) {
   const i = p.blocks.findIndex(b => b.id === id), j = i + dir;
   if (j < 0 || j >= p.blocks.length) return;
   [p.blocks[i], p.blocks[j]] = [p.blocks[j], p.blocks[i]];
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableAddRow(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b) return;
+  b.rows = b.rows || [];
+  const colCount = (b.headers && b.headers.length) ? b.headers.length : (b.rows[0] ? b.rows[0].length : 3);
+  const newRow = Array(colCount).fill('').map((_, i) => `Data ${b.rows.length + 1}.${i + 1}`);
+  b.rows.push(newRow);
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableDelRow(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b || !b.rows || b.rows.length <= 1) return;
+  b.rows.pop();
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableAddCol(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b) return;
+  b.headers = b.headers || [];
+  const newColIdx = b.headers.length + 1;
+  b.headers.push(`Column ${newColIdx}`);
+  (b.rows || []).forEach(r => {
+    r.push(`Val ${newColIdx}`);
+  });
+  edPushUndo();
+  edRenderBlocks();
+  edUpdateLivePreview();
+}
+
+function edTableDelCol(blockId) {
+  const p = edPages.find(pg => pg.id === edCurrentPage);
+  if (!p) return;
+  const b = (p.blocks || []).find(bk => bk.id === blockId);
+  if (!b || !b.headers || b.headers.length <= 1) return;
+  b.headers.pop();
+  (b.rows || []).forEach(r => {
+    if (r.length > 0) r.pop();
+  });
   edPushUndo();
   edRenderBlocks();
   edUpdateLivePreview();
@@ -13994,8 +14235,33 @@ function edRenderBlocks() {
 
       mk('textarea', 'Enter custom code or script...', block.code !== undefined ? block.code : '', v => { block.code = v; edUpdateLivePreview(); }, { rows: 5 });
     } else if (block.type === 'table') {
-      const hi = document.createElement('input'); hi.placeholder = 'Col 1, Col 2'; hi.value = (block.headers || []).join(', '); hi.style.marginTop = '4px'; hi.oninput = () => { block.headers = hi.value.split(',').map(s => s.trim()); }; div.appendChild(hi);
-      mk('textarea', 'Row values (comma separated e.g. Item 1, Data 1)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => { block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim())); }, { rows: 4 });
+      const tbCtrlRow = document.createElement('div');
+      tbCtrlRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:6px;margin:6px 0 4px 0;flex-wrap:wrap';
+      tbCtrlRow.innerHTML = `
+        <div style="font-size:10.5px;font-weight:700;color:var(--gold)">📊 Table Structure</div>
+        <div style="display:flex;gap:4px">
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableAddRow('${block.id}')" title="Add Row">➕ Row</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableDelRow('${block.id}')" title="Delete Last Row">➖ Row</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableAddCol('${block.id}')" title="Add Column">➕ Col</button>
+          <button type="button" class="find-btn" style="font-size:10px;padding:2px 6px" onclick="edTableDelCol('${block.id}')" title="Delete Last Column">➖ Col</button>
+        </div>
+      `;
+      div.appendChild(tbCtrlRow);
+
+      const hi = document.createElement('input');
+      hi.placeholder = 'Column Headers (comma separated e.g. Spec, Tier 1, Tier 2)';
+      hi.value = (block.headers || []).join(', ');
+      hi.style.marginTop = '2px';
+      hi.oninput = () => {
+        block.headers = hi.value.split(',').map(s => s.trim());
+        edUpdateLivePreview();
+      };
+      div.appendChild(hi);
+
+      mk('textarea', 'Row values (comma separated, 1 line per row)', (block.rows || []).map(r => r.join(', ')).join('\n'), v => {
+        block.rows = v.split('\n').filter(s => s.trim()).map(r => r.split(',').map(s => s.trim()));
+        edUpdateLivePreview();
+      }, { rows: 4 });
     } else if (block.type === 'ai') {
       const cfg = getAiConfig();
       const aiHdr = document.createElement('div');
@@ -16555,6 +16821,31 @@ window.initFormatPopover();
 window.addEventListener('keydown', (e) => {
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
   const cmd = isMac ? e.metaKey : e.ctrlKey;
+
+  // Ctrl+F / Cmd+F: Find in Document HUD
+  if (cmd && (e.key === 'f' || e.key === 'F')) {
+    e.preventDefault();
+    toggleFindReplaceHud();
+    return;
+  }
+
+  // Ctrl+P / Cmd+P: Print to PDF Fallback
+  if (cmd && (e.key === 'p' || e.key === 'P')) {
+    e.preventDefault();
+    window.print();
+    return;
+  }
+
+  // Escape: Close Find HUD
+  if (e.key === 'Escape') {
+    const hud = document.getElementById('find-replace-hud');
+    if (hud && hud.classList.contains('open')) {
+      e.preventDefault();
+      toggleFindReplaceHud(false);
+      return;
+    }
+  }
+
   if (cmd && e.shiftKey && (e.key === 'S' || e.key === 's')) {
     e.preventDefault();
     if (typeof downloadCurrentDocument === 'function') downloadCurrentDocument();

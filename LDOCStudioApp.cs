@@ -1,5 +1,5 @@
 // LDOC-Studio — Native Windows Freemium Authoring Studio Launcher
-// Copyright (c) 2026 Jayaraman K. All Rights Reserved.
+// Copyright (c) 2026 J-AI-ENTERPRISES. All Rights Reserved.
 // Licensed under Apache License, Version 2.0.
 
 using System;
@@ -31,14 +31,17 @@ namespace LDOCStudio
             {
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
                 
-                // Locate Studio Fullstack HTML (matches Screenshot 1 and Screenshot 2)
-                string editorPath = Path.Combine(baseDir, "live-studio.html");
+                // Locate Studio Fullstack HTML:
+                // 1. If running from repo root, prioritize isolated studio in packages/ldoc-studio/index.html
+                string editorPath = Path.Combine(baseDir, "packages", "ldoc-studio", "index.html");
                 if (!File.Exists(editorPath))
                 {
-                    editorPath = Path.Combine(baseDir, "packages", "ldoc-studio", "index.html");
+                    // 2. If dedicated live-studio.html exists
+                    editorPath = Path.Combine(baseDir, "live-studio.html");
                 }
                 if (!File.Exists(editorPath))
                 {
+                    // 3. If running inside standalone unzipped packages/ldoc-studio
                     editorPath = Path.Combine(baseDir, "index.html");
                 }
                 if (!File.Exists(editorPath))

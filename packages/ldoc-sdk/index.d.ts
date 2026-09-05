@@ -1,6 +1,6 @@
 /**
  * @ldoc/sdk — TypeScript Definitions for Living Document (.ldocx) SDK
- * Copyright (c) 2026 Jayaraman K. Licensed under Apache-2.0.
+ * Copyright (c) 2026 J-AI-ENTERPRISES. Licensed under Apache-2.0.
  */
 
 export const SCHEMA_VERSION: string;

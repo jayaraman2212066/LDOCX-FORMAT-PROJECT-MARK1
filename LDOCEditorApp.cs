@@ -1,5 +1,5 @@
 // LDOC-Editor — Native Windows Living Document Editor & Universal Converter
-// Copyright (c) 2026 Jayaraman K. All Rights Reserved.
+// Copyright (c) 2026 J-AI-ENTERPRISES. All Rights Reserved.
 // Licensed under Apache License, Version 2.0.
 
 using System;

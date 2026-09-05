@@ -1,5 +1,5 @@
 # Create Desktop Shortcuts for LDOC Suite
-# Copyright (c) 2026 Jayaraman K. Apache-2.0 License.
+# Copyright (c) 2026 J-AI-ENTERPRISES. Apache-2.0 License.
 
 $ErrorActionPreference = "Stop"
 
