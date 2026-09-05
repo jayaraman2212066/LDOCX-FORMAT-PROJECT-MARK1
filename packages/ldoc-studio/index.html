@@ -3618,14 +3618,41 @@ mark.ldoc-search-match.active {
   display: inline-block;
 }
 
-/* ── One-Click Print to PDF Fallback Stylesheet ── */
+/* ── Executive Ultra-Aligned Print & PDF Fallback Stylesheet ── */
 @media print {
   @page {
     size: letter portrait;
     margin: 0.5in;
   }
 
-  /* Suppress all desktop application chrome, editor sidebars, tools, HUDs */
+  /* 1. Global Reset for Consistent Geometry & Zero-Artifact Ink Rendering */
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 2. Suppress All Desktop Application UI Chrome, Menus, Toolbars, HUDs, Modals */
   #desktop-menubar,
   #toolbar,
   #ldoc-status-bar,
@@ -3648,6 +3675,8 @@ mark.ldoc-search-match.active {
   canvas.page-fx-canvas,
   .audio-player-bar,
   #toast-container,
+  #drop-zone,
+  #loading,
   .ed-sidebar,
   .ed-toolbar,
   #ed-add-panel,
@@ -3658,119 +3687,345 @@ mark.ldoc-search-match.active {
   .ed-block-dn,
   .ed-block-dup,
   .ed-block-del,
-  .ed-add-btn {
+  .ed-add-btn,
+  .close-preview,
+  .ed-preview-toggle,
+  #ed-preview-badge,
+  .preview-header,
+  .pres-3d-toolbar,
+  .pres-3d-badge,
+  .pres-3d-info,
+  .pres-bg-btn,
+  .pres-audio-card,
+  .video-card .video-label,
+  button,
+  .find-btn {
     display: none !important;
   }
 
-  html, body {
+  /* 3. Containers: Flatten all flex/overflow constraints for seamless document flow */
+  #main,
+  #viewer-panel,
+  #editor-panel,
+  #pres-stage,
+  .pres-canvas-wrap,
+  #page-canvas,
+  #ed-preview-pane,
+  #ed-preview-body,
+  .preview-body {
+    display: block !important;
     background: #ffffff !important;
     color: #0f172a !important;
     overflow: visible !important;
     height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
     width: 100% !important;
-    font-size: 11pt !important;
-  }
-
-  #main, #viewer-panel, #pres-stage, .pres-canvas-wrap, #page-canvas, #ed-preview-pane, #ed-preview-body {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    overflow: visible !important;
-    height: auto !important;
-    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
     position: static !important;
     transform: none !important;
     padding: 0 !important;
     margin: 0 !important;
+    border: none !important;
   }
 
-  /* Render each slide as a clean printable page */
+  /* 4. Page Box: Each slide/page renders as a pristine, independent printed page */
   .pres-page, .pres-slide {
+    display: block !important;
     background: #ffffff !important;
     color: #0f172a !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 6px !important;
+    border: none !important;
+    border-radius: 0 !important;
     box-shadow: none !important;
     page-break-after: always !important;
     break-after: page !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    margin: 0 0 24pt 0 !important;
-    padding: 24pt !important;
+    margin: 0 0 20pt 0 !important;
+    padding: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
-    box-sizing: border-box !important;
+    min-height: auto !important;
+    height: auto !important;
     position: relative !important;
     transform: none !important;
+    overflow: visible !important;
   }
 
   .pres-page:last-child, .pres-slide:last-child {
-    page-break-after: avoid !important;
-    break-after: avoid !important;
+    page-break-after: auto !important;
+    break-after: auto !important;
+    margin-bottom: 0 !important;
   }
 
-  .page-content-layer, .pres-content-layer {
+  .pres-page::before, .pres-page::after {
+    display: none !important;
+  }
+
+  /* 5. Zero-Offset Content Layer & Editorial Sections (Perfect Left-Alignment) */
+  .page-content-layer,
+  .pres-content-layer,
+  .pres-section,
+  .pres-hero-content {
+    display: block !important;
     position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
     color: #0f172a !important;
   }
 
-  /* High contrast print typography */
-  h1, h2, h3, h4, h5, h6, .pres-page-header {
+  /* 6. Page Header (Flush with Left & Right Content Margins) */
+  .pres-page-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 0 0 8pt 0 !important;
+    margin: 0 0 16pt 0 !important;
+    border-bottom: 1.5pt solid #cbd5e1 !important;
+    background: transparent !important;
+    color: #64748b !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 8.5pt !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5pt !important;
+  }
+
+  /* 7. Precision Typography: Headings, Sentences, Paragraphs & Letters */
+  h1, h2, h3, h4, h5, h6,
+  .pres-section h1, .pres-section h2,
+  .pres-hero h1, .pres-hero h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
     color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    -webkit-background-clip: border-box !important;
+    background: none !important;
+    text-shadow: none !important;
+    text-align: left !important;
+    letter-spacing: -0.01em !important;
     page-break-after: avoid !important;
     break-after: avoid !important;
-  }
-
-  p, li, td, th, div, span {
-    color: #1e293b !important;
-  }
-
-  /* Crisp table formatting for standard PDF / print */
-  .pres-table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    border: 1px solid #cbd5e1 !important;
-    box-shadow: none !important;
-    margin: 12pt 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
-  .pres-table th {
+  h1 {
+    font-size: 20pt !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+    margin: 0 0 10pt 0 !important;
+    padding: 0 !important;
+  }
+
+  h2 {
+    font-size: 15pt !important;
+    line-height: 1.3 !important;
+    font-weight: 700 !important;
+    margin: 14pt 0 8pt 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  h3 {
+    font-size: 12.5pt !important;
+    line-height: 1.35 !important;
+    font-weight: 600 !important;
+    margin: 12pt 0 6pt 0 !important;
+    padding: 0 !important;
+  }
+
+  h4, h5, h6 {
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    margin: 10pt 0 4pt 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Sentences and Paragraphs: Natural, Intended Flow, Consistent Alignment */
+  p, .docx-in-place-editable, .ldoc-rich-text, div.ldoc-in-place-editable {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+    text-align: left !important;
+    text-indent: 0 !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    margin: 0 0 10pt 0 !important;
+    padding: 0 !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    hyphens: none !important;
+    white-space: normal !important;
+    page-break-inside: auto !important;
+  }
+
+  /* Lists: Aligned Bullet Points & Numbering */
+  ul, ol {
+    margin: 0 0 12pt 0 !important;
+    padding-left: 20pt !important;
+    text-align: left !important;
+  }
+
+  li {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    color: #1e293b !important;
+    -webkit-text-fill-color: #1e293b !important;
+    margin-bottom: 4pt !important;
+    letter-spacing: normal !important;
+    text-align: left !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left: 3.5pt solid #94a3b8 !important;
+    margin: 12pt 0 !important;
+    padding: 6pt 14pt !important;
+    background: #f8fafc !important;
+    color: #334155 !important;
+    -webkit-text-fill-color: #334155 !important;
+    font-style: italic !important;
+    font-size: 10.5pt !important;
+    line-height: 1.6 !important;
+    text-align: left !important;
+    letter-spacing: normal !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* 8. Crisp Gilded & Pro Tables (Flush Alignment, Full Width, Clean Borders) */
+  .pres-table, .table-pro, table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: auto !important;
+    border-collapse: collapse !important;
+    border: 1pt solid #cbd5e1 !important;
+    margin: 14pt 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+  }
+
+  .table-pro-wrap {
+    width: 100% !important;
+    margin: 14pt 0 !important;
+    overflow: visible !important;
+  }
+
+  .pres-table th, .table-pro th, th {
     background: #f1f5f9 !important;
     color: #0f172a !important;
-    border: 1px solid #cbd5e1 !important;
-    padding: 8pt 12pt !important;
+    -webkit-text-fill-color: #0f172a !important;
+    border: 1pt solid #cbd5e1 !important;
+    padding: 7pt 10pt !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 9.5pt !important;
     font-weight: 700 !important;
+    text-align: left !important;
+    letter-spacing: normal !important;
+    line-height: 1.4 !important;
   }
 
-  .pres-table td {
+  .pres-table td, .table-pro td, td {
     background: #ffffff !important;
     color: #1e293b !important;
-    border: 1px solid #e2e8f0 !important;
-    padding: 8pt 12pt !important;
+    -webkit-text-fill-color: #1e293b !important;
+    border: 1pt solid #e2e8f0 !important;
+    padding: 7pt 10pt !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 9.5pt !important;
+    line-height: 1.45 !important;
+    text-align: left !important;
+    letter-spacing: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
   }
 
-  .pres-table tr:nth-child(even) td {
+  .pres-table tr:nth-child(even) td, .table-pro tr:nth-child(even) td {
     background: #f8fafc !important;
   }
 
-  /* Interactive cards and code blocks */
-  .interactive-code-card, pre, code {
-    background: #f8fafc !important;
-    color: #0f172a !important;
-    border: 1px solid #cbd5e1 !important;
-    box-shadow: none !important;
+  /* 9. Feature Grids, Columns & Cards Alignment */
+  .feature-grid, .grid, .pres-grid, .pricing-cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12pt !important;
+    margin: 12pt 0 !important;
+    width: 100% !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
-  pre code {
+  .feature-card, .card, .pricing-card, .preorder-card {
+    border: 1pt solid #cbd5e1 !important;
+    background: #ffffff !important;
     color: #0f172a !important;
+    border-radius: 4pt !important;
+    padding: 10pt 12pt !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    text-align: left !important;
   }
 
+  /* 10. Code Cards & Blocks */
+  .interactive-code-card {
+    background: #f8fafc !important;
+    border: 1pt solid #cbd5e1 !important;
+    border-radius: 4pt !important;
+    margin: 12pt 0 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    overflow: visible !important;
+  }
+
+  .interactive-code-card * {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .code-card-body, .code-pane {
+    padding: 8pt 10pt !important;
+    overflow: visible !important;
+  }
+
+  pre, code {
+    font-family: "JetBrains Mono", Consolas, "Courier New", monospace !important;
+    font-size: 9pt !important;
+    line-height: 1.45 !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    background: #f8fafc !important;
+    border: none !important;
+  }
+
+  /* 11. Links & Search Marks Cleanup */
   a {
     color: #0284c7 !important;
     text-decoration: underline !important;
+  }
+
+  mark.ldoc-search-match {
+    background: transparent !important;
+    color: inherit !important;
+    box-shadow: none !important;
+    padding: 0 !important;
   }
 }
 </style>
@@ -3819,7 +4074,7 @@ mark.ldoc-search-match.active {
         <div class="dmenu-entry" onclick="location.href='creator.html'"><span>📄 New Document (+Creator)</span><span class="hotkey">Ctrl+N</span></div>
         <div class="dmenu-entry" onclick="document.getElementById('file-input').click()"><span>📂 Open .ldocx File...</span><span class="hotkey">Ctrl+O</span></div>
         <div class="dmenu-entry" onclick="saveDoc()"><span>💾 Save / Export .ldocx</span><div class="dmenu-entry" onclick="showCloudVaultModal()"><span>🌟 Cloud Documents Vault</span></div><div class="dmenu-entry" onclick="showVersionsModal()"><span>↺ Version History &amp; Restore</span></div><div class="dmenu-entry" onclick="showShareModal()"><span>🔗 Share Living Document</span></div><span class="hotkey">Ctrl+S</span></div>
-        <div class="dmenu-entry" onclick="window.print()"><span>🖨️ Print / Export PDF...</span><span class="hotkey">Ctrl+P</span></div>
+        <div class="dmenu-entry" onclick="printDocument()"><span>🖨️ Print / Export PDF...</span><span class="hotkey">Ctrl+P</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="location.href='creator.html'"><span>🎨 Open Visual Creator</span><span class="hotkey">Ctrl+Shift+C</span></div>
         <div class="dmenu-entry" onclick="switchTab('converter')"><span>⚡ Universal Document Converter</span></div>
@@ -3945,7 +4200,7 @@ mark.ldoc-search-match.active {
   <input type="file" id="ed-file-input" accept=".ldocx,.ldoc" style="display:none" onchange="edOpenLdocxFile(event)">
   <button class="toolbar-btn primary" id="save-btn" onclick="saveDoc()" style="display:inline-flex;align-items:center;gap:6px" title="Save / Export .ldocx package">&#128190; Save .ldocx</button>
   <button class="toolbar-btn" onclick="toggleFindReplaceHud()" title="Find in Document (Ctrl+F)" style="gap:5px;display:inline-flex;align-items:center"><span>🔍</span> <span>Find</span></button>
-  <button class="toolbar-btn" onclick="window.print()" title="Print or Save to PDF (Ctrl+P)" style="gap:5px;display:inline-flex;align-items:center;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-weight:700"><span>🖨️</span> <span>Print to PDF</span></button>
+  <button class="toolbar-btn" onclick="printDocument()" title="Print or Save to PDF (Ctrl+P)" style="gap:5px;display:inline-flex;align-items:center;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-weight:700"><span>🖨️</span> <span>Print to PDF</span></button>
   <button class="toolbar-btn" id="pages-toggle-btn" onclick="togglePagesPanel()" style="display:none">&#9776; Pages</button>
   <button class="toolbar-btn primary" id="build-btn" onclick="buildAndView()" style="display:none">&#9654; Build &amp; View</button>
   <button class="toolbar-btn" id="build-save-btn" onclick="buildAndSave()" style="display:none">&#128190; Build &amp; Save</button>
@@ -17382,6 +17637,53 @@ function clearFindHighlights() {
   activeMatchIdx = -1;
   const countEl = document.getElementById('find-count');
   if (countEl) countEl.textContent = '0/0';
+}
+
+// ── One-Click Print to PDF Fallback Handler ──
+function printDocument() {
+  // 1. If in Editor/Studio with page array, render all pages cleanly into preview body before print
+  if (typeof edPages !== 'undefined' && Array.isArray(edPages) && edPages.length > 0) {
+    const previewBody = document.getElementById('ed-preview-body');
+    if (previewBody) {
+      previewBody.innerHTML = '';
+      edPages.forEach((pg, idx) => {
+        const slide = document.createElement('div');
+        slide.className = 'pres-page pres-slide';
+        
+        const header = document.createElement('div');
+        header.className = 'pres-page-header';
+        header.innerHTML = `<span>Page ${idx + 1} of ${edPages.length}</span> <span>${typeof escapeHtml === 'function' ? escapeHtml(pg.title || ('Page ' + (idx + 1))) : (pg.title || ('Page ' + (idx + 1)))}</span>`;
+        slide.appendChild(header);
+
+        const content = document.createElement('div');
+        content.className = 'page-content-layer';
+
+        (pg.blocks || []).forEach(b => {
+          if (typeof renderBlockNode === 'function') {
+            renderBlockNode(b, content);
+          }
+        });
+
+        slide.appendChild(content);
+        previewBody.appendChild(slide);
+      });
+    }
+  }
+
+  // 2. Clear any active search highlights so yellow marks aren't printed
+  const findInp = document.getElementById('find-input');
+  const query = findInp ? findInp.value : '';
+  if (typeof clearFindHighlights === 'function') {
+    clearFindHighlights();
+  }
+
+  // 3. Trigger native print / PDF export
+  window.print();
+
+  // 4. Restore search highlights if query was active
+  if (query && typeof executeFind === 'function') {
+    setTimeout(() => { executeFind(query); }, 200);
+  }
 }
 
 function toggleFindReplaceHud(forceOpen) {
