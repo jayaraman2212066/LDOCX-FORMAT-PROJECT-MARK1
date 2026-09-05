@@ -17887,7 +17887,7 @@ function renderProfileHub(user) {
   container.innerHTML = `
     <div class="ldoc-profile-hub">
       <div class="ldoc-profile-header">
-        <img class="ldoc-profile-avatar" src="${user.avatar || 'data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%236366f1'/%3E%3Ccircle cx='20' cy='15' r='7' fill='%23fff'/%3E%3Cpath d='M8 35c0-7 5.4-12 12-12s12 5 12 12' fill='%23fff'/%3E%3C/svg%3E'}" alt="Avatar">
+        <img class="ldoc-profile-avatar" src="${user.avatar || 'data:image/svg+xml;utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 40 40\'%3E%3Ccircle cx=\'20\' cy=\'20\' r=\'20\' fill=\'%236366f1\'/%3E%3Ccircle cx=\'20\' cy=\'15\' r=\'7\' fill=\'%23fff\'/%3E%3Cpath d=\'M8 35c0-7 5.4-12 12-12s12 5 12 12\' fill=\'%23fff\'/%3E%3C/svg%3E'}" alt="Avatar">
         <div class="ldoc-profile-meta">
           <div style="display:flex;align-items:center;gap:8px">
             <span class="ldoc-profile-name">${escapeHtml(user.name)}</span>

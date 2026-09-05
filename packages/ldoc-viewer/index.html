@@ -11136,7 +11136,7 @@ function renderBlockNode(node,parent){
             <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13.5px;color:#fef08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(lbl)}</div>
             <div style="font-size:11px;color:#34d399;margin-top:3px;display:flex;align-items:center;gap:5px">
               <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399"></span>
-              <strong>Atmospheric Audio (Loop Mode: Active)</strong>
+              <strong>${(src && src.startsWith("data:")) ? "⚡ Offline Atmospheric Soundtrack (100% Embedded Loop)" : "Atmospheric Audio (Loop Mode: Active)"}</strong>
             </div>
           </div>
           <audio controls loop src="${escapeHtml(src)}" style="height:34px;max-width:240px;outline:none"></audio>
@@ -11189,7 +11189,8 @@ function renderBlockNode(node,parent){
       const vl = document.createElement('div');
       vl.className = 'video-label';
       vl.style.cssText = 'display:flex;align-items:center;gap:10px;padding-top:12px;font-family:Cinzel,serif;font-size:14px;color:#fef08a;font-weight:700;';
-      vl.innerHTML = `<span style="color:var(--gold);font-size:18px">🎬</span> <span>${escapeHtml(lbl)}</span>`;
+      const offlineVBadge = (videoSrc && videoSrc.startsWith("data:")) ? '<span style="font-size:10px;padding:2px 8px;border-radius:6px;background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.4);margin-left:auto;font-family:monospace;font-weight:600">⚡ 100% Offline Embedded Video</span>' : '';
+      vl.innerHTML = `<span style="color:var(--gold);font-size:18px">🎬</span> <span>${escapeHtml(lbl)}</span> ${offlineVBadge}`;
       card.appendChild(vl);
       parent.appendChild(card);
       break;
@@ -18215,7 +18216,7 @@ function renderProfileHub(user) {
   container.innerHTML = `
     <div class="ldoc-profile-hub">
       <div class="ldoc-profile-header">
-        <img class="ldoc-profile-avatar" src="${user.avatar || 'data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%236366f1'/%3E%3Ccircle cx='20' cy='15' r='7' fill='%23fff'/%3E%3Cpath d='M8 35c0-7 5.4-12 12-12s12 5 12 12' fill='%23fff'/%3E%3C/svg%3E'}" alt="Avatar">
+        <img class="ldoc-profile-avatar" src="${user.avatar || 'data:image/svg+xml;utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 40 40\'%3E%3Ccircle cx=\'20\' cy=\'20\' r=\'20\' fill=\'%236366f1\'/%3E%3Ccircle cx=\'20\' cy=\'15\' r=\'7\' fill=\'%23fff\'/%3E%3Cpath d=\'M8 35c0-7 5.4-12 12-12s12 5 12 12\' fill=\'%23fff\'/%3E%3C/svg%3E'}" alt="Avatar">
         <div class="ldoc-profile-meta">
           <div style="display:flex;align-items:center;gap:8px">
             <span class="ldoc-profile-name">${escapeHtml(user.name)}</span>

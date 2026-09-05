@@ -4411,30 +4411,49 @@ mark.ldoc-search-match.active {
         <div id="ed-empty">&larr; Add a page to start</div>
         <div id="ed-blocks-panel" style="display:none"></div>
       </div>
-      <div id="ed-add-bar">
-        <span style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;align-self:center;margin-right:4px">Add Element:</span>
-        <button class="ed-add-btn" onclick="toggleFreeTextTool()" style="background:rgba(245,158,11,.25);color:#fef08a;border-color:var(--gold);font-weight:700">✍️ Free Text</button>
-        <button class="ed-add-btn" onclick="edAddBlock('heading')">🏷️ Heading</button>
-        <button class="ed-add-btn" onclick="edAddBlock('paragraph')">📝 Text</button>
-        <button class="ed-add-btn" onclick="edAddBlock('quote')">📜 Quote</button>
-        <button class="ed-add-btn" onclick="edAddBlock('list')">📋 List</button>
-        <button class="ed-add-btn" onclick="edAddBlock('table')">📊 Table</button>
-        <button class="ed-add-btn" onclick="edAddBlock('code')">💻 Code</button>
-        <button class="ed-add-btn" onclick="edAddBlock('web_image')">🖼️ 3D Image</button>
-        <button class="ed-add-btn" onclick="edAddBlock('web_audio')">🎵 Soundtrack</button>
-        <button class="ed-add-btn" onclick="edAddBlock('web_video')">🎬 Video</button>
-        <button class="ed-add-btn" onclick="edAddBlock('3d_model')">📦 3D Model</button>
-        <button class="ed-add-btn" onclick="edAddBlock('ai')">⚡ AI Copilot</button>
-        <button class="ed-add-btn" onclick="edAddBlock('form')">📑 Form</button>
-        <button class="ed-add-btn" onclick="edAddBlock('feature_grid')">🌟 Feature Grid</button>
-        <button class="ed-add-btn" onclick="edAddBlock('live_feed')">📡 Live Dispatch</button>
-        <button class="ed-add-btn" onclick="edAddBlock('preorder')">💎 Pre-Order</button>
-        <button class="ed-add-btn" onclick="edAddBlock('button')">🔘 Smart Action</button>
-        <button class="ed-add-btn" onclick="edAddBlock('throttle_dyno')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🏎️ Throttle Dyno</button>
-        <button class="ed-add-btn" onclick="edAddBlock('orbit_sim')" style="background:rgba(167,139,250,.15);color:#a78bfa;border-color:rgba(167,139,250,.4)">🛰️ Orbit Sim</button>
-        <button class="ed-add-btn" onclick="edAddBlock('arr_projector')" style="background:rgba(16,185,129,.15);color:#10b981;border-color:rgba(16,185,129,.4)">📈 ARR Projector</button>
-        <button class="ed-add-btn" onclick="edAddBlock('tilt_card')" style="background:rgba(244,63,94,.15);color:#f43f5e;border-color:rgba(244,63,94,.4)">📐 3D Tilt Card</button>
-        <button class="ed-add-btn" onclick="edAddBlock('jsx_canvas')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">⚡ Live Sandbox</button>
+            <div id="ed-add-bar" style="display:flex;flex-direction:column;gap:8px;padding:8px 12px;background:var(--surface);border-top:1px solid var(--border)">
+        <!-- Search & Direct Upload Bar -->
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:6px">
+          <div style="position:relative;flex:1;min-width:220px;max-width:360px">
+            <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:12px;pointer-events:none;opacity:0.7">🔍</span>
+            <input type="text" id="ed-element-search" placeholder="Search 20+ elements (video, audio, 3d, table)..." oninput="edFilterAddElements(this.value)" style="width:100%;padding:4px 8px 4px 28px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);color:#fff;font-size:11.5px;outline:none">
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+            <span style="font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;margin-right:2px">Offline Upload:</span>
+            <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('video')" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.4);color:#fef08a;font-size:11px;padding:3px 8px;font-weight:700" title="Upload local Video file (.mp4, .webm, .mov) directly into new block">🎬 + Video File</button>
+            <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('audio')" style="background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.4);color:#c084fc;font-size:11px;padding:3px 8px;font-weight:700" title="Upload local Audio soundtrack (.mp3, .wav, .ogg) directly into new block">🎵 + Audio File</button>
+            <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('3d')" style="background:rgba(56,189,248,0.15);border-color:rgba(56,189,248,0.4);color:#38bdf8;font-size:11px;padding:3px 8px;font-weight:700" title="Upload local 3D model (.glb, .gltf, .obj, .stl) directly into new block">📦 + 3D Model</button>
+            <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('image')" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#34d399;font-size:11px;padding:3px 8px;font-weight:700" title="Upload local Image (.png, .jpg, .webp, .svg) directly into new block">🖼️ + Image File</button>
+            <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('sandbox')" style="background:rgba(244,63,94,0.15);border-color:rgba(244,63,94,0.4);color:#fb7185;font-size:11px;padding:3px 8px;font-weight:700" title="Upload local JSX/HTML script (.jsx, .js, .html) directly into new live sandbox">⚡ + Sandbox Code</button>
+          </div>
+        </div>
+
+        <!-- Filterable Element Buttons Flow -->
+        <div id="ed-add-elements-list" style="display:flex;flex-wrap:wrap;align-items:center;gap:5px">
+          <span style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;align-self:center;margin-right:2px">Add Element:</span>
+          <button class="ed-add-btn" data-keywords="free text write note draft draw annotate pen" onclick="toggleFreeTextTool()" style="background:rgba(245,158,11,.25);color:#fef08a;border-color:var(--gold);font-weight:700">✍️ Free Text</button>
+          <button class="ed-add-btn" data-keywords="heading title h1 h2 h3 h4 h5 h6 header text section" onclick="edAddBlock('heading')">🏷️ Heading</button>
+          <button class="ed-add-btn" data-keywords="paragraph text body write copy article description story content" onclick="edAddBlock('paragraph')">📝 Text</button>
+          <button class="ed-add-btn" data-keywords="quote blockquote citation proverb excerpt testimonial" onclick="edAddBlock('quote')">📜 Quote</button>
+          <button class="ed-add-btn" data-keywords="list bullet numbered checklist todo items tasks" onclick="edAddBlock('list')">📋 List</button>
+          <button class="ed-add-btn" data-keywords="table grid spreadsheet rows columns data cells sheet" onclick="edAddBlock('table')">📊 Table</button>
+          <button class="ed-add-btn" data-keywords="code syntax script programming javascript python rust html css upload" onclick="edAddBlock('code')">💻 Code</button>
+          <button class="ed-add-btn" data-keywords="image photo picture 3d graphic banner visual upload offline png jpg webp" onclick="edAddBlock('web_image')">🖼️ 3D Image</button>
+          <button class="ed-add-btn" data-keywords="audio music sound soundtrack atmospheric loop mp3 wav ogg offline upload" onclick="edAddBlock('web_audio')">🎵 Soundtrack</button>
+          <button class="ed-add-btn" data-keywords="video movie motion stream player mp4 webm youtube upload clip offline film" onclick="edAddBlock('web_video')">🎬 Video</button>
+          <button class="ed-add-btn" data-keywords="3d model hologram glb gltf obj stl mesh spatial upload offline render threejs" onclick="edAddBlock('3d_model')">📦 3D Model</button>
+          <button class="ed-add-btn" data-keywords="ai copilot assistant gemini gpt claude intelligent prompt chat" onclick="edAddBlock('ai')">⚡ AI Copilot</button>
+          <button class="ed-add-btn" data-keywords="form input fields webhook survey feedback dispatch contact submit" onclick="edAddBlock('form')">📑 Form</button>
+          <button class="ed-add-btn" data-keywords="feature grid cards showcase highlights tiers columns cards" onclick="edAddBlock('feature_grid')">🌟 Feature Grid</button>
+          <button class="ed-add-btn" data-keywords="live feed telemetry dispatch beacon broadcast metrics real-time" onclick="edAddBlock('live_feed')">📡 Live Dispatch</button>
+          <button class="ed-add-btn" data-keywords="preorder pricing card payment stripe checkout commerce purchase buy" onclick="edAddBlock('preorder')">💎 Pre-Order</button>
+          <button class="ed-add-btn" data-keywords="button link cta smart action trigger click navigate action" onclick="edAddBlock('button')">🔘 Smart Action</button>
+          <button class="ed-add-btn" data-keywords="throttle dyno speedometer gauge telemetry speed car acceleration" onclick="edAddBlock('throttle_dyno')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🏎️ Throttle Dyno</button>
+          <button class="ed-add-btn" data-keywords="orbit sim satellite space planetary trajectory astrophysics physics gravity" onclick="edAddBlock('orbit_sim')" style="background:rgba(167,139,250,.15);color:#a78bfa;border-color:rgba(167,139,250,.4)">🛰️ Orbit Sim</button>
+          <button class="ed-add-btn" data-keywords="arr projector revenue financial forecast growth valuation chart saas" onclick="edAddBlock('arr_projector')" style="background:rgba(16,185,129,.15);color:#10b981;border-color:rgba(16,185,129,.4)">📈 ARR Projector</button>
+          <button class="ed-add-btn" data-keywords="tilt card 3d holographic perspective interactive hover tilt card" onclick="edAddBlock('tilt_card')" style="background:rgba(244,63,94,.15);color:#f43f5e;border-color:rgba(244,63,94,.4)">📐 3D Tilt Card</button>
+          <button class="ed-add-btn" data-keywords="jsx canvas sandbox react tailwind babel chartjs threejs live code widget upload script" onclick="edAddBlock('jsx_canvas')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">⚡ Live Sandbox</button>
+        </div>
       </div>
     </div>
 
@@ -11346,7 +11365,7 @@ function renderBlockNode(node,parent){
             <div style="font-family:'Cinzel',serif;font-weight:700;font-size:13.5px;color:#fef08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(lbl)}</div>
             <div style="font-size:11px;color:#34d399;margin-top:3px;display:flex;align-items:center;gap:5px">
               <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399"></span>
-              <strong>Atmospheric Audio (Loop Mode: Active)</strong>
+              <strong>${(src && src.startsWith("data:")) ? "⚡ Offline Atmospheric Soundtrack (100% Embedded Loop)" : "Atmospheric Audio (Loop Mode: Active)"}</strong>
             </div>
           </div>
           <audio controls loop src="${escapeHtml(src)}" style="height:34px;max-width:240px;outline:none"></audio>
@@ -11399,7 +11418,8 @@ function renderBlockNode(node,parent){
       const vl = document.createElement('div');
       vl.className = 'video-label';
       vl.style.cssText = 'display:flex;align-items:center;gap:10px;padding-top:12px;font-family:Cinzel,serif;font-size:14px;color:#fef08a;font-weight:700;';
-      vl.innerHTML = `<span style="color:var(--gold);font-size:18px">🎬</span> <span>${escapeHtml(lbl)}</span>`;
+      const offlineVBadge = (videoSrc && videoSrc.startsWith("data:")) ? '<span style="font-size:10px;padding:2px 8px;border-radius:6px;background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.4);margin-left:auto;font-family:monospace;font-weight:600">⚡ 100% Offline Embedded Video</span>' : '';
+      vl.innerHTML = `<span style="color:var(--gold);font-size:18px">🎬</span> <span>${escapeHtml(lbl)}</span> ${offlineVBadge}`;
       card.appendChild(vl);
       parent.appendChild(card);
       break;
@@ -14121,6 +14141,146 @@ function edShowEmpty() {
   edUpdateLivePreview();
 }
 
+
+// ── 🔍 Interactive Search Filter for Add Elements & Quick Offline Upload ────────
+function edFilterAddElements(query) {
+  const q = (query || '').toLowerCase().trim();
+  const allBtns = document.querySelectorAll('#ed-add-elements-list .ed-add-btn, .ed-empty-element-btn');
+  let matchCount = 0;
+  allBtns.forEach(btn => {
+    const txt = (btn.textContent || '').toLowerCase();
+    const kw = (btn.getAttribute('data-keywords') || '').toLowerCase();
+    const match = !q || txt.includes(q) || kw.includes(q);
+    btn.style.display = match ? '' : 'none';
+    if (match) matchCount++;
+  });
+}
+
+function edTriggerDirectUpload(kind) {
+  let page = (typeof edGetActivePage === 'function') ? edGetActivePage() : null;
+  if (!page && typeof edPages !== 'undefined' && edPages.length > 0) {
+    const idx = (typeof edActivePageIndex === 'number') ? edActivePageIndex : 0;
+    page = edPages[idx] || edPages[0];
+  }
+  if (!page) {
+    if (typeof edAddPage === 'function') {
+      edAddPage();
+      page = (typeof edGetActivePage === 'function') ? edGetActivePage() : (edPages && edPages[0]);
+    }
+  }
+  if (!page) {
+    if (typeof showToast === 'function') showToast('Please create or select a page first', 'err');
+    return;
+  }
+  if (!Array.isArray(page.blocks)) page.blocks = [];
+
+  const input = document.createElement('input');
+  input.type = 'file';
+  if (kind === 'video') input.accept = '.mp4,.webm,.ogg,.mov,.mkv';
+  else if (kind === 'audio') input.accept = '.mp3,.wav,.ogg,.m4a,.aac,.flac';
+  else if (kind === '3d') input.accept = '.glb,.gltf,.obj,.stl';
+  else if (kind === 'image') input.accept = '.png,.jpg,.jpeg,.webp,.svg,.gif,.bmp';
+  else if (kind === 'sandbox' || kind === 'code') input.accept = '.jsx,.js,.html,.tsx,.txt,.py,.rs,.css,.json,.sql';
+
+  input.onchange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (kind === 'sandbox' || kind === 'code') {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const content = ev.target.result;
+        const baseName = file.name.replace(/\.[^/.]+$/, "");
+        if (kind === 'sandbox') {
+          const b = {
+            id: (typeof edBId === 'function') ? edBId() : ('b_' + Math.random().toString(36).substr(2, 6)),
+            type: 'jsx_canvas',
+            value: baseName,
+            title: baseName + ' (Interactive Sandbox)',
+            filename: file.name,
+            code: content,
+            style: { code: content }
+          };
+          page.blocks.push(b);
+        } else {
+          const ext = file.name.split('.').pop().toLowerCase();
+          const langMap = { js: 'javascript', ts: 'typescript', jsx: 'javascript', tsx: 'typescript', py: 'python', rs: 'rust', html: 'html', css: 'css', json: 'json', sql: 'sql', sh: 'shell' };
+          const b = {
+            id: (typeof edBId === 'function') ? edBId() : ('b_' + Math.random().toString(36).substr(2, 6)),
+            type: 'code',
+            language: langMap[ext] || 'javascript',
+            code: content,
+            filename: file.name
+          };
+          page.blocks.push(b);
+        }
+        if (typeof edRenderBlocks === 'function') edRenderBlocks();
+        if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+        if (typeof showToast === 'function') showToast(`✓ Offline ${kind.toUpperCase()} embedded: ${file.name}`, 'ok');
+      };
+      reader.readAsText(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const dataUrl = ev.target.result;
+        const baseName = file.name.replace(/\.[^/.]+$/, "");
+        const ext = file.name.split('.').pop().toLowerCase();
+        const blockId = (typeof edBId === 'function') ? edBId() : ('b_' + Math.random().toString(36).substr(2, 6));
+
+        let b;
+        if (kind === 'video') {
+          b = {
+            id: blockId,
+            type: 'web_video',
+            src: dataUrl,
+            label: baseName,
+            filename: file.name,
+            format: ext,
+            style: { src: dataUrl, label: baseName }
+          };
+        } else if (kind === 'audio') {
+          b = {
+            id: blockId,
+            type: 'web_audio',
+            src: dataUrl,
+            label: baseName,
+            filename: file.name,
+            style: { src: dataUrl, label: baseName }
+          };
+        } else if (kind === '3d') {
+          b = {
+            id: blockId,
+            type: '3d_model',
+            src: dataUrl,
+            value: baseName + ' (3D Hologram)',
+            filename: file.name,
+            format: ext,
+            material_mode: 'cyber_hologram',
+            style: { src: dataUrl, format: ext }
+          };
+        } else if (kind === 'image') {
+          b = {
+            id: blockId,
+            type: 'web_image',
+            src: dataUrl,
+            alt: baseName,
+            filename: file.name,
+            style: { src: dataUrl, alt: baseName }
+          };
+        }
+        if (b) {
+          page.blocks.push(b);
+          if (typeof edRenderBlocks === 'function') edRenderBlocks();
+          if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+          if (typeof showToast === 'function') showToast(`✓ Offline ${kind.toUpperCase()} embedded: ${file.name}`, 'ok');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  input.click();
+}
+
 function edAddBlock(type) {
   const page = edPages.find(p => p.id === edCurrentPage);
   if (!page) { showToast('Add a page first.'); return; }
@@ -14425,26 +14585,39 @@ function edRenderBlocks() {
   ptRow.appendChild(ptInp);
   panel.appendChild(ptRow);
 
-  if (!page.blocks.length) {
+    if (!page.blocks.length) {
     const e = document.createElement('div');
     e.style.cssText = 'color:var(--text3);font-size:13px;text-align:center;padding:24px 20px;background:var(--surface);border-radius:12px;border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;gap:14px';
     e.innerHTML = `
-      <div style="font-weight:600;color:var(--text2)">This page has no blocks yet. Click an element below to add it immediately:</div>
+      <div style="font-weight:600;color:var(--text2)">This page has no blocks yet. Search elements or upload media directly:</div>
+      
+      <!-- Quick Offline Upload Row -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid rgba(255,255,255,0.06)">
+        <span style="font-size:10.5px;font-weight:700;color:var(--gold);text-transform:uppercase">Direct Offline Upload:</span>
+        <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('video')" style="padding:4px 10px;font-size:11.5px;background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.4);color:#fef08a;font-weight:700">🎬 + Upload Video</button>
+        <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('audio')" style="padding:4px 10px;font-size:11.5px;background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.4);color:#c084fc;font-weight:700">🎵 + Upload Audio</button>
+        <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('3d')" style="padding:4px 10px;font-size:11.5px;background:rgba(56,189,248,0.15);border-color:rgba(56,189,248,0.4);color:#38bdf8;font-weight:700">📦 + Upload 3D</button>
+        <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('image')" style="padding:4px 10px;font-size:11.5px;background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.4);color:#34d399;font-weight:700">🖼️ + Upload Image</button>
+        <button class="toolbar-btn" type="button" onclick="edTriggerDirectUpload('sandbox')" style="padding:4px 10px;font-size:11.5px;background:rgba(244,63,94,0.15);border-color:rgba(244,63,94,0.4);color:#fb7185;font-weight:700">⚡ + Upload Sandbox</button>
+      </div>
+
+      <!-- Quick Add Elements Row -->
       <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:680px">
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('heading')">🏷️ + Heading</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('paragraph')">📝 + Text</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_video')">🎬 + Video / YouTube</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('button')">⚡ + Button</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('3d_model')">📦 + 3D Model</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_audio')">🎵 + Audio</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_image')">🖼️ + Image</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('table')">📊 + Table</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('quote')">📜 + Quote</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('throttle_dyno')">🏎️ + Dyno</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(167,139,250,.4);color:#a78bfa" onclick="edAddBlock('orbit_sim')">🛰️ + Orbit Sim</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(16,185,129,.4);color:#10b981" onclick="edAddBlock('arr_projector')">📈 + ARR</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(244,63,94,.4);color:#f43f5e" onclick="edAddBlock('tilt_card')">📐 + 3D Tilt</button>
-        <button class="toolbar-btn" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('jsx_canvas')">⚡ + Live Sandbox</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="heading title h1 h2 h3 header" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('heading')">🏷️ + Heading</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="paragraph text body article copy" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('paragraph')">📝 + Text</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="video movie motion stream player mp4 upload offline" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_video')">🎬 + Video / YouTube</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="button link cta smart action trigger" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('button')">⚡ + Button</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="3d model hologram glb gltf obj stl upload offline" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('3d_model')">📦 + 3D Model</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="audio music sound soundtrack mp3 wav upload offline" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_audio')">🎵 + Audio</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="image photo picture 3d banner upload offline" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('web_image')">🖼️ + Image</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="table grid spreadsheet rows columns data" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('table')">📊 + Table</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="quote blockquote citation proverb excerpt" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('quote')">📜 + Quote</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="code syntax script programming javascript python rust" style="padding:6px 12px;font-size:12px" onclick="edAddBlock('code')">💻 + Code</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="throttle dyno speedometer telemetry gauge" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('throttle_dyno')">🏎️ + Dyno</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="orbit sim satellite space trajectory" style="padding:6px 12px;font-size:12px;border-color:rgba(167,139,250,.4);color:#a78bfa" onclick="edAddBlock('orbit_sim')">🛰️ + Orbit Sim</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="arr projector revenue financial forecast growth" style="padding:6px 12px;font-size:12px;border-color:rgba(16,185,129,.4);color:#10b981" onclick="edAddBlock('arr_projector')">📈 + ARR</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="tilt card 3d holographic perspective" style="padding:6px 12px;font-size:12px;border-color:rgba(244,63,94,.4);color:#f43f5e" onclick="edAddBlock('tilt_card')">📐 + 3D Tilt</button>
+        <button class="toolbar-btn ed-empty-element-btn" data-keywords="jsx canvas sandbox react tailwind babel chartjs threejs upload" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('jsx_canvas')">⚡ + Live Sandbox</button>
       </div>
     `;
     panel.appendChild(e);
@@ -14557,6 +14730,36 @@ function edRenderBlocks() {
         if (ta) ta.value = '';
         edUpdateLivePreview();
       };
+            const btnUploadScript = document.createElement('button');
+      btnUploadScript.type = 'button';
+      btnUploadScript.className = 'find-btn';
+      btnUploadScript.style.cssText = 'font-size:10.5px;background:rgba(56,189,248,0.15);color:#38bdf8;border-color:rgba(56,189,248,0.4);font-weight:700';
+      btnUploadScript.textContent = '📁 Upload Script File';
+      btnUploadScript.onclick = () => {
+        const fi = document.createElement('input');
+        fi.type = 'file';
+        fi.accept = '.js,.py,.rs,.html,.css,.json,.ts,.jsx,.tsx,.c,.cpp,.java,.sql,.sh,.txt';
+        fi.onchange = (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
+          const ext = f.name.split('.').pop().toLowerCase();
+          const langMap = { js: 'javascript', py: 'python', rs: 'rust', html: 'html', css: 'css', json: 'json', ts: 'typescript', jsx: 'javascript', tsx: 'typescript', c: 'c', cpp: 'cpp', java: 'java', sql: 'sql', sh: 'shell' };
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            block.code = ev.target.result;
+            block.language = langMap[ext] || 'javascript';
+            block.filename = f.name;
+            li.value = block.language;
+            const ta = div.querySelector('textarea');
+            if (ta) ta.value = block.code;
+            edUpdateLivePreview();
+            if (typeof showToast === 'function') showToast(`✓ Script loaded: ${f.name} (${block.language})`, 'ok');
+          };
+          reader.readAsText(f);
+        };
+        fi.click();
+      };
+      sampleRow.appendChild(btnUploadScript);
       sampleRow.appendChild(btnClr);
 
       div.appendChild(sampleRow);
@@ -14837,15 +15040,291 @@ function edRenderBlocks() {
       renderFieldsList();
       syncChildren();
 
-    } else if (block.type === 'web_image') {
-      mk('input', 'Image URL (https://...)', block.src || '', v => { block.src = v; });
-      mk('input', 'Alt description', block.alt || '', v => { block.alt = v; });
+        } else if (block.type === 'web_image') {
+      mk('input', 'Alt Description / Caption', block.alt || block.value || '', v => { block.alt = block.value = v; edUpdateLivePreview(); });
+
+      // Mode Selector Tabs
+      let curMode = (block.src && block.src.startsWith('data:')) ? 'upload' : ((block.src && !block.src.startsWith('data:')) ? 'url' : 'upload');
+      const modeBar = document.createElement('div');
+      modeBar.style.cssText = 'display:flex;gap:4px;margin:5px 0;background:var(--surface2);padding:3px;border-radius:6px';
+
+      const btnUpload = document.createElement('button');
+      btnUpload.type = 'button';
+      btnUpload.textContent = '📁 Offline Image File';
+
+      const btnUrl = document.createElement('button');
+      btnUrl.type = 'button';
+      btnUrl.textContent = '🌐 Online Image URL';
+
+      modeBar.appendChild(btnUpload);
+      modeBar.appendChild(btnUrl);
+      div.appendChild(modeBar);
+
+      const dynamicArea = document.createElement('div');
+      dynamicArea.style.cssText = 'margin:6px 0';
+      div.appendChild(dynamicArea);
+
+      const renderImageSourceMode = () => {
+        btnUpload.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='upload'?'background:#10b981;color:#fff':'background:transparent;color:var(--text2)'}`;
+        btnUrl.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='url'?'background:#10b981;color:#fff':'background:transparent;color:var(--text2)'}`;
+        dynamicArea.innerHTML = '';
+
+        if (curMode === 'upload') {
+          const dropBox = document.createElement('div');
+          dropBox.style.cssText = 'border:1.5px dashed rgba(16,185,129,0.4);background:rgba(16,185,129,0.05);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all 0.15s';
+          dropBox.innerHTML = `
+            <div style="font-size:22px;margin-bottom:4px">🖼️</div>
+            <div style="font-size:11.5px;font-weight:700;color:#34d399">${block.filename ? escapeHtml(block.filename) : 'Click or Drop Image (.PNG, .JPG, .WebP, .SVG)'}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">${block.src && block.src.startsWith('data:') ? '⚡ Image embedded offline with 3D holographic tilt' : '100% Offline — saved inside the document'}</div>
+          `;
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = '.png,.jpg,.jpeg,.webp,.svg,.gif,.bmp';
+          fileInput.style.display = 'none';
+          fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              block.filename = file.name;
+              if (!block.alt) block.alt = file.name.replace(/\.[^/.]+$/, "");
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                block.src = ev.target.result;
+                if (!block.style) block.style = {};
+                block.style.src = ev.target.result;
+                block.style.alt = block.alt;
+                edUpdateLivePreview();
+                renderImageSourceMode();
+                if (typeof showToast === 'function') showToast(`✓ Offline Image Embedded (${file.name})`, 'ok');
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+          dropBox.onclick = () => fileInput.click();
+          dynamicArea.appendChild(dropBox);
+          dynamicArea.appendChild(fileInput);
+
+          if (block.src && block.src.startsWith('data:')) {
+            const thumbWrap = document.createElement('div');
+            thumbWrap.style.cssText = 'margin-top:8px;display:flex;align-items:center;gap:8px';
+            thumbWrap.innerHTML = `
+              <img src="${escapeHtml(block.src)}" style="width:48px;height:48px;border-radius:6px;object-fit:cover;border:1px solid rgba(16,185,129,0.4)">
+              <div style="flex:1;min-width:0;font-size:10.5px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(block.filename || 'Embedded Image')}</div>
+            `;
+            const clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.textContent = '🗑️';
+            clearBtn.className = 'find-btn';
+            clearBtn.title = 'Remove Image';
+            clearBtn.style.cssText = 'font-size:11px;color:#ef4444;border-color:rgba(239,68,68,0.3);padding:3px 6px';
+            clearBtn.onclick = () => { block.src = ''; block.filename = ''; if (block.style) block.style.src = ''; edUpdateLivePreview(); renderImageSourceMode(); };
+            thumbWrap.appendChild(clearBtn);
+            dynamicArea.appendChild(thumbWrap);
+          }
+        } else {
+          const urlInp = document.createElement('input');
+          urlInp.placeholder = 'Image URL (https://...)';
+          urlInp.value = block.src && !block.src.startsWith('data:') ? block.src : '';
+          urlInp.style.cssText = 'width:100%;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px';
+          urlInp.oninput = () => {
+            block.src = urlInp.value.trim();
+            block.filename = '';
+            if (!block.style) block.style = {};
+            block.style.src = block.src;
+            edUpdateLivePreview();
+          };
+          dynamicArea.appendChild(urlInp);
+        }
+      };
+
+      btnUpload.onclick = () => { curMode = 'upload'; renderImageSourceMode(); };
+      btnUrl.onclick = () => { curMode = 'url'; renderImageSourceMode(); };
+      renderImageSourceMode();
+
     } else if (block.type === 'web_audio') {
-      mk('input', 'Audio Stream URL (https://... MP3/OGG)', block.src || '', v => { block.src = v; });
-      mk('input', 'Track Title', block.label || '', v => { block.label = v; });
+      mk('input', 'Track Title / Soundtrack Name', block.label || block.value || '', v => { block.label = block.value = v; edUpdateLivePreview(); });
+
+      // Mode Selector Tabs
+      let curMode = (block.src && block.src.startsWith('data:')) ? 'upload' : ((block.src && !block.src.startsWith('data:')) ? 'url' : 'upload');
+      const modeBar = document.createElement('div');
+      modeBar.style.cssText = 'display:flex;gap:4px;margin:5px 0;background:var(--surface2);padding:3px;border-radius:6px';
+
+      const btnUpload = document.createElement('button');
+      btnUpload.type = 'button';
+      btnUpload.textContent = '📁 Offline Audio File';
+
+      const btnUrl = document.createElement('button');
+      btnUrl.type = 'button';
+      btnUrl.textContent = '🌐 Online / Stream URL';
+
+      modeBar.appendChild(btnUpload);
+      modeBar.appendChild(btnUrl);
+      div.appendChild(modeBar);
+
+      const dynamicArea = document.createElement('div');
+      dynamicArea.style.cssText = 'margin:6px 0';
+      div.appendChild(dynamicArea);
+
+      const renderAudioSourceMode = () => {
+        btnUpload.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='upload'?'background:#7c3aed;color:#fff':'background:transparent;color:var(--text2)'}`;
+        btnUrl.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='url'?'background:#7c3aed;color:#fff':'background:transparent;color:var(--text2)'}`;
+        dynamicArea.innerHTML = '';
+
+        if (curMode === 'upload') {
+          const dropBox = document.createElement('div');
+          dropBox.style.cssText = 'border:1.5px dashed rgba(124,58,237,0.4);background:rgba(124,58,237,0.05);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all 0.15s';
+          dropBox.innerHTML = `
+            <div style="font-size:22px;margin-bottom:4px">🎵</div>
+            <div style="font-size:11.5px;font-weight:700;color:#c084fc">${block.filename ? escapeHtml(block.filename) : 'Click or Drop Soundtrack File (.MP3, .WAV, .OGG, .M4A)'}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">${block.src && block.src.startsWith('data:') ? '⚡ Soundtrack embedded offline in .ldocx package' : '100% Offline — saved inside the document, loops automatically'}</div>
+          `;
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = '.mp3,.wav,.ogg,.m4a,.aac,.flac';
+          fileInput.style.display = 'none';
+          fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              block.filename = file.name;
+              if (!block.label) block.label = file.name.replace(/\.[^/.]+$/, "");
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                block.src = ev.target.result;
+                if (!block.style) block.style = {};
+                block.style.src = ev.target.result;
+                block.style.label = block.label;
+                edUpdateLivePreview();
+                renderAudioSourceMode();
+                if (typeof showToast === 'function') showToast(`✓ Offline Soundtrack Embedded (${file.name})`, 'ok');
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+          dropBox.onclick = () => fileInput.click();
+          dynamicArea.appendChild(dropBox);
+          dynamicArea.appendChild(fileInput);
+
+          if (block.src && block.src.startsWith('data:')) {
+            const clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.textContent = '🗑️ Remove Offline Audio';
+            clearBtn.className = 'find-btn';
+            clearBtn.style.cssText = 'margin-top:6px;font-size:10.5px;color:#ef4444;border-color:rgba(239,68,68,0.3)';
+            clearBtn.onclick = () => { block.src = ''; block.filename = ''; if (block.style) block.style.src = ''; edUpdateLivePreview(); renderAudioSourceMode(); };
+            dynamicArea.appendChild(clearBtn);
+          }
+        } else {
+          const urlInp = document.createElement('input');
+          urlInp.placeholder = 'Audio Stream URL (https://... MP3, OGG, or YouTube)';
+          urlInp.value = block.src && !block.src.startsWith('data:') ? block.src : '';
+          urlInp.style.cssText = 'width:100%;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px';
+          urlInp.oninput = () => {
+            block.src = urlInp.value.trim();
+            block.filename = '';
+            if (!block.style) block.style = {};
+            block.style.src = block.src;
+            edUpdateLivePreview();
+          };
+          dynamicArea.appendChild(urlInp);
+        }
+      };
+
+      btnUpload.onclick = () => { curMode = 'upload'; renderAudioSourceMode(); };
+      btnUrl.onclick = () => { curMode = 'url'; renderAudioSourceMode(); };
+      renderAudioSourceMode();
+
     } else if (block.type === 'web_video') {
-      mk('input', 'Video URL (https://... MP4/WebM)', block.src || '', v => { block.src = v; });
-      mk('input', 'Video Label', block.label || '', v => { block.label = v; });
+      mk('input', 'Video Title / Caption', block.label || block.value || '', v => { block.label = block.value = v; edUpdateLivePreview(); });
+
+      // Mode Selector Tabs
+      let curMode = (block.src && block.src.startsWith('data:')) ? 'upload' : ((block.src && !block.src.startsWith('data:')) ? 'url' : 'upload');
+      const modeBar = document.createElement('div');
+      modeBar.style.cssText = 'display:flex;gap:4px;margin:5px 0;background:var(--surface2);padding:3px;border-radius:6px';
+
+      const btnUpload = document.createElement('button');
+      btnUpload.type = 'button';
+      btnUpload.textContent = '📁 Offline Video File';
+
+      const btnUrl = document.createElement('button');
+      btnUrl.type = 'button';
+      btnUrl.textContent = '🌐 Online / YouTube URL';
+
+      modeBar.appendChild(btnUpload);
+      modeBar.appendChild(btnUrl);
+      div.appendChild(modeBar);
+
+      const dynamicArea = document.createElement('div');
+      dynamicArea.style.cssText = 'margin:6px 0';
+      div.appendChild(dynamicArea);
+
+      const renderVideoSourceMode = () => {
+        btnUpload.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='upload'?'background:#f59e0b;color:#0a0a14':'background:transparent;color:var(--text2)'}`;
+        btnUrl.style.cssText = `flex:1;font-size:10.5px;padding:4px;border:none;border-radius:4px;cursor:pointer;font-weight:700;${curMode==='url'?'background:#f59e0b;color:#0a0a14':'background:transparent;color:var(--text2)'}`;
+        dynamicArea.innerHTML = '';
+
+        if (curMode === 'upload') {
+          const dropBox = document.createElement('div');
+          dropBox.style.cssText = 'border:1.5px dashed rgba(245,158,11,0.4);background:rgba(245,158,11,0.05);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all 0.15s';
+          dropBox.innerHTML = `
+            <div style="font-size:22px;margin-bottom:4px">🎬</div>
+            <div style="font-size:11.5px;font-weight:700;color:#fef08a">${block.filename ? escapeHtml(block.filename) : 'Click or Drop Video File (.MP4, .WebM, .MOV)'}</div>
+            <div style="font-size:10px;color:var(--text3);margin-top:2px">${block.src && block.src.startsWith('data:') ? '⚡ Video embedded offline in .ldocx package' : '100% Offline — saved inside the document, no server needed'}</div>
+          `;
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = '.mp4,.webm,.ogg,.mov,.mkv';
+          fileInput.style.display = 'none';
+          fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              block.filename = file.name;
+              block.format = file.name.split('.').pop().toLowerCase();
+              if (!block.label) block.label = file.name.replace(/\.[^/.]+$/, "");
+              const reader = new FileReader();
+              reader.onload = (ev) => {
+                block.src = ev.target.result;
+                if (!block.style) block.style = {};
+                block.style.src = ev.target.result;
+                block.style.label = block.label;
+                edUpdateLivePreview();
+                renderVideoSourceMode();
+                if (typeof showToast === 'function') showToast(`✓ Offline Video Embedded (${file.name})`, 'ok');
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+          dropBox.onclick = () => fileInput.click();
+          dynamicArea.appendChild(dropBox);
+          dynamicArea.appendChild(fileInput);
+
+          if (block.src && block.src.startsWith('data:')) {
+            const clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.textContent = '🗑️ Remove Offline Video';
+            clearBtn.className = 'find-btn';
+            clearBtn.style.cssText = 'margin-top:6px;font-size:10.5px;color:#ef4444;border-color:rgba(239,68,68,0.3)';
+            clearBtn.onclick = () => { block.src = ''; block.filename = ''; if (block.style) block.style.src = ''; edUpdateLivePreview(); renderVideoSourceMode(); };
+            dynamicArea.appendChild(clearBtn);
+          }
+        } else {
+          const urlInp = document.createElement('input');
+          urlInp.placeholder = 'Video URL (https://... MP4, WebM, or YouTube link)';
+          urlInp.value = block.src && !block.src.startsWith('data:') ? block.src : '';
+          urlInp.style.cssText = 'width:100%;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px';
+          urlInp.oninput = () => {
+            block.src = urlInp.value.trim();
+            block.filename = '';
+            if (!block.style) block.style = {};
+            block.style.src = block.src;
+            edUpdateLivePreview();
+          };
+          dynamicArea.appendChild(urlInp);
+        }
+      };
+
+      btnUpload.onclick = () => { curMode = 'upload'; renderVideoSourceMode(); };
+      btnUrl.onclick = () => { curMode = 'url'; renderVideoSourceMode(); };
+      renderVideoSourceMode();
+
     } else if (block.type === '3d_model') {
       mk('input', 'Hologram Title / Caption', block.value || '', v => { block.value = v; edUpdateLivePreview(); });
 
@@ -15236,7 +15715,36 @@ function edRenderBlocks() {
           edUpdateLivePreview();
         }
       };
-      helperRow.appendChild(helperSel);
+            helperRow.appendChild(helperSel);
+      const btnUploadSandbox = document.createElement('button');
+      btnUploadSandbox.type = 'button';
+      btnUploadSandbox.className = 'find-btn';
+      btnUploadSandbox.style.cssText = 'font-size:10.5px;background:rgba(244,63,94,0.15);color:#fb7185;border-color:rgba(244,63,94,0.4);font-weight:700;white-space:nowrap';
+      btnUploadSandbox.textContent = '📁 Upload Component (.jsx, .js, .html)';
+      btnUploadSandbox.onclick = () => {
+        const fi = document.createElement('input');
+        fi.type = 'file';
+        fi.accept = '.jsx,.js,.html,.tsx,.txt';
+        fi.onchange = (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const code = ev.target.result;
+            block.code = code;
+            if (!block.style) block.style = {};
+            block.style.code = code;
+            block.filename = f.name;
+            const ta = div.querySelector('textarea');
+            if (ta) ta.value = code;
+            edUpdateLivePreview();
+            if (typeof showToast === 'function') showToast(`✓ Component code loaded: ${f.name}`, 'ok');
+          };
+          reader.readAsText(f);
+        };
+        fi.click();
+      };
+      helperRow.appendChild(btnUploadSandbox);
       div.appendChild(helperRow);
 
       // Code Editor Textarea
@@ -18455,7 +18963,7 @@ function renderProfileHub(user) {
   container.innerHTML = `
     <div class="ldoc-profile-hub">
       <div class="ldoc-profile-header">
-        <img class="ldoc-profile-avatar" src="${user.avatar || 'data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%236366f1'/%3E%3Ccircle cx='20' cy='15' r='7' fill='%23fff'/%3E%3Cpath d='M8 35c0-7 5.4-12 12-12s12 5 12 12' fill='%23fff'/%3E%3C/svg%3E'}" alt="Avatar">
+        <img class="ldoc-profile-avatar" src="${user.avatar || 'data:image/svg+xml;utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 40 40\'%3E%3Ccircle cx=\'20\' cy=\'20\' r=\'20\' fill=\'%236366f1\'/%3E%3Ccircle cx=\'20\' cy=\'15\' r=\'7\' fill=\'%23fff\'/%3E%3Cpath d=\'M8 35c0-7 5.4-12 12-12s12 5 12 12\' fill=\'%23fff\'/%3E%3C/svg%3E'}" alt="Avatar">
         <div class="ldoc-profile-meta">
           <div style="display:flex;align-items:center;gap:8px">
             <span class="ldoc-profile-name">${escapeHtml(user.name)}</span>
