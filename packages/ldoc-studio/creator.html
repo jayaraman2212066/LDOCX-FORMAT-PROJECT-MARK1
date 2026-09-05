@@ -3336,11 +3336,28 @@ body.creator-split-50-50 #creator-preview-pane {
   </div>
 </div>
 
-<button id="ai-helper-toggle" onclick="toggleAiHelper()"><img src="ai-brain.png" alt="AI Brain" style="width:18px;height:18px;object-fit:contain;border-radius:4px" /> <span>AI Helper</span></button>
+<button id="ai-helper-toggle" onclick="toggleAiHelper()" title="LDOC AI Copilot & Document Assistant">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;flex-shrink:0;filter:drop-shadow(0 0 6px rgba(245,158,11,0.6))">
+    <path d="M9.5 2A4.5 4.5 0 0 0 5 6.5c0 .4.05.79.15 1.16A5 5 0 0 0 3 12a5 5 0 0 0 2.5 4.33A4.5 4.5 0 0 0 10 21h.5V2h-1zm5 0h-.5v19h.5a4.5 4.5 0 0 0 4.5-4.67A5 5 0 0 0 21 12a5 5 0 0 0-2.15-4.34A4.5 4.5 0 0 0 14.5 2z" stroke="#fef08a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="rgba(245,158,11,0.2)"/>
+    <path d="M12 5v14M8 8h4M12 12h4M7 16h5M12 16h5" stroke="#38bdf8" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="8" cy="8" r="1.2" fill="#fef08a"/>
+    <circle cx="16" cy="12" r="1.2" fill="#fef08a"/>
+    <circle cx="7" cy="16" r="1.2" fill="#38bdf8"/>
+  </svg>
+  <span>AI Helper</span>
+</button>
 
 <div id="ai-helper-panel">
   <div class="ai-hdr">
-    <div style="display:flex;align-items:center;gap:8px"><img src="ai-brain.png" alt="AI" style="width:22px;height:22px;object-fit:contain;border-radius:4px" /><h3 style="margin:0;font-size:14px;color:#fef08a;font-family:'Cinzel',serif">AI Creator Assistant</h3></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:24px;height:24px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(245,158,11,0.3)">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.5 2A4.5 4.5 0 0 0 5 6.5c0 .4.05.79.15 1.16A5 5 0 0 0 3 12a5 5 0 0 0 2.5 4.33A4.5 4.5 0 0 0 10 21h.5V2h-1zm5 0h-.5v19h.5a4.5 4.5 0 0 0 4.5-4.67A5 5 0 0 0 21 12a5 5 0 0 0-2.15-4.34A4.5 4.5 0 0 0 14.5 2z" stroke="#fef08a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="rgba(245,158,11,0.2)"/>
+          <path d="M12 5v14M8 8h4M12 12h4M7 16h5M12 16h5" stroke="#38bdf8" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 style="margin:0;font-size:14px;color:#fef08a;font-family:'Cinzel',serif">AI Creator Assistant</h3>
+    </div>
     <button style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px" onclick="toggleAiHelper()">✕</button>
   </div>
   <div class="ai-messages" id="ai-msgs">
@@ -5198,6 +5215,50 @@ function createVideoPlayerHtml(src, label = '', autoplay = false, height = '220p
         <span style="color:#ef4444">▶</span> <strong>${escapeHtml(label)}</strong>
         <span style="margin-left:auto;color:#38bdf8;font-family:monospace">YouTube 4K Stream</span>
       </div>` : ''}
+    `;
+  }
+
+  const isHtmlVis = /^\s*<!DOCTYPE\b|^\s*<html\b|<\s*canvas\b|<\s*script\b|THREE\.|WebGL/i.test(src) || /<\s*style\b/i.test(src);
+  if (isHtmlVis) {
+    let processed = src.replace(/(<script\b[^>]*?\bsrc=["'])([^"'>]+)(["'][^>]*?>\s*<\/script>)/gi, (match, prefix, s, suffix) => {
+      if (lower.includes('orbitcontrols.js') || lower.includes('orbitcontrols')) return `${prefix}vendor/OrbitControls.js${suffix}`;
+      if (lower.includes('gltfloader.js') || lower.includes('gltfloader')) return `${prefix}vendor/GLTFLoader.js${suffix}`;
+      if (lower.includes('objloader.js') || lower.includes('objloader')) return `${prefix}vendor/OBJLoader.js${suffix}`;
+      if (lower.includes('stlloader.js') || lower.includes('stlloader')) return `${prefix}vendor/STLLoader.js${suffix}`;
+      if (lower.includes('three.min.js') || lower.includes('three.js') || lower.includes('three@') || lower.includes('/three/')) return `${prefix}vendor/three.min.js${suffix}`;
+      if (lower.includes('chart.min.js') || lower.includes('chart.js')) return `${prefix}vendor/chart.min.js${suffix}`;
+      return match;
+    });
+    const shims = `
+<style>html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; } canvas { display: block; width: 100%; height: 100%; }</style>
+<script>
+window.addEventListener('error', function(e) { console.warn('[Sandbox catch]:', e.message); });
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof THREE !== 'undefined' && !THREE.OrbitControls) {
+    THREE.OrbitControls = function(obj, dom) {
+      this.object = obj; this.domElement = dom || document.body; this.update = function() {}; this.dispose = function() {};
+      let down = false, px = 0, py = 0; const target = this.domElement;
+      target.addEventListener('mousedown', function(e) { down = true; px = e.clientX; py = e.clientY; });
+      window.addEventListener('mouseup', function() { down = false; });
+      window.addEventListener('mousemove', function(e) { if (!down || !obj) return; obj.rotation.y += (e.clientX - px) * 0.01; obj.rotation.x += (e.clientY - py) * 0.01; px = e.clientX; py = e.clientY; });
+    };
+  }
+});
+<\/script>
+`;
+    if (/<head\b[^>]*>/i.test(processed)) processed = processed.replace(/<head\b[^>]*>/i, `$&${shims}`);
+    else if (/<html\b[^>]*>/i.test(processed)) processed = processed.replace(/<html\b[^>]*>/i, `$&<head>${shims}</head>`);
+    else processed = `<!DOCTYPE html><html><head>${shims}</head><body>${processed}</body></html>`;
+
+    return `
+      <div style="border-radius:12px;overflow:hidden;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.85);position:relative">
+        <iframe srcdoc="${escapeHtml(processed)}" 
+                title="${escapeHtml(label || 'Interactive 3D / Live Motion Sandbox')}"
+                style="width:100%;height:${height === '160px' ? '220px' : '360px'};border:none;display:block;background:#000"
+                sandbox="allow-scripts allow-modals allow-same-origin allow-forms"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        ${label ? `<div style="font-size:11px;color:var(--text2);padding:6px 12px;background:rgba(0,0,0,0.7);display:flex;align-items:center;gap:6px"><span>⚡</span> <strong>${escapeHtml(label)}</strong> <span style="margin-left:auto;color:#38bdf8;font-family:monospace">Interactive 3D Sandbox</span></div>` : ''}
+      </div>
     `;
   }
 

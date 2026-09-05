@@ -4049,6 +4049,8 @@ mark.ldoc-search-match.active {
 <!-- Local Offline Vendor Libraries (Zero Outsource / 100% Offline Standalone) -->
 <script src="vendor/three.min.js"></script>
 <script>if(typeof THREE==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
+<script src="vendor/OrbitControls.js"></script>
+<script>if(typeof THREE!=='undefined'&&!THREE.OrbitControls&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>')</script>
 <script src="vendor/GLTFLoader.js"></script>
 <script>if(typeof THREE!=='undefined'&&!THREE.GLTFLoader&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"><\/script>')</script>
 <script src="vendor/OBJLoader.js"></script>
@@ -4499,7 +4501,12 @@ mark.ldoc-search-match.active {
   <!-- Header -->
   <div class="ai-helper-header">
     <div class="ai-helper-header-left">
-      <img class="ai-helper-brand" src="ai-brain.png" alt="AI Brain" style="width:24px;height:24px;border-radius:6px;object-fit:contain" />
+      <div class="ai-helper-brand" style="width:26px;height:26px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(245,158,11,0.3)">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.5 2A4.5 4.5 0 0 0 5 6.5c0 .4.05.79.15 1.16A5 5 0 0 0 3 12a5 5 0 0 0 2.5 4.33A4.5 4.5 0 0 0 10 21h.5V2h-1zm5 0h-.5v19h.5a4.5 4.5 0 0 0 4.5-4.67A5 5 0 0 0 21 12a5 5 0 0 0-2.15-4.34A4.5 4.5 0 0 0 14.5 2z" stroke="#fef08a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="rgba(245,158,11,0.2)"/>
+          <path d="M12 5v14M8 8h4M12 12h4M7 16h5M12 16h5" stroke="#38bdf8" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
       <div>
         <strong id="ai-panel-title">LDOCX AI Assistant</strong>
         <span id="ai-panel-subtitle">Document Intelligence &amp; Live Sync</span>
@@ -8013,6 +8020,18 @@ function resetJsxSandbox(uid) {
   }
 }
 
+function toggleJsxFullscreen(uid) {
+  const bodyEl = document.getElementById(`${uid}-body`) || document.getElementById(`jsx-output-${uid}`);
+  if (!bodyEl) return;
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    if (bodyEl.requestFullscreen) bodyEl.requestFullscreen();
+    else if (bodyEl.webkitRequestFullscreen) bodyEl.webkitRequestFullscreen();
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+}
+
 function triggerTelemetryBurst(btn) {
   if (!btn) return;
   btn.textContent = '⚡ Scanning...';
@@ -10630,6 +10649,37 @@ function nodeLabel(n){if(!n)return '';return n.label||(n.aria&&n.aria.label)||n.
 function nodePH(n){if(!n)return '';return n.placeholder||(n.aria&&n.aria.placeholder)||'';}
 function assetUrl(n){return n.asset_id?`${API}/documents/${docId}/assets/${n.asset_id}`:'';;}
 
+function renderInteractiveVisualSandbox(code, title, parent, node = {}) {
+  const card = document.createElement('div');
+  card.className = 'jsx-canvas-card visual-sandbox-card';
+  card.style.cssText = 'background:rgba(15,15,28,0.95);border:1.5px solid rgba(245,158,11,0.4);border-radius:18px;padding:14px;margin:16px 0;box-shadow:0 16px 48px rgba(0,0,0,0.85);position:relative;z-index:10;';
+  const uid = 'vis_' + Math.random().toString(36).slice(2, 9);
+
+  card.innerHTML = `
+    <div class="jsx-header" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span class="jsx-badge" style="font-family:'Cinzel',serif;font-weight:700;font-size:13px;color:#fef08a;display:inline-flex;align-items:center;gap:6px">
+        <span style="color:var(--gold);font-size:16px">⚡</span>
+        <span>${escapeHtml(title || 'Interactive 3D / Live Motion Sandbox')}</span>
+      </span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="jsx-toggle-btn" type="button" onclick="toggleJsxFullscreen('${uid}')" style="background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">⛶ Fullscreen</button>
+        <button class="jsx-toggle-btn" type="button" onclick="resetJsxSandbox('${uid}')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#cbd5e1;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">🔄 Reset</button>
+        <button class="jsx-toggle-btn" type="button" onclick="toggleJsxCode('${uid}')" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#cbd5e1;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">👁️ Code</button>
+      </div>
+    </div>
+    <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative;width:100%;height:440px;border-radius:12px;overflow:hidden;background:#000"></div>
+    <pre class="jsx-code-view" id="${uid}-code" style="display:none;max-height:220px;overflow:auto;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1);padding:10px;border-radius:8px;font-size:11px;color:#cbd5e1;margin-top:10px"><code>${escapeHtml(code)}</code></pre>
+  `;
+  parent.appendChild(card);
+
+  setTimeout(() => {
+    const bodyEl = document.getElementById(`${uid}-body`);
+    if (bodyEl) {
+      executeCustomSandboxCode(code, bodyEl, uid);
+    }
+  }, 25);
+}
+
 function executeCustomSandboxCode(rawCode, containerEl, uid) {
   if (!containerEl) return;
   containerEl.innerHTML = '';
@@ -10641,7 +10691,7 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
     hint.innerHTML = `
       <div style="font-size:18px;margin-bottom:4px">⚡</div>
       <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:2px">Custom Interactive Sandbox</div>
-      <div style="font-size:10.5px;color:var(--text3)">Enter custom HTML, React JSX, Chart.js, Three.js, or Canvas code</div>
+      <div style="font-size:10.5px;color:var(--text3)">Enter custom HTML, React JSX, Chart.js, Three.js, Unity WebGL, or Canvas code</div>
     `;
     containerEl.appendChild(hint);
     return;
@@ -10662,35 +10712,123 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
   };
 
   try {
-    // Classification: Is this HTML markup with optional <script> tags, OR is it pure JavaScript / React component code?
     const isJsModuleSyntax = /^(?:import\s|export\s|function\s+[A-Z]|class\s+[A-Z]|const\s+[A-Z]|let\s+[A-Z]|var\s+[A-Z]|(?:\/\*[\s\S]*?\*\/|\/\/[^\n]*\n)*\s*(?:import|export|function\s+[A-Z]|class\s+[A-Z]|const\s+[A-Z]))/.test(trimmed);
     const startsWithHtmlTag = /^\s*(?:<!--[\s\S]*?-->\s*)*<\s*(?:!DOCTYPE|html|head|body|div|span|canvas|section|header|footer|nav|aside|article|main|form|p|h[1-6]|button|input|svg|table|style|script)\b/i.test(trimmed);
     const hasScriptTag = /<\s*script\b/i.test(trimmed);
     const hasJsxSyntax = /className=|style=\{\{|<[A-Z][A-Za-z0-9_]*|\/>/.test(trimmed);
 
-    const isHtml = startsWithHtmlTag && !isJsModuleSyntax && (hasScriptTag || !hasJsxSyntax);
+    const isHtml = (startsWithHtmlTag && !isJsModuleSyntax && (hasScriptTag || !hasJsxSyntax)) || /^\s*<!DOCTYPE\b|^\s*<html\b/i.test(trimmed);
+    const is3dCanvasScript = !hasJsxSyntax && (trimmed.includes('THREE.') || trimmed.includes('WebGL') || trimmed.includes('createUnityInstance') || trimmed.includes('renderer.setSize') || trimmed.includes('document.body.appendChild'));
 
-    if (isHtml) {
-      // HTML markup with optional embedded <script> tags
-      const scopedCode = trimmed.replace(/\bdocument\.getElementById\((["'])([^"'\s\)]+)\1\)/g, (m, q, id) => {
-        return `((this && this.closest && this.closest('[data-scope]')) ? this.closest('[data-scope]').querySelector('#${id}') : document.getElementById('${id}'))`;
+    if (isHtml || is3dCanvasScript) {
+      // Execute in an isolated sandbox iframe to completely prevent DOM leaks, style collisions, or window takeovers!
+      const iframe = document.createElement('iframe');
+      iframe.className = 'ldoc-sandbox-frame';
+      iframe.setAttribute('sandbox', 'allow-scripts allow-modals allow-same-origin allow-forms');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+      
+      const isMini = containerEl.id && containerEl.id.startsWith('mini-sandbox-');
+      const isLivePreview = containerEl.closest && containerEl.closest('#ed-preview-pane');
+      const frameHeight = isMini ? '220px' : (isLivePreview ? '300px' : (containerEl.style.height || '440px'));
+      iframe.style.cssText = `width:100%;height:${frameHeight};min-height:${isMini ? '200px' : (isLivePreview ? '260px' : '360px')};border:none;border-radius:10px;display:block;background:#000;box-shadow:0 8px 30px rgba(0,0,0,0.7);`;
+      
+      containerEl.innerHTML = '';
+      containerEl.appendChild(iframe);
+
+      let processed = trimmed;
+      if (!isHtml && is3dCanvasScript) {
+        processed = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; }
+    canvas { display: block; width: 100%; height: 100%; }
+  </style>
+  <script src="vendor/three.min.js"><\/script>
+  <script src="vendor/OrbitControls.js"><\/script>
+  <script src="vendor/GLTFLoader.js"><\/script>
+  <script src="vendor/chart.min.js"><\/script>
+</head>
+<body>
+<script>
+try {
+  ${trimmed}
+} catch(err) {
+  console.error('[3D Sandbox Notice]:', err);
+  document.body.innerHTML = '<div style="padding:16px;color:#fca5a5;font-family:monospace;font-size:12px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:8px;margin:12px"><strong>⚠️ 3D Visualization Notice</strong><br>' + String(err.message || err) + '</div>';
+}
+<\/script>
+</body>
+</html>`;
+      }
+
+      // Preprocess HTML to rewrite external CDN script URLs to local vendor paths for 100% offline support
+      processed = processed.replace(/(<script\b[^>]*?\bsrc=["'])([^"'>]+)(["'][^>]*?>\s*<\/script>)/gi, (match, prefix, src, suffix) => {
+        if (s.includes('orbitcontrols.js') || s.includes('orbitcontrols')) return `${prefix}vendor/OrbitControls.js${suffix}`;
+        if (s.includes('gltfloader.js') || s.includes('gltfloader')) return `${prefix}vendor/GLTFLoader.js${suffix}`;
+        if (s.includes('objloader.js') || s.includes('objloader')) return `${prefix}vendor/OBJLoader.js${suffix}`;
+        if (s.includes('stlloader.js') || s.includes('stlloader')) return `${prefix}vendor/STLLoader.js${suffix}`;
+        if (s.includes('three.min.js') || s.includes('three.js') || s.includes('three@') || s.includes('/three/')) return `${prefix}vendor/three.min.js${suffix}`;
+        if (s.includes('chart.min.js') || s.includes('chart.js') || s.includes('chartjs')) return `${prefix}vendor/chart.min.js${suffix}`;
+        if (s.includes('react.production') || s.includes('react.min.js') || s.includes('/react@') || s.includes('/react/')) return `${prefix}vendor/react.production.min.js${suffix}`;
+        if (s.includes('react-dom.production') || s.includes('react-dom.min.js') || s.includes('/react-dom@') || s.includes('/react-dom/')) return `${prefix}vendor/react-dom.production.min.js${suffix}`;
+        if (s.includes('babel.min.js') || s.includes('babel-standalone')) return `${prefix}vendor/babel.min.js${suffix}`;
+        if (s.includes('tailwind') || s.includes('tailwindcss')) return `${prefix}vendor/tailwind.min.js${suffix}`;
+        return match;
       });
-      containerEl.innerHTML = scopedCode;
 
-      const scripts = containerEl.querySelectorAll('script');
-      scripts.forEach(s => {
-        try {
-          let sCode = s.textContent;
-          const isBabel = s.type === 'text/babel' || s.type === 'text/jsx' || /<[A-Za-z0-9_]/.test(sCode);
-          if (isBabel && window.Babel) {
-            sCode = window.Babel.transform(sCode, { presets: [['react', { runtime: 'classic' }]] }).code;
-          }
-          const fn = new Function('container', 'scopeId', 'React', 'ReactDOM', 'THREE', 'Chart', `var { useState, useEffect, useRef, useMemo, useCallback } = React || {};\n` + sCode);
-          fn(containerEl, uid, window.React, window.ReactDOM, window.THREE, window.Chart);
-        } catch (sErr) {
-          renderError('Script Runtime Notice', sErr.message, sErr.stack);
+      // Inject robust fallback shims and error handler inside the iframe
+      const shims = `
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
+<script>
+  window.addEventListener('error', function(e) {
+    console.warn('[Sandbox Runtime Notice]:', e.message);
+  });
+  // Three.js OrbitControls resilient fallback stub
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof THREE !== 'undefined' && !THREE.OrbitControls) {
+      THREE.OrbitControls = function(object, domElement) {
+        this.object = object;
+        this.domElement = domElement || document.body;
+        this.update = function() {};
+        this.dispose = function() {};
+        let isDown = false, px = 0, py = 0;
+        const target = this.domElement;
+        target.addEventListener('mousedown', function(e) { isDown = true; px = e.clientX; py = e.clientY; });
+        window.addEventListener('mouseup', function() { isDown = false; });
+        window.addEventListener('mousemove', function(e) {
+          if (!isDown || !object) return;
+          object.rotation.y += (e.clientX - px) * 0.01;
+          object.rotation.x += (e.clientY - py) * 0.01;
+          px = e.clientX; py = e.clientY;
+        });
+      };
+    }
+  });
+<\/script>
+`;
+      if (/<head\b[^>]*>/i.test(processed)) {
+        processed = processed.replace(/<head\b[^>]*>/i, `$&${shims}`);
+      } else if (/<html\b[^>]*>/i.test(processed)) {
+        processed = processed.replace(/<html\b[^>]*>/i, `$&<head>${shims}</head>`);
+      } else {
+        processed = `<!DOCTYPE html><html><head>${shims}</head><body>${processed}</body></html>`;
+      }
+
+      if ('srcdoc' in iframe) {
+        iframe.srcdoc = processed;
+      } else {
+        const doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+        if (doc) {
+          doc.open();
+          doc.write(processed);
+          doc.close();
         }
-      });
+      }
     } else {
       // Pure JS / React / JSX code (supports full modern components with imports, exports, hooks, and auto-mount)
       let jsCode = trimmed;
@@ -11387,6 +11525,14 @@ function renderBlockNode(node,parent){
     case 'video':case 'web_video':{
       const rawSrc = (node.style && node.style.src) || node.src || assetUrl(node) || '';
       const lbl = (node.style && node.style.label) || (node.aria && node.aria.label) || node.value || 'Video Stream';
+
+      // Smart Auto-Detection: Did user provide HTML / 3D WebGL / Canvas / Visualization code instead of video file?
+      const isHtmlVisualization = /^\s*<!DOCTYPE\b|^\s*<html\b|<\s*canvas\b|<\s*script\b|THREE\.|WebGL|createUnityInstance/i.test(rawSrc) || /<\s*style\b/i.test(rawSrc);
+      if (isHtmlVisualization) {
+        renderInteractiveVisualSandbox(rawSrc, lbl, parent, node);
+        break;
+      }
+
       const card = document.createElement('div');
       card.className = 'video-card';
       card.style.cssText = 'background:rgba(15,15,28,0.92);border:1.5px solid rgba(245,158,11,0.4);border-radius:18px;padding:14px;margin:20px 0;box-shadow:0 16px 48px rgba(0,0,0,0.85);position:relative;z-index:10;';
@@ -12195,11 +12341,12 @@ function renderBlockNode(node,parent){
         <div class="jsx-header">
           <span class="jsx-badge">⚡ ${escapeHtml(title)}</span>
           <div style="display:flex;gap:6px">
+            <button class="jsx-toggle-btn" type="button" onclick="toggleJsxFullscreen('${uid}')">⛶ Fullscreen</button>
             <button class="jsx-toggle-btn" type="button" onclick="toggleJsxCode('${uid}')">👁️ Code</button>
             <button class="jsx-toggle-btn" type="button" onclick="resetJsxSandbox('${uid}')">🔄 Reset</button>
           </div>
         </div>
-        <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative"></div>
+        <div class="jsx-body" id="${uid}-body" data-scope="${uid}" style="position:relative;width:100%;min-height:360px;border-radius:12px;overflow:hidden;background:#000"></div>
         <pre class="jsx-code-view" id="${uid}-code"><code>${escapeHtml(rawCode)}</code></pre>
       `;
       parent.appendChild(card);
@@ -15281,7 +15428,7 @@ function edRenderBlocks() {
           `;
           const fileInput = document.createElement('input');
           fileInput.type = 'file';
-          fileInput.accept = '.mp4,.webm,.ogg,.mov,.mkv';
+          fileInput.accept = '.mp4,.webm,.ogg,.mov,.mkv,.html,.htm';
           fileInput.style.display = 'none';
           fileInput.onchange = (e) => {
             const file = e.target.files[0];
@@ -15289,6 +15436,7 @@ function edRenderBlocks() {
               block.filename = file.name;
               block.format = file.name.split('.').pop().toLowerCase();
               if (!block.label) block.label = file.name.replace(/\.[^/.]+$/, "");
+              const isHtmlFile = file.name.endsWith('.html') || file.name.endsWith('.htm');
               const reader = new FileReader();
               reader.onload = (ev) => {
                 block.src = ev.target.result;
@@ -15297,9 +15445,13 @@ function edRenderBlocks() {
                 block.style.label = block.label;
                 edUpdateLivePreview();
                 renderVideoSourceMode();
-                if (typeof showToast === 'function') showToast(`✓ Offline Video Embedded (${file.name})`, 'ok');
+                if (typeof showToast === 'function') showToast(`✓ Offline ${isHtmlFile ? '3D Visualization' : 'Video'} Embedded (${file.name})`, 'ok');
               };
-              reader.readAsDataURL(file);
+              if (isHtmlFile) {
+                reader.readAsText(file);
+              } else {
+                reader.readAsDataURL(file);
+              }
             }
           };
           dropBox.onclick = () => fileInput.click();
@@ -15316,10 +15468,17 @@ function edRenderBlocks() {
             dynamicArea.appendChild(clearBtn);
           }
         } else {
-          const urlInp = document.createElement('input');
-          urlInp.placeholder = 'Video URL (https://... MP4, WebM, or YouTube link)';
+          const isHtmlCode = /^\s*<!DOCTYPE\b|^\s*<html\b|<\s*canvas\b|<\s*script\b|THREE\.|WebGL|createUnityInstance/i.test(block.src || '') || /<\s*style\b/i.test(block.src || '');
+          if (isHtmlCode) {
+            const detectBadge = document.createElement('div');
+            detectBadge.style.cssText = 'font-size:10.5px;color:#38bdf8;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.35);padding:4px 8px;border-radius:6px;margin-bottom:6px;font-weight:700;display:flex;align-items:center;gap:6px';
+            detectBadge.innerHTML = '<span>⚡</span> <span>Interactive 3D / Live Motion Sandbox (Hardware Accelerated)</span>';
+            dynamicArea.appendChild(detectBadge);
+          }
+          const urlInp = document.createElement(isHtmlCode ? 'textarea' : 'input');
+          urlInp.placeholder = 'Video URL (MP4, WebM, YouTube) or paste 3D HTML / WebGL visualization code';
           urlInp.value = block.src && !block.src.startsWith('data:') ? block.src : '';
-          urlInp.style.cssText = 'width:100%;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px';
+          urlInp.style.cssText = `width:100%;padding:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px;font-family:${isHtmlCode ? 'monospace' : 'inherit'};height:${isHtmlCode ? '90px' : 'auto'}`;
           urlInp.oninput = () => {
             block.src = urlInp.value.trim();
             block.filename = '';
