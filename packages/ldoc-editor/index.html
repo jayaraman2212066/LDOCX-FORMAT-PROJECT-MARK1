@@ -959,7 +959,7 @@ body.mode-paper .page-paper-layer {
 .ai-helper-send:hover{opacity:.9}
 
 /* ── Editor Panel Styles ───────────────────────────────────────────────────── */
-#editor-panel{display:none;flex:1;overflow:hidden;flex-direction:row}
+#editor-panel{display:flex;flex:1;overflow:hidden;flex-direction:row}
 #ed-pages{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
 #ed-pages-header{padding:12px 16px 10px;font-family:'Cinzel',serif;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 #ed-page-list{flex:1;overflow-y:auto;padding:6px 0}
@@ -4459,6 +4459,7 @@ mark.ldoc-search-match.active {
   </div>
 </div>
 
+<audio id="bg-audio-el" loop style="display:none"></audio>
 <div id="bg-audio-bar">
   <span style="font-size:16px;color:var(--accent)">&#9835;</span>
   <span id="bg-audio-label">Background Soundtrack</span>
@@ -7995,13 +7996,14 @@ function initBgAudio(src,label){
 }
 function toggleBgAudio(){
   const el=document.getElementById('bg-audio-el');
-  if(el.paused){el.play().catch(()=>{});document.getElementById('bg-audio-toggle').innerHTML='&#9646;&#9646;';}
-  else{el.pause();document.getElementById('bg-audio-toggle').innerHTML='&#9654;';}
+  if(!el) return;
+  if(el.paused){el.play().catch(()=>{});const b=document.getElementById('bg-audio-toggle');if(b)b.innerHTML='&#9646;&#9646;';}
+  else{el.pause();const b=document.getElementById('bg-audio-toggle');if(b)b.innerHTML='&#9654;';}
 }
-function setBgVol(v){document.getElementById('bg-audio-el').volume=parseFloat(v);}
+function setBgVol(v){const el=document.getElementById('bg-audio-el');if(el)el.volume=parseFloat(v);}
 function stopBgAudio(){
-  const el=document.getElementById('bg-audio-el');el.pause();el.removeAttribute('src');
-  document.getElementById('bg-audio-bar').style.display='none';
+  const el=document.getElementById('bg-audio-el');if(el){el.pause();el.removeAttribute('src');}
+  const b=document.getElementById('bg-audio-bar');if(b)b.style.display='none';
 }
 
 function togglePagesPanel(){const o=document.getElementById('pages-overlay');o.classList.toggle('open');}
@@ -8013,30 +8015,48 @@ function switchTab(tab){
   const portalView = document.getElementById('portal-view');
   if (portalView) portalView.style.display = 'none';
   const portalBtn = document.getElementById('view-toggle-portal');
-  const wsBtn = document.getElementById('view-toggle-workspace');
   if (portalBtn) portalBtn.classList.remove('active');
+  const wsBtn = document.getElementById('view-toggle-workspace');
   if (wsBtn) wsBtn.classList.add('active');
 
-  document.getElementById('tab-viewer').classList.toggle('active',tab==='viewer');
-  document.getElementById('tab-editor').classList.toggle('active',tab==='editor');
-  document.getElementById('tab-converter')?.classList.toggle('active',tab==='converter');
-  document.getElementById('tab-templates')?.classList.toggle('active',tab==='templates');
-  document.getElementById('tab-docs').classList.toggle('active',tab==='docs');
-  
-  document.getElementById('viewer-panel').style.display=tab==='viewer'?'flex':'none';
-  document.getElementById('editor-panel').style.display=tab==='editor'?'flex':'none';
-  document.getElementById('converter-panel').style.display=tab==='converter'?'flex':'none';
-  document.getElementById('templates-panel').style.display=tab==='templates'?'flex':'none';
-  document.getElementById('docs-panel').style.display=tab==='docs'?'flex':'none';
-  
-  document.getElementById('open-btn').style.display=tab==='viewer'?'':'none';
-  document.getElementById('ed-open-btn').style.display=tab==='editor'?'':'none';
-  document.getElementById('save-btn').style.display='inline-flex';
-  document.getElementById('build-btn').style.display=tab==='editor'?'':'none';
-  document.getElementById('build-save-btn').style.display=tab==='editor'?'':'none';
-  if(tab==='docs')refreshDocs();
-  if(tab==='templates')renderTemplateVault();
-  if(tab==='editor'){if(typeof edPages!=='undefined'&&edPages.length===0){edAddPage();}edUpdateLivePreview();}
+  const tabIds = ['tab-viewer', 'tab-editor', 'tab-converter', 'tab-templates', 'tab-docs'];
+  tabIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', tab === id.replace('tab-', ''));
+  });
+
+  const panelMap = {
+    'viewer': 'viewer-panel',
+    'editor': 'editor-panel',
+    'converter': 'converter-panel',
+    'templates': 'templates-panel',
+    'docs': 'docs-panel'
+  };
+  Object.keys(panelMap).forEach(key => {
+    const p = document.getElementById(panelMap[key]);
+    if (p) p.style.display = (tab === key ? 'flex' : 'none');
+  });
+
+  const openBtn = document.getElementById('open-btn');
+  if (openBtn) openBtn.style.display = (tab === 'viewer' ? '' : 'none');
+  const edOpenBtn = document.getElementById('ed-open-btn');
+  if (edOpenBtn) edOpenBtn.style.display = (tab === 'editor' ? '' : 'none');
+  const saveBtn = document.getElementById('save-btn');
+  if (saveBtn) saveBtn.style.display = 'inline-flex';
+  const buildBtn = document.getElementById('build-btn');
+  if (buildBtn) buildBtn.style.display = (tab === 'editor' ? '' : 'none');
+  const buildSaveBtn = document.getElementById('build-save-btn');
+  if (buildSaveBtn) buildSaveBtn.style.display = (tab === 'editor' ? '' : 'none');
+
+  if (tab === 'docs' && typeof refreshDocs === 'function') refreshDocs();
+  if (tab === 'templates' && typeof renderTemplateVault === 'function') renderTemplateVault();
+  if (tab === 'editor') {
+    if (typeof edPages !== 'undefined' && edPages.length === 0 && typeof edAddPage === 'function') {
+      edAddPage();
+    }
+    if (typeof edRenderPageList === 'function') edRenderPageList();
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  }
 }
 
 // ── AI Assistant Controller ─────────────────────────────────────────────────
@@ -9699,50 +9719,53 @@ init() {
 // Initialize 3D viewer when needed
 let viewer3D = null;
 
-document.getElementById('page-canvas').addEventListener('_createViewer', (e) => {
-  const container = e.detail.container;
-  viewer3D = new ThreeJsViewer(container.id);
-});
+const pageCanvasEl = document.getElementById('page-canvas');
+if (pageCanvasEl) {
+  pageCanvasEl.addEventListener('_createViewer', (e) => {
+    const container = e.detail.container;
+    viewer3D = new ThreeJsViewer(container.id);
+  });
 
-document.getElementById('page-canvas').addEventListener('_loadModel', (e) => {
-  if (!viewer3D) return;
-  const { meshData, format, stats } = e.detail;
-  viewer3D.loadMeshFromJSON(meshData);
-  viewer3D.updateInfo({ format, ...stats });
-});
+  pageCanvasEl.addEventListener('_loadModel', (e) => {
+    if (!viewer3D) return;
+    const { meshData, format, stats } = e.detail;
+    viewer3D.loadMeshFromJSON(meshData);
+    viewer3D.updateInfo({ format, ...stats });
+  });
 
-document.getElementById('page-canvas').addEventListener('_loadSVG', (e) => {
-  if (!viewer3D) return;
-  const { svgContent } = e.detail;
-  viewer3D.loadSVG(svgContent);
-});
+  pageCanvasEl.addEventListener('_loadSVG', (e) => {
+    if (!viewer3D) return;
+    const { svgContent } = e.detail;
+    viewer3D.loadSVG(svgContent);
+  });
 
-document.getElementById('page-canvas').addEventListener('_addModelPanel', (e) => {
-  const { format, panelId } = e.detail;
-  const panel = document.createElement('div');
-  panel.id = panelId;
-  panel.className = 'model-panel';
-  
-  if (format === 'svg') {
-    const svgPanel = document.createElement('div');
-    svgPanel.id = 'svg-viewer-panel';
-    svgPanel.className = 'model-panel active';
-    panel.appendChild(svgPanel);
-  } else {
-    const canvas = document.createElement('div');
-    canvas.id = 'viewer-3d-canvas';
-    canvas.style.cssText = 'width:100%;height:100%;position:relative';
+  pageCanvasEl.addEventListener('_addModelPanel', (e) => {
+    const { format, panelId } = e.detail;
+    const panel = document.createElement('div');
+    panel.id = panelId;
+    panel.className = 'model-panel';
     
-    const info = document.createElement('div');
-    info.id = 'viewer-3d-info';
-    info.textContent = 'Loading...';
+    if (format === 'svg') {
+      const svgPanel = document.createElement('div');
+      svgPanel.id = 'svg-viewer-panel';
+      svgPanel.className = 'model-panel active';
+      panel.appendChild(svgPanel);
+    } else {
+      const canvas = document.createElement('div');
+      canvas.id = 'viewer-3d-canvas';
+      canvas.style.cssText = 'width:100%;height:100%;position:relative';
+      
+      const info = document.createElement('div');
+      info.id = 'viewer-3d-info';
+      info.textContent = 'Loading...';
+      
+      panel.appendChild(canvas);
+      panel.appendChild(info);
+    }
     
-    panel.appendChild(canvas);
-    panel.appendChild(info);
-  }
-  
-  document.getElementById('page-canvas').appendChild(panel);
-});
+    pageCanvasEl.appendChild(panel);
+  });
+}
 
 // File upload and drag-and-drop wiring
 const fileInputEl = document.getElementById('file-input');
@@ -13272,14 +13295,24 @@ function initBalanceTunerWidget(card, cfg) {
 }
 
 function showLoading(text){
-  document.getElementById('drop-zone').style.display='none';
+  const dz = document.getElementById('drop-zone'); if (dz) dz.style.display='none';
   const sub = document.getElementById('ldoc-loading-subtext');
-  if(sub) sub.textContent = text || 'Compiling Enchanted Living Presentation…';
-  document.getElementById('loading').style.display='flex';
-  document.getElementById('page-canvas').style.display='none';
+  if(sub) sub.textContent = text || 'Compiling Living Document…';
+  const ld = document.getElementById('loading'); if (ld) ld.style.display='flex';
+  const pc = document.getElementById('page-canvas'); if (pc) pc.style.display='none';
 }
-function showViewer(){document.getElementById('drop-zone').style.display='none';document.getElementById('loading').style.display='none';document.getElementById('page-canvas').style.display='block';}
-function showDropZone(){document.getElementById('drop-zone').style.display='flex';document.getElementById('loading').style.display='none';document.getElementById('page-canvas').style.display='none';document.getElementById('pages-toggle-btn').style.display='none';document.getElementById('save-btn').style.display='none';}
+function showViewer(){
+  const dz = document.getElementById('drop-zone'); if (dz) dz.style.display='none';
+  const ld = document.getElementById('loading'); if (ld) ld.style.display='none';
+  const pc = document.getElementById('page-canvas'); if (pc) pc.style.display='block';
+}
+function showDropZone(){
+  const dz = document.getElementById('drop-zone'); if (dz) dz.style.display='flex';
+  const ld = document.getElementById('loading'); if (ld) ld.style.display='none';
+  const pc = document.getElementById('page-canvas'); if (pc) pc.style.display='none';
+  const ptb = document.getElementById('pages-toggle-btn'); if (ptb) ptb.style.display='none';
+  const sb = document.getElementById('save-btn'); if (sb) sb.style.display='none';
+}
 
 async function saveDoc(){
   const convPanel = document.getElementById('converter-panel');
@@ -13365,8 +13398,13 @@ async function saveDoc(){
     if (success) return;
   }
 
-  // 2. Default: show clean drop-zone without auto-loading any document
-  showDropZone();
+  // 2. Editor App Default: immediately activate editor workspace and ready canvas
+  if (typeof switchTab === 'function') switchTab('editor');
+  if (typeof edPages !== 'undefined' && edPages.length === 0 && typeof edAddPage === 'function') {
+    edAddPage();
+  }
+  if (typeof edRenderPageList === 'function') edRenderPageList();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
 })();
 
 async function refreshDocs(){
@@ -14036,7 +14074,7 @@ function edRenderPageList() {
   edPages.forEach((p, i) => {
     const item = document.createElement('div');
     item.className = 'ed-page-item' + (p.id === edCurrentPage ? ' active' : '');
-    item.innerHTML = `<span style="font-size:10px;color:var(--text3);min-width:14px">${i + 1}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.title}</span><button class="ed-page-del" onclick="event.stopPropagation();edDeletePage(${p.id})">&#10005;</button>`;
+    item.innerHTML = `<span style="font-size:10px;color:var(--text3);min-width:14px">${i + 1}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.title}</span><button class="ed-page-del" onclick="event.stopPropagation();edDeletePage('${p.id}')">&#10005;</button>`;
     item.onclick = () => edSelectPage(p.id);
     list.appendChild(item);
   });
@@ -18844,9 +18882,17 @@ console.log('%c🛡️ LDOCX Living Document Studio v2.5.0\\n%cCopyright (c) 202
 <script>
 // Auto-activate Editor tab on start
 window.addEventListener('DOMContentLoaded', () => {
+  if (typeof switchTab === 'function') switchTab('editor');
+  if (typeof edPages !== 'undefined' && edPages.length === 0 && typeof edAddPage === 'function') {
+    edAddPage();
+  }
+  if (typeof edRenderPageList === 'function') edRenderPageList();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
   setTimeout(() => {
     if (typeof switchTab === 'function') switchTab('editor');
-  }, 100);
+    if (typeof edRenderPageList === 'function') edRenderPageList();
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  }, 50);
 });
 </script>
 </body>

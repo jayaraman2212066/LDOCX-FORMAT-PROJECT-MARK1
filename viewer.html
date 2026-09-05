@@ -4112,7 +4112,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
     <button class="toolbar-btn" onclick="nextSlide()" title="Next Slide (Right Arrow)" style="border:none;background:transparent;padding:2px 8px">Next ▶</button>
   </div>
   
-  <button class="toolbar-btn" onclick="togglePagesPanel()" title="Pages Overview Grid">📑 Pages</button>
+  <button class="toolbar-btn" id="pages-toggle-btn" onclick="togglePagesPanel()" title="Pages Overview Grid">📑 Pages</button>
 
   <span class="doc-title" id="doc-title" style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">No document loaded</span>
   <span id="validation-badge"></span>
@@ -4841,6 +4841,7 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
   </div>
 </div>
 
+<audio id="bg-audio-el" loop style="display:none"></audio>
 <div id="bg-audio-bar">
   <span style="font-size:16px;color:var(--accent)">&#9835;</span>
   <span id="bg-audio-label">Background Soundtrack</span>
@@ -7573,15 +7574,15 @@ function renderConvResult(spec, blob, file) {
   if (resultCard) resultCard.style.display = 'flex';
 
   const ext = (file.name || '').split('.').pop().toUpperCase();
-  document.getElementById('conv-doc-title').textContent = spec.title || file.name;
-  document.getElementById('conv-doc-subtitle').textContent = `Converted from ${file.name} • ${ext} format preserved`;
-  document.getElementById('conv-stat-pages').textContent = spec.pages.length;
+  const _cdt = document.getElementById('conv-doc-title'); if (_cdt) _cdt.textContent = spec.title || file.name;
+  const _cds = document.getElementById('conv-doc-subtitle'); if (_cds) _cds.textContent = `Converted from ${file.name} • ${ext} format preserved`;
+  const _csp = document.getElementById('conv-stat-pages'); if (_csp) _csp.textContent = spec.pages.length;
   
   let totalBlocks = 0;
   spec.pages.forEach(p => totalBlocks += (p.blocks || []).length);
-  document.getElementById('conv-stat-blocks').textContent = `${totalBlocks} Blocks`;
-  document.getElementById('conv-stat-size').textContent = `${(blob.size / 1024).toFixed(1)} KB`;
-  document.getElementById('conv-stat-format').textContent = ext;
+  const _csb = document.getElementById('conv-stat-blocks'); if (_csb) _csb.textContent = `${totalBlocks} Blocks`;
+  const _css = document.getElementById('conv-stat-size'); if (_css) _css.textContent = `${(blob.size / 1024).toFixed(1)} KB`;
+  const _csf = document.getElementById('conv-stat-format'); if (_csf) _csf.textContent = ext;
 
   const outline = document.getElementById('conv-outline-preview');
   if (outline) {
@@ -8377,13 +8378,14 @@ function initBgAudio(src,label){
 }
 function toggleBgAudio(){
   const el=document.getElementById('bg-audio-el');
-  if(el.paused){el.play().catch(()=>{});document.getElementById('bg-audio-toggle').innerHTML='&#9646;&#9646;';}
-  else{el.pause();document.getElementById('bg-audio-toggle').innerHTML='&#9654;';}
+  if(!el) return;
+  if(el.paused){el.play().catch(()=>{});const b=document.getElementById('bg-audio-toggle');if(b)b.innerHTML='&#9646;&#9646;';}
+  else{el.pause();const b=document.getElementById('bg-audio-toggle');if(b)b.innerHTML='&#9654;';}
 }
-function setBgVol(v){document.getElementById('bg-audio-el').volume=parseFloat(v);}
+function setBgVol(v){const el=document.getElementById('bg-audio-el');if(el)el.volume=parseFloat(v);}
 function stopBgAudio(){
-  const el=document.getElementById('bg-audio-el');el.pause();el.removeAttribute('src');
-  document.getElementById('bg-audio-bar').style.display='none';
+  const el=document.getElementById('bg-audio-el');if(el){el.pause();el.removeAttribute('src');}
+  const b=document.getElementById('bg-audio-bar');if(b)b.style.display='none';
 }
 
 function togglePagesPanel(){const o=document.getElementById('pages-overlay');o.classList.toggle('open');}
@@ -8395,30 +8397,48 @@ function switchTab(tab){
   const portalView = document.getElementById('portal-view');
   if (portalView) portalView.style.display = 'none';
   const portalBtn = document.getElementById('view-toggle-portal');
-  const wsBtn = document.getElementById('view-toggle-workspace');
   if (portalBtn) portalBtn.classList.remove('active');
+  const wsBtn = document.getElementById('view-toggle-workspace');
   if (wsBtn) wsBtn.classList.add('active');
 
-  document.getElementById('tab-viewer').classList.toggle('active',tab==='viewer');
-  document.getElementById('tab-editor').classList.toggle('active',tab==='editor');
-  document.getElementById('tab-converter')?.classList.toggle('active',tab==='converter');
-  document.getElementById('tab-templates')?.classList.toggle('active',tab==='templates');
-  document.getElementById('tab-docs').classList.toggle('active',tab==='docs');
-  
-  document.getElementById('viewer-panel').style.display=tab==='viewer'?'flex':'none';
-  document.getElementById('editor-panel').style.display=tab==='editor'?'flex':'none';
-  document.getElementById('converter-panel').style.display=tab==='converter'?'flex':'none';
-  document.getElementById('templates-panel').style.display=tab==='templates'?'flex':'none';
-  document.getElementById('docs-panel').style.display=tab==='docs'?'flex':'none';
-  
-  document.getElementById('open-btn').style.display=tab==='viewer'?'':'none';
-  document.getElementById('ed-open-btn').style.display=tab==='editor'?'':'none';
-  document.getElementById('save-btn').style.display='inline-flex';
-  document.getElementById('build-btn').style.display=tab==='editor'?'':'none';
-  document.getElementById('build-save-btn').style.display=tab==='editor'?'':'none';
-  if(tab==='docs')refreshDocs();
-  if(tab==='templates')renderTemplateVault();
-  if(tab==='editor'){if(typeof edPages!=='undefined'&&edPages.length===0){edAddPage();}edUpdateLivePreview();}
+  const tabIds = ['tab-viewer', 'tab-editor', 'tab-converter', 'tab-templates', 'tab-docs'];
+  tabIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', tab === id.replace('tab-', ''));
+  });
+
+  const panelMap = {
+    'viewer': 'viewer-panel',
+    'editor': 'editor-panel',
+    'converter': 'converter-panel',
+    'templates': 'templates-panel',
+    'docs': 'docs-panel'
+  };
+  Object.keys(panelMap).forEach(key => {
+    const p = document.getElementById(panelMap[key]);
+    if (p) p.style.display = (tab === key ? 'flex' : 'none');
+  });
+
+  const openBtn = document.getElementById('open-btn');
+  if (openBtn) openBtn.style.display = (tab === 'viewer' ? '' : 'none');
+  const edOpenBtn = document.getElementById('ed-open-btn');
+  if (edOpenBtn) edOpenBtn.style.display = (tab === 'editor' ? '' : 'none');
+  const saveBtn = document.getElementById('save-btn');
+  if (saveBtn) saveBtn.style.display = 'inline-flex';
+  const buildBtn = document.getElementById('build-btn');
+  if (buildBtn) buildBtn.style.display = (tab === 'editor' ? '' : 'none');
+  const buildSaveBtn = document.getElementById('build-save-btn');
+  if (buildSaveBtn) buildSaveBtn.style.display = (tab === 'editor' ? '' : 'none');
+
+  if (tab === 'docs' && typeof refreshDocs === 'function') refreshDocs();
+  if (tab === 'templates' && typeof renderTemplateVault === 'function') renderTemplateVault();
+  if (tab === 'editor') {
+    if (typeof edPages !== 'undefined' && edPages.length === 0 && typeof edAddPage === 'function') {
+      edAddPage();
+    }
+    if (typeof edRenderPageList === 'function') edRenderPageList();
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  }
 }
 
 // ── AI Assistant Controller ─────────────────────────────────────────────────
@@ -10372,7 +10392,7 @@ async function renderDirectPresentation(manifest, extractedPages) {
     GlobalAudio.setTrack(sSrc, sTitle);
   }
 
-  document.getElementById('pages-toggle-btn').style.display = '';
+  const _ptb = document.getElementById('pages-toggle-btn'); if (_ptb) _ptb.style.display = '';
   document.getElementById('save-btn').style.display = '';
 
   // Update AI Assistant header
@@ -10582,7 +10602,7 @@ async function openDoc(id){
     const sTitle = typeof st === 'string' ? 'Vice City Radio — The Pointer Sisters' : (st.title || 'Vice City Radio — The Pointer Sisters');
     GlobalAudio.setTrack(sSrc, sTitle);
   }
-  document.getElementById('pages-toggle-btn').style.display='';
+  const _ptb2 = document.getElementById('pages-toggle-btn'); if (_ptb2) _ptb2.style.display = '';
   document.getElementById('save-btn').style.display='';
 
   // Update AI Assistant for loaded document
@@ -13667,7 +13687,7 @@ function showLoading(text){
   document.getElementById('page-canvas').style.display='none';
 }
 function showViewer(){document.getElementById('drop-zone').style.display='none';document.getElementById('loading').style.display='none';document.getElementById('page-canvas').style.display='block';}
-function showDropZone(){document.getElementById('drop-zone').style.display='flex';document.getElementById('loading').style.display='none';document.getElementById('page-canvas').style.display='none';document.getElementById('pages-toggle-btn').style.display='none';document.getElementById('save-btn').style.display='none';}
+function showDropZone(){const _dz=document.getElementById('drop-zone');if(_dz)_dz.style.display='flex';const _ld=document.getElementById('loading');if(_ld)_ld.style.display='none';const _pc=document.getElementById('page-canvas');if(_pc)_pc.style.display='none';const _ptb=document.getElementById('pages-toggle-btn');if(_ptb)_ptb.style.display='none';const _sb=document.getElementById('save-btn');if(_sb)_sb.style.display='none';}
 
 async function saveDoc(){
   const convPanel = document.getElementById('converter-panel');
@@ -14192,7 +14212,7 @@ async function useTemplate(tplId, mode) {
 
   if (mode === 'editor') {
     switchTab('editor');
-    document.getElementById('ed-title').value = spec.title;
+    const _edt = document.getElementById('ed-title'); if (_edt) _edt.value = spec.title;
     edPages = spec.pages.map(p => ({
       id: edPId(),
       title: p.title,
@@ -14424,16 +14444,16 @@ function edRenderPageList() {
   edPages.forEach((p, i) => {
     const item = document.createElement('div');
     item.className = 'ed-page-item' + (p.id === edCurrentPage ? ' active' : '');
-    item.innerHTML = `<span style="font-size:10px;color:var(--text3);min-width:14px">${i + 1}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.title}</span><button class="ed-page-del" onclick="event.stopPropagation();edDeletePage(${p.id})">&#10005;</button>`;
+    item.innerHTML = `<span style="font-size:10px;color:var(--text3);min-width:14px">${i + 1}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.title}</span><button class="ed-page-del" onclick="event.stopPropagation();edDeletePage('${p.id}')">&#10005;</button>`;
     item.onclick = () => edSelectPage(p.id);
     list.appendChild(item);
   });
 }
 
 function edShowEmpty() {
-  document.getElementById('ed-empty').style.display = 'flex';
-  document.getElementById('ed-blocks-panel').style.display = 'none';
-  edUpdateLivePreview();
+  const _emp = document.getElementById('ed-empty'); if (_emp) _emp.style.display = 'flex';
+  const _bp = document.getElementById('ed-blocks-panel'); if (_bp) _bp.style.display = 'none';
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
 }
 
 function edAddBlock(type) {
@@ -14620,9 +14640,9 @@ async function edLoadFromDocId(id) {
   const doc = await (await fetch(`${API}/documents/${id}`)).json();
   const pageList = await (await fetch(`${API}/documents/${id}/pages`)).json();
 
-  document.getElementById('ed-title').value = doc.manifest?.title || 'Imported Document';
-  document.getElementById('ed-author').value = doc.manifest?.author || 'Unknown';
-  document.getElementById('ed-lang').value = doc.manifest?.lang || 'en';
+  const _et = document.getElementById('ed-title'); if (_et) _et.value = doc.manifest?.title || 'Imported Document';
+  const _ea = document.getElementById('ed-author'); if (_ea) _ea.value = doc.manifest?.author || 'Unknown';
+  const _el = document.getElementById('ed-lang'); if (_el) _el.value = doc.manifest?.lang || 'en';
 
   edPages = [];
   for (const p of pageList) {
@@ -14662,10 +14682,9 @@ async function edLoadFromDocId(id) {
 
 function edRenderBlocks() {
   const page = edPages.find(p => p.id === edCurrentPage);
-  document.getElementById('ed-empty').style.display = 'none';
+  const _ee = document.getElementById('ed-empty'); if (_ee) _ee.style.display = 'none';
   const panel = document.getElementById('ed-blocks-panel');
-  panel.style.display = 'flex';
-  panel.innerHTML = '';
+  if (panel) { panel.style.display = 'flex'; panel.innerHTML = ''; }
   if (!page) { edShowEmpty(); return; }
 
   const ptRow = document.createElement('div');
