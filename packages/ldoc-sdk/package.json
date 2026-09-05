@@ -1,5 +1,5 @@
 {
-  "name": "@ldoc/sdk",
+  "name": "ldoc-sdk",
   "version": "2.5.0",
   "description": "Open-Source Living Document (.ldocx) Parser, Serializer, and AST Schema SDK",
   "main": "index.js",
@@ -18,14 +18,14 @@
   "author": "J-AI-ENTERPRISES",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1.git"
+    "url": "git+https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1.git"
   },
   "dependencies": {
     "jszip": "^3.10.1"
   },
   "bin": {
-    "ldocx": "./bin/ldocx.js",
-    "ldoc": "./bin/ldocx.js"
+    "ldocx": "bin/ldocx.js",
+    "ldoc": "bin/ldocx.js"
   },
   "scripts": {
     "test": "node test.js"

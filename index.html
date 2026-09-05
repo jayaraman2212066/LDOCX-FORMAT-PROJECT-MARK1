@@ -4152,7 +4152,8 @@ mark.ldoc-search-match.active {
         <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md', '_blank')"><span>📄 Technical Specification (Markdown)</span></div>
         <div class="dmenu-divider"></div>
         <div class="dmenu-entry" onclick="window.open('https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1', '_blank')"><span>🌐 GitHub Repository</span></div>
-                <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.5.0 (Enterprise Reactive 3D Edition)\nCopyright © 2026 J-AI-ENTERPRISES. Apache-2.0 License', 'info')"><span>ℹ️ About LDOC Studio</span></div>
+                <div class="dmenu-entry" onclick="showLegalSecurityModal()"><span>🛡️ Legal, Security &amp; License (Apache-2.0)</span></div>
+        <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.5.0 (Enterprise Reactive 3D Edition)\nCopyright © 2026 J-AI-ENTERPRISES. Apache-2.0 License', 'info')"><span>ℹ️ About LDOC Studio</span></div>
       </div>
     </div>
   </div>
@@ -4170,11 +4171,6 @@ mark.ldoc-search-match.active {
   <button class="tab-btn" id="tab-templates" onclick="switchTab('templates')">🌟 Vault</button>
   <button class="tab-btn" id="tab-docs" onclick="switchTab('docs')">Documents</button>
   <a href="creator.html" style="background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.3);color:var(--accent);font-size:13px;font-weight:600;padding:5px 14px;border-radius:8px;text-decoration:none;margin-left:4px">+ Creator</a>
-  <button class="toolbar-btn" style="border-color:rgba(16,185,129,0.4);color:#34d399;gap:5px;font-size:11px" onclick="showLegalSecurityModal()" title="Apache 2.0 Licensed & Copyright © 2026 J-AI-ENTERPRISES">🛡️ Apache-2.0</button>
-  <div id="studio-120hz-pill" style="display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.12);border:1.5px solid rgba(245,158,11,0.4);padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;color:var(--gold);margin-left:4px" title="Hardware GPU Video Acceleration & 120Hz / 120 FPS High Refresh Rate Engine Active">
-    <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399"></span>
-    <span id="studio-hz-val">⚡ 120Hz / 120 FPS Video Engine</span>
-  </div>
 
 
   <span class="doc-title" id="doc-title">NO DOCUMENT LOADED</span>
@@ -11565,20 +11561,6 @@ function renderBlockNode(node,parent){
         const vWrap = document.createElement('div');
         vWrap.style.cssText = 'position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;box-shadow:0 10px 30px rgba(0,0,0,0.8);';
 
-        // 120Hz Pro Motion Telemetry Header
-        const telemetry = document.createElement('div');
-        telemetry.style.cssText = 'position:absolute;top:10px;left:10px;right:10px;display:flex;align-items:center;justify-content:space-between;z-index:20;pointer-events:none;';
-        telemetry.innerHTML = `
-          <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(15,15,25,0.85);backdrop-filter:blur(8px);border:1px solid rgba(245,158,11,0.5);border-radius:20px;padding:3px 10px;font-size:10.5px;font-weight:800;color:#fef08a">
-            <span>⚡ 120Hz PRO MOTION</span>
-            <span class="v-fps-tag" style="background:rgba(52,211,153,0.2);border:1px solid rgba(52,211,153,0.4);color:#34d399;padding:1px 6px;border-radius:8px;font-family:monospace;font-size:10px">120 FPS</span>
-          </div>
-          <div style="background:rgba(15,15,25,0.85);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:3px 10px;font-size:10px;color:#94a3b8;font-weight:600">
-            Hardware GPU Acceleration (Zero Dropped Frames)
-          </div>
-        `;
-        vWrap.appendChild(telemetry);
-
         const v = document.createElement('video');
         v.controls = true;
         v.loop = true;
@@ -11588,43 +11570,12 @@ function renderBlockNode(node,parent){
         v.style.cssText = 'width:100%;height:100%;border-radius:12px;display:block;background:#000;transform:translateZ(0);will-change:transform;image-rendering:high-quality;';
         vWrap.appendChild(v);
         card.appendChild(vWrap);
-
-        // Real-time video frame rate monitor
-        const fpsTag = telemetry.querySelector('.v-fps-tag');
-        if ('requestVideoFrameCallback' in v) {
-          let lastT = 0;
-          let count = 0;
-          let smoothed = 120;
-          const trackFrame = (now) => {
-            if (lastT > 0) {
-              const dt = (now - lastT) / 1000;
-              if (dt > 0) {
-                const cur = Math.min(120, Math.round(1 / dt));
-                smoothed = Math.round((smoothed * 0.7) + (cur * 0.3));
-                count++;
-                if (count % 8 === 0 && fpsTag) {
-                  fpsTag.textContent = `${Math.max(60, smoothed)} FPS`;
-                }
-              }
-            }
-            lastT = now;
-            if (!v.paused && !v.ended) {
-              v.requestVideoFrameCallback(trackFrame);
-            }
-          };
-          v.addEventListener('play', () => {
-            lastT = 0;
-            count = 0;
-            v.requestVideoFrameCallback(trackFrame);
-          });
-        }
       }
 
       const vl = document.createElement('div');
       vl.className = 'video-label';
       vl.style.cssText = 'display:flex;align-items:center;gap:10px;padding-top:12px;font-family:Cinzel,serif;font-size:14px;color:#fef08a;font-weight:700;';
-      const offlineVBadge = (videoSrc && videoSrc.startsWith("data:")) ? '<span style="font-size:10px;padding:2px 8px;border-radius:6px;background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.4);margin-left:auto;font-family:monospace;font-weight:600">⚡ 100% Offline Embedded Video</span>' : '';
-      vl.innerHTML = `<span style="color:var(--gold);font-size:18px">🎬</span> <span>${escapeHtml(lbl)}</span> ${offlineVBadge}`;
+      vl.innerHTML = `<span style="color:var(--gold);font-size:18px">🎬</span> <span>${escapeHtml(lbl)}</span>`;
       card.appendChild(vl);
       parent.appendChild(card);
       break;
