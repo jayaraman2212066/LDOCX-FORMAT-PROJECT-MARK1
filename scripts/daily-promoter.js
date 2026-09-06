@@ -269,6 +269,22 @@ ${campaign.devto.body}`
     }
   }
 
+  // Direct Zapier MCP Multi-Channel Social Broadcast (LinkedIn / Threads)
+  try {
+    const { publishCampaign } = require('./zapier-social-publisher');
+    const zapierText = campaign.social.linkedin || campaign.social.twitter;
+    const bannerImg = "https://raw.githubusercontent.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/main/public/ldoc-promo-banner.jpg";
+    logMessage('🚀 Broadcasting via Zapier MCP (LinkedIn & Threads)...');
+    const zapierResults = await publishCampaign({
+      text: zapierText,
+      imageUrl: bannerImg,
+      method: process.env.ZAPIER_METHOD || 'queue'
+    });
+    logMessage(`✅ Zapier MCP Broadcast complete (${zapierResults.length} channels processed).`);
+  } catch (zErr) {
+    logMessage(`⚠️ Zapier MCP Broadcast note: ${zErr.message}`);
+  }
+
   // Update State
   const todayStr = new Date().toISOString().split('T')[0];
   state.lastRunDate = todayStr;
