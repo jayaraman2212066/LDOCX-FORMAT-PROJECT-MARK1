@@ -18,7 +18,7 @@ const { validateLdocxSpec, convertToLdocx, SCHEMA_VERSION } = require('./schema_
 const { generatePackageManifest, verifyPackageManifest } = require('./package_signer');
 
 const PORT = process.env.PORT || 8080;
-const ALLOWED_ORIGINS = (process.env.LDOC_ALLOWED_ORIGINS || 'https://ldoc-studios.vercel.app,https://jayaraman2212066.github.io,http://localhost:3000,http://localhost:8080,http://localhost:8085').split(',');
+const ALLOWED_ORIGINS = (process.env.LDOC_ALLOWED_ORIGINS || 'https://ldoc-studios.vercel.app,https://coderjay2003-svg.github.io,http://localhost:3000,http://localhost:8080,http://localhost:8085').split(',');
 
 const RATE_LIMIT_STORE = new Map();
 function checkRateLimit(ip, limit = 60, windowMs = 60000) {

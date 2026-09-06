@@ -5,7 +5,8 @@
     1,
     2,
     3,
-    4
+    4,
+    5
   ],
   "history": [
     {
@@ -37,6 +38,12 @@
       "dayNumber": 4,
       "theme": "Living Document (.ldocx) vs Markdown (.md) & Raw HTML",
       "devtoUrl": "https://dev.to/coder_jay_ai/broken-links-and-markdown-drift-why-technical-writers-are-switching-to-ldocx-3l1e"
+    },
+    {
+      "date": "2026-09-06",
+      "dayNumber": 5,
+      "theme": "Living Document (.ldocx) vs Heavy CAD Software (AutoCAD / STEP / DWG)",
+      "devtoUrl": "https://dev.to/coder_jay_ai/why-install-15gb-cad-software-just-to-review-a-3d-part-meet-the-37mb-ldocx-suite-38lp"
     }
   ]
 }

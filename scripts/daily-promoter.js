@@ -269,12 +269,12 @@ ${campaign.devto.body}`
     }
   }
 
-  // Direct Zapier MCP Multi-Channel Social Broadcast (Daily 5 Posts to LinkedIn & Threads)
+  // Direct Zapier MCP Multi-Channel Social Broadcast (Daily 5 Posts to LinkedIn, Threads, Instagram & Discord)
   try {
     const { publishDaily5Batch } = require('./zapier-social-publisher');
     const { generateDaily5Posts } = require('./daily-5-posts');
     const daily5 = generateDaily5Posts(campaign, devToResponse ? devToResponse.url : null);
-    logMessage(`🚀 Broadcasting Daily 5-Post campaign via Zapier MCP (LinkedIn & Threads)...`);
+    logMessage(`🚀 Broadcasting Daily 5-Post campaign via Zapier MCP (LinkedIn, Threads, Instagram & Discord)...`);
     const zapierResults = await publishDaily5Batch(daily5, process.env.ZAPIER_METHOD || 'queue');
     logMessage(`✅ Zapier MCP Broadcast complete (All 5 daily posts queued across channels).`);
   } catch (zErr) {
