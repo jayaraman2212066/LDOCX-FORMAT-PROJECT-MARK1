@@ -4,7 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/ldoc-sdk.svg?color=success)](https://www.npmjs.com/package/ldoc-sdk)
 [![License: MIT / Apache-2.0](https://img.shields.io/badge/License-MIT%20%2F%20Apache--2.0-blue.svg)](LICENSE)
 [![Platform: Windows | Linux | iOS | Web](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20iOS%20%7C%20Web-brightgreen.svg)]()
-[![Deploy to GitHub Pages](https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/actions/workflows/deploy.yml/badge.svg)](https://github.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/actions/workflows/deploy.yml)
+[![Deploy to GitHub Pages](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/actions/workflows/deploy.yml/badge.svg)](https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/actions/workflows/deploy.yml)
 
 > **The Next-Generation Interactive, 3D, and Cryptographic Document Standard.**
 > Moving beyond static 1990s PDFs and Word files. `.ldocx` packages rich interactive Three.js 3D models, reactive data charts, offline multimedia, executable sandboxes, and cryptographic SHA-256 Merkle-tree validation into a single, self-contained, offline-first container.
@@ -70,8 +70,8 @@ All standalone viewers, editors, command-line utilities, and developer SDKs are 
 
 Try the free Living Document tools directly in your browser with zero installation:
 
-- **🚀 Live Studio & Viewer:** [https://jayaraman2212066.github.io/LDOCX-FORMAT-PROJECT-MARK1/](https://jayaraman2212066.github.io/LDOCX-FORMAT-PROJECT-MARK1/)
-- **✨ Live Standalone Creator:** [https://jayaraman2212066.github.io/LDOCX-FORMAT-PROJECT-MARK1/creator.html](https://jayaraman2212066.github.io/LDOCX-FORMAT-PROJECT-MARK1/creator.html)
+- **🚀 Live Studio & Viewer:** [https://coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/](https://coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/)
+- **✨ Live Standalone Creator:** [https://coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/creator.html](https://coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/creator.html)
 
 ---
 

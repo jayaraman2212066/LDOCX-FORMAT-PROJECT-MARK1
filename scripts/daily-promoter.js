@@ -182,7 +182,7 @@ async function main() {
   const campaign = campaigns.find(c => c.dayNumber === targetDay) || campaigns[0];
   const links = generateSocialLinks(campaign);
 
-  console.log(`📌 Active Campaign: Day ${campaign.dayNumber} of 7`);
+  console.log(`📌 Active Campaign: Day ${campaign.dayNumber} of ${campaigns.length}`);
   console.log(`🎯 Theme: ${campaign.theme}`);
   console.log(`💡 Headline: "${campaign.headline}"\n`);
 
@@ -269,18 +269,14 @@ ${campaign.devto.body}`
     }
   }
 
-  // Direct Zapier MCP Multi-Channel Social Broadcast (LinkedIn / Threads)
+  // Direct Zapier MCP Multi-Channel Social Broadcast (Daily 5 Posts to LinkedIn & Threads)
   try {
-    const { publishCampaign } = require('./zapier-social-publisher');
-    const zapierText = campaign.social.linkedin || campaign.social.twitter;
-    const bannerImg = "https://raw.githubusercontent.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/main/public/ldoc-promo-banner.jpg";
-    logMessage('🚀 Broadcasting via Zapier MCP (LinkedIn & Threads)...');
-    const zapierResults = await publishCampaign({
-      text: zapierText,
-      imageUrl: bannerImg,
-      method: process.env.ZAPIER_METHOD || 'queue'
-    });
-    logMessage(`✅ Zapier MCP Broadcast complete (${zapierResults.length} channels processed).`);
+    const { publishDaily5Batch } = require('./zapier-social-publisher');
+    const { generateDaily5Posts } = require('./daily-5-posts');
+    const daily5 = generateDaily5Posts(campaign, devToResponse ? devToResponse.url : null);
+    logMessage(`🚀 Broadcasting Daily 5-Post campaign via Zapier MCP (LinkedIn & Threads)...`);
+    const zapierResults = await publishDaily5Batch(daily5, process.env.ZAPIER_METHOD || 'queue');
+    logMessage(`✅ Zapier MCP Broadcast complete (All 5 daily posts queued across channels).`);
   } catch (zErr) {
     logMessage(`⚠️ Zapier MCP Broadcast note: ${zErr.message}`);
   }

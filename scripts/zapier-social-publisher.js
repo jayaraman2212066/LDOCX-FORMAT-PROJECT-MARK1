@@ -1,5 +1,5 @@
 // scripts/zapier-social-publisher.js
-// Automated Social Media Publisher via Zapier MCP (Buffer / LinkedIn / Threads)
+// Automated Multi-Channel Social Media Publisher via Zapier MCP (Buffer / LinkedIn / Threads)
 const fs = require('fs');
 const path = require('path');
 
@@ -47,59 +47,98 @@ async function callZapierTool(toolName, args, token) {
   return { text };
 }
 
-async function publishCampaign({ text, imageUrl, method = 'draft' }) {
-  const token = await getZapierToken();
-  const organizationId = '6a9bd30fb1db4222ba656ba8';
-  
-  const channels = [
-    { id: '6a9bd713065799be46921774', name: 'LinkedIn (jayaramankalidasan)' },
-    { id: '6a9bd6f6065799be46921721', name: 'Threads (j_a_i_enterprise)' }
-  ];
+const CHANNELS = {
+  LINKEDIN: { id: '6a9bd713065799be46921774', name: 'LinkedIn (jayaramankalidasan)' },
+  THREADS: { id: '6a9bd6f6065799be46921721', name: 'Threads (j_a_i_enterprise)' }
+};
+const ORGANIZATION_ID = '6a9bd30fb1db4222ba656ba8';
 
+async function publishSinglePost({ linkedinText, threadsText, imageUrl, method = 'queue' }) {
+  const token = await getZapierToken();
   const results = [];
 
-  for (const ch of channels) {
-    console.log(`⏳ Publishing to ${ch.name} [method: ${method}]...`);
-    try {
-      let channelText = text;
-      // Threads limit is 500 characters
-      if (ch.name.includes('Threads') && channelText.length > 480) {
-        channelText = `Stop sending flat PDFs in 2026. 🛑\n\nWhy send a 33-year-old printer format when you can send a Living Document (.ldocx)?\n🧊 Full 3D CAD & mesh models in 60 FPS\n📊 Live reactive datasets & charts\n🛡️ SHA-256 Merkle tree verification\n⚡ 3.7MB lightweight native viewer (Win/Linux/iOS)\n\n100% Free & Open-Source.\n\nDownload: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/tag/v2.5.0-free\nSDK: npm install ldoc-sdk\n\n#TechNews #OpenSource #3D #WebDev`;
+  // 1. Dispatch to LinkedIn
+  try {
+    console.log(`? Queueing to ${CHANNELS.LINKEDIN.name}...`);
+    const lRes = await callZapierTool('buffer_add_to_queue', {
+      output_hint: 'id, text, status, channel',
+      organizationId: ORGANIZATION_ID,
+      channelId: CHANNELS.LINKEDIN.id,
+      method,
+      dynamic_properties: {
+        text: linkedinText,
+        attachment: 'image',
+        image: imageUrl,
+        image_alttext: 'Living Document (.ldocx) Technical Showcase'
       }
+    }, token);
+    console.log(`? Success for LinkedIn`);
+    results.push({ channel: CHANNELS.LINKEDIN.name, result: lRes });
+  } catch (e) {
+    console.error(`? Error for LinkedIn:`, e.message);
+    results.push({ channel: CHANNELS.LINKEDIN.name, error: e.message });
+  }
 
-      const res = await callZapierTool('buffer_add_to_queue', {
-        output_hint: 'id, text, status, channel',
-        organizationId,
-        channelId: ch.id,
-        method,
-        dynamic_properties: {
-          text: channelText,
-          attachment: 'image',
-          image: imageUrl,
-          image_alttext: 'Living Document (.ldocx) Technical Architecture'
-        }
-      }, token);
-      console.log(`✅ Success for ${ch.name}`);
-      results.push({ channel: ch.name, result: res });
-    } catch (e) {
-      console.error(`❌ Error for ${ch.name}:`, e.message);
-      results.push({ channel: ch.name, error: e.message });
+  // 2. Dispatch to Threads (ensuring under 500 characters)
+  try {
+    console.log(`? Queueing to ${CHANNELS.THREADS.name}...`);
+    let tText = threadsText || linkedinText;
+    if (tText.length > 480) {
+      tText = tText.slice(0, 470) + '...\n\n?? https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT';
     }
+
+    const tRes = await callZapierTool('buffer_add_to_queue', {
+      output_hint: 'id, text, status, channel',
+      organizationId: ORGANIZATION_ID,
+      channelId: CHANNELS.THREADS.id,
+      method,
+      dynamic_properties: {
+        text: tText,
+        attachment: 'image',
+        image: imageUrl,
+        image_alttext: 'Living Document (.ldocx) Technical Showcase'
+      }
+    }, token);
+    console.log(`? Success for Threads`);
+    results.push({ channel: CHANNELS.THREADS.name, result: tRes });
+  } catch (e) {
+    console.error(`? Error for Threads:`, e.message);
+    results.push({ channel: CHANNELS.THREADS.name, error: e.message });
   }
 
   return results;
 }
 
-// Self-run when called directly
-if (require.main === module) {
-  const method = process.argv.includes('--share') ? 'share_now' : (process.argv.includes('--queue') ? 'queue' : 'draft');
-  const sampleText = "Why are we still printing documents to glass? PDF was engineered for physical printers in 1993. The Living Document Format (.ldocx) introduces interactive 3D WebGL, reactive charts, and block-level cryptographic verification.\n\nCompare the specs and download our free 3.7MB native suite for Windows, Linux, and iOS:\nhttps://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/tag/v2.5.0-free";
-  const imageUrl = "https://raw.githubusercontent.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/main/public/ldoc-promo-banner.jpg";
+// Publish entire batch of 5 daily posts into Buffer queue
+async function publishDaily5Batch(posts, method = 'queue') {
+  console.log(`\n?? Starting Daily 5-Post Multi-Channel Promotion Batch (method: ${method})...\n`);
+  const batchResults = [];
 
-  publishCampaign({ text: sampleText, imageUrl, method }).then(res => {
-    console.log('\n--- Final Broadcast Summary ---');
-    console.log(JSON.stringify(res, null, 2));
-  });
+  for (let i = 0; i < posts.length; i++) {
+    const post = posts[i];
+    console.log(`\n--- Dispatching Post ${i + 1}/5: ${post.slot} ---`);
+    console.log(`?? Angle: ${post.angle}`);
+    const res = await publishSinglePost({
+      linkedinText: post.linkedin,
+      threadsText: post.threads,
+      imageUrl: post.imageUrl,
+      method
+    });
+    batchResults.push({ slot: post.slot, angle: post.angle, results: res });
+    // Small pause between queue calls for clean rate limiting
+    await new Promise(resolve => setTimeout(resolve, 2000));
+  }
+
+  console.log(`\n?? All 5 daily promotion posts queued successfully into Buffer!`);
+  return batchResults;
 }
 
-module.exports = { publishCampaign };
+async function publishCampaign({ text, imageUrl, method = 'queue' }) {
+  return publishSinglePost({ linkedinText: text, threadsText: text, imageUrl, method });
+}
+
+module.exports = {
+  publishCampaign,
+  publishSinglePost,
+  publishDaily5Batch
+};
