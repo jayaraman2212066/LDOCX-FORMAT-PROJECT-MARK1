@@ -59,24 +59,30 @@ async function publishCampaign({ text, imageUrl, method = 'draft' }) {
   const results = [];
 
   for (const ch of channels) {
-    console.log(`? Publishing to ${ch.name} [method: ${method}]...`);
+    console.log(`⏳ Publishing to ${ch.name} [method: ${method}]...`);
     try {
+      let channelText = text;
+      // Threads limit is 500 characters
+      if (ch.name.includes('Threads') && channelText.length > 480) {
+        channelText = `Stop sending flat PDFs in 2026. 🛑\n\nWhy send a 33-year-old printer format when you can send a Living Document (.ldocx)?\n🧊 Full 3D CAD & mesh models in 60 FPS\n📊 Live reactive datasets & charts\n🛡️ SHA-256 Merkle tree verification\n⚡ 3.7MB lightweight native viewer (Win/Linux/iOS)\n\n100% Free & Open-Source.\n\nDownload: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT/releases/tag/v2.5.0-free\nSDK: npm install ldoc-sdk\n\n#TechNews #OpenSource #3D #WebDev`;
+      }
+
       const res = await callZapierTool('buffer_add_to_queue', {
         output_hint: 'id, text, status, channel',
         organizationId,
         channelId: ch.id,
         method,
         dynamic_properties: {
-          text,
+          text: channelText,
           attachment: 'image',
           image: imageUrl,
           image_alttext: 'Living Document (.ldocx) Technical Architecture'
         }
       }, token);
-      console.log(`? Success for ${ch.name}`);
+      console.log(`✅ Success for ${ch.name}`);
       results.push({ channel: ch.name, result: res });
     } catch (e) {
-      console.error(`? Error for ${ch.name}:`, e.message);
+      console.error(`❌ Error for ${ch.name}:`, e.message);
       results.push({ channel: ch.name, error: e.message });
     }
   }
