@@ -1,0 +1,171 @@
+[
+  {
+    "id": "master_ad1_first_look",
+    "adNumber": 1,
+    "title": "Ad 1 — First Look (Product Demo / Feature Reveal)",
+    "angle": "Straight product demo — watch a static idea become a living document in real time",
+    "length": "40s",
+    "targetPlatforms": [
+      "YouTube Shorts",
+      "TikTok",
+      "Instagram Reels",
+      "Threads",
+      "LinkedIn"
+    ],
+    "posterFile": "public/posters/master_ad1_first_look.jpg",
+    "posterUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/posters/master_ad1_first_look.jpg",
+    "videoPrompt": {
+      "format": "Vertical 9:16 master (1080x1920), crop-safe center for 1:1/16:9",
+      "music": "Upbeat, driving tech-house build with hard beat-drop at 0:02 when empty page appears. Builds into 3D snap.",
+      "shotList": [
+        "0:00-0:02 — Extreme close-up on a blank white page in a boring word processor, dull grey UI, cursor blinking. Hard beat-drop.",
+        "0:02-0:06 — Hard cut to LDOC Studio dark UI. Caption: 'This is a document. But it's ALIVE.' Drag block to canvas.",
+        "0:06-0:14 — 3D model block (turbine/engine) drops onto page and immediately renders in 60 FPS rotating 3D. Caption: 'Drop in a real 3D model.'",
+        "0:14-0:20 — Quick cuts: live chart animates in, interactive dashboard ticks upward, code-sandbox runs and prints live result. Caption: 'Charts that move. Code that runs. Right on the page.'",
+        "0:20-0:26 — Single 'Save' action; .ldocx icon flies into chat/email/USB icon row. Caption: 'One file. Everything inside it.'",
+        "0:26-0:32 — Second device opens same file with no login screen or spinner, straight into spinning 3D model. Caption: 'No account. No wait. It just opens.'",
+        "0:32-0:36 — Quick montage of block types (orbit simulation, tilt card, live dashboard) synced to music stabs.",
+        "0:36-0:40 — End card: LDOC Studio wordmark, tagline 'Documents that do more than sit there.' CTA: 'Try it free — github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT'"
+      ],
+      "voiceover": "Most documents just sit there. / This one doesn't. / Drop in 3D. Drop in code. Drop in live data. / Save it as one file — / that opens anywhere, instantly. / LDOC Studio. Documents that do more."
+    },
+    "linkedin": "🚨 Most documents just sit there. This one doesn't.\n\nMeet the Living Document (.ldocx) format.\n\nDrop in real-time 3D CAD models. Run executable code sandboxes. Recalculate interactive data blocks directly on the page — and save it all into a single, portable, offline-first file.\n\n⚡ What's inside LDOC Studio:\n• Hardware-accelerated 60 FPS 3D WebGL orbit & zoom\n• Zero-latency JavaScript / Python code execution\n• Reactive AST engine that updates numbers and charts live\n• Zero cloud login required — opens instantly on any machine\n\nExperience documents that do more than sit there:\n👉 Explore on GitHub: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n🌐 Try Free Web Creator: https://coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/creator.html\n\n#LivingDocuments #WebDev #OpenSource #3DGraphics #SoftwareEngineering #TechInnovation",
+    "threads": "Most documents just sit there. This one doesn't. ⚡\n\nDrop in 3D models. Drop in code. Drop in live data.\n\nSave it as one file that opens anywhere, instantly — no login, no cloud subscription.\n\n• 60 FPS 3D WebGL orbit\n• Live code sandbox on-canvas\n• 100% Offline-first\n\n👉 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#WebDev #OpenSource #Tech",
+    "instagram": "🚨 MOST DOCUMENTS JUST SIT THERE. THIS ONE DOESN'T. 🧊✨\n\nMeet the Living Document Format (.ldocx) — where technical reports, research papers, and documentation come alive.\n\nDrop in hardware-accelerated 3D models. Run executable code sandboxes. Recalculate live data directly on the page. And save it all into ONE portable file.\n\n✨ Superpowers:\n🕹️ 60 FPS 3D WebGL CAD orbit & zoom\n💻 In-document live code execution\n📊 Dynamic reactive AST recalculations\n🔒 Zero login required — runs 100% offline\n\n🌐 GitHub: github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n🚀 Web Creator: coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/creator.html\n\n#webdev #threejs #webgl #coding #developer #softwareengineer #techinnovation #futuretech #programming #opensource #frontend",
+    "discord": "🧊 **Master Ad 1: FIRST LOOK — Documents that do more than sit there!**\n\nDrop in real-time 3D models, run executable code sandboxes, and recalculate interactive data right on the page — all inside a single, portable .ldocx file.\n\n• 🕹️ 60 FPS 3D WebGL orbit & inspection\n• 💻 Embedded code execution engine\n• 📊 Reactive AST formulas & live charts\n• 🔒 Zero login, zero cloud lock-in, 100% offline\n\n⭐ **GitHub**: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n🌐 **Web Creator**: https://coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/creator.html"
+  },
+  {
+    "id": "master_ad2_docx_vs_ldocx",
+    "adNumber": 2,
+    "title": "Ad 2 — .docx vs .ldocx (Head-to-Head Split Screen)",
+    "angle": "Direct format-vs-format comparison — the 'old way' frozen next to the 'new way' alive",
+    "length": "35s",
+    "targetPlatforms": [
+      "Instagram Feed",
+      "TikTok",
+      "Threads",
+      "LinkedIn"
+    ],
+    "posterFile": "public/posters/master_ad2_docx_vs_ldocx.jpg",
+    "posterUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/posters/master_ad2_docx_vs_ldocx.jpg",
+    "videoPrompt": {
+      "format": "Vertical 9:16 master (1080x1920), crop-safe center for 1:1/16:9",
+      "music": "Starts flat and muted (humming room-tone) for left side, then vertical wipe triggers hard riser + beat-drop for right side synth track.",
+      "shotList": [
+        "0:00-0:04 — Full-screen split: LEFT half labeled '.DOCX', static grey Word page, lifeless text, blinking cursor. RIGHT half black. Caption: 'Same content. Two formats.'",
+        "0:04-0:08 — On left, user tries to click chart image — nothing happens, just a picture. Caption on left: 'Flat. Frozen. Just ink on a page.'",
+        "0:08-0:10 — Hard vertical wipe left→right, riser + beat-drop.",
+        "0:10-0:16 — RIGHT half fills screen: LDOC Studio, same content, but chart is live draggable data block and small 3D object spins. Caption: 'Living. Interactive. Actually works.'",
+        "0:16-0:22 — Quick two-column spec comparison card: .docx (opens as text, static tables, flat page) vs .ldocx (opens as experience, live interactive blocks, 3D+code+data in one file).",
+        "0:22-0:28 — Demonstrate portability: .ldocx dragged onto phone, tablet, laptop — all show same live 3D block with zero login. Caption: 'Still just one file. No account needed anywhere.'",
+        "0:28-0:32 — Fast zoom into glowing, rotating file icon.",
+        "0:32-0:35 — End card: wordmark + tagline 'Your documents deserve to be alive.' CTA: 'Open your first .ldocx — github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT'"
+      ],
+      "voiceover": "Same idea. Two files. / One's frozen. / One's alive. / This is .docx. / This is .ldocx. / Which one would you rather open?"
+    },
+    "linkedin": "⚔️ .docx vs .ldocx: Which one would you rather open?\n\nFor 30 years, documents have been frozen ink on a digital page. When you want to show a 3D model, you paste a flat screenshot. When you want to share data, you paste a lifeless image of a chart.\n\nThat stops today:\n\n❌ Microsoft Word (.docx):\n• Opens as flat, inert text\n• Static tables and lifeless image screenshots\n• Bloated proprietary XML vulnerable to manual tampering\n\n⚡ Living Document (.ldocx):\n• Opens as an interactive, hardware-accelerated experience\n• 60 FPS 3D WebGL models you can orbit with your mouse\n• Live executable code sandboxes and reactive formulas\n• Still just ONE self-contained file with ZERO cloud account needed\n\nRead the technical architecture comparison:\n👉 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#SoftwareArchitecture #Productivity #Engineering #DocumentFormat #TechComparison #WebDev",
+    "threads": "Same idea. Two files. 📄 vs ⚡\n\nOne's frozen. One's alive.\n\n.docx:\n❌ Flat, static text\n❌ Lifeless chart images\n\n.ldocx:\n⚡ 60 FPS 3D models\n⚡ Running code sandboxes\n⚡ 100% Offline, zero login\n\nWhich one would you rather open?\n👉 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#Tech #WebDev #OpenSource",
+    "instagram": "⚔️ SAME IDEA. TWO FILES. WHICH ONE WOULD YOU RATHER OPEN? 📄⚡\n\nFor 30 years, we've settled for frozen ink on glass.\n\nLeft side (.docx):\n❌ Flat. Frozen. Just ink on a page.\n❌ You click a chart — nothing happens.\n\nRight side (.ldocx):\n⚡ Living. Interactive. Actually works.\n🕹️ Orbit 3D CAD parts in real-time.\n📊 Drag and recalculate live data.\n🔒 One file. No login. Opens instantly.\n\n🌐 Star on GitHub: github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#softwareengineering #techcomparison #programming #futureoftech #javascript #webdev #threejs #productivity #codinglife",
+    "discord": "⚔️ **The Ultimate Head-to-Head: .docx vs .ldocx!**\n\nWhy settle for 30-year-old frozen printer pages?\n\n• **.docx**: Opens as static text, lifeless chart screenshots, zero reactivity.\n• **.ldocx**: Opens as an interactive living experience with 60 FPS 3D WebGL, executable code sandboxes, and reactive AST recalculation.\n\nOne file. Zero login required.\n\n⭐ **GitHub**: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT"
+  },
+  {
+    "id": "master_ad3_zero_login",
+    "adNumber": 3,
+    "title": "Ad 3 — One File. Zero Login. (Portability & Freedom)",
+    "angle": "Freedom / privacy pitch — no workspace, no subscription wall, no 'create an account to continue'",
+    "length": "30s",
+    "targetPlatforms": [
+      "LinkedIn",
+      "Threads",
+      "Privacy Communities",
+      "X/Twitter"
+    ],
+    "posterFile": "public/posters/master_ad3_zero_login.jpg",
+    "posterUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/posters/master_ad3_zero_login.jpg",
+    "videoPrompt": {
+      "format": "Vertical 9:16 master (1080x1920), crop-safe center for 1:1/16:9",
+      "music": "Spacious, minimal ambient synth pad gradually building into a driving, triumphant synth-pop 'freedom anthem'.",
+      "shotList": [
+        "0:00-0:04 — Hand reaches for laptop in a place with visibly no signal (plane, cabin, subway) — phone shows 'No Internet'. Caption: 'No wifi. No problem.'",
+        "0:04-0:10 — Cut to screen: LDOC Studio opens instantly, loads .ldocx file with embedded spinning 3D model, no loading spinner, no login. Caption: 'No account. No cloud login. Just... open.'",
+        "0:10-0:16 — User attaches same file to email; recipient double-clicks — opens immediately with 3D model, code block, chart intact, no 'request access' screen. Caption: 'Send it like a photo. Not like a permission request.'",
+        "0:16-0:22 — Metaphor: .ldocx file icon shown as glowing capsule/vault fitting into USB, phone, email attachment. 'It travels light.'",
+        "0:22-0:26 — Bold kinetic type: 'YOUR FILE. YOUR MACHINE. YOUR RULES.'",
+        "0:26-0:30 — End card: wordmark + tagline 'A document you actually own.' CTA: 'Download LDOC Studio — github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT'"
+      ],
+      "voiceover": "No login. / No subscription wall. / No 'create a workspace to continue.' / Just a file — that opens, anywhere, instantly. / LDOC Studio. A document you actually own."
+    },
+    "linkedin": "🛑 Stop paying rent on your own thoughts.\n\nModern cloud document apps hold your knowledge hostage:\n• 'Please sign in with Google to view this file'\n• 'You need a paid workspace seat to view interactive blocks'\n• 'Offline mode requires a premium tier'\n\nWe rejected that model entirely.\n\nWith the Living Document Format (.ldocx):\n🔒 100% Local-First: Runs on your machine with zero cloud telemetry\n✈️ Works completely offline on a plane, train, or remote site\n📦 Send it like a photo — not like a permission request\n🛡️ One self-contained file with embedded 3D, code, and data\n\nYOUR FILE. YOUR MACHINE. YOUR RULES.\n\nGet the open-source suite:\n👉 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#LocalFirst #Privacy #DataOwnership #OpenSource #TechFreedom #SoftwareArchitecture",
+    "threads": "Stop paying rent on your own thoughts. 🛑\n\nNo login.\nNo subscription wall.\nNo 'create a workspace to continue.'\n\nJust a file — that opens anywhere, instantly.\n\nYour file. Your machine. Your rules.\n\n👉 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#LocalFirst #Privacy #OpenSource",
+    "instagram": "🛑 STOP PAYING RENT ON YOUR OWN THOUGHTS. ✈️🔒\n\nNo login. No subscription wall. No 'request access' spinner.\n\nJust a single, self-contained file that opens anywhere, instantly:\n✨ Works 100% offline with zero wifi\n🕹️ 3D models and code execute directly on your machine\n📧 Send it like a photo — not like a SaaS permission request\n\nYOUR FILE. YOUR MACHINE. YOUR RULES.\n\n🌐 GitHub: github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#localfirst #privacy #opensource #dataprivacy #developer #productivity #futureoftech #techfreedom #programming",
+    "discord": "🔒 **No Login. No Cloud Lock-In. A Document You Actually Own.**\n\nStop paying SaaS subscriptions just to open your own files. The Living Document Format (.ldocx) is 100% local-first and self-contained:\n\n• ✈️ Works without wifi on planes, subways, or remote jobsites\n• 📧 Send it like an image — no 'request access' walls\n• 🕹️ Embedded 3D and code sandboxes execute locally on your GPU/CPU\n\n**YOUR FILE. YOUR MACHINE. YOUR RULES.**\n\n⭐ **GitHub**: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT"
+  },
+  {
+    "id": "master_ad4_built_different",
+    "adNumber": 4,
+    "title": "Ad 4 — Built Different (Developer & Power-User Angle)",
+    "angle": "Speaks directly to developers — Cmd+K command palette, live AST inspector, and real code sandbox inside a document",
+    "length": "30s",
+    "targetPlatforms": [
+      "Dev Channels",
+      "Discord",
+      "GitHub",
+      "Reddit/X",
+      "LinkedIn"
+    ],
+    "posterFile": "public/posters/master_ad4_built_different.jpg",
+    "posterUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/posters/master_ad4_built_different.jpg",
+    "videoPrompt": {
+      "format": "Vertical 9:16 master (1080x1920), crop-safe center for 1:1/16:9",
+      "music": "Dark, driving synthwave/drum-and-bass hybrid. Beat-drop at 0:01, sustained high-energy control-room aesthetic.",
+      "shotList": [
+        "0:00-0:02 — Fast flash-cut of terminal cursor blinking, hard-cut on beat-drop.",
+        "0:02-0:07 — Hands on keyboard, user hits keyboard shortcut and VS-Code-style command palette flies open over document. Caption: 'Cmd+K. Just like your editor.'",
+        "0:07-0:13 — Types command, inserts code block, writes script live; block executes and renders live result directly on page. Caption: 'Real code. Runs in the document. Not a screenshot of code.'",
+        "0:13-0:19 — Live AST/JSON inspector shows document structure updating in real time, monospace terminal-green accents. Caption: 'See the actual structure. Not a black box.'",
+        "0:19-0:24 — Quick split: LEFT = mouse clicking boring toolbar; RIGHT = LDOC Studio, all keyboard, palette open. Caption: 'Built for people who'd rather type than click.'",
+        "0:24-0:27 — Fast zoom into glowing .ldocx icon, flashes opening on second machine with code already rendered.",
+        "0:27-0:30 — End card terminal-style: 'LDOC Studio. $ open_anything' CTA: 'github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT'"
+      ],
+      "voiceover": "Command palette. Live AST. Real code — in a document. / LDOC Studio. Built different."
+    },
+    "linkedin": "⚡ Built for engineers who'd rather type than click.\n\nWhy do document editors treat technical creators like we've never touched a terminal?\n\nLDOC Studio was engineered from the kernel up for power-users and developers:\n⌨️ Cmd+K Command Palette: Jump anywhere, insert blocks, and control styles without touching the mouse\n💻 Executable Code Sandboxes: Real JavaScript code executing directly on-canvas — not a lifeless code screenshot\n🔍 Live AST / JSON Inspector: Inspect your document's hierarchical syntax tree in real time as you edit\n📦 Microsecond Headless Parsing: Parse, query, and transform .ldocx files via \npm install ldoc-sdk\n\nNo black boxes. No opaque proprietary binary blobs.\n\nCheck out the open standard:\n👉 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#DeveloperTools #TypeScript #JavaScript #Coding #AST #SoftwareEngineering #OpenSource",
+    "threads": "Built for developers who'd rather type than click. ⌨️⚡\n\n• Cmd+K Command Palette\n• Real executable code blocks (not screenshots)\n• Live AST & JSON inspector\n• Microsecond SDK parsing\n\nCommand palette. Live AST. Real code — in a document.\n\nLDOC Studio. Built different.\n👉 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#Developers #TypeScript #WebDev",
+    "instagram": "⚡ BUILT FOR PEOPLE WHO'D RATHER TYPE THAN CLICK. ⌨️🔥\n\nWhy are document editors built like 1995 word processors?\n\nMeet LDOC Studio:\n⌨️ Cmd+K Command Palette just like VS Code\n💻 Real code sandboxes that execute on the page (not screenshots!)\n🔍 Live AST/JSON inspector for real-time document structure\n⚡ Instant headless parsing via npm install ldoc-sdk\n\nCommand palette. Live AST. Real code — in a document.\nLDOC Studio. Built different.\n\n🌐 GitHub: github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#developer #coding #programming #softwareengineering #vscode #typescript #javascript #npm #techstack #buildinpublic",
+    "discord": "⌨️ **Attention Developers: A Document Tool Engineered Like Your Code Editor!**\n\nStop fighting clunky WYSIWYG editors. LDOC Studio is built for engineers:\n\n• ⚡ **Cmd+K Command Palette**: Full keyboard-driven workflow\n• 💻 **Live Code Sandboxes**: Execute code directly on the canvas\n• 🔍 **Live AST / JSON Inspector**: See the live document syntax tree in real time\n• 📦 **NPM SDK**: \npm install ldoc-sdk for instant headless parsing\n\n⭐ **GitHub**: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT"
+  },
+  {
+    "id": "master_ad5_pitch_alive",
+    "adNumber": 5,
+    "title": "Ad 5 — Your Pitch, Alive (Startup & Business Pitch-Deck)",
+    "angle": "Turn a pitch deck or investor update into a live, interactive dashboard the room can watch move in real time",
+    "length": "40s",
+    "targetPlatforms": [
+      "LinkedIn",
+      "YouTube Pre-Roll",
+      "Discord Startups",
+      "Threads"
+    ],
+    "posterFile": "public/posters/master_ad5_pitch_alive.jpg",
+    "posterUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/posters/master_ad5_pitch_alive.jpg",
+    "videoPrompt": {
+      "format": "Vertical 9:16 master (1080x1920), crop-safe center for 1:1/16:9",
+      "music": "Cinematic corporate-epic trailer build — swelling strings-meets-synth hybrid. Boardroom-confident energy, big swell at reveal (0:14).",
+      "shotList": [
+        "0:00-0:04 — Presenter in meeting room opens plain, static slide deck — investors' faces politely unimpressed, one checks phone. Caption: 'Another pitch deck. Another polite nod.'",
+        "0:04-0:08 — Presenter closes it, opens LDOC Studio instead. Caption: 'What if your numbers actually moved?'",
+        "0:08-0:14 — Big reveal: ARR revenue-projection block animates upward as presenter drags growth-rate slider — room leans in. Caption: 'Drag it. Watch the model react — live.'",
+        "0:14-0:20 — Quick cuts: live comparison table updates, small 3D product model spins next to roadmap section, board opens same file identically mid-meeting. Caption: 'Everyone sees the same live file. No let me re-send that.'",
+        "0:20-0:26 — Presenter edits a number live, projection instantly redraws. Caption: 'Change the model live. In the room.'",
+        "0:26-0:32 — Cut to handshake / nodding investors, laptop closed. Caption: 'One file. Zero follow-up deck.'",
+        "0:32-0:36 — Fast montage: 3 more interactive business blocks flashing by (dashboard tile, comparison card, timeline).",
+        "0:36-0:40 — End card: wordmark + tagline 'Pitch decks that don't sit still.' CTA: 'Build your living pitch — github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT'"
+      ],
+      "voiceover": "Static decks get a polite nod. / Living ones get a second meeting. / Drag the model. Watch it react. Live, in the room. / LDOC Studio. Pitch decks that don't sit still."
+    },
+    "linkedin": "📈 Static pitch decks get a polite nod. Living decks get a second meeting.\n\nEvery founder has been there: you project a slide deck, an investor asks 'What happens if your churn drops to 2% and your CAC drops by 15%?', and you have to say:\n'Let me rerun the model and send you a follow-up deck tonight.'\n\nMomentum: lost.\n\nIn a Living Document (.ldocx), your pitch deck IS the financial model:\n📊 Drag growth sliders live on the projection screen and watch ARR recalibrate in real time\n🕹️ Embed your interactive 3D product prototype right next to the go-to-market roadmap\n🤝 Hand the file to the investor — it opens identically on their machine with zero login\n📁 One file. Zero 'let me send a follow-up email'.\n\nBuild pitch decks that don't sit still:\n👉 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#Startups #VentureCapital #PitchDeck #Founders #BusinessStrategy #Innovation",
+    "threads": "Static pitch decks get a polite nod. Living decks close rounds. 📈🤝\n\nDrag growth sliders live in the room. Watch your ARR projections recalculate in real time.\n\n• Live interactive financial models\n• Embedded 3D product demos\n• One file. Zero 'follow-up deck'.\n\n👉 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#Startups #Founders #Business",
+    "instagram": "📈 STATIC DECKS GET A POLITE NOD. LIVING DECKS CLOSE ROUNDS. 💼✨\n\nWhat if your pitch deck wasn't a dead PDF, but a living, breathing financial model?\n\nIn LDOC Studio:\n📊 Drag growth rate sliders live in front of investors\n📈 Watch ARR projections and unit economics recalculate in real time\n🕹️ Spin a live 3D product prototype right on the slide\n📁 One file. Opens instantly. Zero 'let me send a follow-up deck.'\n\nPitch decks that don't sit still.\n\n🌐 GitHub: github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#startups #founders #venturecapital #pitchdeck #entrepreneurship #businessstrategy #techinnovation #salespitch",
+    "discord": "📈 **Pitch Decks That Don't Sit Still: Living Documents (.ldocx) for Founders!**\n\nStop saying *'Let me rerun the financial model and follow up tonight'*. In a Living Document, your deck IS the model:\n\n• 📊 **Live ARR Sliders**: Drag growth parameters and watch projections recalculate live in the room\n• 🕹️ **Embedded 3D Prototypes**: Orbit your hardware product right beside the roadmap\n• 📁 **Single File**: Hand it to investors on a USB or email — opens instantly with zero login\n\n⭐ **GitHub**: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT"
+  }
+]

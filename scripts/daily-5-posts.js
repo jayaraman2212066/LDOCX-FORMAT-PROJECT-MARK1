@@ -17,6 +17,11 @@ const POSTERS = {
   DAY5_VIEWER: CDN_BASE + "poster_day5_native_viewer.jpg",
   DAY6_CONVERTER: CDN_BASE + "poster_day6_universal_converter.jpg",
   DAY7_CLEAN_PRINT: CDN_BASE + "poster_day7_clean_print.jpg",
+  MASTER_AD1_FIRST_LOOK: CDN_BASE + "master_ad1_first_look.jpg",
+  MASTER_AD2_DOCX_VS_LDOCX: CDN_BASE + "master_ad2_docx_vs_ldocx.jpg",
+  MASTER_AD3_ZERO_LOGIN: CDN_BASE + "master_ad3_zero_login.jpg",
+  MASTER_AD4_BUILT_DIFFERENT: CDN_BASE + "master_ad4_built_different.jpg",
+  MASTER_AD5_PITCH_ALIVE: CDN_BASE + "master_ad5_pitch_alive.jpg",
   VIRAL_3D_CAR: CDN_BASE + "poster_viral_3d_car.jpg",
   CYBER_TABLET: CDN_BASE + "poster_cyberpunk_tablet.jpg"
 };
@@ -50,12 +55,10 @@ function generateDaily5Posts(campaign, devtoUrl) {
 
 ${campaign.theme}:
 ❌ Legacy Flaws:
-${campaign.comparison.legacyFlaws.map(f => '• ' + f).join('
-')}
+${campaign.comparison.legacyFlaws.map(f => '• ' + f).join('\n')}
 
 ⚡ .ldocx Superpowers:
-${campaign.comparison.ldocxSuperpowers.map(s => '• ' + s).join('
-')}
+${campaign.comparison.ldocxSuperpowers.map(s => '• ' + s).join('\n')}
 
 Read the full showdown:
 👉 ${articleUrl}
@@ -78,12 +81,10 @@ Why are we still sharing static, lifeless PDFs when modern devices can render fu
 ${campaign.theme}:
 
 ❌ Legacy Flaws:
-${campaign.comparison.legacyFlaws.map(f => '• ' + f).join('
-')}
+${campaign.comparison.legacyFlaws.map(f => '• ' + f).join('\n')}
 
 ⚡ .ldocx Superpowers:
-${campaign.comparison.ldocxSuperpowers.map(s => '• ' + s).join('
-')}
+${campaign.comparison.ldocxSuperpowers.map(s => '• ' + s).join('\n')}
 
 🌐 100% Free & Open-Source:
 github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT
@@ -94,12 +95,10 @@ github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT
 **${campaign.theme}**
 
 ❌ **Legacy Document Flaws:**
-${campaign.comparison.legacyFlaws.map(f => '• ' + f).join('
-')}
+${campaign.comparison.legacyFlaws.map(f => '• ' + f).join('\n')}
 
 ⚡ **.ldocx Superpowers:**
-${campaign.comparison.ldocxSuperpowers.map(s => '• ' + s).join('
-')}
+${campaign.comparison.ldocxSuperpowers.map(s => '• ' + s).join('\n')}
 
 📖 **Full Showcase & Comparison**: ${articleUrl}
 🌐 **Official Repo**: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT
@@ -111,7 +110,7 @@ ${campaign.comparison.ldocxSuperpowers.map(s => '• ' + s).join('
     {
       slot: "2/5 Mid-Day Deep Dive (12:30 PM)",
       angle: "3D WebGL & Interactive Architecture",
-      imageUrl: POSTERS.VIRAL_3D_CAR,
+      imageUrl: (dayNumber % 2 === 1) ? POSTERS.MASTER_AD1_FIRST_LOOK : POSTERS.VIRAL_3D_CAR,
       linkedin: `Why are documents still 2D? The Living Document Format (.ldocx) integrates real-time Three.js 3D WebGL models, reactive spreadsheets, and live charts directly inside a self-contained container.
 
 Key Capabilities:
@@ -168,7 +167,7 @@ The Living Document Format integrates real-time Three.js 3D WebGL models and rea
     {
       slot: "3/5 Afternoon Security (03:30 PM)",
       angle: "Cryptographic Tamper Detection",
-      imageUrl: POSTERS.DAY2_SECURITY,
+      imageUrl: (dayNumber % 2 === 1) ? POSTERS.DAY2_SECURITY : POSTERS.MASTER_AD2_DOCX_VS_LDOCX,
       linkedin: `Did you know anyone can unzip a Microsoft Word (.docx), edit sensitive legal numbers in the XML, re-zip it, and Word will open it without warning? ⚠️
 
 The Living Document Format (.ldocx) solves document forgery with mathematical precision:
@@ -234,7 +233,7 @@ console.log(doc.verifyIntegrity() ? 'Authentic' : 'Tampered');
     {
       slot: "4/5 Evening Developer Angle (06:30 PM)",
       angle: "Developer SDK & Open Standards",
-      imageUrl: POSTERS.DAY4_AI_AST,
+      imageUrl: (dayNumber % 2 === 1) ? POSTERS.MASTER_AD4_BUILT_DIFFERENT : POSTERS.DAY4_AI_AST,
       linkedin: `Building document processing, RAG pipelines, or technical authoring tools? 🤖
 
 Stop wrangling brittle PDF parsers and OCR hacks. The Living Document SDK (npm install ldoc-sdk) gives you a clean, typed JSON Abstract Syntax Tree (AST) with zero heuristic guessing.
@@ -296,7 +295,7 @@ The Living Document SDK (\`ldoc-sdk\`) provides microsecond JSON AST parsing wit
     {
       slot: "5/5 Night Viral Curiosity (09:30 PM)",
       angle: "Zero-Install Instant Web Creator",
-      imageUrl: POSTERS.DAY3_CREATOR,
+      imageUrl: (dayNumber % 3 === 1) ? POSTERS.MASTER_AD3_ZERO_LOGIN : ((dayNumber % 3 === 2) ? POSTERS.MASTER_AD5_PITCH_ALIVE : POSTERS.DAY3_CREATOR),
       linkedin: `No installation required. Try creating your very first Living Document (.ldocx) right in your browser:
 
 👉 Open the Free Web Creator:
