@@ -55,14 +55,11 @@ async function postAdByIndex(adIndex, method = 'share_now', { postYouTube = true
   logMsg(`📹 Video: ${ad.videoUrl}`);
   logMsg(`🖼️ Poster: ${ad.posterUrl}`);
 
-  const videoNotePlain = '\n\n📹 Watch 2K Video: ' + ad.videoUrl;
-  const discordText = ad.discord + '\n\n🎬 **Watch 2K Quad HD Video**:\n' + ad.videoUrl;
-
   const results = await publishSinglePost({
-    linkedinText: ad.linkedin + videoNotePlain,
-    threadsText: ad.threads + videoNotePlain,
-    instagramText: ad.instagram + videoNotePlain,
-    discordText: discordText,
+    linkedinText: ad.linkedin,
+    threadsText: ad.threads,
+    instagramText: ad.instagram,
+    discordText: ad.discord,
     imageUrl: ad.posterUrl,
     videoUrl: ad.videoUrl,
     method,

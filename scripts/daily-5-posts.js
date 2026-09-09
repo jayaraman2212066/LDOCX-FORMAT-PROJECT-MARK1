@@ -7,7 +7,7 @@ const GITHUB_RELEASES_URL = "https://github.com/coderjay2003-svg/NEW-GEN-LIVING-
 const LIVE_CREATOR_URL = "https://coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/creator.html";
 
 // CDN Base for verified 200 OK assets
-const CDN_BASE = "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/posters/";
+const CDN_BASE = "https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT";
 
 const POSTERS = {
   DAY1_3D_CAD: CDN_BASE + "poster_day1_3d_cad.jpg",

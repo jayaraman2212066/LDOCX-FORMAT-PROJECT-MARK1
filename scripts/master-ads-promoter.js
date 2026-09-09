@@ -43,14 +43,11 @@ async function promoteMasterAd(adNumber, method = 'queue') {
   console.log(`===============================================================\n`);
 
   // Dispatch to LinkedIn, Threads, Instagram, and Discord with video link included
-  const videoNote = `\n\n📹 **Watch 2K Quad HD Video Ad**: ${ad.videoUrl}`;
-  const videoNotePlain = `\n\n📹 Watch 2K Video: ${ad.videoUrl}`;
-
   const results = await publishSinglePost({
-    linkedinText: ad.linkedin + videoNotePlain,
-    threadsText: ad.threads + videoNotePlain,
-    instagramText: ad.instagram + videoNotePlain,
-    discordText: ad.discord + videoNote,
+    linkedinText: ad.linkedin,
+    threadsText: ad.threads,
+    instagramText: ad.instagram,
+    discordText: ad.discord,
     imageUrl: ad.posterUrl,
     videoUrl: ad.videoUrl,
     method,

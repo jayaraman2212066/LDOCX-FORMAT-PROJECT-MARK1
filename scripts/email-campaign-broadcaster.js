@@ -24,10 +24,20 @@ const RECIPIENTS = {
   REFERRAL_EMAIL: 'jayaraman2212066@ssn.edu.in',
   REFERRAL_NAME: 'Jayaraman K (IT Department, SSN College of Engineering)',
   GITHUB_URL: 'https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT',
-  WEB_CREATOR_URL: 'https://coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/creator.html'
+  DOCS_URL: 'https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT#readme'
 };
 
 function generateEmailHtml(ad) {
+  const localVideoPath = path.resolve(__dirname, '..', 'public', 'ads', `${ad.id}.mp4`);
+  let isVideoAttached = false;
+  if (fs.existsSync(localVideoPath)) {
+    const sizeMb = fs.statSync(localVideoPath).size / (1024 * 1024);
+    if (sizeMb <= 24.5) isVideoAttached = true;
+  }
+
+  const primaryPlayUrl = ad.youtubeUrl || ad.videoUrl;
+  const primaryPlayText = ad.youtubeUrl ? `▶️ Watch on YouTube (2K Quad HD)` : `🎬 Stream 2K Quad HD Video (${ad.length})`;
+
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -61,7 +71,7 @@ function generateEmailHtml(ad) {
           <!-- Poster Image Banner -->
           <tr>
             <td style="padding: 0; line-height: 0;">
-              <a href="${ad.videoUrl}" target="_blank" style="display: block;">
+              <a href="${primaryPlayUrl}" target="_blank" style="display: block;">
                 <img src="${ad.posterUrl}" alt="${ad.title}" style="width: 100%; max-width: 600px; height: auto; display: block; border: 0;" />
               </a>
             </td>
@@ -83,15 +93,24 @@ ${ad.linkedin.split('\n\n#')[0]}
               </div>
 
               <!-- CTA Button: Watch Video -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin: 28px 0 20px 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin: 20px 0 16px 0;">
                 <tr>
                   <td align="center">
-                    <a href="${ad.videoUrl}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 700; padding: 14px 32px; border-radius: 8px; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4); text-align: center;">
-                      🎬 Watch 2K Quad HD Video (${ad.length})
+                    <a href="${primaryPlayUrl}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 700; padding: 14px 32px; border-radius: 8px; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4); text-align: center;">
+                      ${primaryPlayText}
                     </a>
                   </td>
                 </tr>
               </table>
+
+              ${isVideoAttached ? `
+              <!-- Direct Attachment Notice -->
+              <div style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 12px 16px; margin: 16px 0 20px 0; text-align: center;">
+                <span style="font-size: 13px; color: #34d399; font-weight: 600;">
+                  📎 Direct Video Attached: The full 2K Quad HD video (${ad.length}) is attached to this email for direct offline playback.
+                </span>
+              </div>
+              ` : ''}
 
               <!-- Project Superpowers Grid -->
               <div style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 20px; margin-top: 24px;">
@@ -112,7 +131,7 @@ ${ad.linkedin.split('\n\n#')[0]}
                   <td align="center">
                     <a href="${RECIPIENTS.GITHUB_URL}" target="_blank" style="color: #38bdf8; text-decoration: none; font-size: 13px; font-weight: 600; margin: 0 12px;">⭐ GitHub Repository</a>
                     <span style="color: #475569;">•</span>
-                    <a href="${RECIPIENTS.WEB_CREATOR_URL}" target="_blank" style="color: #38bdf8; text-decoration: none; font-size: 13px; font-weight: 600; margin: 0 12px;">🌐 Free Web Creator</a>
+                    <a href="${RECIPIENTS.DOCS_URL}" target="_blank" style="color: #38bdf8; text-decoration: none; font-size: 13px; font-weight: 600; margin: 0 12px;">📖 Technical Docs</a>
                   </td>
                 </tr>
               </table>
@@ -154,6 +173,16 @@ async function broadcastAdEmail(adIndex, { isTest = false } = {}) {
   const toList = isTest ? [RECIPIENTS.REFERRAL_EMAIL] : RECIPIENTS.TO;
   const ccList = isTest ? [] : RECIPIENTS.CC;
 
+  // Determine if video can be attached directly (Gmail 25MB attachment limit)
+  const localVideoPath = path.resolve(__dirname, '..', 'public', 'ads', `${ad.id}.mp4`);
+  let shouldAttach = false;
+  if (fs.existsSync(localVideoPath)) {
+    const sizeMb = fs.statSync(localVideoPath).size / (1024 * 1024);
+    if (sizeMb <= 24.5 && ad.videoUrl) {
+      shouldAttach = true;
+    }
+  }
+
   console.log('\n===============================================================');
   console.log(`📧 BROADCASTING AD ${ad.index} VIA ZAPIER GMAIL`);
   console.log(`🎯 Subject: "${subject}"`);
@@ -163,6 +192,10 @@ async function broadcastAdEmail(adIndex, { isTest = false } = {}) {
   }
   console.log(`📹 Video CDN: ${ad.videoUrl}`);
   console.log(`🖼️ Poster CDN: ${ad.posterUrl}`);
+  if (ad.youtubeUrl) {
+    console.log(`▶️ YouTube: ${ad.youtubeUrl}`);
+  }
+  console.log(`📎 Video Attachment: ${shouldAttach ? 'YES (Directly Attached)' : 'NO (> 25MB, Streamed via CDN/YouTube)'}`);
   console.log('===============================================================\n');
 
   const args = {
@@ -177,6 +210,10 @@ async function broadcastAdEmail(adIndex, { isTest = false } = {}) {
 
   if (ccList.length > 0) {
     args.cc = ccList;
+  }
+
+  if (shouldAttach) {
+    args.file = [ad.videoUrl];
   }
 
   const res = await callZapierTool('gmail_send_email', args, token);
