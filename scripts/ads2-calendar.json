@@ -1,0 +1,71 @@
+[
+  {
+    "id": "ads2_ad1_sha256_security",
+    "adNumber": 1,
+    "title": "Ad 1 \u2014 Cryptographic SHA-256 & Ed25519 Security (Tamper Alarms)",
+    "angle": "Physical paper stacks and unverified Word files vs. cryptographic per-block Merkle integrity",
+    "length": "40s (2560x1440 2K Quad HD)",
+    "targetPlatforms": [
+      "LinkedIn",
+      "YouTube",
+      "Discord",
+      "Threads",
+      "Instagram"
+    ],
+    "posterFile": "public/posters/ads2_ad1_sha256_security.jpg",
+    "posterUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/posters/ads2_ad1_sha256_security.jpg",
+    "videoFile": "public/ads/ads2_ad1_sha256_security.mp4",
+    "videoUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/ads/ads2_ad1_sha256_security.mp4",
+    "resolution": "2560x1440",
+    "linkedin": "\ud83d\udee1\ufe0f The era of unverified paper mountains and easily forged digital documents is over.\n\nAnyone can unzip a Microsoft Word (.docx) file, modify financial clauses in raw XML, and Word will open it without warning. In legal and enterprise workflows, that is a catastrophic vulnerability.\n\nThe Living Document Format (.ldocx) re-engineers document security with mathematical rigor:\n\ud83d\udd12 Per-block SHA-256 Merkle tree hashing\n\ud83d\udd11 Ed25519 cryptographic signatures\n\ud83d\udea8 Tamper detection alarms that trigger in under 15ms\n\ud83d\udce6 Zero macros, zero arbitrary scripts, 100% offline verification\n\nVerify document authenticity in 3 lines of code:\nconst { LDOCXParser } = require('ldoc-sdk');\nconst doc = await LDOCXParser.parse(buffer);\nconsole.log(doc.verifyIntegrity() ? 'Authentic' : 'Tampered');\n\n\ud83d\udc49 GitHub: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#CyberSecurity #InfoSec #Cryptography #LegalTech #EnterpriseSecurity #OpenSource",
+    "threads": "Unverified documents are a multi-million dollar liability. \ud83d\udee1\ufe0f\n\nWord (.docx) allows anyone to alter XML text without warning.\n\n.ldocx seals every block with SHA-256 Merkle trees & Ed25519 signatures. Instant tamper alarm in < 15ms.\n\n\ud83d\udc49 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#CyberSecurity #InfoSec #OpenSource",
+    "instagram": "DOCUMENT FORGERY IS DEAD. \ud83d\udee1\ufe0f\ud83d\udd12\u2728\n\nWhy trust documents that can be unpacked with a ZIP tool and modified in secret?\n\nThe Living Document Format (.ldocx) introduces mathematical verification:\n\ud83d\udd10 Every paragraph & 3D mesh hashed in a SHA-256 Merkle tree\n\ud83d\udee1\ufe0f Ed25519 cryptographic digital signatures\n\ud83d\udea8 Real-time tamper alarms trigger in < 15ms\n\u26a1 Zero macros, zero cloud lock-in\n\nYour file. Your proof. 100% mathematically secure.\n\n\ud83c\udf10 GitHub: github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#cybersecurity #infosec #cryptography #dataprotection #securityfirst #coding #developer #legaltech #opensource #programming",
+    "discord": "\ud83d\udee1\ufe0f **Document Forgery is Dead: Cryptographic SHA-256 & Ed25519 in .ldocx**\n\nStop relying on fragile legacy document wrappers. .ldocx hashes every paragraph, data table, and 3D asset into a SHA-256 Merkle tree with Ed25519 digital signatures:\n\n\u2022 \ud83d\udd10 **Cryptographic Proof**: Instant integrity verification\n\u2022 \ud83d\udea8 **Tamper Alarm**: Triggers in under 15 milliseconds\n\u2022 \ud83d\udee1\ufe0f **Zero Exploits**: No arbitrary macros or script execution\n\n\u2b50 **GitHub**: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\ud83d\udce6 **Install SDK**: \npm install ldoc-sdk"
+  },
+  {
+    "id": "ads2_ad2_cad_collaboration",
+    "adNumber": 2,
+    "title": "Ad 2 \u2014 Spatial 3D CAD & Team Collaboration",
+    "angle": "Cross-functional engineering teams inspecting 3D hardware prototypes inside living documentation",
+    "length": "30s (2560x1440 2K Quad HD)",
+    "targetPlatforms": [
+      "LinkedIn",
+      "YouTube",
+      "Discord",
+      "Threads",
+      "Instagram"
+    ],
+    "posterFile": "public/posters/ads2_ad2_cad_collaboration.jpg",
+    "posterUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/posters/ads2_ad2_cad_collaboration.jpg",
+    "videoFile": "public/ads/ads2_ad2_cad_collaboration.mp4",
+    "videoUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/ads/ads2_ad2_cad_collaboration.mp4",
+    "resolution": "2560x1440",
+    "linkedin": "\ud83d\udd79\ufe0f Stop sending static 2D screenshots of complex 3D engineering parts.\n\nWhen hardware, robotics, and aerospace teams review designs, pasting PNGs into PDF reports causes miscommunication, delays, and costly tooling errors.\n\nThe Living Document Format (.ldocx) embeds real-time 3D CAD meshes directly beside engineering text:\n\u2699\ufe0f Hardware-accelerated 60 FPS Three.js 3D WebGL orbit & zoom\n\ud83d\udcf1 Multi-touch tablet gestures and desktop multi-monitor workflows\n\ud83d\udce6 Native .GLTF, .OBJ, and .STL mesh ingestion\n\u26a1 Under 4MB standalone viewer \u2014 zero 15GB CAD suite installations needed\n\nExperience spatial living documents:\n\ud83d\udc49 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#CAD #Engineering #ThreeJS #WebGL #Hardware #Robotics #TechInnovation #OpenSource",
+    "threads": "Can your PDF or Google Doc orbit a 3D engine block at 60 FPS? \ud83d\udd79\ufe0f\u2699\ufe0f\n\nNope. But .ldocx does!\n\nReview 3D hardware prototypes with touch gestures or mouse orbit directly on the page.\n\n\u2022 60 FPS WebGL rendering\n\u2022 Multi-touch tablet support\n\u2022 100% Offline-first\n\n\ud83d\udc49 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#3D #CAD #Engineering #WebDev",
+    "instagram": "3D CAD MEETS LIVING DOCUMENTS. \ud83d\udd79\ufe0f\u2699\ufe0f\u2728\n\nWhy send flat screenshots of complex hardware when your client can orbit the real 3D mesh at 60 FPS?\n\nIn LDOC Studio:\n\ud83c\udfce\ufe0f Embed full 3D CAD models directly inside technical reports\n\ud83d\udd0d Multi-touch tablet gestures & desktop camera orbit\n\ud83d\udcbb Hardware-accelerated WebGL rendering\n\ud83d\udcc1 Opens instantly with ZERO cloud logins or heavy licenses\n\nWelcome to documents built for 2026.\n\n\ud83c\udf10 GitHub: github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#cad #3dmodeling #engineering #threejs #webgl #developer #coding #techinnovation #futureoftech #javascript #opensource",
+    "discord": "\ud83d\udd79\ufe0f **Spatial 3D CAD Collaboration in Living Documents (.ldocx)**\n\nHardware and engineering teams don't need to force contractors or executives to install 15GB CAD suites just to inspect a 3D part. .ldocx embeds 60 FPS WebGL scenes directly into documentation:\n\n\u2022 \u2699\ufe0f Full camera orbit, zoom, and wireframe inspection\n\u2022 \ud83d\udcf1 Native multi-touch tablet and desktop hardware acceleration\n\u2022 \ud83d\udd12 100% Offline-first with zero cloud tracking\n\n\u2b50 **GitHub**: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\ud83c\udf10 **Web Creator**: https://coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/creator.html"
+  },
+  {
+    "id": "ads2_ad3_living_interactive",
+    "adNumber": 3,
+    "title": "Ad 3 \u2014 Living. Interactive. Works.",
+    "angle": "Direct head-to-head showdown: Frozen 2021 Word doc chart vs. LDOC Studio living interactive sliders and 3D wireframe",
+    "length": "30s (2560x1440 2K Quad HD)",
+    "targetPlatforms": [
+      "LinkedIn",
+      "YouTube",
+      "Discord",
+      "Threads",
+      "Instagram"
+    ],
+    "posterFile": "public/posters/ads2_ad3_living_interactive.jpg",
+    "posterUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/posters/ads2_ad3_living_interactive.jpg",
+    "videoFile": "public/ads/ads2_ad3_living_interactive.mp4",
+    "videoUrl": "https://raw.githubusercontent.com/jayaraman2212066/LDOCX-FORMAT-PROJECT-MARK1/freemium-desktop-suite/public/ads/ads2_ad3_living_interactive.mp4",
+    "resolution": "2560x1440",
+    "linkedin": "\u2694\ufe0f Living. Interactive. Works.\n\nFor 30 years, documents have been frozen ink on a digital canvas. When you want to share data, you paste a lifeless image of a chart. When parameters change, the document is broken.\n\nThat stops today.\n\n\u274c Legacy Word Processor (.docx):\n\u2022 Frozen, unresponsive charts\n\u2022 Static tables that can't recalculate\n\u2022 Inert 2D screenshots of 3D objects\n\n\u26a1 LDOC Studio (.ldocx):\n\u2022 Drag interactive sliders and watch the document recalculate live\n\u2022 Glowing real-time 3D wireframe meshes you can inspect\n\u2022 Standalone single file that opens identically anywhere with zero login\n\nStop sending dead files in 2026. Build documents that are alive:\n\ud83d\udc49 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#SoftwareEngineering #Productivity #TechInnovation #FutureOfTech #WebDev #OpenSource #DocumentFormat",
+    "threads": "Living. Interactive. Works. \u26a1\ud83d\udcc4\n\nLegacy Word docs are frozen ink. In .ldocx:\n\n\u2022 Drag sliders to recalculate data live\n\u2022 Orbit 3D wireframe models in 60 FPS\n\u2022 One file. Zero cloud logins.\n\n\ud83d\udc49 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#Tech #WebDev #OpenSource",
+    "instagram": "LIVING. INTERACTIVE. WORKS. \u26a1\u2728\n\nSame idea. Two files.\nOne is frozen in 2021. One is alive in 2026.\n\nIn LDOC Studio:\n\ud83d\udcca Drag parameter sliders live on the page\n\ud83d\udd79\ufe0f Orbit glowing 3D wireframe models at 60 FPS\n\ud83d\udcbb Live code sandboxes and reactive AST recalculations\n\ud83d\udcc1 One single file that opens instantly anywhere\n\nDocuments that do more than sit there.\n\n\ud83c\udf10 GitHub: github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\n#webdev #threejs #coding #developer #softwareengineer #techinnovation #futuretech #programming #opensource #frontend #uiux",
+    "discord": "\u26a1 **Living. Interactive. Works. \u2014 The New Generation Living Document (.ldocx)**\n\nWhy are documents still frozen ink? In LDOC Studio, your document is active software:\n\n\u2022 \ud83d\udcca **Reactive Sliders**: Recalculate charts & data blocks in real time\n\u2022 \ud83d\udd79\ufe0f **Interactive 3D**: Orbit glowing wireframe CAD models at 60 FPS\n\u2022 \ud83d\udcc1 **Single File**: Self-contained container, 100% offline, zero cloud login\n\n\u2b50 **GitHub**: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT\n\ud83c\udf10 **Web Creator**: https://coderjay2003-svg.github.io/NEW-GEN-LIVING-DOCUMENT-FORMAT/creator.html"
+  }
+]
