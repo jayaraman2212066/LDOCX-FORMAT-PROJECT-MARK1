@@ -49,6 +49,7 @@ async function promoteVideoDay(dayNumber, method = 'queue') {
     instagramText: campaign.instagram,
     discordText: campaign.discord,
     imageUrl: campaign.posterUrl,
+    videoUrl: campaign.videoUrl,
     method,
     postToDiscord: true
   });

@@ -101,24 +101,30 @@ const DISCORD = {
   NAME: 'Discord (#general)'
 };
 
-async function publishSinglePost({ linkedinText, threadsText, instagramText, discordText, imageUrl, method = 'queue', postToDiscord = false }) {
+async function publishSinglePost({ linkedinText, threadsText, instagramText, discordText, imageUrl, videoUrl, method = 'queue', postToDiscord = false }) {
   const token = await getZapierToken();
   const results = [];
 
   // 1. Dispatch to LinkedIn (Buffer)
   try {
-    console.log(`📤 Dispatching to ${CHANNELS.LINKEDIN.name} [${method}]...`);
+    console.log(`📤 Dispatching to ${CHANNELS.LINKEDIN.name} [${method}] (Media: ${videoUrl ? 'Video' : 'Image'})...`);
+    const dynamic_properties = videoUrl ? {
+      text: linkedinText,
+      attachment: 'video',
+      video: videoUrl
+    } : {
+      text: linkedinText,
+      attachment: 'image',
+      image: imageUrl,
+      image_alttext: 'Living Document (.ldocx) Technical Showcase'
+    };
+
     const lRes = await callZapierTool('buffer_add_to_queue', {
       output_hint: 'id, text, status, channel',
       organizationId: BUFFER_ORG_ID,
       channelId: CHANNELS.LINKEDIN.id,
       method,
-      dynamic_properties: {
-        text: linkedinText,
-        attachment: 'image',
-        image: imageUrl,
-        image_alttext: 'Living Document (.ldocx) Technical Showcase'
-      }
+      dynamic_properties
     }, token);
     console.log(`✅ Success for LinkedIn`);
     results.push({ channel: CHANNELS.LINKEDIN.name, result: lRes });
@@ -129,23 +135,29 @@ async function publishSinglePost({ linkedinText, threadsText, instagramText, dis
 
   // 2. Dispatch to Threads (Buffer - 500 char safe limit)
   try {
-    console.log(`📤 Dispatching to ${CHANNELS.THREADS.name} [${method}]...`);
+    console.log(`📤 Dispatching to ${CHANNELS.THREADS.name} [${method}] (Media: ${videoUrl ? 'Video' : 'Image'})...`);
     let tText = threadsText || linkedinText;
     if (tText.length > 480) {
       tText = tText.slice(0, 470) + '...\n\n👉 https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT';
     }
+
+    const dynamic_properties = videoUrl ? {
+      text: tText,
+      attachment: 'video',
+      video: videoUrl
+    } : {
+      text: tText,
+      attachment: 'image',
+      image: imageUrl,
+      image_alttext: 'Living Document (.ldocx) Technical Showcase'
+    };
 
     const tRes = await callZapierTool('buffer_add_to_queue', {
       output_hint: 'id, text, status, channel',
       organizationId: BUFFER_ORG_ID,
       channelId: CHANNELS.THREADS.id,
       method,
-      dynamic_properties: {
-        text: tText,
-        attachment: 'image',
-        image: imageUrl,
-        image_alttext: 'Living Document (.ldocx) Technical Showcase'
-      }
+      dynamic_properties
     }, token);
     console.log(`✅ Success for Threads`);
     results.push({ channel: CHANNELS.THREADS.name, result: tRes });
@@ -156,22 +168,30 @@ async function publishSinglePost({ linkedinText, threadsText, instagramText, dis
 
   // 3. Dispatch to Instagram (Buffer)
   try {
-    console.log(`📤 Dispatching to ${CHANNELS.INSTAGRAM.name} [${method}]...`);
+    console.log(`📤 Dispatching to ${CHANNELS.INSTAGRAM.name} [${method}] (Media: ${videoUrl ? 'Reels Video' : 'Image'})...`);
     const igText = instagramText || linkedinText;
+
+    const dynamic_properties = videoUrl ? {
+      ig_post_type: 'reels',
+      video: videoUrl,
+      ig_share_to_feed: 'true',
+      text: igText,
+      scheduling_type: 'direct'
+    } : {
+      ig_post_type: 'post',
+      attachment: 'image',
+      image: imageUrl,
+      image_alttext: 'Living Document (.ldocx) Technical Showcase',
+      text: igText,
+      scheduling_type: 'direct'
+    };
 
     const igRes = await callZapierTool('buffer_add_to_queue', {
       output_hint: 'id, text, status, channel',
       organizationId: BUFFER_ORG_ID,
       channelId: CHANNELS.INSTAGRAM.id,
       method,
-      dynamic_properties: {
-        ig_post_type: 'post',
-        attachment: 'image',
-        image: imageUrl,
-        image_alttext: 'Living Document (.ldocx) Technical Showcase',
-        text: igText,
-        scheduling_type: 'direct'
-      }
+      dynamic_properties
     }, token);
     console.log(`✅ Success for Instagram`);
     results.push({ channel: CHANNELS.INSTAGRAM.name, result: igRes });
@@ -184,13 +204,19 @@ async function publishSinglePost({ linkedinText, threadsText, instagramText, dis
   if (postToDiscord && discordText) {
     try {
       console.log(`📤 Dispatching live announcement to ${DISCORD.NAME}...`);
-      const dRes = await callZapierTool('discord_send_channel_message', {
+      const discordArgs = {
         output_hint: 'id, content, channel_id',
         channel_id: DISCORD.CHANNEL_ID,
         username: 'Living Document (.ldocx) Herald',
         avatar_url: imageUrl,
         content: discordText
-      }, token);
+      };
+      if (videoUrl) {
+        discordArgs.file = [videoUrl];
+        discordArgs.filename = ['master_ad_video.mp4'];
+      }
+
+      const dRes = await callZapierTool('discord_send_channel_message', discordArgs, token);
       console.log(`✅ Success for Discord`);
       results.push({ channel: DISCORD.NAME, result: dRes });
     } catch (e) {

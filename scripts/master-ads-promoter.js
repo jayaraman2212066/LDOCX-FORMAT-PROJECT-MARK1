@@ -52,6 +52,7 @@ async function promoteMasterAd(adNumber, method = 'queue') {
     instagramText: ad.instagram + videoNotePlain,
     discordText: ad.discord + videoNote,
     imageUrl: ad.posterUrl,
+    videoUrl: ad.videoUrl,
     method,
     postToDiscord: true
   });
