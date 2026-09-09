@@ -12,7 +12,7 @@ if (fs.existsSync(statePath)) {
   try { state = JSON.parse(fs.readFileSync(statePath, 'utf8')); } catch (e) {}
 }
 
-async function promoteAds2(adNumber, method = 'share_now') {
+async function promoteAds2(adNumber, method = 'share_now', { postYouTube = false } = {}) {
   const ad = calendar.find(c => c.adNumber === adNumber);
   if (!ad) throw new Error('Ad not found: ' + adNumber);
 
@@ -34,13 +34,17 @@ async function promoteAds2(adNumber, method = 'share_now') {
     imageUrl: ad.posterUrl,
     videoUrl: ad.videoUrl,
     method,
-    postToDiscord: true
+    postToDiscord: true,
+    postToYouTube: postYouTube,
+    youtubeTitle: 'Living Document (.ldocx) — ' + ad.title,
+    youtubeDescription: ad.linkedin,
+    youtubePrivacy: 'public'
   });
 
   const todayStr = new Date().toISOString().split('T')[0];
   state.lastRunDate = todayStr;
   if (!state.completedAds.includes(adNumber)) state.completedAds.push(adNumber);
-  state.history.push({ date: todayStr, adNumber, id: ad.id, title: ad.title, method });
+  state.history.push({ date: todayStr, adNumber, id: ad.id, title: ad.title, method, postYouTube });
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2), 'utf8');
 
   console.log('\n🎉 ADS2 Ad ' + adNumber + ' successfully processed and recorded!');
@@ -56,7 +60,8 @@ async function main() {
   }
 
   const method = args.includes('--queue') ? 'queue' : 'share_now';
-  await promoteAds2(targetAd, method);
+  const postYouTube = args.includes('--youtube');
+  await promoteAds2(targetAd, method, { postYouTube });
 }
 
 if (require.main === module) {

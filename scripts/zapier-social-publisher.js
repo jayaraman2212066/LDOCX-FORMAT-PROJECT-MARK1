@@ -101,7 +101,21 @@ const DISCORD = {
   NAME: 'Discord (#general)'
 };
 
-async function publishSinglePost({ linkedinText, threadsText, instagramText, discordText, imageUrl, videoUrl, method = 'queue', postToDiscord = false }) {
+async function publishSinglePost({
+  linkedinText,
+  threadsText,
+  instagramText,
+  discordText,
+  imageUrl,
+  videoUrl,
+  method = 'queue',
+  postToDiscord = false,
+  postToYouTube = false,
+  youtubeTitle,
+  youtubeDescription,
+  youtubePrivacy = 'public',
+  youtubeTags
+}) {
   const token = await getZapierToken();
   const results = [];
 
@@ -211,17 +225,41 @@ async function publishSinglePost({ linkedinText, threadsText, instagramText, dis
         avatar_url: imageUrl,
         content: discordText
       };
-      if (videoUrl) {
-        discordArgs.file = [videoUrl];
-        discordArgs.filename = ['master_ad_video.mp4'];
-      }
-
+      // Discord API limit for bot file uploads is 25MB.
+      // Direct raw .mp4 links in the text content automatically trigger Discord's native 2K video player embed.
+      // We pass the raw video link in discordText to enable streamable video playback without hitting upload caps.
       const dRes = await callZapierTool('discord_send_channel_message', discordArgs, token);
       console.log(`✅ Success for Discord`);
       results.push({ channel: DISCORD.NAME, result: dRes });
     } catch (e) {
       console.error(`❌ Error for Discord:`, e.message);
       results.push({ channel: DISCORD.NAME, error: e.message });
+    }
+  }
+
+  // 5. Dispatch to YouTube (Direct Zapier MCP)
+  if (postToYouTube && videoUrl) {
+    try {
+      console.log(`📤 Dispatching video upload to YouTube...`);
+      const ytArgs = {
+        output_hint: 'id, title, status',
+        title: (youtubeTitle || 'Living Document (.ldocx)').slice(0, 100),
+        description: (youtubeDescription || linkedinText || '').slice(0, 4900) + '\n\n👉 GitHub: https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT',
+        video: videoUrl,
+        category_id: '28', // Science & Technology
+        privacy_status: youtubePrivacy || 'public',
+        made_for_kids: false,
+        tags: youtubeTags || ['ldocx', 'living document', 'tech', 'software', 'engineering', 'cryptography', 'webgl']
+      };
+      if (imageUrl) {
+        ytArgs.thumbnail = imageUrl;
+      }
+      const ytRes = await callZapierTool('youtube_upload_video', ytArgs, token);
+      console.log(`✅ Success for YouTube`);
+      results.push({ channel: 'YouTube', result: ytRes });
+    } catch (e) {
+      console.error(`❌ Error for YouTube:`, e.message);
+      results.push({ channel: 'YouTube', error: e.message });
     }
   }
 
