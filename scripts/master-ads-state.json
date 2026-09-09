@@ -1,6 +1,6 @@
 {
   "currentCycle": 1,
-  "lastRunDate": "2026-09-08",
+  "lastRunDate": "2026-09-09",
   "completedAds": [
     1,
     2,
@@ -39,6 +39,41 @@
     },
     {
       "date": "2026-09-08",
+      "adNumber": 5,
+      "id": "master_ad5_pitch_alive",
+      "title": "Ad 5 — Your Pitch, Alive (Startup & Business Pitch-Deck)",
+      "method": "queue"
+    },
+    {
+      "date": "2026-09-09",
+      "adNumber": 1,
+      "id": "master_ad1_first_look",
+      "title": "Ad 1 — First Look (Product Demo / Feature Reveal)",
+      "method": "queue"
+    },
+    {
+      "date": "2026-09-09",
+      "adNumber": 2,
+      "id": "master_ad2_docx_vs_ldocx",
+      "title": "Ad 2 — .docx vs .ldocx (Head-to-Head Split Screen)",
+      "method": "queue"
+    },
+    {
+      "date": "2026-09-09",
+      "adNumber": 3,
+      "id": "master_ad3_zero_login",
+      "title": "Ad 3 — One File. Zero Login. (Portability & Freedom)",
+      "method": "queue"
+    },
+    {
+      "date": "2026-09-09",
+      "adNumber": 4,
+      "id": "master_ad4_built_different",
+      "title": "Ad 4 — Built Different (Developer & Power-User Angle)",
+      "method": "queue"
+    },
+    {
+      "date": "2026-09-09",
       "adNumber": 5,
       "id": "master_ad5_pitch_alive",
       "title": "Ad 5 — Your Pitch, Alive (Startup & Business Pitch-Deck)",

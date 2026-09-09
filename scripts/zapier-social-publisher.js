@@ -257,6 +257,8 @@ module.exports = {
   publishCampaign,
   publishSinglePost,
   publishDaily5Batch,
+  getZapierToken,
+  callZapierTool,
   CHANNELS,
   DISCORD
 };
