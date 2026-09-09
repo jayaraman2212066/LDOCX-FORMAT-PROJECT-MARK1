@@ -83,7 +83,20 @@ async function callZapierTool(toolName, args, token) {
   for (const line of lines) {
     if (line.startsWith('data: ')) {
       const parsed = JSON.parse(line.slice(6));
-      return parsed.result;
+      const resObj = parsed.result;
+      if (resObj && resObj.isError) {
+        let errMsg = 'Zapier tool execution failed';
+        if (resObj.content && resObj.content[0] && resObj.content[0].text) {
+          try {
+            const inner = JSON.parse(resObj.content[0].text);
+            errMsg = inner.error || resObj.content[0].text;
+          } catch (e) {
+            errMsg = resObj.content[0].text;
+          }
+        }
+        throw new Error(errMsg);
+      }
+      return resObj;
     }
   }
   return { text };
