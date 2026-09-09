@@ -78,6 +78,20 @@
       "id": "master_ad5_pitch_alive",
       "title": "Ad 5 — Your Pitch, Alive (Startup & Business Pitch-Deck)",
       "method": "queue"
+    },
+    {
+      "date": "2026-09-09",
+      "adNumber": 1,
+      "id": "master_ad1_first_look",
+      "title": "Ad 1 — First Look (Product Demo / Feature Reveal)",
+      "method": "share_now"
+    },
+    {
+      "date": "2026-09-09",
+      "adNumber": 2,
+      "id": "master_ad2_docx_vs_ldocx",
+      "title": "Ad 2 — .docx vs .ldocx (Head-to-Head Split Screen)",
+      "method": "share_now"
     }
   ]
 }
