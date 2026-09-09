@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const { publishSinglePost, CHANNELS, DISCORD } = require('./zapier-social-publisher');
+const { broadcastAdEmail } = require('./email-campaign-broadcaster');
 
 const catalogPath = path.resolve(__dirname, 'unified-ads-catalog.json');
 const statePath = path.resolve(__dirname, 'unified-schedule-state.json');
@@ -45,7 +46,7 @@ function saveState() {
   fs.writeFileSync(statePath, JSON.stringify(state, null, 2), 'utf8');
 }
 
-async function postAdByIndex(adIndex, method = 'share_now', { postYouTube = true } = {}) {
+async function postAdByIndex(adIndex, method = 'share_now', { postYouTube = true, postEmail = true } = {}) {
   const ad = catalog.find(a => a.index === adIndex);
   if (!ad) throw new Error('Ad not found with index ' + adIndex);
 
@@ -71,6 +72,17 @@ async function postAdByIndex(adIndex, method = 'share_now', { postYouTube = true
     youtubeDescription: ad.linkedin,
     youtubePrivacy: 'public'
   });
+
+  if (method === 'share_now' && postEmail) {
+    try {
+      logMsg(`📧 Dispatching email broadcast to SSN College IT batches with referral CC...`);
+      const emailRes = await broadcastAdEmail(ad.index);
+      results.push({ channel: 'Gmail (SSN IT Batches)', result: emailRes });
+    } catch (e) {
+      logMsg(`❌ Email broadcast error: ${e.message}`);
+      results.push({ channel: 'Gmail (SSN IT Batches)', error: e.message });
+    }
+  }
 
   const todayStr = new Date().toISOString().split('T')[0];
   state.lastRunDate = todayStr;
@@ -182,7 +194,8 @@ async function main() {
 
   if (args.includes('--post-next')) {
     const postYouTube = !args.includes('--no-youtube');
-    await postAdByIndex(state.nextAdIndex, 'share_now', { postYouTube });
+    const postEmail = !args.includes('--no-email');
+    await postAdByIndex(state.nextAdIndex, 'share_now', { postYouTube, postEmail });
     return;
   }
 
@@ -190,7 +203,8 @@ async function main() {
     const targetIdx = parseInt(args[args.indexOf('--ad') + 1], 10);
     const method = args.includes('--queue') ? 'queue' : 'share_now';
     const postYouTube = !args.includes('--no-youtube');
-    await postAdByIndex(targetIdx, method, { postYouTube });
+    const postEmail = !args.includes('--no-email');
+    await postAdByIndex(targetIdx, method, { postYouTube, postEmail });
     return;
   }
 
