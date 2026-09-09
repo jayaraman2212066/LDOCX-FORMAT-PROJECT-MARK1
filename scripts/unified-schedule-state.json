@@ -1,0 +1,74 @@
+{
+  "currentCycle": 1,
+  "nextAdIndex": 6,
+  "lastRunDate": "2026-09-09",
+  "totalBroadcasts": 3,
+  "history": [
+    {
+      "date": "2026-09-09",
+      "timestamp": "2026-09-09T07:22:04.631Z",
+      "index": 3,
+      "id": "master_ad3_zero_login",
+      "title": "Ad 3 — One File. Zero Login. (Portability & Freedom)",
+      "method": "queue",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-09",
+      "timestamp": "2026-09-09T07:22:34.041Z",
+      "index": 4,
+      "id": "master_ad4_built_different",
+      "title": "Ad 4 — Built Different (Developer & Power-User Angle)",
+      "method": "queue",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-09",
+      "timestamp": "2026-09-09T07:23:08.971Z",
+      "index": 5,
+      "id": "master_ad5_pitch_alive",
+      "title": "Ad 5 — Your Pitch, Alive (Startup & Business Pitch-Deck)",
+      "method": "queue",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        }
+      ]
+    }
+  ]
+}
