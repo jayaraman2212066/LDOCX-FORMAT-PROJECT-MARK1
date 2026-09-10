@@ -20,7 +20,6 @@ const RECIPIENTS = {
     'pg2024-it@ssn.edu.in',
     // SSN Computer Science & Engineering (CSE) Batches
     'ug2024-cse@ssn.edu.in',
-    'u2024-cse@ssn.edu.in',
     'ug2022-cse@ssn.edu.in',
     'pg2024-cse@ssn.edu.in',
     'pg2025-cse@ssn.edu.in'
