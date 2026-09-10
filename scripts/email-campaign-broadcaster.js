@@ -174,14 +174,21 @@ async function broadcastAdEmail(adIndex, { isTest = false } = {}) {
   const ccList = isTest ? [] : RECIPIENTS.CC;
 
   // Determine if video can be attached directly (Gmail 25MB attachment limit)
+  // Prefers high-efficiency 9:16 vertical short (2-6MB) which is guaranteed < 25MB
+  const localShortPath = path.resolve(__dirname, '..', 'public', 'shorts', `short_${ad.id}.mp4`);
   const localVideoPath = path.resolve(__dirname, '..', 'public', 'ads', `${ad.id}.mp4`);
-  let shouldAttach = false;
-  if (fs.existsSync(localVideoPath)) {
+  let attachUrl = null;
+
+  if (ad.shortsVideoUrl && fs.existsSync(localShortPath)) {
+    attachUrl = ad.shortsVideoUrl;
+  } else if (ad.videoUrl && fs.existsSync(localVideoPath)) {
     const sizeMb = fs.statSync(localVideoPath).size / (1024 * 1024);
-    if (sizeMb <= 24.5 && ad.videoUrl) {
-      shouldAttach = true;
+    if (sizeMb <= 24.5) {
+      attachUrl = ad.videoUrl;
     }
   }
+
+  const shouldAttach = Boolean(attachUrl);
 
   console.log('\n===============================================================');
   console.log(`📧 BROADCASTING AD ${ad.index} VIA ZAPIER GMAIL`);
@@ -191,11 +198,14 @@ async function broadcastAdEmail(adIndex, { isTest = false } = {}) {
     console.log(`📋 CC (Referral): ${ccList.join(', ')}`);
   }
   console.log(`📹 Video CDN: ${ad.videoUrl}`);
+  if (ad.shortsVideoUrl) {
+    console.log(`📱 Shorts 9:16 CDN: ${ad.shortsVideoUrl}`);
+  }
   console.log(`🖼️ Poster CDN: ${ad.posterUrl}`);
   if (ad.youtubeUrl) {
     console.log(`▶️ YouTube: ${ad.youtubeUrl}`);
   }
-  console.log(`📎 Video Attachment: ${shouldAttach ? 'YES (Directly Attached)' : 'NO (> 25MB, Streamed via CDN/YouTube)'}`);
+  console.log(`📎 Video Attachment: ${shouldAttach ? `YES (${attachUrl})` : 'NO (> 25MB, Streamed via CDN/YouTube)'}`);
   console.log('===============================================================\n');
 
   const args = {
@@ -213,7 +223,7 @@ async function broadcastAdEmail(adIndex, { isTest = false } = {}) {
   }
 
   if (shouldAttach) {
-    args.file = [ad.videoUrl];
+    args.file = [attachUrl];
   }
 
   const res = await callZapierTool('gmail_send_email', args, token);

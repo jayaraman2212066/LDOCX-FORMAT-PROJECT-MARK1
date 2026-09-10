@@ -50,23 +50,26 @@ async function postAdByIndex(adIndex, method = 'share_now', { postYouTube = true
   const ad = catalog.find(a => a.index === adIndex);
   if (!ad) throw new Error('Ad not found with index ' + adIndex);
 
+  const adVideo = ad.shortsVideoUrl || ad.videoUrl;
+  const adPoster = ad.shortsPosterUrl || ad.posterUrl;
+
   logMsg(`🎬 [CYCLE ${state.currentCycle}] DISPATCHING AD ${ad.index}/${catalog.length}: "${ad.title}" (Method: ${method})`);
   logMsg(`💡 Angle: "${ad.angle}"`);
-  logMsg(`📹 Video: ${ad.videoUrl}`);
-  logMsg(`🖼️ Poster: ${ad.posterUrl}`);
+  logMsg(`📱 9:16 Shorts Video: ${adVideo}`);
+  logMsg(`🖼️ Poster: ${adPoster}`);
 
   const results = await publishSinglePost({
     linkedinText: ad.linkedin,
     threadsText: ad.threads,
     instagramText: ad.instagram,
     discordText: ad.discord,
-    imageUrl: ad.posterUrl,
-    videoUrl: ad.videoUrl,
+    imageUrl: adPoster,
+    videoUrl: adVideo,
     method,
     postToDiscord: (method === 'share_now'),
     postToYouTube: postYouTube && (method === 'share_now'),
-    youtubeTitle: 'Living Document (.ldocx) — ' + ad.title,
-    youtubeDescription: ad.linkedin,
+    youtubeTitle: ('Living Document (.ldocx) — ' + ad.title + ' #Shorts').slice(0, 100),
+    youtubeDescription: ad.linkedin + '\n\n#Shorts #LivingDocuments #WebDev #OpenSource #SoftwareEngineering',
     youtubePrivacy: 'public'
   });
 

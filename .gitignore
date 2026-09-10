@@ -1,3 +1,6 @@
+# Dependencies
+node_modules/
+
 # Rust compilation target directories
 /source/target/
 target/
