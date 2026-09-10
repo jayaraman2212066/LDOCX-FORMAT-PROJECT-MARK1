@@ -262,11 +262,9 @@ async function publishSinglePost({
         category_id: '28', // Science & Technology
         privacy_status: youtubePrivacy || 'public',
         made_for_kids: false,
-        tags: youtubeTags || ['ldocx', 'living document', 'tech', 'software', 'engineering', 'cryptography', 'webgl']
+        tags: youtubeTags || ['ldocx', 'living document', 'tech', 'software', 'engineering', 'cryptography', 'webgl', 'shorts']
       };
-      if (imageUrl) {
-        ytArgs.thumbnail = imageUrl;
-      }
+      // Note: Omit custom thumbnail to avoid YouTube permission error: "doesn't have permissions to upload and set custom video thumbnails"
       const ytRes = await callZapierTool('youtube_upload_video', ytArgs, token);
       console.log(`✅ Success for YouTube`);
       results.push({ channel: 'YouTube', result: ytRes });
