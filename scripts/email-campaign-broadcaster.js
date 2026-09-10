@@ -13,10 +13,17 @@ const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
 
 const RECIPIENTS = {
   TO: [
+    // SSN Information Technology (IT) Batches
     'ug2024-it@ssn.edu.in',
     'pg2025-it@ssn.edu.in',
     'ug2022-it@ssn.edu.in',
-    'pg2024-it@ssn.edu.in'
+    'pg2024-it@ssn.edu.in',
+    // SSN Computer Science & Engineering (CSE) Batches
+    'ug2024-cse@ssn.edu.in',
+    'u2024-cse@ssn.edu.in',
+    'ug2022-cse@ssn.edu.in',
+    'pg2024-cse@ssn.edu.in',
+    'pg2025-cse@ssn.edu.in'
   ],
   CC: [
     'jayaraman2212066@ssn.edu.in'
