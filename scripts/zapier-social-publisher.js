@@ -193,7 +193,59 @@ async function publishSinglePost({
     results.push({ channel: CHANNELS.THREADS.name, error: e.message });
   }
 
-  // 3. Dispatch to Instagram (Buffer)
+  // 3a. Dispatch to Instagram (Zapier Direct Instagram for Business)
+  try {
+    console.log(`📤 Checking Zapier Direct Instagram for Business action...`);
+    const igText = (instagramText || linkedinText || '').slice(0, 2200);
+    let pageId = process.env.ZAPIER_INSTAGRAM_PAGE_ID;
+
+    if (!pageId) {
+      try {
+        const enumRes = await callZapierTool('list_dynamic_enum_values', {
+          tool_name: videoUrl ? 'instagram_for_business_publish_video' : 'instagram_for_business_publish_photo_s',
+          property_name: 'instagramPageId'
+        }, token);
+        let parsed = null;
+        if (enumRes.content && enumRes.content[0] && enumRes.content[0].text) {
+          parsed = JSON.parse(enumRes.content[0].text);
+        } else if (enumRes.structuredContent) {
+          parsed = enumRes.structuredContent;
+        }
+        if (parsed && Array.isArray(parsed.values) && parsed.values.length > 0) {
+          pageId = parsed.values[0].value || parsed.values[0].id || parsed.values[0];
+          console.log(`🎯 Discovered Zapier Instagram Page ID: ${pageId}`);
+        }
+      } catch (enumErr) {
+        console.warn(`ℹ️ Could not query dynamic Instagram Page ID: ${enumErr.message}`);
+      }
+    }
+
+    if (pageId) {
+      console.log(`📤 Dispatching directly to Instagram via Zapier (${pageId})...`);
+      const igDirectTool = videoUrl ? 'instagram_for_business_publish_video' : 'instagram_for_business_publish_photo_s';
+      const igDirectArgs = videoUrl ? {
+        output_hint: 'id, permalink',
+        instagramPageId: pageId,
+        video: videoUrl,
+        caption: igText
+      } : {
+        output_hint: 'id, permalink',
+        instagramPageId: pageId,
+        media: [imageUrl],
+        caption: igText
+      };
+      const directRes = await callZapierTool(igDirectTool, igDirectArgs, token);
+      console.log(`✅ Success for Instagram (Zapier Direct)`);
+      results.push({ channel: 'Instagram (Zapier Direct)', result: directRes });
+    } else {
+      console.log(`ℹ️ Zapier Direct Instagram: Awaiting Meta Facebook Page link for @j_a_i_enterprise in Zapier.`);
+    }
+  } catch (e) {
+    console.error(`⚠️ Notice for Zapier Direct Instagram:`, e.message);
+    results.push({ channel: 'Instagram (Zapier Direct)', error: e.message });
+  }
+
+  // 3b. Dispatch to Instagram (Buffer @j_a_i_enterprise)
   try {
     console.log(`📤 Dispatching to ${CHANNELS.INSTAGRAM.name} [${method}] (Media: ${videoUrl ? 'Reels Video' : 'Image'})...`);
     const igText = instagramText || linkedinText;
@@ -220,12 +272,13 @@ async function publishSinglePost({
       method,
       dynamic_properties
     }, token);
-    console.log(`✅ Success for Instagram`);
+    console.log(`✅ Success for Instagram (Buffer @j_a_i_enterprise)`);
     results.push({ channel: CHANNELS.INSTAGRAM.name, result: igRes });
   } catch (e) {
     console.error(`❌ Error for Instagram:`, e.message);
     results.push({ channel: CHANNELS.INSTAGRAM.name, error: e.message });
   }
+
 
   // 4. Dispatch to Discord (Direct Zapier MCP)
   if (postToDiscord && discordText) {
