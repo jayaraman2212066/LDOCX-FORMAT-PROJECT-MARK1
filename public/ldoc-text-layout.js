@@ -4252,7 +4252,11 @@ var __LDocTextLayoutInternal = (() => {
         register: "\u{1F39F}\uFE0F",
         pay: "\u{1F4B3}",
         webhook: "\u{1F517}",
-        video: "\u{1F3AC}"
+        video: "\u{1F3AC}",
+        metric: "\u{1F4CA}",
+        rating: "\u2B50",
+        quote: "\u{1F4AC}",
+        spark: "\u2728"
       };
       let html = `<div class="ldoc-rich-text-container" style="line-height:${lineHeight}px;">`;
       layoutRes.lines.forEach((line) => {

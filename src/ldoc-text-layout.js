@@ -379,7 +379,11 @@ export const LdocTextLayout = {
       register: '🎟️',
       pay: '💳',
       webhook: '🔗',
-      video: '🎬'
+      video: '🎬',
+      metric: '📊',
+      rating: '⭐',
+      quote: '💬',
+      spark: '✨'
     };
 
     let html = `<div class="ldoc-rich-text-container" style="line-height:${lineHeight}px;">`;
