@@ -13,42 +13,10 @@ const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
 
 const RECIPIENTS = {
   TO: [
-    // SSN Information Technology (IT) Batches
-    'ug2024-it@ssn.edu.in',
-    'ug2025-it@ssn.edu.in',
-    'pg2024-it@ssn.edu.in',
-    'pg2025-it@ssn.edu.in',
-
-    // SSN Computer Science & Engineering (CSE) Batches
-    'ug2022-cse@ssn.edu.in',
-    'ug2024-cse@ssn.edu.in',
-    'ug2025-cse@ssn.edu.in',
-    'pg2024-cse@ssn.edu.in',
-    'pg2025-cse@ssn.edu.in',
-
-    // SSN Electronics & Communication Engineering (ECE) Batches
-    'ug2024-ece@ssn.edu.in',
-    'ug2025-ece@ssn.edu.in',
-
-    // SSN Electrical & Electronics Engineering (EEE) Batches
-    'ug2024-eee@ssn.edu.in',
-    'ug2025-eee@ssn.edu.in',
-
-    // SSN Mechanical Engineering (MECH) Batches
-    'ug2024-mech@ssn.edu.in',
-    'ug2025-mech@ssn.edu.in',
-
-    // SSN Chemical Engineering (CHEM) Batches
-    'ug2024-chem@ssn.edu.in',
-    'ug2025-chem@ssn.edu.in',
-
-    // SSN Civil Engineering (CIVIL) Batches
-    'ug2024-civil@ssn.edu.in',
-    'ug2025-civil@ssn.edu.in'
-  ],
-  CC: [
+    // Verified, zero-bounce SSN College recipient
     'jayaraman2212066@ssn.edu.in'
   ],
+  CC: [],
   REFERRAL_EMAIL: 'jayaraman2212066@ssn.edu.in',
   REFERRAL_NAME: 'Jayaraman K (IT Department, SSN College of Engineering)',
   GITHUB_URL: 'https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT',
