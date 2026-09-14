@@ -1,7 +1,7 @@
 // scripts/email-campaign-broadcaster.js
 // Automated Email Campaign Broadcaster via Zapier MCP (Gmail)
 // Broadcasts Living Document (.ldocx) 2K Quad HD Video Ads & Announcements
-// To: SSN College IT Batches (ug2024-it, pg2025-it, ug2022-it, pg2024-it)
+// To: SSN College Engineering Batches (IT, CSE, ECE, EEE, MECH, BME, CHEM, CIVIL)
 // CC: Referral — jayaraman2212066@ssn.edu.in
 
 const fs = require('fs');
@@ -15,14 +15,52 @@ const RECIPIENTS = {
   TO: [
     // SSN Information Technology (IT) Batches
     'ug2024-it@ssn.edu.in',
-    'pg2025-it@ssn.edu.in',
-    'ug2022-it@ssn.edu.in',
+    'ug2025-it@ssn.edu.in',
+    'ug2026-it@ssn.edu.in',
     'pg2024-it@ssn.edu.in',
+    'pg2025-it@ssn.edu.in',
+    'pg2026-it@ssn.edu.in',
+
     // SSN Computer Science & Engineering (CSE) Batches
-    'ug2024-cse@ssn.edu.in',
     'ug2022-cse@ssn.edu.in',
+    'ug2024-cse@ssn.edu.in',
+    'ug2025-cse@ssn.edu.in',
+    'ug2026-cse@ssn.edu.in',
     'pg2024-cse@ssn.edu.in',
-    'pg2025-cse@ssn.edu.in'
+    'pg2025-cse@ssn.edu.in',
+    'pg2026-cse@ssn.edu.in',
+
+    // SSN Electronics & Communication Engineering (ECE) Batches
+    'ug2024-ece@ssn.edu.in',
+    'ug2025-ece@ssn.edu.in',
+    'ug2026-ece@ssn.edu.in',
+
+    // SSN Electrical & Electronics Engineering (EEE) Batches
+    'ug2024-eee@ssn.edu.in',
+    'ug2025-eee@ssn.edu.in',
+    'ug2026-eee@ssn.edu.in',
+
+    // SSN Mechanical Engineering (MECH / ME) Batches
+    'ug2024-mech@ssn.edu.in',
+    'ug2025-mech@ssn.edu.in',
+    'ug2025-me@ssn.edu.in',
+    'ug2026-mech@ssn.edu.in',
+    'ug2026-me@ssn.edu.in',
+
+    // SSN Biomedical Engineering (BME) Batches
+    'ug2024-bme@ssn.edu.in',
+    'ug2025-bme@ssn.edu.in',
+    'ug2026-bme@ssn.edu.in',
+
+    // SSN Chemical Engineering (CHEM) Batches
+    'ug2024-chem@ssn.edu.in',
+    'ug2025-chem@ssn.edu.in',
+    'ug2026-chem@ssn.edu.in',
+
+    // SSN Civil Engineering (CIVIL) Batches
+    'ug2024-civil@ssn.edu.in',
+    'ug2025-civil@ssn.edu.in',
+    'ug2026-civil@ssn.edu.in'
   ],
   CC: [
     'jayaraman2212066@ssn.edu.in'

@@ -75,12 +75,12 @@ async function postAdByIndex(adIndex, method = 'share_now', { postYouTube = true
 
   if (method === 'share_now' && postEmail) {
     try {
-      logMsg(`📧 Dispatching email broadcast to SSN College IT batches with referral CC...`);
+      logMsg(`📧 Dispatching email broadcast to SSN College batches with referral CC...`);
       const emailRes = await broadcastAdEmail(ad.index);
-      results.push({ channel: 'Gmail (SSN IT Batches)', result: emailRes });
+      results.push({ channel: 'Gmail (SSN College Batches)', result: emailRes });
     } catch (e) {
       logMsg(`❌ Email broadcast error: ${e.message}`);
-      results.push({ channel: 'Gmail (SSN IT Batches)', error: e.message });
+      results.push({ channel: 'Gmail (SSN College Batches)', error: e.message });
     }
   }
 
