@@ -1,8 +1,8 @@
 {
   "currentCycle": 2,
-  "nextAdIndex": 1,
-  "lastRunDate": "2026-09-13",
-  "totalBroadcasts": 6,
+  "nextAdIndex": 2,
+  "lastRunDate": "2026-09-14",
+  "totalBroadcasts": 7,
   "history": [
     {
       "date": "2026-09-09",
@@ -164,6 +164,40 @@
         },
         {
           "channel": "Gmail (SSN IT Batches)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-14",
+      "timestamp": "2026-09-14T03:42:13.242Z",
+      "index": 1,
+      "id": "master_ad1_first_look",
+      "title": "Ad 1 — First Look (Product Demo / Feature Reveal)",
+      "method": "share_now",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "failed"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Discord (#general)",
+          "status": "success"
+        },
+        {
+          "channel": "YouTube",
+          "status": "success"
+        },
+        {
+          "channel": "Gmail (SSN College Batches)",
           "status": "success"
         }
       ]
