@@ -1,8 +1,8 @@
 {
   "currentCycle": 2,
-  "nextAdIndex": 2,
+  "nextAdIndex": 5,
   "lastRunDate": "2026-09-14",
-  "totalBroadcasts": 7,
+  "totalBroadcasts": 8,
   "history": [
     {
       "date": "2026-09-09",
@@ -183,6 +183,40 @@
         {
           "channel": "Threads (j_a_i_enterprise)",
           "status": "failed"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Discord (#general)",
+          "status": "success"
+        },
+        {
+          "channel": "YouTube",
+          "status": "success"
+        },
+        {
+          "channel": "Gmail (SSN College Batches)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-14",
+      "timestamp": "2026-09-14T03:53:37.587Z",
+      "index": 4,
+      "id": "master_ad4_built_different",
+      "title": "Ad 4 — Built Different (Developer & Power-User Angle)",
+      "method": "share_now",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
         },
         {
           "channel": "Instagram (j_a_i_enterprise)",
