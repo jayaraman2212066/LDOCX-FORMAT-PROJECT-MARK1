@@ -2918,6 +2918,112 @@ body.creator-split-50-50 #creator-preview-pane {
   max-height: calc(100vh - 140px) !important;
 }
 
+
+/* ── Pretext Zero-Drift & UI/UX Master Additions ───────────────────────────── */
+.dmenu-zero-drift-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: all 120ms ease;
+  user-select: none;
+  -webkit-app-region: no-drag;
+}
+.dmenu-zero-drift-badge:hover {
+  background: rgba(16, 185, 129, 0.22);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+  color: #6ee7b7;
+}
+.dmenu-zero-drift-badge .zdrift-check { font-weight: 900; color: #10b981; }
+
+.slide-tools-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.slide-tool-group {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+}
+.slide-tool-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #cbd5e1;
+  background: transparent;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  user-select: none;
+}
+.slide-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+.slide-tool-btn.purple {
+  color: #c084fc;
+}
+.slide-tool-btn.purple:hover {
+  background: rgba(192, 132, 252, 0.15);
+  border-color: rgba(192, 132, 252, 0.3);
+}
+.slide-tool-btn.highlight {
+  color: #38bdf8;
+}
+.slide-tool-btn.highlight:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+.slide-tool-btn.accent {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.25);
+  color: #7dd3fc;
+}
+.slide-tool-btn.accent:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.ldoc-inline-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 7px;
+  border-radius: 6px;
+  font-size: 0.85em;
+  font-weight: 700;
+  vertical-align: baseline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.ldoc-chip-chip { background: rgba(56, 189, 248, 0.18); border: 1px solid rgba(56, 189, 248, 0.4); color: #7dd3fc; }
+.ldoc-chip-btn, .ldoc-chip-action { background: rgba(167, 139, 250, 0.22); border: 1px solid rgba(167, 139, 250, 0.5); color: #c084fc; }
+.ldoc-chip-register { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.5); color: #6ee7b7; }
+.ldoc-chip-pay { background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.5); color: #fcd34d; }
+.ldoc-chip-webhook { background: rgba(236, 72, 153, 0.2); border: 1px solid rgba(236, 72, 153, 0.5); color: #f472b6; }
+.ldoc-chip-metric { background: rgba(16, 185, 129, 0.22); border: 1px solid rgba(16, 185, 129, 0.5); color: #34d399; font-family: monospace; }
+.ldoc-chip-rating { background: rgba(245, 158, 11, 0.22); border: 1px solid rgba(245, 158, 11, 0.5); color: #fbbf24; }
+.ldoc-chip-spark { background: rgba(192, 132, 252, 0.22); border: 1px solid rgba(192, 132, 252, 0.5); color: #e9d5ff; }
+
 </style>
   
 </head>
@@ -2942,7 +3048,7 @@ body.creator-split-50-50 #creator-preview-pane {
         <div class="dmenu-entry" onclick="buildDoc()"><span>▶ Build &amp; Open in Studio</span><span class="hotkey">Ctrl+B</span></div>
         <div class="dmenu-entry" onclick="downloadDoc()"><span>⬇ Download .ldocx Package</span><span class="hotkey">Ctrl+D</span></div>
         <div class="dmenu-divider"></div>
-        <div class="dmenu-entry" onclick="location.href='/live-studio'"><span>🖥️ Switch to Studio Viewer</span></div>
+        <div class="dmenu-entry" onclick="location.href='index.html'"><span>🖥️ Switch to Studio Viewer</span></div>
         <div class="dmenu-entry" onclick="window.close()"><span>✕ Exit Creator</span><span class="hotkey">Alt+F4</span></div>
       </div>
     </div>
@@ -2997,7 +3103,7 @@ body.creator-split-50-50 #creator-preview-pane {
       <div class="dmenu-dropdown">
         <div class="dmenu-entry" onclick="location.reload()"><span>🔄 Reload Window</span><span class="hotkey">Ctrl+R</span></div>
         <div class="dmenu-entry" onclick="toggleAiHelper()"><span>🧠 AI Document Copilot</span><span class="hotkey">Ctrl+Shift+H</span></div>
-        <div class="dmenu-entry" onclick="location.href='/live-studio'"><span>🖥️ Open Studio Viewer</span></div>
+        <div class="dmenu-entry" onclick="location.href='index.html'"><span>🖥️ Open Studio Viewer</span></div>
       </div>
     </div>
 
@@ -3018,14 +3124,27 @@ body.creator-split-50-50 #creator-preview-pane {
 </div>
 
 
+
+<!-- CREATOR PRO VIP TIER BAR -->
+<div class="studio-tier-bar" style="background:linear-gradient(90deg, #141c2e 0%, #0c1824 50%, #19223a 100%);border-bottom:1px solid rgba(16,185,129,0.35);padding:6px 20px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#cbd5e1;z-index:90;position:relative;">
+ <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+   <span style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.5);color:#34d399;font-weight:800;font-size:10px;padding:3px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:0.5px;">⭐ LDOC CREATOR PRO (VIP LIFETIME WORKSTATION)</span>
+   <span style="color:#94a3b8;font-size:11.5px">Ultra-Low Latency Pretext Layout • 120Hz Liquid Retina • 4GB VRAM Allocation • 100% Air-Gapped Local</span>
+ </div>
+ <div style="display:flex;align-items:center;gap:10px;">
+   <span style="background:linear-gradient(135deg,#f59e0b,#10b981);color:#090d16;font-weight:800;font-size:11px;padding:4px 12px;border-radius:6px;box-shadow:0 0 14px rgba(16,185,129,0.4);display:inline-flex;align-items:center;gap:5px;letter-spacing:0.3px">
+     👑 VIP LIFETIME ACTIVATED
+   </span>
+ </div>
+</div>
 <div id="tb">
   <div style="display:inline-flex;align-items:center;gap:8px;margin-right:6px">
     <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 10px rgba(167,139,250,.45)">
     <span class="logo">LDOC</span>
   </div>
-  <a href="/live-studio" class="nav-link">Studio</a>
-  <a href="/creator" class="nav-link active">Creator</a>
-  <a href="/live-studio?tab=converter" class="nav-link">⚡ Converter</a>
+  <a href="index.html" class="nav-link">Studio</a>
+  <a href="creator.html" class="nav-link active">Creator</a>
+  <a href="index.html?tab=converter" class="nav-link">⚡ Converter</a>
 
   <!-- Floating Dynamic Popup Drawer Toggles -->
   <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);padding:3px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.12);margin-left:6px">
@@ -3231,6 +3350,36 @@ body.creator-split-50-50 #creator-preview-pane {
       </div>
 
       <div style="display:flex;align-items:center;gap:8px">
+      <!-- Pretext Master Layout Tools -->
+      <div class="slide-tools-container">
+        <div class="slide-tool-group">
+          <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
+            <button class="slide-tool-btn purple" id="creator-split-cols-btn" onclick="toggleCreatorColumnMenu(event)" title="Multi-Column Magazine Balance: 2-Col (Classic), 3-Col, 4-Col, or Drop-Cap with Pretext arithmetic!">📰 2-Col ▾</button>
+            <div id="creator-cols-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(192,132,252,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:160px;padding:4px 0">
+              <div onclick="splitActiveTextIntoColumns(2)" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(192,132,252,0.2)'" onmouseout="this.style.background='transparent'">📰 2 Columns (Classic)</div>
+              <div onclick="splitActiveTextIntoColumns(3)" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(192,132,252,0.2)'" onmouseout="this.style.background='transparent'">📰 3 Columns (Editorial)</div>
+              <div onclick="splitActiveTextIntoColumns(4)" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(192,132,252,0.2)'" onmouseout="this.style.background='transparent'">📰 4 Columns (Digest)</div>
+              <div onclick="applyPretextDropCap()" style="padding:6px 12px;font-size:11.5px;color:#fcd34d;cursor:pointer;display:flex;align-items:center;gap:6px;border-top:1px solid rgba(255,255,255,0.1)" onmouseover="this.style.background='rgba(245,158,11,0.2)'" onmouseout="this.style.background='transparent'">🎨 Drop-Cap Magazine Style</div>
+            </div>
+          </div>
+          <button class="slide-tool-btn highlight" id="creator-fit-btn" onclick="shrinkActiveTextToFit()" title="One-Click Shrink to Fit: Binary-search font size in <0.2ms to fit active text box!">🗜️ Fit</button>
+        </div>
+        <div class="slide-tool-group">
+          <button class="slide-tool-btn accent" id="creator-live-flow-btn" onclick="togglePretextLiveFlow()" title="Toggle Real-Time 120fps Dynamic Text Reflow around moving cards!">
+            <span style="width:6px;height:6px;border-radius:50%;background:#38bdf8;box-shadow:0 0 6px #38bdf8;display:inline-block"></span>
+            <span>Live Flow: <strong id="creator-live-flow-label" style="color:#34d399">ON</strong></span>
+          </button>
+          <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
+            <button class="slide-tool-btn" id="creator-add-video-btn" onclick="toggleCreatorObstacleMenu(event)" title="Insert Dynamic Obstacles: 16:9 Video cards, avatars, quotes, and shapes that text flows around!">🎬 Add Video ▾</button>
+            <div id="creator-obstacle-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(56,189,248,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:180px;padding:4px 0">
+              <div onclick="promptInsertSlideVideo()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">🎬 16:9 Video Card (YouTube/MP4)</div>
+              <div onclick="spawnCircularObstacleCard()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">🔵 Circular Avatar / Badge</div>
+              <div onclick="spawnInteractiveQuoteCard()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">💬 Callout Quote Card</div>
+            </div>
+          </div>
+        </div>
+        <button class="slide-tool-btn highlight" id="creator-showcase-btn" onclick="loadPretextLivingShowcase()" title="Load full Pretext Interactive Showcase (Video + 120fps Flow + Chips)" style="border-radius:8px">⚡ Showcase</button>
+      </div>
         <button class="btn" id="creator-free-text-btn" onclick="toggleCreatorFreeTextTool()" style="padding:4px 10px;font-size:11px;background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.35)">✍️ Add Free Text</button>
         <button class="btn" onclick="togglePagesDrawer()" style="padding:4px 8px;font-size:11px" title="Open Pages Navigator">📑 Pages</button>
         <button class="btn" onclick="toggleBlocksDrawer()" style="padding:4px 8px;font-size:11px" title="Open Blocks Editor">🧩 Blocks</button>

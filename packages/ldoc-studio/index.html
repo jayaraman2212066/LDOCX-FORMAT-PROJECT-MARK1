@@ -197,16 +197,16 @@ body::before{
 }
 
 /* ── Top Navigation Toolbar ─────────────────────────────────────────────────── */
-#toolbar{position:relative;z-index:100;background:rgba(10,10,20,.75);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border-bottom:1px solid rgba(255,255,255,.12);padding:0 22px;height:54px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+#toolbar{position:relative;z-index:100;background:rgba(10,10,20,.75);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border-bottom:1px solid rgba(255,255,255,.12);padding:0 14px;height:54px;display:flex;align-items:center;gap:7px;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
 .logo{font-family:'Cinzel',serif;font-weight:900;font-size:17px;background:linear-gradient(135deg,#f59e0b,#c084fc,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
-.doc-title{font-family:'Cinzel',serif;font-size:13px;color:var(--text2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.5px}
+.doc-title{font-family:'Cinzel',serif;font-size:12.5px;color:var(--text2);flex:0 1 200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.5px;min-width:40px}
 #validation-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;display:none}
 #validation-badge.valid{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
 #validation-badge.invalid{background:rgba(248,113,113,.15);color:#f87171;border:1px solid rgba(248,113,113,.3)}
-.tab-btn{background:transparent;border:none;color:var(--text3);font-size:13px;font-weight:700;padding:6px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;height:54px;letter-spacing:.3px}
+.tab-btn{background:transparent;border:none;color:var(--text3);font-size:12.5px;font-weight:700;padding:6px 12px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;height:54px;letter-spacing:.3px;white-space:nowrap}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-btn:hover{color:var(--text)}
-.toolbar-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;backdrop-filter:blur(10px)}
+.toolbar-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;backdrop-filter:blur(10px);white-space:nowrap;display:inline-flex;align-items:center;flex-shrink:0}
 .toolbar-btn:hover{background:rgba(255,255,255,.14);border-color:var(--gold);color:var(--gold)}
 .toolbar-btn.primary{background:linear-gradient(135deg,#f59e0b,#7c3aed);color:#fff;border:none;box-shadow:0 4px 14px rgba(245,158,11,.35)}
 .toolbar-btn.primary:hover{opacity:.95;transform:translateY(-1px);box-shadow:0 6px 18px rgba(245,158,11,.5)}
@@ -4694,9 +4694,12 @@ html.ldoc-unlicensed body {
  <div class="dmenu-divider"></div>
   <div class="dmenu-entry" onclick="window.open('https://ldoc-studios.vercel.app/docs', '_blank')"><span>📘 Architecture Documentation</span></div>
  <div class="dmenu-entry" onclick="showLegalSecurityModal()"><span>Legal &amp; Security Overview (Apache-2.0)</span></div>
- <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.5.0 (Enterprise Reactive 3D Edition)\nCopyright © 2026 J-AI-ENTERPRISES. Apache-2.0 License', 'info')"><span>About LDOC Studio</span></div>
- </div>
- </div>
+  <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.5.0 (Enterprise Reactive 3D Edition)\nCopyright © 2026 J-AI-ENTERPRISES. Apache-2.0 License', 'info')"><span>About LDOC Studio</span></div>
+  </div>
+  </div>
+   </div>
+  <div class="dmenu-zero-drift-badge" onclick="openPretextInspectorModal()" title="Screen, Editor, Viewer, and PDF Flattener share identical line-breaking metrics powered by LdocTextLayout. Zero drift guaranteed." style="margin-left:auto;cursor:pointer;-webkit-app-region:no-drag">
+    <span class="zdrift-check">✓</span> 100% Zero-Drift Verified
   </div>
 </div>
 
@@ -5126,6 +5129,9 @@ html.ldoc-unlicensed body {
           <button type="button" onclick="edScrollAddElements(-220)" class="ed-nav-scroll-btn" title="Scroll elements left" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:var(--text2);width:22px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;flex-shrink:0;transition:all .12s">‹</button>
           <div id="ed-add-elements-list" style="display:flex;align-items:center;gap:5px;flex:1;overflow-x:auto;white-space:nowrap;padding:2px 2px 4px 2px;min-width:0">
             <button class="ed-add-btn" data-keywords="free text write note draft draw annotate pen" onclick="toggleFreeTextTool()" style="background:rgba(245,158,11,.25);color:#fef08a;border-color:var(--gold);font-weight:700">✍️ Free Text</button>
+            <button class="ed-add-btn" data-keywords="pretext chip inline interactive badge button pay register token" onclick="openCustomChipModal()" style="background:rgba(56,189,248,.2);color:#7dd3fc;border-color:rgba(56,189,248,.4);font-weight:700">🏷️ +Chip</button>
+            <button class="ed-add-btn" data-keywords="columns split magazine pretext 2-col 3-col 4-col balance" onclick="splitActiveTextIntoColumns(2)" style="background:rgba(192,132,252,.2);color:#c084fc;border-color:rgba(192,132,252,.4);font-weight:700">📰 2-Col</button>
+            <button class="ed-add-btn" data-keywords="video card obstacle 16:9 pretext contour flow" onclick="promptInsertSlideVideo()" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4);font-weight:700">🎬 Video Obstacle</button>
             <button class="ed-add-btn" data-keywords="heading title h1 h2 h3 h4 h5 h6 header text section" onclick="edAddBlock('heading')">🏷️ Heading</button>
             <button class="ed-add-btn" data-keywords="paragraph text body write copy article description story content" onclick="edAddBlock('paragraph')">📝 Text</button>
             <button class="ed-add-btn" data-keywords="quote blockquote citation proverb excerpt testimonial" onclick="edAddBlock('quote')">📜 Quote</button>
@@ -5156,13 +5162,39 @@ html.ldoc-unlicensed body {
  <!-- Live Presentation Preview Pane (Editor Split View) -->
  <div class="ed-splitter" id="ed-splitter-right" title="Drag to resize Live Slide Presentation"></div>
  <div id="ed-preview-pane" class="open">
- <div class="preview-header">
- <div style="display:flex;align-items:center;gap:8px">
- <span> Live Slide Presentation</span>
- <span id="ed-preview-badge" style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3)">Page 1</span>
- </div>
- <button class="close-preview" onclick="edToggleLivePreview()" title="Collapse Live Preview">✕</button>
- </div>
+  <div class="preview-header">
+  <div style="display:flex;align-items:center;gap:8px">
+  <span> Live Slide Presentation</span>
+  <span id="ed-preview-badge" style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3)">Page 1</span>
+  </div>
+  <div class="slide-tools-container" style="display:inline-flex;align-items:center;gap:4px">
+    <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
+      <button class="slide-tool-btn purple" onclick="toggleEdColumnMenu(event)" title="Multi-Column Magazine Balance: 2-Col, 3-Col, 4-Col, Drop-Cap" style="padding:2px 8px;font-size:11px">📰 2-Col ▾</button>
+      <div id="ed-pretext-cols-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(192,132,252,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:160px;padding:4px 0">
+        <div onclick="splitActiveTextIntoColumns(2)" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(192,132,252,0.2)'" onmouseout="this.style.background='transparent'">📰 2 Columns (Classic)</div>
+        <div onclick="splitActiveTextIntoColumns(3)" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(192,132,252,0.2)'" onmouseout="this.style.background='transparent'">📰 3 Columns (Editorial)</div>
+        <div onclick="splitActiveTextIntoColumns(4)" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(192,132,252,0.2)'" onmouseout="this.style.background='transparent'">📰 4 Columns (Digest)</div>
+        <div onclick="applyPretextDropCap()" style="padding:6px 12px;font-size:11.5px;color:#fcd34d;cursor:pointer;display:flex;align-items:center;gap:6px;border-top:1px solid rgba(255,255,255,0.1)" onmouseover="this.style.background='rgba(245,158,11,0.2)'" onmouseout="this.style.background='transparent'">🎨 Drop-Cap Magazine Style</div>
+      </div>
+    </div>
+    <button class="slide-tool-btn highlight" onclick="shrinkActiveTextToFit()" title="One-Click Shrink to Fit" style="padding:2px 8px;font-size:11px">🗜️ Fit</button>
+    <button class="slide-tool-btn accent" onclick="togglePretextLiveFlow()" title="Toggle Real-Time 120fps Dynamic Text Reflow" style="padding:2px 8px;font-size:11px">
+      <span style="width:5px;height:5px;border-radius:50%;background:#38bdf8;display:inline-block"></span>
+      <span>Live Flow</span>
+    </button>
+    <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
+      <button class="slide-tool-btn" onclick="toggleEdObstacleMenu(event)" title="Insert Dynamic Obstacles: 16:9 Video cards, avatars, quotes" style="padding:2px 8px;font-size:11px">🎬 Add Video ▾</button>
+      <div id="ed-pretext-obstacle-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(56,189,248,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:180px;padding:4px 0">
+        <div onclick="promptInsertSlideVideo()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">🎬 16:9 Video Card (YouTube/MP4)</div>
+        <div onclick="spawnCircularObstacleCard()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">🔵 Circular Avatar / Badge</div>
+        <div onclick="spawnInteractiveQuoteCard()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">💬 Callout Quote Card</div>
+      </div>
+    </div>
+    <button class="slide-tool-btn" onclick="toggleFreeTextTool()" title="Write dynamic styled text" style="padding:2px 8px;font-size:11px">✍️ Add Text</button>
+    <button class="slide-tool-btn highlight" onclick="loadPretextLivingShowcase()" title="Load full Pretext Interactive Showcase" style="padding:2px 8px;font-size:11px">⚡ Showcase</button>
+    <button class="close-preview" onclick="edToggleLivePreview()" title="Collapse Live Preview" style="margin-left:4px">✕</button>
+  </div>
+  </div>
  <div class="preview-body" id="ed-preview-body">
  <div style="padding:40px;text-align:center;color:var(--text3);font-size:13px">
  <img src="ldoc_logo.png" alt="LDOC Studio Logo" style="width:36px;height:36px;border-radius:8px;box-shadow:0 0 16px rgba(245,158,11,.4);margin-bottom:8px;object-fit:contain">
@@ -21409,6 +21441,30 @@ window.openCustomChipModal = function() {
   }
 };
 
+
+
+window.toggleEdColumnMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('ed-pretext-cols-menu');
+  if (m) m.style.display = m.style.display === 'block' ? 'none' : 'block';
+  const om = document.getElementById('ed-pretext-obstacle-menu');
+  if (om) om.style.display = 'none';
+};
+
+window.toggleEdObstacleMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('ed-pretext-obstacle-menu');
+  if (m) m.style.display = m.style.display === 'block' ? 'none' : 'block';
+  const cm = document.getElementById('ed-pretext-cols-menu');
+  if (cm) cm.style.display = 'none';
+};
+
+document.addEventListener('click', function() {
+  const edc = document.getElementById('ed-pretext-cols-menu');
+  if (edc) edc.style.display = 'none';
+  const edo = document.getElementById('ed-pretext-obstacle-menu');
+  if (edo) edo.style.display = 'none';
+});
 
 window.toggleColumnMenu = function(e) {
   e.stopPropagation();
