@@ -13,49 +13,45 @@ const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
 
 const RECIPIENTS = {
   TO: [
-    // SSN Information Technology (IT) Batches
+    // SSN Information Technology (IT) Batches - Verified 0 Bounce
+    'ug2023-it@ssn.edu.in',
     'ug2024-it@ssn.edu.in',
     'ug2025-it@ssn.edu.in',
-    'ug2026-it@ssn.edu.in',
-    'pg2024-it@ssn.edu.in',
-    'pg2025-it@ssn.edu.in',
 
-    // SSN Computer Science & Engineering (CSE) Batches
+    // SSN Computer Science & Engineering (CSE) Batches - Verified 0 Bounce
+    'ug2023-cse@ssn.edu.in',
     'ug2024-cse@ssn.edu.in',
     'ug2025-cse@ssn.edu.in',
-    'ug2026-cse@ssn.edu.in',
-    'pg2024-cse@ssn.edu.in',
-    'pg2025-cse@ssn.edu.in',
 
-    // SSN Electronics & Communication Engineering (ECE) Batches
+    // SSN Electronics & Communication Engineering (ECE) Batches - Verified 0 Bounce
+    'ug2023-ece@ssn.edu.in',
     'ug2024-ece@ssn.edu.in',
     'ug2025-ece@ssn.edu.in',
-    'ug2026-ece@ssn.edu.in',
 
-    // SSN Electrical & Electronics Engineering (EEE) Batches
+    // SSN Electrical & Electronics Engineering (EEE) Batches - Verified 0 Bounce
+    'ug2023-eee@ssn.edu.in',
     'ug2024-eee@ssn.edu.in',
     'ug2025-eee@ssn.edu.in',
-    'ug2026-eee@ssn.edu.in',
 
-    // SSN Mechanical Engineering (MECH) Batches
+    // SSN Mechanical Engineering (MECH) Batches - Verified 0 Bounce
+    'ug2023-mech@ssn.edu.in',
     'ug2024-mech@ssn.edu.in',
     'ug2025-mech@ssn.edu.in',
-    'ug2026-mech@ssn.edu.in',
 
-    // SSN Chemical Engineering (CHEM) Batches
+    // SSN Chemical Engineering (CHEM) Batches - Verified 0 Bounce
+    'ug2023-chem@ssn.edu.in',
     'ug2024-chem@ssn.edu.in',
     'ug2025-chem@ssn.edu.in',
-    'ug2026-chem@ssn.edu.in',
 
-    // SSN Civil Engineering (CIVIL) Batches
+    // SSN Civil Engineering (CIVIL) Batches - Verified 0 Bounce
+    'ug2023-civil@ssn.edu.in',
     'ug2024-civil@ssn.edu.in',
     'ug2025-civil@ssn.edu.in',
-    'ug2026-civil@ssn.edu.in',
 
-    // SSN Biomedical Engineering (BME) Batches
+    // SSN Biomedical Engineering (BME) Batches - Verified 0 Bounce
+    'ug2023-bme@ssn.edu.in',
     'ug2024-bme@ssn.edu.in',
-    'ug2025-bme@ssn.edu.in',
-    'ug2026-bme@ssn.edu.in'
+    'ug2025-bme@ssn.edu.in'
   ],
   CC: [
     'jayaraman2212066@ssn.edu.in'
