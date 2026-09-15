@@ -2304,55 +2304,64 @@ function isProUnlocked() {
  return localStorage.getItem('ldoc_pro_unlocked') === 'true';
 }
 
-function updateDownloadButtonsUI() {
-  // Windows
-  const winSetup = document.getElementById('btn-down-windows-setup');
-  const winZip = document.getElementById('btn-down-windows-zip');
-  if (winSetup) {
-    winSetup.className = 'btn-download-action unlocked';
-    winSetup.innerHTML = '<span class="dl-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span><span class="dl-text">Download Windows Setup (.exe)</span>';
-    winSetup.setAttribute('href', '/downloads/setup.exe');
-    winSetup.setAttribute('download', 'setup.exe');
-  }
-  if (winZip) {
-    winZip.className = 'btn-download-action unlocked';
-    winZip.innerHTML = '<span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span><span class="dl-text">Portable ZIP (.zip)</span>';
-    winZip.setAttribute('href', '/downloads/ldoc-editor-windows.zip');
-    winZip.setAttribute('download', 'ldoc-editor-windows.zip');
-  }
+  function updateDownloadButtonsUI() {
+    // Windows
+    const winSetup = document.getElementById('btn-down-windows-setup');
+    const winZip = document.getElementById('btn-down-windows-zip');
+    if (winSetup) {
+      winSetup.className = 'btn-download-action unlocked';
+      winSetup.innerHTML = '<span class="dl-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span><span class="dl-text">Download Windows Setup (.exe)</span>';
+      winSetup.setAttribute('href', '/downloads/Setup-LDOC-Studio-Pro-Windows.exe');
+      winSetup.setAttribute('download', 'Setup-LDOC-Studio-Pro-Windows.exe');
+    }
+    if (winZip) {
+      winZip.className = 'btn-download-action unlocked';
+      winZip.innerHTML = '<span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span><span class="dl-text">Portable ZIP (.zip)</span>';
+      winZip.setAttribute('href', '/downloads/LDOC-Studio-Windows-VIP.zip');
+      winZip.setAttribute('download', 'LDOC-Studio-Windows-VIP.zip');
+    }
 
-  // Linux
-  const linuxSetup = document.getElementById('btn-down-linux-setup');
-  const linuxZip = document.getElementById('btn-down-linux-zip');
-  if (linuxSetup) {
-    linuxSetup.className = 'btn-download-action unlocked';
-    linuxSetup.innerHTML = '<span class="dl-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span><span class="dl-text">Download AppImage (.AppImage)</span>';
-    linuxSetup.setAttribute('href', '/downloads/ldoc-editor-linux.tar.gz');
-    linuxSetup.setAttribute('download', 'ldoc-editor-linux.tar.gz');
-  }
-  if (linuxZip) {
-    linuxZip.className = 'btn-download-action unlocked';
-    linuxZip.innerHTML = '<span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span><span class="dl-text">Portable tar.gz (.tar.gz)</span>';
-    linuxZip.setAttribute('href', '/downloads/ldoc-viewer-linux.tar.gz');
-    linuxZip.setAttribute('download', 'ldoc-viewer-linux.tar.gz');
-  }
+    // Linux
+    const linuxSetup = document.getElementById('btn-down-linux-setup');
+    const linuxZip = document.getElementById('btn-down-linux-zip');
+    if (linuxSetup) {
+      linuxSetup.className = 'btn-download-action unlocked';
+      linuxSetup.innerHTML = '<span class="dl-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span><span class="dl-text">Download AppImage (.AppImage)</span>';
+      linuxSetup.setAttribute('href', '/downloads/LDOC-Studio-Pro-Linux.AppImage');
+      linuxSetup.setAttribute('download', 'LDOC-Studio-Pro-Linux.AppImage');
+    }
+    if (linuxZip) {
+      linuxZip.className = 'btn-download-action unlocked';
+      linuxZip.innerHTML = '<span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span><span class="dl-text">Portable tar.gz (.tar.gz)</span>';
+      linuxZip.setAttribute('href', '/downloads/LDOC-Studio-Linux-VIP.tar.gz');
+      linuxZip.setAttribute('download', 'LDOC-Studio-Linux-VIP.tar.gz');
+    }
 
-  // macOS / iOS
-  const macSetup = document.getElementById('btn-down-mac-setup');
-  const iosZip = document.getElementById('btn-down-ios-zip');
-  if (macSetup) {
-    macSetup.className = 'btn-download-action unlocked';
-    macSetup.innerHTML = '<span class="dl-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span><span class="dl-text">Download macOS Setup (.dmg)</span>';
-    macSetup.setAttribute('href', '/downloads/LDOC-Free-Suite.dmg');
-    macSetup.setAttribute('download', 'LDOC-Free-Suite.dmg');
+    // macOS & iOS
+    const macSetup = document.getElementById('btn-down-mac-setup');
+    const iosZip = document.getElementById('btn-down-ios-zip');
+    if (macSetup) {
+      macSetup.className = 'btn-download-action unlocked';
+      macSetup.innerHTML = '<span class="dl-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span><span class="dl-text">Download macOS Setup (.dmg)</span>';
+      macSetup.setAttribute('href', '/downloads/LDOC-Studio-Pro-macOS.dmg');
+      macSetup.setAttribute('download', 'LDOC-Studio-Pro-macOS.dmg');
+    }
+    if (iosZip) {
+      iosZip.className = 'btn-download-action unlocked';
+      iosZip.innerHTML = '<span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span><span class="dl-text">iOS Touch PWA (.zip)</span>';
+      iosZip.setAttribute('href', '/downloads/LDOC-Studio-iOS-PWA.zip');
+      iosZip.setAttribute('download', 'LDOC-Studio-iOS-PWA.zip');
+    }
+
+    // Android
+    const androidApk = document.getElementById('btn-down-android-apk');
+    if (androidApk) {
+      androidApk.className = 'btn-download-action unlocked';
+      androidApk.innerHTML = '<span class="dl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span><span class="dl-text">Download Android APK (.apk)</span>';
+      androidApk.setAttribute('href', '/downloads/LDOC-Studio.apk');
+      androidApk.setAttribute('download', 'LDOC-Studio.apk');
+    }
   }
-  if (iosZip) {
-    iosZip.className = 'btn-download-action unlocked';
-    iosZip.innerHTML = '<span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span><span class="dl-text">iOS Touch PWA (.zip)</span>';
-    iosZip.setAttribute('href', '/downloads/ldoc-editor-ios.zip');
-    iosZip.setAttribute('download', 'ldoc-editor-ios.zip');
-  }
-}
 
 function handlePlatformDownload(event, platform) {
  console.log(`Starting LDOC Studio download for platform: ${platform}`);
@@ -2621,7 +2630,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <div style="font-size:12px;color:#cbd5e1;line-height:1.5;background:#161b22;padding:10px 12px;border-radius:6px;">
           <strong>How to redeem in local LDOC Studio:</strong><br>
-          1. Launch <code style="color:#f59e0b">LDOC-Studio.exe</code> (or install from <code style="color:#f59e0b">setup.exe</code>).<br>
+          1. Launch <code style="color:#f59e0b">LDOC-Studio.exe</code> (or install from <code style="color:#f59e0b">Setup-LDOC-Studio-Pro-Windows.exe</code>).<br>
           2. When the activation popup appears, paste this key.<br>
           3. Click <strong style="color:#38bdf8">⚡ Redeem License Key</strong> and click <strong style="color:#fff">[OK]</strong>.<br>
           4. LDOC Studio unlocks for full offline living document creation!
