@@ -316,7 +316,7 @@
       badge: 'Binary Search Fit'
     },
     'dmenu-zero-drift': {
-      title: '⚡ Pretext Engine • Zero-Drift Verified',
+      title: '🔒 100% Zero-Drift Verified',
       desc: 'Audits bit-for-bit typography and line break parity across Screen, Editor, Viewer, and PDF export.',
       badge: 'Pretext Geometry Audit'
     },
