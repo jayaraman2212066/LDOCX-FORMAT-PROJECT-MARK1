@@ -193,6 +193,11 @@ async function main() {
   }
 
   if (args.includes('--post-next')) {
+    const todayStr = new Date().toISOString().split('T')[0];
+    if (state.lastRunDate === todayStr && !args.includes('--force')) {
+      logMsg(`⏸️ Daily dispatch already completed today (${todayStr}) for Ad index ${state.history[state.history.length - 1]?.index}. Use --force to override.`);
+      return;
+    }
     const postYouTube = !args.includes('--no-youtube');
     const postEmail = !args.includes('--no-email');
     await postAdByIndex(state.nextAdIndex, 'share_now', { postYouTube, postEmail });
