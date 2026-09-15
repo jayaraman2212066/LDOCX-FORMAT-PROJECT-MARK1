@@ -300,12 +300,26 @@ body::before{
 .btn.green:hover{opacity:.9}
 .btn:disabled{opacity:.4;cursor:default}
 
+.btn.active {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.28), rgba(96, 165, 250, 0.2)) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+  box-shadow: 0 0 14px rgba(167, 139, 250, 0.35) !important;
+}
+#toggle-elements-btn.active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(245, 158, 11, 0.3)) !important;
+  border-color: var(--gold) !important;
+  color: #fef08a !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.35) !important;
+}
+
+
 /* layout */
 #main {
   position: relative;
   flex: 1;
   width: 100%;
-  height: calc(100vh - 84px);
+  height: calc(100vh - 84px - 25px);
   overflow: hidden;
   display: block;
 }
@@ -381,7 +395,7 @@ body::before{
   position: fixed !important;
   top: 84px !important;
   left: 0 !important;
-  bottom: 0 !important;
+  bottom: 25px !important;
   width: 360px !important;
   max-width: 90vw !important;
   background: rgba(12, 14, 24, 0.97) !important;
@@ -468,7 +482,7 @@ body::before{
   position: fixed !important;
   top: 84px !important;
   left: 0 !important;
-  bottom: 0 !important;
+  bottom: 25px !important;
   width: 560px !important;
   max-width: 95vw !important;
   background: rgba(14, 16, 28, 0.98) !important;
@@ -528,7 +542,7 @@ body::before{
   position: fixed !important;
   top: 84px !important;
   right: 0 !important;
-  bottom: 0 !important;
+  bottom: 25px !important;
   width: 320px !important;
   max-width: 90vw !important;
   background: rgba(12, 14, 24, 0.97) !important;
@@ -873,7 +887,7 @@ body::before{
 
 /* ── ⚜ Living Document Enhancement Wizard (Side Landscape Drawer) ────────── */
 #fx-wizard-sidebar{
-  position:fixed;top:52px;right:0;bottom:0;width:clamp(360px,32vw,440px);overflow:hidden;
+  position:fixed;top: 84px !important;right:0;bottom: 25px !important;width:clamp(360px,32vw,440px);overflow:hidden;
   background:rgba(12,12,22,.98);backdrop-filter:blur(24px);
   border-left:1.5px solid var(--accent);z-index:999;
   transform:translateX(105%);
@@ -2395,32 +2409,47 @@ body.creator-split-50-50 #creator-preview-pane {
   display: none !important;
 }
 
-/* Horizontal Swipable Quick Add Bar */
-#ed-add-bar, #add-bar {
+/* Dynamic Add Element Bar in Center Drawer */
+#add-bar {
   display: flex !important;
   flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  overflow-x: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  padding: 8px 10px !important;
-  gap: 6px !important;
+  flex-wrap: wrap !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 8px 12px !important;
+  gap: 5px !important;
   background: rgba(14, 16, 28, 0.98) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-  scrollbar-width: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+  max-height: 145px !important;
+  flex-shrink: 0 !important;
+  align-items: center !important;
 }
-#ed-add-bar::-webkit-scrollbar, #add-bar::-webkit-scrollbar {
-  display: none !important;
+#add-bar::-webkit-scrollbar {
+  width: 4px !important;
+}
+#add-bar::-webkit-scrollbar-thumb {
+  background: rgba(167, 139, 250, 0.3) !important;
+  border-radius: 2px !important;
 }
 
 .ed-add-btn, .add-btn {
-  padding: 4px 9px !important;
+  padding: 5px 9px !important;
   font-size: 11.5px !important;
+  font-weight: 600 !important;
   white-space: nowrap !important;
   border-radius: 6px !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 4px !important;
   flex-shrink: 0 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+.add-btn:hover {
+  background: rgba(167, 139, 250, 0.18) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+  transform: translateY(-1px) !important;
 }
 
 /* ── 📱 Mobile Phone Specific (< 768px) ── */
@@ -3150,7 +3179,7 @@ body.creator-split-50-50 #creator-preview-pane {
   <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);padding:3px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.12);margin-left:6px">
     <button class="btn" id="toggle-pages-btn" onclick="togglePagesDrawer()" style="padding:5px 12px;font-size:12px;gap:6px">📑 Pages &amp; Meta</button>
     <button class="btn" id="toggle-blocks-btn" onclick="toggleBlocksDrawer()" style="padding:5px 12px;font-size:12px;gap:6px">🧩 Edit Blocks</button>
-    <button class="btn" id="toggle-elements-btn" onclick="toggleElementsPopup()" style="padding:5px 12px;font-size:12px;gap:6px;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(245,158,11,.25));border-color:var(--gold);color:#fef08a">➕ Add Element</button>
+    <button class="btn" id="toggle-elements-btn" onclick="toggleElementsPopup()" style="padding:5px 12px;font-size:12px;gap:6px">➕ Add Element</button>
     <button class="btn" id="toggle-right-btn" onclick="toggleRightDrawer()" style="padding:5px 12px;font-size:12px;gap:6px">⚡ Actions &amp; Templates</button>
     <button class="btn" id="fx-wizard-btn" onclick="toggleFxWizard()" style="padding:5px 12px;font-size:12px;gap:6px;background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.35)">⚜ FX Wizard</button>
   </div>
@@ -3274,10 +3303,7 @@ body.creator-split-50-50 #creator-preview-pane {
   <div class="creator-splitter" id="creator-splitter-left" title="Drag to resize Pages sidebar"></div>
   <div id="center">
     <div id="center-panel-header"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:16px">🧩</span><strong style="font-family:'Cinzel',serif;font-size:13px;color:#fef08a">Block Editor &amp; Inspector</strong></div><button class="drawer-close-btn" onclick="toggleBlocksDrawer()">✕ Close</button></div>
-    <div id="page-title-bar" style="display:none;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px;flex:1"><label>Page Title</label><input id="pg-title-inp" placeholder="Page title" oninput="onPageTitleChange(this.value)"></div><button class="drawer-close-btn" onclick="toggleBlocksDrawer()" style="margin-left:10px">✕ Close</button></div><div style="display:none">
-      <label>Page Title</label>
-      <input id="pg-title-inp" placeholder="Page title" oninput="onPageTitleChange(this.value)">
-    </div>
+    <div id="page-title-bar" style="display:none;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px;flex:1"><label>Page Title</label><input id="pg-title-inp" placeholder="Page title" oninput="onPageTitleChange(this.value)"></div></div>
     <div id="no-page">
       <div class="big">📄</div>
       <div>Add a page to start building</div>
@@ -3285,27 +3311,28 @@ body.creator-split-50-50 #creator-preview-pane {
     </div>
     <div id="blocks-area" style="display:none"></div>
     <div id="add-bar" style="display:none">
-      <span style="font-size:10px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.8px">Add Element:</span>
-      <button class="add-btn" onclick="addBlock('heading')">🏷️ H1–H6</button>
-      <button class="add-btn" onclick="addBlock('paragraph')">📝 Text</button>
-      <button class="add-btn" onclick="addBlock('quote')">📜 Quote</button>
-      <button class="add-btn" onclick="addBlock('list')">📋 List</button>
-      <button class="add-btn" onclick="addBlock('code')">💻 Code</button>
-      <button class="add-btn" onclick="addBlock('table')">📊 Table</button>
-      <button class="add-btn" onclick="addBlock('web_image')">🖼️ 3D Image</button>
-      <button class="add-btn" onclick="addBlock('web_audio')">🎵 Soundtrack</button>
-      <button class="add-btn" onclick="addBlock('web_video')">🎬 Video</button>
-      <button class="add-btn" onclick="addBlock('3d_model')">📦 3D Model</button>
-      <button class="add-btn" onclick="addBlock('ai')">⚡ AI Prompt</button>
-      <button class="add-btn" onclick="addBlock('ai_live')" style="background:rgba(167,139,250,.2);color:var(--accent);border-color:var(--accent)">🌐 AI Live</button>
-      <button class="add-btn" onclick="addBlock('form')">📑 Form</button>
-      <button class="add-btn" onclick="addBlock('feature_grid')">🌟 Feature Grid</button>
-      <button class="add-btn" onclick="addBlock('live_feed')">📡 Live Dispatch</button>
-      <button class="add-btn" onclick="addBlock('preorder')">💎 Pre-Order</button>
-      <button class="add-btn" onclick="addBlock('button')">🔘 Button</button>
-      <button class="add-btn" onclick="addBlock('jsx_canvas')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">⚡ Live Sandbox</button>
-      <button class="add-btn" onclick="addBlock('particles')" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4)">✨ Particle FX</button>
-      <button class="add-btn" onclick="addBlock('water_effect')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🌊 Water Ripples</button>
+      <span style="font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;margin-right:2px">➕ Add:</span>
+      <button type="button" class="add-btn" onclick="addBlock('heading')">🏷️ H1–H6</button>
+      <button type="button" class="add-btn" onclick="addBlock('paragraph')">📝 Text</button>
+      <button type="button" class="add-btn" onclick="addBlock('quote')">📜 Quote</button>
+      <button type="button" class="add-btn" onclick="addBlock('list')">📋 List</button>
+      <button type="button" class="add-btn" onclick="addBlock('code')">💻 Code</button>
+      <button type="button" class="add-btn" onclick="addBlock('table')">📊 Table</button>
+      <button type="button" class="add-btn" onclick="addBlock('web_image')">🖼️ 3D Image</button>
+      <button type="button" class="add-btn" onclick="addBlock('web_audio')">🎵 Soundtrack</button>
+      <button type="button" class="add-btn" onclick="addBlock('web_video')" style="border-color:#ef4444;color:#fca5a5">🎬 Video</button>
+      <button type="button" class="add-btn" onclick="addBlock('3d_model')" style="border-color:#a78bfa;color:#c084fc">📦 3D Model</button>
+      <button type="button" class="add-btn" onclick="addBlock('ai')">⚡ AI Prompt</button>
+      <button type="button" class="add-btn" onclick="addBlock('ai_live')" style="background:rgba(167,139,250,.2);color:var(--accent);border-color:var(--accent)">🌐 AI Live</button>
+      <button type="button" class="add-btn" onclick="addBlock('form')">📑 Form</button>
+      <button type="button" class="add-btn" onclick="addBlock('feature_grid')">🌟 Feature Grid</button>
+      <button type="button" class="add-btn" onclick="addBlock('live_feed')">📡 Live Feed</button>
+      <button type="button" class="add-btn" onclick="addBlock('preorder')" style="border-color:#34d399;color:#6ee7b7">💎 Pre-Order</button>
+      <button type="button" class="add-btn" onclick="addBlock('button')" style="border-color:#f59e0b;color:#fef08a">🔘 Button</button>
+      <button type="button" class="add-btn" onclick="addBlock('jsx_canvas')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">⚡ Sandbox</button>
+      <button type="button" class="add-btn" onclick="addBlock('particles')" style="background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4)">✨ Particles</button>
+      <button type="button" class="add-btn" onclick="addBlock('water_effect')" style="background:rgba(56,189,248,.15);color:#38bdf8;border-color:rgba(56,189,248,.4)">🌊 Ripples</button>
+      <button type="button" class="add-btn" onclick="toggleElementsPopup()" style="background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(245,158,11,.25));border-color:var(--gold);color:#fef08a;margin-left:auto;font-weight:700">➕ All Elements Dock...</button>
     </div>
   </div>
 
@@ -7137,8 +7164,23 @@ function renderBlocks(){
   area.appendChild(qbar);
 
   if(!p||!p.blocks.length){
-    const e=document.createElement('div');e.style.cssText='color:var(--text3);font-size:13px;text-align:center;padding:24px';
-    e.textContent='No blocks yet — use the Add Element bar below';area.appendChild(e);return;
+    const emptyBox=document.createElement('div');
+    emptyBox.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 18px;gap:12px;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.12);border-radius:12px;margin:12px 0;text-align:center';
+    emptyBox.innerHTML=`
+      <div style="font-size:32px;opacity:0.85">📄</div>
+      <div style="font-size:13.5px;font-weight:700;color:#f1f5f9">This slide has no blocks yet</div>
+      <div style="font-size:11.5px;color:var(--text3);max-width:340px">Select a quick-starter element below or use the Add Element ribbon to start composing:</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+        <button type="button" class="add-btn" onclick="quickAddBlock('heading')">🏷️ + Heading</button>
+        <button type="button" class="add-btn" onclick="quickAddBlock('paragraph')">📝 + Text</button>
+        <button type="button" class="add-btn" onclick="quickAddBlock('web_video')" style="border-color:#ef4444;color:#fca5a5">🎬 + Video</button>
+        <button type="button" class="add-btn" onclick="quickAddBlock('button')" style="border-color:#f59e0b;color:#fef08a">⚡ + Button</button>
+        <button type="button" class="add-btn" onclick="quickAddBlock('3d_model')" style="border-color:#a78bfa;color:#c084fc">📦 + 3D Model</button>
+        <button type="button" class="add-btn" onclick="toggleElementsPopup()" style="background:rgba(255,255,255,0.1);font-weight:700">➕ All Elements</button>
+      </div>
+    `;
+    area.appendChild(emptyBox);
+    return;
   }
   p.blocks.forEach(b=>{
     const div=document.createElement('div');div.className='blk ed-block-card';
