@@ -35,10 +35,10 @@ routes.forEach(r => {
 
 const assets = [
   'index.html', 'three.min.js', 'ai-brain.png', 'app.ico', 'daily-prophet.ldocx',
-  'gt6-velocity-unleashed.ldocx', 'ldoc-showcase.ldocx',
+  'gt6-velocity-unleashed.ldocx', 'ldoc-showcase.ldocx', 'all-features-showcase.ldocx',
   'jszip.min.js', 'ldoc_background_image.png', 'ldoc_logo.png', 'manifest.json',
   'video-poster.jpg',
-  'ldoc-config.js', 'ldoc-toast.js', 'ldoc-parser.js', 'ldoc-editor-core.js', 'ldoc-shared-modals.js', 'ldoc-export-engine.js',
+  'ldoc-config.js', 'ldoc-toast.js', 'ldoc-text-layout.js', 'ldoc-parser.js', 'ldoc-editor-core.js', 'ldoc-shared-modals.js', 'ldoc-export-engine.js',
   'LDOCX_ARCHITECTURE_AND_SECURITY_GUIDE.pdf', 'LDOCX_TECHNICAL_SPECIFICATION.pdf',
   'LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.pdf', 'LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md', 'LDOCX-FORMAT-SPECIFICATION.md', 'CONTENT.md',
   'upscaled-videoad2.mp4'
@@ -63,7 +63,7 @@ const viewDl = path.join(viewerDir, 'downloads');
 
 const distFiles = [
   { src: path.join(__dirname, 'android-dist', 'LDOC-Studio.apk'), name: 'LDOC-Studio.apk' },
-  { src: path.join(__dirname, 'packages', 'ldoc-sdk', 'ldoc-dev-sdk.zip'), name: 'ldoc-dev-sdk.zip' },
+  { src: path.join(__dirname, 'dist', 'ldoc-dev-sdk.zip'), name: 'ldoc-dev-sdk.zip' },
   { src: path.join(__dirname, 'dist', 'setup.exe'), name: 'setup.exe' },
   { src: path.join(__dirname, 'dist', 'ldoc-editor-windows.zip'), name: 'ldoc-editor-windows.zip' },
   { src: path.join(__dirname, 'dist', 'ldoc-viewer-windows.zip'), name: 'ldoc-viewer-windows.zip' },

@@ -1,0 +1,308 @@
+{
+  "currentCycle": 2,
+  "nextAdIndex": 7,
+  "lastRunDate": "2026-09-15",
+  "totalBroadcasts": 10,
+  "history": [
+    {
+      "date": "2026-09-09",
+      "timestamp": "2026-09-09T07:22:04.631Z",
+      "index": 3,
+      "id": "master_ad3_zero_login",
+      "title": "Ad 3 — One File. Zero Login. (Portability & Freedom)",
+      "method": "queue",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-09",
+      "timestamp": "2026-09-09T07:22:34.041Z",
+      "index": 4,
+      "id": "master_ad4_built_different",
+      "title": "Ad 4 — Built Different (Developer & Power-User Angle)",
+      "method": "queue",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-09",
+      "timestamp": "2026-09-09T07:23:08.971Z",
+      "index": 5,
+      "id": "master_ad5_pitch_alive",
+      "title": "Ad 5 — Your Pitch, Alive (Startup & Business Pitch-Deck)",
+      "method": "queue",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-11",
+      "timestamp": "2026-09-11T03:32:20.580Z",
+      "index": 6,
+      "id": "ads2_ad1_sha256_security",
+      "title": "Ad 1 — Cryptographic SHA-256 & Ed25519 Security (Tamper Alarms)",
+      "method": "share_now",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "failed"
+        },
+        {
+          "channel": "Discord (#general)",
+          "status": "success"
+        },
+        {
+          "channel": "YouTube",
+          "status": "success"
+        },
+        {
+          "channel": "Gmail (SSN IT Batches)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-12",
+      "timestamp": "2026-09-12T04:08:28.000Z",
+      "index": 7,
+      "id": "ads2_ad2_cad_collaboration",
+      "title": "Ad 2 — Spatial 3D CAD & Team Collaboration",
+      "method": "share_now",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Discord (#general)",
+          "status": "success"
+        },
+        {
+          "channel": "YouTube",
+          "status": "success"
+        },
+        {
+          "channel": "Gmail (SSN IT & CSE Batches)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-13",
+      "timestamp": "2026-09-13T04:59:04.276Z",
+      "index": 8,
+      "id": "ads2_ad3_living_interactive",
+      "title": "Ad 3 — Living. Interactive. Works.",
+      "method": "share_now",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Discord (#general)",
+          "status": "failed"
+        },
+        {
+          "channel": "YouTube",
+          "status": "success"
+        },
+        {
+          "channel": "Gmail (SSN IT Batches)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-14",
+      "timestamp": "2026-09-14T03:42:13.242Z",
+      "index": 1,
+      "id": "master_ad1_first_look",
+      "title": "Ad 1 — First Look (Product Demo / Feature Reveal)",
+      "method": "share_now",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "failed"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Discord (#general)",
+          "status": "success"
+        },
+        {
+          "channel": "YouTube",
+          "status": "success"
+        },
+        {
+          "channel": "Gmail (SSN College Batches)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-14",
+      "timestamp": "2026-09-14T03:53:37.587Z",
+      "index": 4,
+      "id": "master_ad4_built_different",
+      "title": "Ad 4 — Built Different (Developer & Power-User Angle)",
+      "method": "share_now",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Discord (#general)",
+          "status": "success"
+        },
+        {
+          "channel": "YouTube",
+          "status": "success"
+        },
+        {
+          "channel": "Gmail (SSN College Batches)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-15",
+      "timestamp": "2026-09-15T05:40:24.213Z",
+      "index": 5,
+      "id": "master_ad5_pitch_alive",
+      "title": "Ad 5 — Your Pitch, Alive (Startup & Business Pitch-Deck)",
+      "method": "share_now",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Discord (#general)",
+          "status": "success"
+        },
+        {
+          "channel": "YouTube",
+          "status": "success"
+        },
+        {
+          "channel": "Gmail (SSN College Batches)",
+          "status": "success"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-15",
+      "timestamp": "2026-09-15T05:46:52.176Z",
+      "index": 6,
+      "id": "master_ad3_zero_login",
+      "title": "Ad 6 — One File. Zero Login. (Portability & Freedom)",
+      "method": "share_now",
+      "results": [
+        {
+          "channel": "LinkedIn (jayaramankalidasan)",
+          "status": "success"
+        },
+        {
+          "channel": "Threads (j_a_i_enterprise)",
+          "status": "failed"
+        },
+        {
+          "channel": "Instagram (j_a_i_enterprise)",
+          "status": "success"
+        },
+        {
+          "channel": "Discord (#general)",
+          "status": "success"
+        },
+        {
+          "channel": "YouTube",
+          "status": "success"
+        },
+        {
+          "channel": "Gmail (SSN College Batches)",
+          "status": "success"
+        }
+      ]
+    }
+  ]
+}

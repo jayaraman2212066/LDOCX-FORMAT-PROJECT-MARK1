@@ -1,0 +1,34 @@
+{
+  "currentCycle": 1,
+  "lastRunDate": "2026-09-09",
+  "completedAds": [
+    1,
+    2,
+    3
+  ],
+  "history": [
+    {
+      "date": "2026-09-09",
+      "adNumber": 1,
+      "id": "ads2_ad1_sha256_security",
+      "title": "Ad 1 — Cryptographic SHA-256 & Ed25519 Security (Tamper Alarms)",
+      "method": "share_now"
+    },
+    {
+      "date": "2026-09-09",
+      "adNumber": 2,
+      "id": "ads2_ad2_cad_collaboration",
+      "title": "Ad 2 — Spatial 3D CAD & Team Collaboration",
+      "method": "share_now",
+      "postYouTube": true
+    },
+    {
+      "date": "2026-09-09",
+      "adNumber": 3,
+      "id": "ads2_ad3_living_interactive",
+      "title": "Ad 3 — Living. Interactive. Works.",
+      "method": "share_now",
+      "postYouTube": true
+    }
+  ]
+}
