@@ -49,8 +49,3 @@ packages/ldoc-studio/*.zip
 packages/ldoc-studio/electron/
 **/electron/
 
-# Large VIP release archives (>100MB GitHub push limit, served locally/statically)
-downloads/LDOC-Studio-*-VIP.*
-public/downloads/LDOC-Studio-*-VIP.*
-app/viewer/downloads/LDOC-Studio-*-VIP.*
-

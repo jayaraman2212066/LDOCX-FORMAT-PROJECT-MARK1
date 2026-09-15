@@ -110,28 +110,4 @@ for d in downloads_dirs:
             except Exception as ce:
                 pass
 
-# Replicate VIP packages from D:\ANDROID_STD\LDOC_STUDIO_FINAL_REDEEMED if present
-vip_src_dir = r"D:\ANDROID_STD\LDOC_STUDIO_FINAL_REDEEMED"
-vip_files = [
-    (os.path.join(vip_src_dir, 'LDOC-Studio-Windows-VIP.zip'), 'LDOC-Studio-Windows-VIP.zip'),
-    (os.path.join(vip_src_dir, 'LDOC-Studio-Linux-VIP.tar.gz'), 'LDOC-Studio-Linux-VIP.tar.gz'),
-    (os.path.join(vip_src_dir, 'LDOC-Studio-macOS-VIP.zip'), 'LDOC-Studio-macOS-VIP.zip'),
-    (os.path.join(vip_src_dir, 'LDOC-Studio-Offline-Web-VIP.zip'), 'LDOC-Studio-Offline-Web-VIP.zip'),
-    (os.path.join(vip_src_dir, '04_ANDROID_VIP_STUDIO', 'LDOC-Studio.apk'), 'LDOC-Studio.apk'),
-    (os.path.join(vip_src_dir, '05_IOS_VIP_STUDIO', 'ldoc-editor-ios.zip'), 'ldoc-editor-ios.zip'),
-    (os.path.join(vip_src_dir, '01_WINDOWS_VIP_STUDIO', 'LDOC-Studio.exe'), 'LDOC-Studio.exe'),
-    (os.path.join(vip_src_dir, 'VIP_LICENSE_CREDENTIALS.txt'), 'VIP_LICENSE_CREDENTIALS.txt')
-]
-
-if os.path.exists(vip_src_dir):
-    for d in downloads_dirs:
-        for vsrc, vname in vip_files:
-            if os.path.exists(vsrc):
-                vdst = os.path.join(d, vname)
-                try:
-                    if not os.path.exists(vdst) or os.path.getmtime(vsrc) > os.path.getmtime(vdst):
-                        shutil.copy2(vsrc, vdst)
-                except Exception:
-                    pass
-
 print('All distribution archives packaged and synced.')
