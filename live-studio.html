@@ -3831,6 +3831,13 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 
 <!-- Native Desktop Menu Bar (Antigravity Style) -->
 <div id="desktop-menubar">
+  <a href="/" class="dmenu-brand" style="text-decoration:none;margin-right:6px;background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.45);padding:2px 10px;border-radius:6px;color:#fef08a;font-weight:700;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;transition:all .15s ease;" title="Return to Marketing Section &amp; Showcase">
+    <span style="font-size:12px">←</span><span>Back to Website</span>
+  </a>
+  <div class="view-switcher-pill" style="display:inline-flex;align-items:center;background:rgba(0,0,0,0.5);padding:2px 4px;border-radius:20px;border:1px solid rgba(255,255,255,0.12);margin-right:10px" title="Switch View">
+    <a href="/" class="mode-pill-btn" style="text-decoration:none;color:#94a3b8;font-size:11px;font-weight:700;padding:3px 10px;border-radius:14px;transition:all .15s">◈ Showcase</a>
+    <span class="mode-pill-btn active" style="background:linear-gradient(135deg,#f59e0b,#c084fc);color:#0f0f1b;font-weight:800;font-size:11px;padding:3px 10px;border-radius:14px">👁️ Live Studio</span>
+  </div>
  <div class="dmenu-brand" onclick="showToast('LDOCX Living Document Studio v2.4.0 (Enterprise Reactive 3D Edition)', 'info')">
  <img src="ldoc_logo.png" alt="LDOC">
  <span>LDOC Studio</span>
@@ -3848,7 +3855,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
  <div class="dmenu-entry" onclick="switchTab('templates')"><span>🌟 Template Gallery</span></div>
  <div class="dmenu-divider"></div>
  <div class="dmenu-entry" onclick="window.open('LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.pdf')"><span>📕 Architecture &amp; Security Spec (PDF)</span></div>
- <div class="dmenu-entry" onclick="window.close()"><span>✕ Exit Studio</span><span class="hotkey">Alt+F4</span></div>
+ <div class="dmenu-entry" onclick="location.href='/'"><span>🏠 Exit to Marketing Website</span><span class="hotkey">Alt+F4</span></div>
  </div>
  </div>
 
@@ -3925,6 +3932,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
  </div>
  </div>
  
+    <a href="/" style="color:#cbd5e1;text-decoration:none;font-size:11.5px;font-weight:600;display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);margin-right:10px;" title="Marketing Section &amp; Showcase"><span>🌐</span><span>Marketing Site</span></a>
     <div class="dmenu-zero-drift-badge" id="dmenu-zero-drift" onclick="openPretextInspectorModal()" title="Pretext Engine v0.0.9: Bit-for-bit arithmetic text layout across Editor, Viewer, and PDF export flattener. Click to open Pretext Diagnostics &amp; Benchmark." style="margin-left:auto;cursor:pointer;-webkit-app-region:no-drag;display:inline-flex;align-items:center;gap:6px">
     <span style="color:#38bdf8;font-size:12px">⚡</span>
     <span style="font-weight:700;color:#f1f5f9;letter-spacing:0.3px">Pretext Engine</span>
@@ -3933,11 +3941,25 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 </div>
 
 <!-- STUDIO COMPARISON & PRE-LAUNCH TIER BAR -->
+<div class="studio-tier-bar" style="background:linear-gradient(90deg, #18152e 0%, #0d1322 50%, #171c2d 100%);border-bottom:1px solid rgba(139,92,246,0.3);padding:6px 20px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#cbd5e1;z-index:90;position:relative;">
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <a href="/" style="color:#fef08a;background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.45);padding:3px 12px;border-radius:6px;text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;transition:all .15s ease;" title="Return to Marketing Section &amp; Showcase">
+      <span style="font-size:12px">←</span><span>Back to Marketing Showcase</span>
+    </a>
+    <span style="background:rgba(139,92,246,0.25);border:1px solid rgba(139,92,246,0.45);color:#c084fc;font-weight:800;font-size:10px;padding:3px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:0.5px;">Live Studio (Free Web Demo)</span>
+    <span style="color:#94a3b8;font-size:11.5px">Browser sandbox • Standard WebGL • 1-slide previews for PDF/DOCX/3D</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a href="/pricing" style="color:#38bdf8;text-decoration:none;font-weight:700;font-size:11.5px;padding:4px 10px;border-radius:6px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);display:inline-flex;align-items:center;gap:5px;"><span>💎</span><span>Pricing &amp; Plans</span></a>
+    <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;text-decoration:none;font-weight:800;font-size:11.5px;padding:5px 14px;border-radius:6px;box-shadow:0 2px 10px rgba(245,158,11,0.35);display:inline-flex;align-items:center;gap:6px;transition:all .15s ease;"><span>⭐ Buy License</span></a>
+  </div>
+</div>
 <div id="toolbar">
- <div style="display:inline-flex;align-items:center;gap:9px;margin-right:6px">
+ <a href="/" style="display:inline-flex;align-items:center;gap:9px;margin-right:6px;text-decoration:none" title="Return to Marketing Website &amp; Showcase">
  <img src="ldoc_logo.png" alt="LDOC Logo" style="width:26px;height:26px;border-radius:6px;object-fit:contain;box-shadow:0 0 12px rgba(245,158,11,.45)">
  <span class="logo">LDOC</span>
- </div>
+ </a>
+ <a href="/" class="toolbar-btn" style="background:rgba(245,158,11,0.14);border-color:rgba(245,158,11,0.45);color:#fef08a;font-size:12px;font-weight:700;padding:5px 12px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-right:4px;" title="Return to Marketing Website &amp; Showcase"><span>←</span><span>Marketing</span></a>
  <button class="tab-btn active" id="tab-viewer" onclick="switchTab('viewer')"><span style="margin-right:4px">👁️</span>Viewer</button>
  <button class="tab-btn" id="tab-editor" onclick="switchTab('editor')"><span style="margin-right:4px">📝</span>AST Editor</button>
  <button class="tab-btn" id="tab-converter" onclick="switchTab('converter')"><span style="margin-right:4px">🔄</span>Convert</button>
