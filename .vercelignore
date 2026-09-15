@@ -1,11 +1,13 @@
 # Exclude nested npm workspace SDK from Vercel web deployment
 packages/
 
-# Windows executables and heavy binaries
-*.exe
+# Windows executables (except public downloads)
+/*.exe
 app/*.exe
 app/ldoc-server.exe
 app/ldoc.exe
+!public/downloads/*.exe
+!downloads/*.exe
 
 # Local scratch and test scripts
 scratch/
