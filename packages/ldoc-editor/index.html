@@ -4178,11 +4178,7 @@ window.updateAppLicenseBadge = function() {
 
   if (tbBtn) {
     if (isUnlocked) {
-      tbBtn.style.background = 'rgba(34, 197, 94, 0.15)';
-      tbBtn.style.border = '1px solid rgba(34, 197, 94, 0.4)';
-      tbBtn.style.color = '#4ade80';
-      tbBtn.title = 'Pro License Active (' + (licensee || 'Verified') + ') - Click to view';
-      tbBtn.innerHTML = '<span>✓</span><span>PRO ACTIVE</span>';
+      tbBtn.style.display = 'none';
     } else {
       tbBtn.style.background = 'linear-gradient(135deg, rgba(245,158,11,0.25), rgba(234,88,12,0.25))';
       tbBtn.style.border = '1.5px solid #f59e0b';
@@ -4344,8 +4340,10 @@ if (document.readyState === 'loading') {
  </div>
  </div>
  </div>
-  <div class="dmenu-zero-drift-badge" onclick="openPretextInspectorModal()" title="Screen, Editor, Viewer, and PDF Flattener share identical line-breaking metrics powered by LdocTextLayout. Zero drift guaranteed.">
-    <span class="zdrift-check">✓</span> 100% Zero-Drift Verified
+  <div class="dmenu-zero-drift-badge" id="dmenu-zero-drift" onclick="openPretextInspectorModal()" title="Pretext Engine v0.0.9: Bit-for-bit arithmetic text layout across Editor, Viewer, and PDF export flattener. Click to open Pretext Diagnostics &amp; Benchmark." style="margin-left:auto;cursor:pointer;-webkit-app-region:no-drag;display:inline-flex;align-items:center;gap:6px">
+    <span style="color:#38bdf8;font-size:12px">⚡</span>
+    <span style="font-weight:700;color:#f1f5f9;letter-spacing:0.3px">Pretext Engine</span>
+    <span class="zdrift-pill" style="background:rgba(16,185,129,0.18);border:1px solid rgba(16,185,129,0.4);color:#34d399;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:10px">✓ Zero-Drift</span>
   </div>
 </div>
 
