@@ -1646,7 +1646,7 @@
         <span class="dl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
         <span class="dl-text">Download Windows Setup (.exe)</span>
       </a>
-      <a href="/downloads/LDOC-Studio-Windows-VIP.zip" download="LDOC-Studio-Windows-VIP.zip" id="btn-down-windows-zip" class="btn-download-action unlocked" style="font-size:12px;opacity:0.9;padding:7px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);">
+      <a href="/downloads/LDOC-Studio-Pro-Windows-VIP.zip" download="LDOC-Studio-Pro-Windows-VIP.zip" id="btn-down-windows-zip" class="btn-download-action unlocked" style="font-size:12px;opacity:0.9;padding:7px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);">
         <span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span>
         <span class="dl-text">Portable ZIP (.zip)</span>
       </a>
@@ -1674,7 +1674,7 @@
         <span class="dl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
         <span class="dl-text">Download AppImage (.AppImage)</span>
       </a>
-      <a href="/downloads/LDOC-Studio-Linux-VIP.tar.gz" download="LDOC-Studio-Linux-VIP.tar.gz" id="btn-down-linux-zip" class="btn-download-action unlocked" style="font-size:12px;opacity:0.9;padding:7px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);">
+      <a href="/downloads/LDOC-Studio-Pro-Linux.tar.gz" download="LDOC-Studio-Pro-Linux.tar.gz" id="btn-down-linux-zip" class="btn-download-action unlocked" style="font-size:12px;opacity:0.9;padding:7px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);">
         <span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span>
         <span class="dl-text">Portable tar.gz (.tar.gz)</span>
       </a>
@@ -1702,7 +1702,7 @@
         <span class="dl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
         <span class="dl-text">Download macOS Setup (.dmg)</span>
       </a>
-      <a href="/downloads/LDOC-Studio-iOS-PWA.zip" download="LDOC-Studio-iOS-PWA.zip" id="btn-down-ios-zip" class="btn-download-action unlocked" style="font-size:12px;opacity:0.9;padding:7px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);">
+      <a href="/downloads/LDOC-Studio-Pro-iOS-PWA.zip" download="LDOC-Studio-Pro-iOS-PWA.zip" id="btn-down-ios-zip" class="btn-download-action unlocked" style="font-size:12px;opacity:0.9;padding:7px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);">
         <span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span>
         <span class="dl-text">iOS Touch PWA (.zip)</span>
       </a>
@@ -1726,7 +1726,7 @@
       </ul>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">
-      <a href="/downloads/LDOC-Studio.apk" download="LDOC-Studio.apk" id="btn-down-android-apk" class="btn-download-action unlocked">
+      <a href="/downloads/LDOC-Studio-Pro-Android.apk" download="LDOC-Studio-Pro-Android.apk" id="btn-down-android-apk" class="btn-download-action unlocked">
         <span class="dl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
         <span class="dl-text">Download Android APK (.apk)</span>
       </a>
@@ -2317,8 +2317,8 @@ function isProUnlocked() {
     if (winZip) {
       winZip.className = 'btn-download-action unlocked';
       winZip.innerHTML = '<span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span><span class="dl-text">Portable ZIP (.zip)</span>';
-      winZip.setAttribute('href', '/downloads/LDOC-Studio-Windows-VIP.zip');
-      winZip.setAttribute('download', 'LDOC-Studio-Windows-VIP.zip');
+      winZip.setAttribute('href', '/downloads/LDOC-Studio-Pro-Windows-VIP.zip');
+      winZip.setAttribute('download', 'LDOC-Studio-Pro-Windows-VIP.zip');
     }
 
     // Linux
@@ -2333,8 +2333,8 @@ function isProUnlocked() {
     if (linuxZip) {
       linuxZip.className = 'btn-download-action unlocked';
       linuxZip.innerHTML = '<span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span><span class="dl-text">Portable tar.gz (.tar.gz)</span>';
-      linuxZip.setAttribute('href', '/downloads/LDOC-Studio-Linux-VIP.tar.gz');
-      linuxZip.setAttribute('download', 'LDOC-Studio-Linux-VIP.tar.gz');
+      linuxZip.setAttribute('href', '/downloads/LDOC-Studio-Pro-Linux.tar.gz');
+      linuxZip.setAttribute('download', 'LDOC-Studio-Pro-Linux.tar.gz');
     }
 
     // macOS & iOS
@@ -2349,8 +2349,8 @@ function isProUnlocked() {
     if (iosZip) {
       iosZip.className = 'btn-download-action unlocked';
       iosZip.innerHTML = '<span class="dl-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></span><span class="dl-text">iOS Touch PWA (.zip)</span>';
-      iosZip.setAttribute('href', '/downloads/LDOC-Studio-iOS-PWA.zip');
-      iosZip.setAttribute('download', 'LDOC-Studio-iOS-PWA.zip');
+      iosZip.setAttribute('href', '/downloads/LDOC-Studio-Pro-iOS-PWA.zip');
+      iosZip.setAttribute('download', 'LDOC-Studio-Pro-iOS-PWA.zip');
     }
 
     // Android
@@ -2358,8 +2358,8 @@ function isProUnlocked() {
     if (androidApk) {
       androidApk.className = 'btn-download-action unlocked';
       androidApk.innerHTML = '<span class="dl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span><span class="dl-text">Download Android APK (.apk)</span>';
-      androidApk.setAttribute('href', '/downloads/LDOC-Studio.apk');
-      androidApk.setAttribute('download', 'LDOC-Studio.apk');
+      androidApk.setAttribute('href', '/downloads/LDOC-Studio-Pro-Android.apk');
+      androidApk.setAttribute('download', 'LDOC-Studio-Pro-Android.apk');
     }
   }
 
