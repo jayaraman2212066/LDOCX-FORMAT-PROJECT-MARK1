@@ -4,18 +4,13 @@
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>LDOC Studio — Documents That Compute, React &amp; Evolve (.ldocx)</title>
- <meta name="description" content="The open Living Document Format (.ldocx) and LDOC Studio. Real-time code execution, spatial 3D WebGL, reactive data models, and agentic AI. Replacing static PDFs forever.">
+ <meta name="description" content="The open Living Document Format (.ldocx) & LDOC Studio: real-time execution, 3D WebGL, reactive data models, and agentic AI. Replacing static PDFs forever.">
  <link rel="icon" type="image/png" href="/ldoc_logo.png">
  <link rel="shortcut icon" href="/app.ico">
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-   <script src="/three.min.js"></script>
-  <script src="three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
- <style>
+   <style>
  :root {
  --bg: #090d16;
  --bg-alt: #0d1322;
@@ -78,9 +73,9 @@
  letter-spacing: 0.01em;
  }
  .promo-strip a {
- color: #fef08a;
+ color: #fde047;
  text-decoration: underline;
- font-weight: 600;
+ font-weight: 700;
  transition: opacity 0.2s;
  }
  .promo-strip a:hover { opacity: 0.85; }
@@ -2708,6 +2703,7 @@
  <div class="ambient-bg"></div>
 
  <div class="page-wrap">
+ <header class="site-header">
  <!-- Promo Strip -->
  <div class="promo-strip">
  <span class="promo-badge">Spec v2.5.0</span>
@@ -2719,7 +2715,7 @@
  <nav class="nav-bar">
  <div class="nav-left">
  <a href="/" class="brand-logo">
- <img src="/ldoc_logo.png" alt="LDOC Logo">
+ <img src="/ldoc_logo.png" alt="LDOC Logo" width="28" height="28">
  <span>LDOC STUDIO</span>
  <span class="brand-badge">.ldocx</span>
  </a>
@@ -2755,6 +2751,9 @@
  </a>
  </div>
  </nav>
+  </header>
+
+  <main id="main-content">
 
  <!-- HERO SECTION -->
  <section class="hero-section">
@@ -2797,7 +2796,7 @@
 
      <div class="hero-video-col">
        <div class="hero-video-embedded">
-         <video id="hero-marketing-video" class="hero-video-player" src="/upscaled-videoad2.mp4" autoplay muted loop playsinline preload="auto" poster="/video-poster.jpg"></video>
+         <video id="hero-marketing-video" class="hero-video-player" width="640" height="360" muted loop playsinline preload="none" poster="/video-poster.webp" style="aspect-ratio: 16 / 9;"><source src="/upscaled-videoad2.mp4" type="video/mp4"></video>
          
          <div class="video-floating-overlay">
            <button type="button" class="video-float-btn" id="hero-video-sound-btn" onclick="toggleHeroVideoAudio()" title="Toggle Sound" aria-label="Toggle Sound">
@@ -2832,7 +2831,7 @@
  <div class="canvas-dot dot-g" title="Maximize"></div>
  </div>
  <div class="studio-app-brand">
- <img src="/ldoc_logo.png" alt="LDOC Studio Logo" style="width:16px;height:16px;border-radius:3px;">
+ <img src="/ldoc_logo.png" alt="LDOC Studio Logo" width="16" height="16" style="width:16px;height:16px;border-radius:3px;">
  <span>LDOC STUDIO</span>
  </div>
  <div class="studio-menu-actions">
@@ -2862,7 +2861,7 @@
  <div class="studio-slide-canvas">
  <div>
  <div class="slide-meta-badge">SLIDE 1 OF 4 • SPATIAL 3D &amp; COMPUTED TELEMETRY</div>
- <h3 class="slide-heading">Vanguard-7 Robotics Architecture</h3>
+ <h2 class="slide-heading" style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin-bottom: 8px;">Vanguard-7 Robotics Architecture</h2>
  <p class="slide-paragraph">
  The next-generation autonomous quadruped platform with embedded real-time 3D kinematic model, reactive strain calculations, and zero-telemetry offline storage.
  </p>
@@ -3294,7 +3293,7 @@
  <div style="font-size: 3.5rem;"></div>
  </div>
  <div class="build-content">
- <h4 class="build-title">Annual ESG &amp; Financial Living Report</h4>
+ <h3 class="build-title">Annual ESG &amp; Financial Living Report</h3>
  <p class="build-desc">Includes reactive revenue models, carbon offset calculators, and live audited variance tables with slider adjustments.</p>
  <div class="build-footer">
  <span class="build-tag">BLUEPRINT • 12 SLIDES</span>
@@ -3310,7 +3309,7 @@
  <div style="font-size: 3.5rem;">⚛️</div>
  </div>
  <div class="build-content">
- <h4 class="build-title">Quantum Qubit Coherence Living Paper</h4>
+ <h3 class="build-title">Quantum Qubit Coherence Living Paper</h3>
  <p class="build-desc">Interactive Bloch sphere 3D simulation with live Hamiltonian equation solvers and dynamic quantum state vectors.</p>
  <div class="build-footer">
  <span class="build-tag">BLUEPRINT • 8 SLIDES</span>
@@ -3326,7 +3325,7 @@
  <div style="font-size: 3.5rem;"></div>
  </div>
  <div class="build-content">
- <h4 class="build-title">Hyperion Series A Dynamic Investor Deck</h4>
+ <h3 class="build-title">Hyperion Series A Dynamic Investor Deck</h3>
  <p class="build-desc">Luminous glassmorphism presentation with live cap table simulations, runway sensitivity toggles, and video demo loops.</p>
  <div class="build-footer">
  <span class="build-tag">BLUEPRINT • 14 SLIDES</span>
@@ -3342,7 +3341,7 @@
  <div style="font-size: 3.5rem;"></div>
  </div>
  <div class="build-content">
- <h4 class="build-title">Vanguard-7 Robotics Hardware Datasheet</h4>
+ <h3 class="build-title">Vanguard-7 Robotics Hardware Datasheet</h3>
  <p class="build-desc">Embedded 3D robotic arm model with exploded view controls, joint torque telemetry, and real-time stress testing graphs.</p>
  <div class="build-footer">
  <span class="build-tag">BLUEPRINT • 6 SLIDES</span>
@@ -3879,7 +3878,7 @@
     <!-- Bottom Action Card -->
     <div class="faq-cta-card">
       <div class="faq-cta-content">
-        <h4 style="font-size: 1.25rem; font-weight: 800; color: #f8fafc; margin-bottom: 6px;">Have an engineering or integration question?</h4>
+        <h3 style="font-size: 1.25rem; font-weight: 800; color: #f8fafc; margin-bottom: 6px;">Have an engineering or integration question?</h3>
         <p style="font-size: 0.95rem; color: #94a3b8; margin: 0;">Test the living document pipeline live in your browser sandbox, or inspect our zero-dependency SDK on GitHub.</p>
       </div>
       <div class="faq-cta-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
@@ -4094,12 +4093,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   <!-- FOOTER -->
- <footer class="site-footer">
+ </main>
+
+  <footer class="site-footer">
  <div class="container">
  <div class="footer-grid">
  <div class="footer-brand">
  <a href="/" class="brand-logo">
- <img src="/ldoc_logo.png" alt="LDOC Logo">
+ <img src="/ldoc_logo.png" alt="LDOC Logo" width="28" height="28">
  <span>LDOC STUDIO</span>
  </a>
  <p>The open living document architecture. Compute, render, and evolve beyond static PDFs.</p>
@@ -4852,7 +4853,6 @@ document.addEventListener('DOMContentLoaded', () => {
     video.playsInline = true;
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
-    video.setAttribute('autoplay', '');
 
     const tryPlay = () => {
       if (!video) return;
@@ -4865,10 +4865,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    tryPlay();
-    video.addEventListener('canplay', tryPlay, { once: true });
-    video.addEventListener('loadeddata', tryPlay, { once: true });
-    video.addEventListener('loadedmetadata', tryPlay, { once: true });
+    // Lazy play only when video is in viewport to conserve bandwidth and reduce CLS
+    if ('IntersectionObserver' in window) {
+      const vObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            tryPlay();
+          } else {
+            video.pause();
+          }
+        });
+      }, { threshold: 0.25 });
+      vObs.observe(video);
+    } else {
+      tryPlay();
+    }
 
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden && video.paused) {
@@ -6751,5 +6762,6 @@ window.setBillingCycle = function(cycle) {
   }
 };
 </script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
 </body>
 </html>
