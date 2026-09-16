@@ -2462,6 +2462,246 @@
   .matrix-check { color: #34d399; font-weight: 700; margin-right: 6px; }
   .matrix-cross { color: #ef4444; font-weight: 700; margin-right: 6px; }
 
+
+
+/* ── FAQ & KNOWLEDGE BASE STYLES ────────────────────────── */
+.faq-section {
+  padding: 80px 20px 100px;
+  background: linear-gradient(180deg, var(--bg, #090d16) 0%, rgba(13, 19, 34, 0.92) 50%, var(--bg, #090d16) 100%);
+  position: relative;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.faq-container {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+.faq-search-wrapper {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto 26px;
+}
+.faq-search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  color: #94a3b8;
+  pointer-events: none;
+}
+.faq-search-input {
+  width: 100%;
+  padding: 14px 44px 14px 48px;
+  background: rgba(18, 26, 44, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 99px;
+  color: #f8fafc;
+  font-size: 0.98rem;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.faq-search-input:focus {
+  border-color: #f59e0b;
+  background: rgba(24, 34, 58, 0.92);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.faq-clear-btn {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  color: #cbd5e1;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+.faq-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+.faq-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  padding: 8px 16px;
+  border-radius: 99px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+}
+.faq-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.faq-pill.active {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(217, 119, 6, 0.22));
+  border-color: #f59e0b;
+  color: #fbbf24;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.2);
+}
+.pill-count {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 1px 7px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.faq-pill.active .pill-count {
+  background: rgba(245, 158, 11, 0.35);
+  color: #fff;
+}
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 48px;
+}
+.faq-item {
+  background: var(--card-bg, rgba(18, 26, 44, 0.7));
+  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.faq-item:hover {
+  border-color: rgba(245, 158, 11, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+.faq-item.active {
+  border-color: rgba(245, 158, 11, 0.5);
+  background: rgba(22, 32, 54, 0.88);
+  box-shadow: 0 6px 24px rgba(245, 158, 11, 0.12);
+}
+.faq-question {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  color: #f8fafc;
+  font-size: 1.05rem;
+  font-weight: 700;
+  outline: none;
+  font-family: inherit;
+}
+.faq-q-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+.faq-cat-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.badge-showcase { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+.badge-zerodrift { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+.badge-security { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+.badge-ai { background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); }
+.badge-ownership { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+.faq-chevron {
+  font-size: 1.2rem;
+  color: #94a3b8;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.faq-item.active .faq-chevron {
+  transform: rotate(180deg);
+  color: #f59e0b;
+}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.faq-item.active .faq-answer {
+  max-height: 600px;
+}
+.faq-answer-inner {
+  padding: 0 24px 22px 24px;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 6px;
+  padding-top: 16px;
+}
+.faq-answer-inner p {
+  margin: 0;
+}
+.faq-answer-inner code {
+  background: rgba(255, 255, 255, 0.08);
+  color: #38bdf8;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88em;
+  font-family: 'JetBrains Mono', monospace;
+}
+.faq-answer-inner strong {
+  color: #f1f5f9;
+}
+.faq-no-results {
+  text-align: center;
+  padding: 40px 20px;
+  color: #94a3b8;
+  font-size: 1rem;
+}
+.faq-cta-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.88) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 16px;
+  padding: 32px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+@media (max-width: 768px) {
+  .faq-cta-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+  }
+  .faq-question {
+    padding: 16px 18px;
+    font-size: 0.98rem;
+  }
+  .faq-q-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2496,6 +2736,7 @@
  <li><a href="/live-studio">Live Studio</a></li>
  <li><a href="/models">Models Hub</a></li>
  <li><a href="/pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
  <li><a href="/docs">Docs</a></li>
  <li><a href="/changelog">Changelog</a></li>
  </ul>
@@ -3417,7 +3658,442 @@
 </div>
   </section>
 
- <!-- FOOTER -->
+ <!-- ── FAQ & KNOWLEDGE BASE SECTION (AI GROUNDED) ────────────────── -->
+<section id="faq" class="faq-section">
+  <div class="faq-container">
+    <div class="section-head" style="margin-bottom: 36px;">
+      <span class="section-tag" style="color: #f59e0b; letter-spacing: 1px;">Document Problem &amp; Architecture Knowledge Base</span>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-sub">
+        Instant answers for creators, engineering teams, legal auditors, and AI developers transitioning from static PDFs and Word documents to living .ldocx containers.
+      </p>
+    </div>
+
+    <!-- Interactive FAQ Search -->
+    <div class="faq-search-wrapper">
+      <span class="faq-search-icon" aria-hidden="true">&#128269;</span>
+      <input type="text" id="faqSearchInput" class="faq-search-input" placeholder="Search problems (e.g., 3D CAD, Word forgery, text drift, RAG OCR, pricing)..." aria-label="Search FAQ questions">
+      <button type="button" class="faq-clear-btn" id="faqClearBtn" onclick="clearFaqSearch()" aria-label="Clear search" style="display:none;">&#10005;</button>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="faq-filter-pills" role="tablist" aria-label="FAQ Categories">
+      <button type="button" class="faq-pill active" data-category="all" onclick="filterFaq('all', this)" role="tab" aria-selected="true">
+        All Questions <span class="pill-count">12</span>
+      </button>
+      <button type="button" class="faq-pill" data-category="showcase" onclick="filterFaq('showcase', this)" role="tab" aria-selected="false">
+        Realistic 3D &amp; Showcase <span class="pill-count">3</span>
+      </button>
+      <button type="button" class="faq-pill" data-category="zerodrift" onclick="filterFaq('zerodrift', this)" role="tab" aria-selected="false">
+        Zero Text Drift <span class="pill-count">2</span>
+      </button>
+      <button type="button" class="faq-pill" data-category="security" onclick="filterFaq('security', this)" role="tab" aria-selected="false">
+        Anti-Tamper Security <span class="pill-count">2</span>
+      </button>
+      <button type="button" class="faq-pill" data-category="ai" onclick="filterFaq('ai', this)" role="tab" aria-selected="false">
+        AI &amp; RAG Ingestion <span class="pill-count">2</span>
+      </button>
+      <button type="button" class="faq-pill" data-category="ownership" onclick="filterFaq('ownership', this)" role="tab" aria-selected="false">
+        Offline &amp; Pricing <span class="pill-count">3</span>
+      </button>
+    </div>
+
+    <!-- FAQ Accordion List -->
+    <div class="faq-list" id="faqList">
+        <div class="faq-item" data-category="showcase">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-showcase">3D & Showcase</span>
+              <span class="faq-q-text">Why can't I create a realistic, interactive document showoff using PDF or Microsoft Word?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Traditional formats like Adobe PDF and Microsoft Word were engineered over 30 years ago as static "digital printer paper". They are restricted to frozen, flat 2D images and static text. When designers, engineers, or product teams want to showcase realistic 3D CAD parts, interactive models, or live data in a client report, PDF forces them to paste lifeless 2D screenshots.<br><br><strong>The LDOC Solution:</strong> The Living Document Format (<code>.ldocx</code>) transforms documents into reactive software. You can embed hardware-accelerated 60 FPS Three.js 3D WebGL scenes directly on the page. Clients can rotate, zoom, and inspect full <code>.GLTF</code>, <code>.OBJ</code>, and <code>.STL</code> CAD assemblies with natural mouse or multi-touch gestures—no 15GB CAD software required.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="showcase">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-showcase">3D & Showcase</span>
+              <span class="faq-q-text">How can clients and stakeholders inspect 3D engineering models on mobile or tablets without heavy CAD software?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Legacy CAD review requires recipients to either purchase expensive CAD seats ($2,000+/year) or install 10GB–15GB desktop software like AutoCAD or SolidWorks. With LDOC Studio and the standalone LDOC Viewer (<4MB), anyone on Windows, macOS, Linux, Android, or iOS can open a <code>.ldocx</code> file and interact with full 3D models with zero software installation, zero cloud login, and zero subscription fees.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="showcase">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-showcase">3D & Showcase</span>
+              <span class="faq-q-text">Can text wrap smoothly around 3D models and interactive media without layout glitches?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Yes. LDOC Studio features magazine-style obstacle exclusion carving powered by <code>LdocTextLayout</code>. Paragraphs dynamically flow around 3D canvas viewports and spatial cards using geometric margin carving, completely preventing bounding-box overlaps or forced browser reflow.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="zerodrift">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-zerodrift">Zero Text Drift</span>
+              <span class="faq-q-text">Why do Word documents and Google Docs shift formatting and wrap lines differently across computers?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Traditional word processors rely on system-installed operating system fonts and browser DOM reflow heuristics. Opening a <code>.docx</code> file on Mac vs. Windows or mobile recalculates line widths differently, causing words to jump between lines, tables to break across pages, and headings to orphan.<br><br><strong>The LDOC Solution:</strong> LDOC is built on the <code>LdocTextLayout</code> pure arithmetic layout engine (encapsulating <code>@chenglou/pretext</code>). Text layout is pre-computed using deterministic font metrics off-DOM. This guarantees 100% bit-for-bit identical line breaks, line counts, and bounding heights across the Editor, Viewer, and headless PDF export.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="zerodrift">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-zerodrift">Zero Text Drift</span>
+              <span class="faq-q-text">Will my living document print or export to PDF exactly as it appears on my screen?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Yes. Unlike web pages where <code>window.print()</code> results in broken margins and unexpected page splits, LDOC Studio uses a predictive page-break flattener. The PDF export flattener uses the identical layout arithmetic as the live editor canvas, ensuring zero text drift and watermark-free publication print parity.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="security">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-security">Anti-Tamper Security</span>
+              <span class="faq-q-text">Can Microsoft Word (.docx) files be silently edited or forged without detection?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Yes. A <code>.docx</code> file is simply an unencrypted ZIP archive containing raw XML files (<code>document.xml</code>). Anyone can unzip the file, modify contract numbers or financial clauses, re-zip it, and Word will open it without any warning or error.<br><br><strong>The LDOC Solution:</strong> Every <code>.ldocx</code> document integrates a cryptographic SHA-256 Merkle tree and Ed25519 digital signature manifest. Every paragraph, data block, and 3D asset is individually hashed. If even a single character or mesh coordinate is tampered with, LDOC Studio triggers an instant cryptographic alarm in under 15 milliseconds, pinpointing the exact compromised block.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="security">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-security">Anti-Tamper Security</span>
+              <span class="faq-q-text">Does .ldocx protect against macro viruses and arbitrary code execution?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Yes. Microsoft Office macros (VBA) remain one of the top enterprise security threat vectors. LDOC eliminates arbitrary code execution entirely. Instead of executable macros, document interactivity is powered by a sandboxed, deterministic Abstract Syntax Tree (AST). Mathematical formulas and reactive sliders run in an isolated reactive DAG with zero access to system files, shell commands, or unauthorized network APIs.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="ai">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-ai">AI & RAG Ingestion</span>
+              <span class="faq-q-text">Why is extracting text and tables from PDFs so unreliable and expensive for AI pipelines (RAG)?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>PDFs do not store semantic paragraphs, tables, or sections; they only store raw graphical glyph draw calls like <em>"draw character 'A' at coordinate (142, 580)"</em>. AI pipelines must burn huge GPU compute costs running heuristic OCR models that routinely scramble financial tables, misread multi-column articles, and hallucinate reading order.<br><br><strong>The LDOC Solution:</strong> A <code>.ldocx</code> document is an AI-native JSON AST. AI agents, LangChain, LlamaIndex, or custom RAG pipelines can ingest documents via <code>npm install ldoc-sdk</code> in under 2 milliseconds. Tables, headings, code blocks, and 3D descriptions retain 100% structural fidelity with zero OCR errors and zero GPU extraction overhead.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="ai">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-ai">AI & RAG Ingestion</span>
+              <span class="faq-q-text">How can AI assistants like ChatGPT, Claude, and Gemini generate or inspect .ldocx files?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Because <code>.ldocx</code> documents follow an open, well-typed JSON schema (<code>manifest.json</code> + <code>document.json</code>), AI models can programmatically generate, inspect, and update living documents directly using standard JSON tooling or the official <code>@ldoc/sdk</code> TypeScript/Node.js API.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="ownership">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-ownership">Offline & Pricing</span>
+              <span class="faq-q-text">Do I lose access to my documents if I don't have internet or cancel a subscription?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Never. Cloud tools like Google Docs, Notion, and Microsoft 365 store your intellectual property in proprietary cloud databases—if your subscription lapses or internet drops, you are locked out. LDOC is strictly <strong>Local-First and Offline-First</strong>. Your files are self-contained <code>.ldocx</code> files on your disk. You own the files forever with zero cloud dependency.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="ownership">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-ownership">Offline & Pricing</span>
+              <span class="faq-q-text">Will a .ldocx file still be readable 20 years from now?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Yes. Every <code>.ldocx</code> file bundles a self-contained, standalone <code>fallback.html</code> archival viewer inside its container. Even if LDOC Studio or modern browsers evolve decades in the future, opening <code>fallback.html</code> in any standard web viewer renders the entire document faithfully without external dependencies.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item" data-category="ownership">
+          <button class="faq-question" type="button" aria-expanded="false" onclick="toggleFaq(this)">
+            <div class="faq-q-left">
+              <span class="faq-cat-badge badge-ownership">Offline & Pricing</span>
+              <span class="faq-q-text">What is the difference between Live Studio (Free Web Demo) and Studio Pro Suite?</span>
+            </div>
+            <span class="faq-chevron" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p><strong>Live Studio (Free Web Demo):</strong> Runs directly in your browser with zero installation. Ideal for sandbox testing, viewing <code>.ldocx</code> files, experimenting with 3D blocks, and quick 1-slide previews.<br><br><strong>Studio Pro Suite ($49 Lifetime VIP):</strong> Full offline desktop application for Windows, macOS, and Linux (plus companion mobile packages for Android and iOS). Unlocks unlimited multi-slide presentations, local disk file access, GPU hardware acceleration, watermark-free PDF/print export, dynamic comparison tables, Merkle verification tools, and commercial publishing rights.</p>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="faq-no-results" id="faqNoResults" style="display: none;">
+      <p style="font-size: 1.1rem; color: #f1f5f9; margin-bottom: 8px;">No matching questions found.</p>
+      <p style="font-size: 0.9rem; color: #94a3b8;">Try searching for keywords like "3D", "Word", "PDF", "Merkle", "drift", "RAG", or "offline".</p>
+      <button type="button" onclick="clearFaqSearch()" style="margin-top: 14px; background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; color: #fbbf24; padding: 6px 16px; border-radius: 8px; cursor: pointer; font-weight: 700;">Reset Filters</button>
+    </div>
+
+    <!-- Bottom Action Card -->
+    <div class="faq-cta-card">
+      <div class="faq-cta-content">
+        <h4 style="font-size: 1.25rem; font-weight: 800; color: #f8fafc; margin-bottom: 6px;">Have an engineering or integration question?</h4>
+        <p style="font-size: 0.95rem; color: #94a3b8; margin: 0;">Test the living document pipeline live in your browser sandbox, or inspect our zero-dependency SDK on GitHub.</p>
+      </div>
+      <div class="faq-cta-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="/live-studio" class="btn-primary" style="text-decoration: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; background: linear-gradient(135deg, #f59e0b, #d97706); color: #090d16; display: inline-flex; align-items: center; gap: 6px;">
+          <span>&#9889;</span><span>Launch Live Studio</span>
+        </a>
+        <a href="/pricing" class="btn-secondary" style="text-decoration: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.16); color: #f8fafc; display: inline-flex; align-items: center; gap: 6px;">
+          <span>&#128142;</span><span>Compare Plans</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Schema.org FAQPage Structured Data (AI Grounding & Rich Snippets) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why can't I create a realistic, interactive document showoff using PDF or Microsoft Word?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Traditional formats like Adobe PDF and Microsoft Word were engineered over 30 years ago as static \"digital printer paper\". They are restricted to frozen, flat 2D images and static text. When designers, engineers, or product teams want to showcase realistic 3D CAD parts, interactive models, or live data in a client report, PDF forces them to paste lifeless 2D screenshots.  The LDOC Solution: The Living Document Format (.ldocx) transforms documents into reactive software. You can embed hardware-accelerated 60 FPS Three.js 3D WebGL scenes directly on the page. Clients can rotate, zoom, and inspect full .GLTF, .OBJ, and .STL CAD assemblies with natural mouse or multi-touch gestures\u2014no 15GB CAD software required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can clients and stakeholders inspect 3D engineering models on mobile or tablets without heavy CAD software?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Legacy CAD review requires recipients to either purchase expensive CAD seats ($2,000+/year) or install 10GB\u201315GB desktop software like AutoCAD or SolidWorks. With LDOC Studio and the standalone LDOC Viewer (<4MB), anyone on Windows, macOS, Linux, Android, or iOS can open a .ldocx file and interact with full 3D models with zero software installation, zero cloud login, and zero subscription fees."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can text wrap smoothly around 3D models and interactive media without layout glitches?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. LDOC Studio features magazine-style obstacle exclusion carving powered by LdocTextLayout. Paragraphs dynamically flow around 3D canvas viewports and spatial cards using geometric margin carving, completely preventing bounding-box overlaps or forced browser reflow."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do Word documents and Google Docs shift formatting and wrap lines differently across computers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Traditional word processors rely on system-installed operating system fonts and browser DOM reflow heuristics. Opening a .docx file on Mac vs. Windows or mobile recalculates line widths differently, causing words to jump between lines, tables to break across pages, and headings to orphan.  The LDOC Solution: LDOC is built on the LdocTextLayout pure arithmetic layout engine (encapsulating @chenglou/pretext). Text layout is pre-computed using deterministic font metrics off-DOM. This guarantees 100% bit-for-bit identical line breaks, line counts, and bounding heights across the Editor, Viewer, and headless PDF export."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will my living document print or export to PDF exactly as it appears on my screen?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Unlike web pages where window.print() results in broken margins and unexpected page splits, LDOC Studio uses a predictive page-break flattener. The PDF export flattener uses the identical layout arithmetic as the live editor canvas, ensuring zero text drift and watermark-free publication print parity."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can Microsoft Word (.docx) files be silently edited or forged without detection?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. A .docx file is simply an unencrypted ZIP archive containing raw XML files (document.xml). Anyone can unzip the file, modify contract numbers or financial clauses, re-zip it, and Word will open it without any warning or error.  The LDOC Solution: Every .ldocx document integrates a cryptographic SHA-256 Merkle tree and Ed25519 digital signature manifest. Every paragraph, data block, and 3D asset is individually hashed. If even a single character or mesh coordinate is tampered with, LDOC Studio triggers an instant cryptographic alarm in under 15 milliseconds, pinpointing the exact compromised block."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does .ldocx protect against macro viruses and arbitrary code execution?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Microsoft Office macros (VBA) remain one of the top enterprise security threat vectors. LDOC eliminates arbitrary code execution entirely. Instead of executable macros, document interactivity is powered by a sandboxed, deterministic Abstract Syntax Tree (AST). Mathematical formulas and reactive sliders run in an isolated reactive DAG with zero access to system files, shell commands, or unauthorized network APIs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is extracting text and tables from PDFs so unreliable and expensive for AI pipelines (RAG)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PDFs do not store semantic paragraphs, tables, or sections; they only store raw graphical glyph draw calls like <em>\"draw character 'A' at coordinate (142, 580)\"</em>. AI pipelines must burn huge GPU compute costs running heuristic OCR models that routinely scramble financial tables, misread multi-column articles, and hallucinate reading order.  The LDOC Solution: A .ldocx document is an AI-native JSON AST. AI agents, LangChain, LlamaIndex, or custom RAG pipelines can ingest documents via npm install ldoc-sdk in under 2 milliseconds. Tables, headings, code blocks, and 3D descriptions retain 100% structural fidelity with zero OCR errors and zero GPU extraction overhead."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can AI assistants like ChatGPT, Claude, and Gemini generate or inspect .ldocx files?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because .ldocx documents follow an open, well-typed JSON schema (manifest.json + document.json), AI models can programmatically generate, inspect, and update living documents directly using standard JSON tooling or the official @ldoc/sdk TypeScript/Node.js API."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I lose access to my documents if I don't have internet or cancel a subscription?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Never. Cloud tools like Google Docs, Notion, and Microsoft 365 store your intellectual property in proprietary cloud databases\u2014if your subscription lapses or internet drops, you are locked out. LDOC is strictly Local-First and Offline-First. Your files are self-contained .ldocx files on your disk. You own the files forever with zero cloud dependency."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will a .ldocx file still be readable 20 years from now?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every .ldocx file bundles a self-contained, standalone fallback.html archival viewer inside its container. Even if LDOC Studio or modern browsers evolve decades in the future, opening fallback.html in any standard web viewer renders the entire document faithfully without external dependencies."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between Live Studio (Free Web Demo) and Studio Pro Suite?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Live Studio (Free Web Demo): Runs directly in your browser with zero installation. Ideal for sandbox testing, viewing .ldocx files, experimenting with 3D blocks, and quick 1-slide previews.  Studio Pro Suite ($49 Lifetime VIP): Full offline desktop application for Windows, macOS, and Linux (plus companion mobile packages for Android and iOS). Unlocks unlimited multi-slide presentations, local disk file access, GPU hardware acceleration, watermark-free PDF/print export, dynamic comparison tables, Merkle verification tools, and commercial publishing rights."
+      }
+    }
+  ]
+}
+</script>
+
+<script>
+// FAQ Accordion & Filtering Engine
+function toggleFaq(btn) {
+  var item = btn.closest('.faq-item');
+  var isOpen = item.classList.contains('active');
+  
+  // Close all other open items for a clean accordion experience
+  var allItems = document.querySelectorAll('.faq-item');
+  allItems.forEach(function(el) {
+    if (el !== item) {
+      el.classList.remove('active');
+      var b = el.querySelector('.faq-question');
+      if (b) b.setAttribute('aria-expanded', 'false');
+    }
+  });
+  
+  if (isOpen) {
+    item.classList.remove('active');
+    btn.setAttribute('aria-expanded', 'false');
+  } else {
+    item.classList.add('active');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+}
+
+var currentFaqCategory = 'all';
+
+function filterFaq(cat, btn) {
+  currentFaqCategory = cat;
+  
+  // Update pill active state
+  var pills = document.querySelectorAll('.faq-pill');
+  pills.forEach(function(p) { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
+  if (btn) {
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+  }
+  
+  applyFaqFilters();
+}
+
+function applyFaqFilters() {
+  var query = (document.getElementById('faqSearchInput').value || '').trim().toLowerCase();
+  var clearBtn = document.getElementById('faqClearBtn');
+  if (clearBtn) clearBtn.style.display = query.length > 0 ? 'flex' : 'none';
+  
+  var items = document.querySelectorAll('.faq-item');
+  var visibleCount = 0;
+  
+  items.forEach(function(item) {
+    var itemCat = item.getAttribute('data-category');
+    var catMatch = (currentFaqCategory === 'all') || (itemCat === currentFaqCategory);
+    
+    var textContent = item.textContent.toLowerCase();
+    var queryMatch = !query || textContent.indexOf(query) !== -1;
+    
+    if (catMatch && queryMatch) {
+      item.style.display = 'block';
+      visibleCount++;
+    } else {
+      item.style.display = 'none';
+    }
+  });
+  
+  var noRes = document.getElementById('faqNoResults');
+  if (noRes) noRes.style.display = visibleCount === 0 ? 'block' : 'none';
+}
+
+function clearFaqSearch() {
+  var input = document.getElementById('faqSearchInput');
+  if (input) {
+    input.value = '';
+    input.focus();
+  }
+  currentFaqCategory = 'all';
+  var pills = document.querySelectorAll('.faq-pill');
+  pills.forEach(function(p) {
+    var isAll = p.getAttribute('data-category') === 'all';
+    p.classList.toggle('active', isAll);
+    p.setAttribute('aria-selected', isAll ? 'true' : 'false');
+  });
+  applyFaqFilters();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var searchInput = document.getElementById('faqSearchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', applyFaqFilters);
+  }
+});
+</script>
+
+
+  <!-- FOOTER -->
  <footer class="site-footer">
  <div class="container">
  <div class="footer-grid">
