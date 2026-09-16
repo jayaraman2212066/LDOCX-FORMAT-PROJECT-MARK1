@@ -84,30 +84,6 @@ package_zip(viewer_dir, os.path.join(workspace, 'ios-dist', 'ldoc-viewer-ios.zip
 if os.path.exists(ios_dir):
     package_zip(ios_dir, os.path.join(workspace, 'ios-dist', 'ldoc-ios-xcode-project.zip'))
 
-# Replicate to downloads/ folders
-downloads_dirs = [
-    os.path.join(workspace, 'downloads'),
-    os.path.join(workspace, 'public', 'downloads'),
-    os.path.join(workspace, 'app', 'viewer', 'downloads')
-]
-for d in downloads_dirs:
-    os.makedirs(d, exist_ok=True)
-    for src in [
-        os.path.join(workspace, 'dist', 'ldoc-editor-windows.zip'),
-        os.path.join(workspace, 'dist', 'ldoc-viewer-windows.zip'),
-        os.path.join(workspace, 'dist', 'ldoc-dev-sdk.zip'),
-        os.path.join(workspace, 'linux-dist', 'ldoc-editor-linux.tar.gz'),
-        os.path.join(workspace, 'linux-dist', 'ldoc-viewer-linux.tar.gz'),
-        os.path.join(workspace, 'ios-dist', 'ldoc-editor-ios.zip'),
-    ]:
-        if os.path.exists(src):
-            dst = os.path.join(d, os.path.basename(src))
-            try:
-                if os.path.exists(dst):
-                    try: os.remove(dst)
-                    except Exception: pass
-                shutil.copy2(src, dst)
-            except Exception as ce:
-                pass
 
-print('All distribution archives packaged and synced.')
+print('All distribution archives packaged.')
+

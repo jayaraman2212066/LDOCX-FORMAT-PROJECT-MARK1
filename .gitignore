@@ -18,7 +18,19 @@ target/
 # Large installers / redistributables
 redist/
 output/
+tests/output/
+logs/
 *.log
+
+# Build distribution output directories
+dist/
+android-dist/
+ios-dist/
+linux-dist/
+mac-dist/
+packages/ldoc-studio/*.zip
+packages/ldoc-studio/electron/
+**/electron/
 
 # Environment secrets and API keys
 .env
@@ -43,9 +55,5 @@ node_modules/
 scratch/
 **/scratch/
 
-# Desktop distributions
-# (downloads/ hosted statically in repo/site)
-packages/ldoc-studio/*.zip
-packages/ldoc-studio/electron/
-**/electron/
+
 
