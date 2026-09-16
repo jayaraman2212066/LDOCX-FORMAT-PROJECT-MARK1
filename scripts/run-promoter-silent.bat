@@ -3,8 +3,8 @@ cd /d "d:\ANDROID_STD\PROJECT_CUSTOMER_WEBSITE\LDOCX-FORMAT-PROJECT-MARK1"
 if not exist "logs" mkdir "logs"
 echo [%date% %time%] Daily Promotion Runner triggered >> "logs\ad-scheduler.log"
 
-rem Force clean switch to freemium-desktop-suite so uncommitted edits on other branches cannot block it
-git checkout -f freemium-desktop-suite >> "logs\ad-scheduler.log" 2>&1
+rem Ensure we are on main branch so promotional scripts run against production
+git checkout -f main >> "logs\ad-scheduler.log" 2>&1
 
 if not exist "scripts\auto-ad-scheduler.js" (
     echo [%date% %time%] ERROR: scripts\auto-ad-scheduler.js not found! >> "logs\ad-scheduler.log"
