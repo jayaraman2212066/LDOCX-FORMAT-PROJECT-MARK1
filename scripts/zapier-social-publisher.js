@@ -67,6 +67,7 @@ async function callZapierTool(toolName, args, token) {
       'Accept': 'application/json, text/event-stream',
       'Authorization': 'Bearer ' + token
     },
+    signal: AbortSignal.timeout(45000),
     body: JSON.stringify({
       jsonrpc: '2.0',
       id: Date.now(),

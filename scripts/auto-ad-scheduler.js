@@ -58,7 +58,23 @@ async function postAdByIndex(adIndex, method = 'share_now', { postYouTube = true
   logMsg(`📱 9:16 Shorts Video: ${adVideo}`);
   logMsg(`🖼️ Poster: ${adPoster}`);
 
-  const results = await publishSinglePost({
+  const results = [];
+
+  // 1. Dispatch Email Broadcast FIRST (Direct to 24 SSN Batches & Inbox)
+  if (method === 'share_now' && postEmail) {
+    try {
+      logMsg(`📧 Dispatching email broadcast to SSN College batches with referral CC FIRST...`);
+      const emailRes = await broadcastAdEmail(ad.index);
+      results.push({ channel: 'Gmail (SSN College Batches)', result: emailRes });
+      logMsg(`✅ Gmail broadcast dispatched successfully!`);
+    } catch (e) {
+      logMsg(`❌ Email broadcast error: ${e.message}`);
+      results.push({ channel: 'Gmail (SSN College Batches)', error: e.message });
+    }
+  }
+
+  // 2. Dispatch to Social Media Channels (LinkedIn, Threads, Instagram, Discord, YouTube)
+  const socialResults = await publishSinglePost({
     linkedinText: ad.linkedin,
     threadsText: ad.threads,
     instagramText: ad.instagram,
@@ -73,16 +89,7 @@ async function postAdByIndex(adIndex, method = 'share_now', { postYouTube = true
     youtubePrivacy: 'public'
   });
 
-  if (method === 'share_now' && postEmail) {
-    try {
-      logMsg(`📧 Dispatching email broadcast to SSN College batches with referral CC...`);
-      const emailRes = await broadcastAdEmail(ad.index);
-      results.push({ channel: 'Gmail (SSN College Batches)', result: emailRes });
-    } catch (e) {
-      logMsg(`❌ Email broadcast error: ${e.message}`);
-      results.push({ channel: 'Gmail (SSN College Batches)', error: e.message });
-    }
-  }
+  results.push(...socialResults);
 
   const todayStr = new Date().toISOString().split('T')[0];
   state.lastRunDate = todayStr;
