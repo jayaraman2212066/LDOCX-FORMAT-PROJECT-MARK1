@@ -3951,10 +3951,11 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 
 <!-- STUDIO COMPARISON & PRE-LAUNCH TIER BAR -->
 <div class="studio-tier-bar" style="background:linear-gradient(90deg, #18152e 0%, #0d1322 50%, #171c2d 100%);border-bottom:1px solid rgba(139,92,246,0.3);padding:6px 20px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#cbd5e1;z-index:90;position:relative;">
-  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><span style="background:rgba(139,92,246,0.25);border:1px solid rgba(139,92,246,0.45);color:#c084fc;font-weight:800;font-size:10px;padding:3px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:0.5px;">Live Studio (Free Web Demo)</span>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><span onclick="openProFeaturesModal()" title="Click to view Pro vs Web Demo comparison" style="background:rgba(139,92,246,0.25);border:1px solid rgba(139,92,246,0.45);color:#c084fc;font-weight:800;font-size:10px;padding:3px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;">Live Studio (Free Web Demo) ⚡</span>
     <span style="color:#94a3b8;font-size:11.5px">Browser sandbox • Standard WebGL • 1-slide previews for PDF/DOCX/3D</span>
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
+    <button type="button" onclick="openProFeaturesModal()" style="background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.4);color:#fbbf24;font-weight:800;font-size:11.5px;padding:4px 10px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s ease;"><span>✨ Pro vs Web Demo</span></button>
     <a href="/pricing" style="color:#38bdf8;text-decoration:none;font-weight:700;font-size:11.5px;padding:4px 10px;border-radius:6px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);display:inline-flex;align-items:center;gap:5px;"><span>💎</span><span>Pricing &amp; Plans</span></a>
     <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;text-decoration:none;font-weight:800;font-size:11.5px;padding:5px 14px;border-radius:6px;box-shadow:0 2px 10px rgba(245,158,11,0.35);display:inline-flex;align-items:center;gap:6px;transition:all .15s ease;"><span>⭐ Buy License</span></a>
   </div>
@@ -20570,5 +20571,196 @@ window.loadPretextLivingShowcase = function() {
   }
 };
 </script>
+
+<!-- ── PRO VS WEB DEMO TRANSPARENT MODAL ────────────────────────────────────── -->
+<script>
+window.openProFeaturesModal = function() {
+  var modal = document.getElementById('pro-features-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'pro-features-modal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(7,10,19,0.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;animation:proModalFadeIn 0.22s ease;font-family:\'Plus Jakarta Sans\',-apple-system,BlinkMacSystemFont,sans-serif;';
+    document.body.appendChild(modal);
+
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) window.closeProFeaturesModal();
+    });
+  }
+
+  modal.style.display = 'flex';
+  modal.innerHTML = `
+    <div style="background:linear-gradient(135deg, rgba(16,24,43,0.96) 0%, rgba(9,13,24,0.98) 100%);border:1.5px solid rgba(245,158,11,0.45);border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,0.85), 0 0 50px rgba(245,158,11,0.18);width:100%;max-width:880px;max-height:92vh;overflow-y:auto;box-sizing:border-box;color:#cbd5e1;position:relative;">
+      
+      <!-- Top Glow Header -->
+      <div style="padding:20px 24px 16px;background:linear-gradient(90deg, rgba(245,158,11,0.18) 0%, rgba(139,92,246,0.18) 50%, rgba(56,189,248,0.14) 100%);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+        <div>
+          <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);color:#fbbf24;font-size:11px;font-weight:800;padding:3px 10px;border-radius:99px;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">
+            <span>⭐</span><span>Exclusive Native Multi-OS Suite vs. Free Web Demo</span>
+          </div>
+          <h3 style="margin:0 0 6px;font-size:22px;font-weight:800;color:#f8fafc;letter-spacing:-0.02em;">
+            Experience Full Power: LDOC Studio Pro Desktop Suite
+          </h3>
+          <p style="margin:0;font-size:13px;color:#94a3b8;line-height:1.5;">
+            You are currently exploring the <strong>Free Web Demo sandbox</strong>. Upgrade to our native downloadable Desktop &amp; Mobile Pro applications for unthrottled performance and full disk control.
+          </p>
+        </div>
+        <button type="button" onclick="window.closeProFeaturesModal()" aria-label="Close modal" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#94a3b8;font-size:16px;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .15s ease;flex-shrink:0;">✕</button>
+      </div>
+
+      <!-- Supported OS Badges Strip -->
+      <div style="padding:10px 24px;background:rgba(0,0,0,0.25);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11.5px;color:#94a3b8;">
+        <span style="font-weight:700;color:#cbd5e1;">Available Native Apps:</span>
+        <span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px;color:#f1f5f9;border:1px solid rgba(255,255,255,0.1);">💻 Windows (.exe / .zip)</span>
+        <span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px;color:#f1f5f9;border:1px solid rgba(255,255,255,0.1);">🍏 macOS (.dmg)</span>
+        <span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px;color:#f1f5f9;border:1px solid rgba(255,255,255,0.1);">🐧 Linux (.AppImage / .tar.gz)</span>
+        <span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px;color:#f1f5f9;border:1px solid rgba(255,255,255,0.1);">📱 Android (.apk v1/v2/v3)</span>
+        <span style="background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:6px;color:#f1f5f9;border:1px solid rgba(255,255,255,0.1);">📱 iOS (PWA / Xcode)</span>
+      </div>
+
+      <!-- Side-by-Side Comparison Grid -->
+      <div style="padding:22px 24px;display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+        
+        <!-- Column 1: Live Studio (Web Demo) -->
+        <div style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div>
+                <div style="font-size:16px;font-weight:800;color:#f1f5f9;">Live Studio Web Demo</div>
+                <div style="font-size:11.5px;color:#64748b;">Current In-Browser Sandbox</div>
+              </div>
+              <span style="background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.35);color:#c084fc;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px;">Active Now</span>
+            </div>
+            
+            <ul style="list-style:none;padding:0;margin:0 0 16px;font-size:12.5px;line-height:1.75;display:flex;flex-direction:column;gap:6px;">
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#cbd5e1;">
+                <span style="color:#10b981;font-weight:bold;">✓</span> <span>Zero-install instant browser testing</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#cbd5e1;">
+                <span style="color:#10b981;font-weight:bold;">✓</span> <span>Standard Three.js WebGL orbit</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#94a3b8;">
+                <span style="color:#f59e0b;">⚠️</span> <span>1-slide preview mode for PDF/DOCX/3D</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#94a3b8;">
+                <span style="color:#f59e0b;">⚠️</span> <span>Ephemeral browser storage (no direct disk save)</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#94a3b8;">
+                <span style="color:#f59e0b;">⚠️</span> <span>Standard browser CPU throttling</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#94a3b8;">
+                <span style="color:#f59e0b;">⚠️</span> <span>Watermarked print &amp; PDF flattener export</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#94a3b8;">
+                <span style="color:#f59e0b;">⚠️</span> <span>No native OS file associations (.ldocx)</span>
+              </li>
+            </ul>
+          </div>
+
+          <button type="button" onclick="window.closeProFeaturesModal()" style="width:100%;padding:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:8px;color:#f1f5f9;font-weight:700;font-size:12px;cursor:pointer;transition:all .15s ease;">
+            Continue in Web Demo Sandbox
+          </button>
+        </div>
+
+        <!-- Column 2: Studio Pro Suite -->
+        <div style="background:linear-gradient(180deg, rgba(245,158,11,0.09) 0%, rgba(139,92,246,0.09) 100%);border:1.5px solid rgba(245,158,11,0.45);border-radius:14px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 30px rgba(245,158,11,0.12);">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div>
+                <div style="font-size:16px;font-weight:800;color:#fbbf24;">LDOC Studio Pro Suite</div>
+                <div style="font-size:11.5px;color:#a78bfa;">Native Desktop &amp; Mobile ($49 Lifetime)</div>
+              </div>
+              <span style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#090d16;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px;">PRO UNLOCKED</span>
+            </div>
+
+            <ul style="list-style:none;padding:0;margin:0 0 16px;font-size:12.5px;line-height:1.75;display:flex;flex-direction:column;gap:6px;">
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#f8fafc;">
+                <span style="color:#f59e0b;font-weight:bold;">⚡</span> <span><strong>120Hz Discrete GPU Acceleration</strong> (Smooth 3D CAD)</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#f8fafc;">
+                <span style="color:#f59e0b;font-weight:bold;">📁</span> <span><strong>100% Air-Gapped Offline Filesystem</strong> (Save directly to disk)</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#f8fafc;">
+                <span style="color:#f59e0b;font-weight:bold;">📄</span> <span><strong>Unlimited Multi-Slide Decks</strong> &amp; living documents</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#f8fafc;">
+                <span style="color:#f59e0b;font-weight:bold;">🛡️</span> <span><strong>SHA-256 Merkle Signer</strong> &amp; tamper alarm (&lt;15ms)</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#f8fafc;">
+                <span style="color:#f59e0b;font-weight:bold;">🖨️</span> <span><strong>100% Watermark-Free Export</strong> (Publication PDF / Print)</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#f8fafc;">
+                <span style="color:#f59e0b;font-weight:bold;">📦</span> <span><strong>All 7 Native Packages Included</strong> (Win/Mac/Linux/Android/iOS)</span>
+              </li>
+              <li style="display:flex;align-items:flex-start;gap:8px;color:#f8fafc;">
+                <span style="color:#f59e0b;font-weight:bold;">💼</span> <span><strong>Commercial Rights &amp; Lifetime Updates</strong> (No subscription)</span>
+              </li>
+            </ul>
+          </div>
+
+          <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" style="width:100%;box-sizing:border-box;padding:11px;background:linear-gradient(135deg,#f59e0b,#d97706);border:none;border-radius:8px;color:#090d16;font-weight:800;font-size:13px;cursor:pointer;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 12px rgba(245,158,11,0.35);">
+            <span>⭐</span><span>Unlock Studio Pro Lifetime — $49</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Bottom Action & Dismiss Footer -->
+      <div style="padding:14px 24px 18px;background:rgba(0,0,0,0.35);border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+        <span style="font-size:11.5px;color:#64748b;">
+          🔒 30-Day Money-Back Guarantee • Instant License Delivery • 100% Offline-First
+        </span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <a href="/pricing" style="color:#38bdf8;text-decoration:none;font-weight:700;font-size:12px;padding:6px 12px;border-radius:6px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);">
+            💎 Compare All Plans &amp; Downloads
+          </a>
+          <button type="button" onclick="window.closeProFeaturesModal()" style="background:none;border:none;color:#94a3b8;font-size:12px;cursor:pointer;text-decoration:underline;padding:6px 8px;">
+            Dismiss &amp; Enter Web Demo
+          </button>
+        </div>
+      </div>
+
+    </div>
+  `;
+};
+
+window.closeProFeaturesModal = function() {
+  var modal = document.getElementById('pro-features-modal');
+  if (modal) modal.style.display = 'none';
+  try {
+    sessionStorage.setItem('ldoc_pro_modal_seen', 'true');
+  } catch (e) {}
+};
+
+// Listen for Escape key
+window.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') window.closeProFeaturesModal();
+});
+
+// Auto-trigger transparent pop up on entering live-studio
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    var hasSeen = sessionStorage.getItem('ldoc_pro_modal_seen');
+    var isForced = window.location.hash.indexOf('pro') !== -1 || window.location.hash.indexOf('compare') !== -1;
+    if (!hasSeen || isForced) {
+      setTimeout(function() {
+        if (typeof window.openProFeaturesModal === 'function') {
+          window.openProFeaturesModal();
+        }
+      }, 650);
+    }
+  } catch (e) {}
+});
+</script>
+<style>
+@keyframes proModalFadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+@media (max-width: 720px) {
+  #pro-features-modal > div > div:nth-child(3) {
+    grid-template-columns: 1fr !important;
+  }
+}
+</style>
+
 </body>
 </html>
