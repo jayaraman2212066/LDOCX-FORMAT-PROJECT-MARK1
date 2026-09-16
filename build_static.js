@@ -52,7 +52,7 @@ assets.forEach(a => {
   }
 });
 
-// Copy distribution artifacts to downloads/ for direct website delivery
+// Sync Pro downloads from downloads/ to public/downloads/ and app/viewer/downloads/
 const rootDl = path.join(__dirname, 'downloads');
 const pubDl = path.join(publicDir, 'downloads');
 const viewDl = path.join(viewerDir, 'downloads');
@@ -61,25 +61,15 @@ const viewDl = path.join(viewerDir, 'downloads');
   if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
 });
 
-const distFiles = [
-  { src: path.join(__dirname, 'android-dist', 'LDOC-Studio.apk'), name: 'LDOC-Studio.apk' },
-  { src: path.join(__dirname, 'dist', 'ldoc-dev-sdk.zip'), name: 'ldoc-dev-sdk.zip' },
-  { src: path.join(__dirname, 'dist', 'setup.exe'), name: 'setup.exe' },
-  { src: path.join(__dirname, 'dist', 'ldoc-editor-windows.zip'), name: 'ldoc-editor-windows.zip' },
-  { src: path.join(__dirname, 'dist', 'ldoc-viewer-windows.zip'), name: 'ldoc-viewer-windows.zip' },
-  { src: path.join(__dirname, 'mac-dist', 'LDOC-Free-Suite.dmg'), name: 'LDOC-Free-Suite.dmg' },
-  { src: path.join(__dirname, 'linux-dist', 'ldoc-editor-linux.tar.gz'), name: 'ldoc-editor-linux.tar.gz' },
-  { src: path.join(__dirname, 'linux-dist', 'ldoc-viewer-linux.tar.gz'), name: 'ldoc-viewer-linux.tar.gz' },
-  { src: path.join(__dirname, 'ios-dist', 'ldoc-editor-ios.zip'), name: 'ldoc-editor-ios.zip' }
-];
-
-distFiles.forEach(f => {
-  if (fs.existsSync(f.src)) {
-    try { fs.copyFileSync(f.src, path.join(rootDl, f.name)); } catch(e){}
-    try { fs.copyFileSync(f.src, path.join(pubDl, f.name)); } catch(e){}
-    try { fs.copyFileSync(f.src, path.join(viewDl, f.name)); } catch(e){}
-  }
-});
+if (fs.existsSync(rootDl)) {
+  fs.readdirSync(rootDl).forEach(file => {
+    const srcFile = path.join(rootDl, file);
+    if (fs.statSync(srcFile).isFile()) {
+      try { fs.copyFileSync(srcFile, path.join(pubDl, file)); } catch(e){}
+      try { fs.copyFileSync(srcFile, path.join(viewDl, file)); } catch(e){}
+    }
+  });
+}
 
   console.log('✓ Public and app/viewer output directories successfully assembled with all dual routes, downloads, and shared core modules!');
 } catch (err) {
