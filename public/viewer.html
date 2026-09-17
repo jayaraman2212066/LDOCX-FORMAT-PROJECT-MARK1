@@ -3718,9 +3718,20 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <script src="ldoc-config.js"></script>
 <script src="ldoc-toast.js"></script>
 <script src="ldoc-text-layout.js"></script>
+<script src="ldoc-shape-engine.js"></script>
+<script src="ldoc-reactive-engine.js"></script>
+<script src="ldoc-3d-inspector.js"></script>
+<script src="ldoc-quiz-engine.js"></script>
+<script src="ldoc-validator.js"></script>
 <script src="ldoc-parser.js"></script>
 <script src="ldoc-editor-core.js"></script>
 <script src="ldoc-shared-modals.js"></script>
+<script src="ldoc-template-engine.js"></script>
+<script src="ldoc-vector-editor.js"></script>
+<script src="ldoc-image-engine.js"></script>
+<script src="ldoc-diagram-engine.js"></script>
+<script src="ldoc-timeline-engine.js"></script>
+<script src="ldoc-plugin-api.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
@@ -3883,6 +3894,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
   <button class="toolbar-btn" id="ed-open-btn" onclick="document.getElementById('ed-file-input').click()" style="display:none">📂 Open</button>
   <input type="file" id="ed-file-input" accept=".ldocx,.ldoc" style="display:none" onchange="edOpenLdocxFile(event)">
   <button class="toolbar-btn primary" id="save-btn" onclick="saveDoc()" style="display:inline-flex;align-items:center;gap:6px" title="Save / Export .ldocx package">&#128190; Save .ldocx</button>
+  <button class="toolbar-btn" id="living-showcase-btn" onclick="window.open('gta6-vice-city-unleashed.ldoc.html', '_blank')" style="background:linear-gradient(135deg,#ec4899,#06b6d4);color:#fff;border:none;font-weight:800;display:inline-flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(236,72,153,0.4)" title="Open Full Screen Cinematic Living Showcase">◈ Living Showcase</button>
   <button class="toolbar-btn" id="pages-toggle-btn" onclick="togglePagesPanel()" style="display:none">&#9776; Pages</button>
   <button class="toolbar-btn primary" id="build-btn" onclick="buildAndView()" style="display:none">&#9654; Build &amp; View</button>
   <button class="toolbar-btn" id="build-save-btn" onclick="buildAndSave()" style="display:none">&#128190; Build &amp; Save</button>
@@ -10234,6 +10246,10 @@ async function renderDirectPresentation(manifest, extractedPages) {
 
   // Render pages directly into #page-canvas
   showViewer();
+  const docTheme = (manifest.theme || 'deck').toLowerCase();
+  if (typeof setPresentationMode === 'function') {
+    setPresentationMode(docTheme === 'vice_city' || docTheme === 'cyber' || docTheme === 'velocity' ? 'deck' : docTheme);
+  }
   const canvas = document.getElementById('page-canvas');
   canvas.innerHTML = '';
 
@@ -10830,27 +10846,8 @@ function executeCustomSandboxCode(rawCode, containerEl, uid) {
           if (isBabel && window.Babel) {
             sCode = window.Babel.transform(sCode, { presets: [['react', { runtime: 'classic' }]] }).code;
           }
-                // Secure sandboxed JSX execution via iframe
-      const jsxIframe = document.createElement('iframe');
-      jsxIframe.setAttribute('sandbox', 'allow-scripts');
-      jsxIframe.style.cssText = 'width:100%;height:400px;border:none;border-radius:8px;background:#0d1117;';
-      const jsxHtml = `<!DOCTYPE html><html><head>
-<script src="vendor/react.production.min.js"><\/script>
-<script src="vendor/react-dom.production.min.js"><\/script>
-<script src="vendor/three.min.js"><\/script>
-<script src="vendor/chart.min.js"><\/script>
-<style>body{margin:0;background:#0d1117;color:#e6edf3;font-family:system-ui;}#root{padding:12px;}</style>
-</head><body><div id="root"></div><script>
-try {
-  const container = document.getElementById('root');
-  ${jsCode}
-} catch(e) {
-  document.getElementById('root').innerHTML = '<pre style="color:#f87171">Error: ' + e.message + '</pre>';
-}
-<\/script></body></html>`;
-      jsxIframe.srcdoc = jsxHtml;
-      containerEl.innerHTML = '';
-      containerEl.appendChild(jsxIframe);
+          const fn = new Function('container', 'THREE', 'Chart', 'React', 'ReactDOM', sCode);
+          fn.call(containerEl, containerEl, window.THREE, window.Chart, window.React, window.ReactDOM);
         } catch (sErr) {
           renderError('Script Runtime Notice', sErr.message, sErr.stack);
         }
@@ -10925,27 +10922,12 @@ try {
         }
       }
 
-            // Secure sandboxed JSX execution via iframe
-      const jsxIframe = document.createElement('iframe');
-      jsxIframe.setAttribute('sandbox', 'allow-scripts');
-      jsxIframe.style.cssText = 'width:100%;height:400px;border:none;border-radius:8px;background:#0d1117;';
-      const jsxHtml = `<!DOCTYPE html><html><head>
-<script src="vendor/react.production.min.js"><\/script>
-<script src="vendor/react-dom.production.min.js"><\/script>
-<script src="vendor/three.min.js"><\/script>
-<script src="vendor/chart.min.js"><\/script>
-<style>body{margin:0;background:#0d1117;color:#e6edf3;font-family:system-ui;}#root{padding:12px;}</style>
-</head><body><div id="root"></div><script>
-try {
-  const container = document.getElementById('root');
-  ${jsCode}
-} catch(e) {
-  document.getElementById('root').innerHTML = '<pre style="color:#f87171">Error: ' + e.message + '</pre>';
-}
-<\/script></body></html>`;
-      jsxIframe.srcdoc = jsxHtml;
-      containerEl.innerHTML = '';
-      containerEl.appendChild(jsxIframe);
+      try {
+        const execFn = new Function('container', 'React', 'ReactDOM', 'THREE', 'Chart', jsCode);
+        execFn.call(containerEl, containerEl, window.React, window.ReactDOM, window.THREE, window.Chart);
+      } catch (runErr) {
+        renderError('Runtime Notice', runErr.message, runErr.stack);
+      }
     }
   } catch (err) {
     renderError('Sandbox Runtime Notice', err.message, err.stack);
@@ -11006,7 +10988,7 @@ function renderSection(nodes,container){
   }
 }
 
-function make3DImageCard(src,alt,parent){
+function make3DImageCard(src,alt,parent,node={}){
   if(!src){
     const ph=document.createElement('div');
     ph.style.cssText='background:var(--surface2);border:1px dashed var(--border);border-radius:16px;padding:24px;text-align:center;color:var(--text3);margin:16px 0';
@@ -11016,6 +10998,21 @@ function make3DImageCard(src,alt,parent){
   const inner=document.createElement('div');inner.className='img-inner';
   const badge=document.createElement('div');badge.className='img-3d-badge';badge.textContent='✨ Living Portrait';
   const img=document.createElement('img');img.src=src;img.alt=alt;
+
+  // Apply non-destructive CSS filters, transforms, and masks
+  const flt = (node && (node.filters || (node.style && node.style.filters))) || {};
+  const filterCss = `brightness(${flt.brightness !== undefined ? flt.brightness : 100}%) contrast(${flt.contrast !== undefined ? flt.contrast : 100}%) saturate(${flt.saturation !== undefined ? flt.saturation : 100}%) grayscale(${flt.grayscale || 0}%) blur(${flt.blur || 0}px)`;
+  const flipH = node && (node.flipH || (node.style && node.style.flipH));
+  const flipV = node && (node.flipV || (node.style && node.style.flipV));
+  const transCss = `${flipH ? 'scaleX(-1)' : ''} ${flipV ? 'scaleY(-1)' : ''}`.trim();
+  const mask = node && (node.mask || (node.style && node.style.mask));
+  if (mask === 'circle') inner.style.borderRadius = '50%';
+  else if (mask === 'rounded') inner.style.borderRadius = '20px';
+  else if (mask === 'hexagon') inner.style.clipPath = 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)';
+  else if (mask === 'star') inner.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+  img.style.filter = filterCss;
+  if (transCss) img.style.transform = transCss;
+
   img.onerror=()=>{wrap.className='';wrap.style.cssText='background:var(--surface2);border:1px dashed var(--border);border-radius:16px;padding:24px;text-align:center;color:var(--text3);margin:16px 0';wrap.textContent='[Image] '+alt;};
   const cap=document.createElement('div');cap.className='img-caption';cap.textContent=alt;
   inner.appendChild(badge);inner.appendChild(img);inner.appendChild(cap);
@@ -11305,6 +11302,68 @@ function renderBlockNode(node,parent){
       p.className='ldoc-rich-text ldoc-in-place-editable';
       p.innerHTML=window.sanitizeClipboardHtml ? window.sanitizeClipboardHtml(node.value || text || '') : (node.value || text || '');
       parent.appendChild(p);break;
+    }
+    case 'shape':{
+      const wrap = document.createElement('div');
+      wrap.className = 'ldoc-canvas-shape-wrap';
+      wrap.style.cssText = 'margin:14px 0;position:relative;display:inline-block;';
+      if (window.LDocShapeEngine && typeof window.LDocShapeEngine.generateSvgMarkup === 'function') {
+        wrap.innerHTML = window.LDocShapeEngine.generateSvgMarkup(node);
+      } else {
+        wrap.style.cssText += 'padding:16px;background:' + ((node.style && node.style.fill) || '#6366f1') + ';border-radius:10px;color:#fff;font-weight:700;';
+        wrap.textContent = (node.label && node.label.text) || node.shape_type || 'Vector Shape';
+      }
+      parent.appendChild(wrap);
+      break;
+    }
+    case 'image_card':{
+      const wrap = document.createElement('div');
+      wrap.className = 'ldoc-image-card-wrap';
+      const w = node.width || 320;
+      const h = node.height || 220;
+      const flt = node.filters || {};
+      const filterCss = `brightness(${flt.brightness !== undefined ? flt.brightness : 100}%) contrast(${flt.contrast !== undefined ? flt.contrast : 100}%) saturate(${flt.saturation !== undefined ? flt.saturation : 100}%) grayscale(${flt.grayscale || 0}%) blur(${flt.blur || 0}px)`;
+      const transCss = `${node.flipH ? 'scaleX(-1)' : ''} ${node.flipV ? 'scaleY(-1)' : ''}`.trim();
+      const clipStyle = node.mask === 'circle' ? 'border-radius:50%;' : (node.mask === 'rounded' ? 'border-radius:16px;' : `border-radius:${node.borderRadius || 8}px;`);
+      wrap.style.cssText = `margin:14px 0;width:${w}px;max-width:100%;height:${h}px;overflow:hidden;${clipStyle}box-shadow:0 8px 24px rgba(0,0,0,0.5);background:#111;position:relative;`;
+      if (node.url) {
+        wrap.innerHTML = `<img src="${node.url}" alt="${node.alt || 'Image'}" style="width:100%;height:100%;object-fit:${node.objectFit || 'cover'};filter:${filterCss};transform:${transCss || 'none'};display:block;" />`;
+      } else {
+        wrap.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:13px;">🖼️ Image Card</div>`;
+      }
+      parent.appendChild(wrap);
+      break;
+    }
+    case 'diagram':{
+      const wrap = document.createElement('div');
+      wrap.className = 'ldoc-canvas-diagram-wrap';
+      wrap.style.cssText = 'margin:14px 0;position:relative;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px;overflow:auto;';
+      if (node.title) {
+        const dTitle = document.createElement('div');
+        dTitle.style.cssText = 'font-size:12px;font-weight:700;color:#38bdf8;margin-bottom:8px';
+        dTitle.textContent = '🗺️ ' + node.title;
+        wrap.appendChild(dTitle);
+      }
+      if (window.LDocDiagramEngine && typeof window.LDocDiagramEngine.renderDiagramSvg === 'function') {
+        wrap.innerHTML += window.LDocDiagramEngine.renderDiagramSvg(node);
+      } else {
+        wrap.innerHTML += '<div style="color:#94a3b8;font-size:12px">Diagram Engine Ready</div>';
+      }
+      parent.appendChild(wrap);
+      break;
+    }
+    case 'custom_path':
+    case 'path':{
+      const wrap = document.createElement('div');
+      wrap.className = 'ldoc-canvas-path-wrap';
+      wrap.style.cssText = 'margin:14px 0;position:relative;display:flex;justify-content:center;';
+      if (window.LDocVectorEditor && typeof window.LDocVectorEditor.renderPathSvg === 'function') {
+        wrap.innerHTML = window.LDocVectorEditor.renderPathSvg(node);
+      } else {
+        wrap.innerHTML = '<svg width="200" height="80"><path d="' + (node.pathData || 'M 10 40 L 190 40') + '" stroke="' + (node.stroke || '#38bdf8') + '" stroke-width="2" fill="none"/></svg>';
+      }
+      parent.appendChild(wrap);
+      break;
     }
     case 'chart':{
       const card = document.createElement('div');
@@ -11616,13 +11675,13 @@ function renderBlockNode(node,parent){
     case 'image':{
       const imgSrc = node.src || assetUrl(node) || (node.style && node.style.src) || '';
       const imgAlt = (node.aria && node.aria.alt) || node.alt || node.value || 'Image';
-      make3DImageCard(imgSrc, imgAlt, parent);
+      make3DImageCard(imgSrc, imgAlt, parent, node);
       break;
     }
     case 'web_image':{
       const imgSrc = (node.style && node.style.src) || node.src || node.url || (node.style && node.style.url) || '';
       const imgAlt = (node.style && node.style.alt) || node.alt || node.value || 'Image';
-      make3DImageCard(imgSrc, imgAlt, parent);
+      make3DImageCard(imgSrc, imgAlt, parent, node);
       break;
     }
             case 'audio':case 'web_audio':{
@@ -12561,6 +12620,33 @@ function renderBlockNode(node,parent){
     }
     case 'quantum_sim':{
       renderQuantumSim(node, parent);
+      break;
+    }
+    case 'simulation':{
+      const simWrap = document.createElement('div');
+      simWrap.className = 'ldoc-sim-block-wrapper';
+      if (window.LDocReactiveEngine && typeof window.LDocReactiveEngine.generateSimulationCard === 'function') {
+        simWrap.innerHTML = window.LDocReactiveEngine.generateSimulationCard(node);
+      } else {
+        simWrap.style.cssText = 'padding:16px;background:rgba(15,23,42,0.9);border:1px solid #38bdf8;border-radius:12px;color:#f8fafc;margin:16px 0;';
+        simWrap.innerHTML = `<strong>⚡ Reactive Simulation:</strong> ${node.title || node.preset || 'Dynamic System'}`;
+      }
+      parent.appendChild(simWrap);
+      break;
+    }
+    case 'quiz':{
+      const quizWrap = document.createElement('div');
+      quizWrap.className = 'ldoc-quiz-block-wrapper';
+      if (window.LDocQuizEngine && typeof window.LDocQuizEngine.generateQuizCard === 'function') {
+        quizWrap.innerHTML = window.LDocQuizEngine.generateQuizCard(node);
+        if (window.LDocQuizEngine.registerQuizSpec) {
+          window.LDocQuizEngine.registerQuizSpec('quiz_' + (node.id || 'default'), node);
+        }
+      } else {
+        quizWrap.style.cssText = 'padding:16px;background:rgba(18,18,32,0.9);border:1px solid #a855f7;border-radius:12px;color:#f8fafc;margin:16px 0;';
+        quizWrap.innerHTML = `<strong>🎯 Knowledge Check:</strong> ${node.title || 'Interactive Assessment'}`;
+      }
+      parent.appendChild(quizWrap);
       break;
     }
     case 'balance_tuner':case 'horology_tuner':{
@@ -13856,7 +13942,25 @@ async function saveDoc(){
     return false;
   }
 
-  // 1. If URL has doc ID, try to open it with auto-retry
+  // 1. If URL has direct file param or ends with .ldocx, fetch and load directly
+  const directFile = params.get('file') || params.get('url') || (id && (id.endsWith('.ldocx') || id.endsWith('.ldoc')) ? id : null);
+  if (directFile) {
+    try {
+      showLoading(`Loading ${directFile}…`);
+      const res = await fetch(directFile);
+      if (res.ok) {
+        const blob = await res.blob();
+        await loadLdocxFileDirect(blob);
+        showViewer();
+        if (typeof showToast === 'function') showToast(`✓ Loaded ${directFile}`, 'ok');
+        return;
+      }
+    } catch (err) {
+      console.warn('Direct file URL load failed:', err);
+    }
+  }
+
+  // 1b. If URL has doc ID, try to open it with auto-retry
   if (id) {
     const success = await attemptOpen(id);
     if (success) return;

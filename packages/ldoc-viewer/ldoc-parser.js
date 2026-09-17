@@ -309,6 +309,25 @@
     if (typeof global.JSZip !== 'undefined') {
       return Promise.resolve(global.JSZip);
     }
+    if (typeof require === 'function') {
+      try {
+        var jsz = require('jszip');
+        global.JSZip = jsz;
+        return Promise.resolve(jsz);
+      } catch (_) {
+        try {
+          var jsz2 = require('../jszip.min.js');
+          global.JSZip = jsz2;
+          return Promise.resolve(jsz2);
+        } catch (_) {
+          try {
+            var jsz3 = require('./jszip.min.js');
+            global.JSZip = jsz3;
+            return Promise.resolve(jsz3);
+          } catch (_) {}
+        }
+      }
+    }
     return new Promise(function (resolve, reject) {
       var attempts = 0;
       var check = setInterval(function () {
@@ -318,11 +337,15 @@
           resolve(global.JSZip);
         } else if (attempts > 50) {
           clearInterval(check);
-          var script = document.createElement('script');
-          script.src = 'jszip.min.js';
-          script.onload = function () { resolve(global.JSZip); };
-          script.onerror = function () { reject(new Error('Unable to load JSZip dependency.')); };
-          document.head.appendChild(script);
+          if (typeof document !== 'undefined' && document.head) {
+            var script = document.createElement('script');
+            script.src = 'jszip.min.js';
+            script.onload = function () { resolve(global.JSZip); };
+            script.onerror = function () { reject(new Error('Unable to load JSZip dependency.')); };
+            document.head.appendChild(script);
+          } else {
+            reject(new Error('JSZip dependency is not loaded.'));
+          }
         }
       }, 50);
     });
@@ -339,6 +362,12 @@
   }
 
   function renderFallbackHtml(title, author, pages) {
+    if (typeof title === 'object' && title !== null) {
+      var doc = title;
+      title = (doc.manifest && doc.manifest.title) || doc.title || 'Untitled Document';
+      author = (doc.manifest && doc.manifest.author) || doc.author || 'Anonymous';
+      pages = (doc.document && doc.document.pages) || doc.pages || [];
+    }
     var body = '';
     (pages || []).forEach(function(p, pIdx) {
       body += '<section class="ldoc-page" id="' + escapeHtml(p.id || 'p_' + (pIdx + 1)) + '">\n';
@@ -364,6 +393,57 @@
           body += '      <p><strong>Mesh:</strong> ' + escapeHtml(b.model_type || 'glTF/STL Model') + '</p>\n';
           body += '      <p class="fallback-note"><em>View in LDOC Workstation for full WebGL 3D manipulation.</em></p>\n';
           body += '    </div>\n';
+        } else if (type === 'shape') {
+          var shapeEngine = (typeof global !== 'undefined' && global.LDocShapeEngine) || (typeof require === 'function' ? (function () { try { return require('./ldoc-shape-engine'); } catch(_) { return null; } })() : null);
+          if (shapeEngine && typeof shapeEngine.generateSvgMarkup === 'function') {
+            body += '    <div class="doc-shape" style="margin:16px 0;">' + shapeEngine.generateSvgMarkup(b) + '</div>\n';
+          } else {
+            body += '    <div class="doc-shape" style="padding:16px;background:' + escapeHtml((b.style && b.style.fill) || '#6366f1') + ';border-radius:' + escapeHtml((b.style && b.style.cornerRadius) || 8) + 'px;color:#fff;">' + escapeHtml((b.label && b.label.text) || b.shape_type || 'Shape') + '</div>\n';
+          }
+        } else if (type === 'image_card' || type === 'image' || type === 'web_image') {
+          var imgUrl = b.url || b.src || (b.data && b.data.url) || '';
+          body += '    <div class="doc-image-wrap" style="margin:16px 0;text-align:center;">\n';
+          if (imgUrl) {
+            body += '      <img src="' + escapeHtml(imgUrl) + '" alt="' + escapeHtml(b.alt || 'Document Image') + '" style="max-width:100%;height:auto;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);" />\n';
+          }
+          if (b.caption) {
+            body += '      <div style="font-size:12px;color:var(--text-muted);margin-top:6px;">' + escapeHtml(b.caption) + '</div>\n';
+          }
+          body += '    </div>\n';
+        } else if (type === 'video' || type === 'web_video') {
+          var poster = b.poster || '';
+          body += '    <div class="fallback-interactive" style="background:#000;padding:16px;border-radius:8px;margin:16px 0;">\n';
+          body += '      <div class="fallback-badge">▶ VIDEO MEDIA ARCHIVE</div>\n';
+          if (poster) {
+            body += '      <img src="' + escapeHtml(poster) + '" alt="' + escapeHtml(b.title || 'Video') + '" style="max-width:100%;border-radius:6px;margin:8px 0;" />\n';
+          }
+          body += '      <p><strong>Title:</strong> ' + escapeHtml(b.title || 'Embedded Video') + '</p>\n';
+          if (b.url) {
+            body += '      <p><a href="' + escapeHtml(b.url) + '" target="_blank" rel="noopener noreferrer" style="color:#60a5fa;">Watch external video stream &rarr;</a></p>\n';
+          }
+          body += '    </div>\n';
+        } else if (type === 'simulation') {
+          var simEngine = (typeof global !== 'undefined' && global.LDocReactiveEngine) || (typeof require === 'function' ? (function () { try { return require('./ldoc-reactive-engine'); } catch(_) { return null; } })() : null);
+          if (simEngine && typeof simEngine.generateSimulationCard === 'function') {
+            body += '    <div class="doc-simulation-wrap" style="margin:16px 0;">' + simEngine.generateSimulationCard(b) + '</div>\n';
+          } else {
+            body += '    <div class="fallback-interactive">\n';
+            body += '      <div class="fallback-badge">⚡ REACTIVE SIMULATION (ARCHIVE MODE)</div>\n';
+            body += '      <p><strong>' + escapeHtml(b.title || 'Dynamic Simulation') + '</strong> (' + escapeHtml(b.preset || 'custom') + ')</p>\n';
+            body += '      <p class="fallback-note"><em>Interactive simulation parameters available in LDOC Studio.</em></p>\n';
+            body += '    </div>\n';
+          }
+        } else if (type === 'quiz') {
+          var quizEngine = (typeof global !== 'undefined' && global.LDocQuizEngine) || (typeof require === 'function' ? (function () { try { return require('./ldoc-quiz-engine'); } catch(_) { return null; } })() : null);
+          if (quizEngine && typeof quizEngine.generateQuizCard === 'function') {
+            body += '    <div class="doc-quiz-wrap" style="margin:16px 0;">' + quizEngine.generateQuizCard(b) + '</div>\n';
+          } else {
+            body += '    <div class="fallback-interactive">\n';
+            body += '      <div class="fallback-badge">🎯 INTERACTIVE KNOWLEDGE CHECK</div>\n';
+            body += '      <p><strong>' + escapeHtml(b.title || 'Diagnostic Assessment') + '</strong></p>\n';
+            body += '      <p class="fallback-note"><em>Complete interactive grading in LDOC Studio/Viewer.</em></p>\n';
+            body += '    </div>\n';
+          }
         } else {
           body += '    <div class="doc-block">' + escapeHtml(textContent || JSON.stringify(b.data || '')) + '</div>\n';
         }
@@ -471,6 +551,7 @@
           totalBlocks++;
           if (!blk || typeof blk !== 'object' || !blk.type) {
             quarantinedCount++;
+            isRecovered = true;
             safeBlocks.push({
               id: 'blk_quarantine_' + bIdx,
               type: 'paragraph',

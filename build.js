@@ -32,12 +32,23 @@ try {
 console.log('\n▶ STEP 2: Synchronizing source modules from src/ across targets...');
 const coreModules = [
   'ldoc-text-layout.js',
+  'ldoc-shape-engine.js',
+  'ldoc-reactive-engine.js',
+  'ldoc-3d-inspector.js',
+  'ldoc-quiz-engine.js',
   'ldoc-editor-core.js',
+  'ldoc-validator.js',
   'ldoc-parser.js',
   'ldoc-export-engine.js',
   'ldoc-shared-modals.js',
   'ldoc-toast.js',
-  'ldoc-config.js'
+  'ldoc-config.js',
+  'ldoc-template-engine.js',
+  'ldoc-vector-editor.js',
+  'ldoc-image-engine.js',
+  'ldoc-diagram-engine.js',
+  'ldoc-timeline-engine.js',
+  'ldoc-plugin-api.js'
 ];
 
 const syncTargets = [
@@ -65,8 +76,11 @@ coreModules.forEach(mod => {
     fs.copyFileSync(srcFile, path.join(rootDir, mod));
   }
 
-  // Also sync to packages/ldoc-sdk for ldoc-text-layout.js and ldoc-parser.js
-  if (mod === 'ldoc-text-layout.js' || mod === 'ldoc-parser.js') {
+  // Also sync to packages/ldoc-sdk for core engine modules
+  if (mod === 'ldoc-text-layout.js' || mod === 'ldoc-parser.js' || mod === 'ldoc-validator.js' || mod === 'ldoc-shape-engine.js' ||
+      mod === 'ldoc-reactive-engine.js' || mod === 'ldoc-3d-inspector.js' || mod === 'ldoc-quiz-engine.js' ||
+      mod === 'ldoc-template-engine.js' || mod === 'ldoc-vector-editor.js' || mod === 'ldoc-image-engine.js' ||
+      mod === 'ldoc-diagram-engine.js' || mod === 'ldoc-timeline-engine.js' || mod === 'ldoc-plugin-api.js') {
     fs.copyFileSync(srcFile, path.join(rootDir, 'packages', 'ldoc-sdk', mod));
   }
 

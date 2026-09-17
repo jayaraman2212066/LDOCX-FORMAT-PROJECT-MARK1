@@ -39,10 +39,11 @@ const assets = [
   'jszip.min.js', 'ldoc_background_image.png', 'ldoc_logo.png', 'manifest.json',
   'video-poster.jpg', 'video-poster.webp', 'ai-brain.webp', 'ldoc_background_image.webp', 'ldoc_logo.webp',
   'robots.txt', 'sitemap.xml',
-  'ldoc-config.js', 'ldoc-toast.js', 'ldoc-text-layout.js', 'ldoc-parser.js', 'ldoc-editor-core.js', 'ldoc-shared-modals.js', 'ldoc-export-engine.js',
+  'ldoc-config.js', 'ldoc-toast.js', 'ldoc-text-layout.js', 'ldoc-shape-engine.js', 'ldoc-reactive-engine.js', 'ldoc-3d-inspector.js', 'ldoc-quiz-engine.js', 'ldoc-validator.js', 'ldoc-parser.js', 'ldoc-editor-core.js', 'ldoc-shared-modals.js', 'ldoc-export-engine.js',
+  'ldoc-template-engine.js', 'ldoc-vector-editor.js', 'ldoc-image-engine.js', 'ldoc-diagram-engine.js', 'ldoc-timeline-engine.js', 'ldoc-plugin-api.js',
   'LDOCX_ARCHITECTURE_AND_SECURITY_GUIDE.pdf', 'LDOCX_TECHNICAL_SPECIFICATION.pdf',
   'LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.pdf', 'LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md', 'LDOCX-FORMAT-SPECIFICATION.md', 'CONTENT.md',
-  'upscaled-videoad2.mp4'
+  'upscaled-videoad2.mp4', 'gta6-vice-city-unleashed.ldoc.html'
 ];
 
 assets.forEach(a => {

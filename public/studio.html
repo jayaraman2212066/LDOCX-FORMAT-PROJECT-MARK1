@@ -4144,10 +4144,21 @@ canvas, .three-canvas-wrap, #viewer-stage, #page-canvas, .conv-living-sheet {
 <script src="ldoc-config.js"></script>
 <script src="ldoc-toast.js"></script>
 <script src="ldoc-text-layout.js"></script>
+<script src="ldoc-shape-engine.js"></script>
+<script src="ldoc-reactive-engine.js"></script>
+<script src="ldoc-3d-inspector.js"></script>
+<script src="ldoc-quiz-engine.js"></script>
+<script src="ldoc-validator.js"></script>
 <script src="ldoc-parser.js"></script>
 <script src="ldoc-editor-core.js"></script>
 <script src="ldoc-shared-modals.js"></script>
 <script src="ldoc-export-engine.js"></script>
+<script src="ldoc-template-engine.js"></script>
+<script src="ldoc-vector-editor.js"></script>
+<script src="ldoc-image-engine.js"></script>
+<script src="ldoc-diagram-engine.js"></script>
+<script src="ldoc-timeline-engine.js"></script>
+<script src="ldoc-plugin-api.js"></script>
 <!-- Local Offline Vendor Libraries (Zero Outsource / 100% Offline Standalone) -->
 <script src="vendor/three.min.js"></script>
 <script>if(typeof THREE==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
@@ -4657,8 +4668,13 @@ html.ldoc-unlicensed body {
  <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
  <div class="dmenu-btn">Edit ▾</div>
  <div class="dmenu-dropdown">
+ <div class="dmenu-entry" onclick="LDocModals.showCommandPalette()"><span>⌘ Command Palette...</span><span class="hotkey">Ctrl+K</span></div>
+ <div class="dmenu-entry" onclick="LDocModals.showLayersModal()"><span>📚 Layers &amp; Hierarchy...</span><span class="hotkey">Ctrl+L</span></div>
+ <div class="dmenu-entry" onclick="LDocModals.showFindReplaceModal()"><span>🔍 Find &amp; Replace...</span><span class="hotkey">Ctrl+F</span></div>
+ <div class="dmenu-entry" onclick="LDocModals.showDocumentHealthModal()"><span>🩺 Document Health &amp; Diagnostics...</span></div>
+ <div class="dmenu-entry" onclick="LDocModals.showProceduralModal()"><span>⚡ Procedural Blueprint Explorer (36M+)...</span></div>
+ <div class="dmenu-divider"></div>
  <div class="dmenu-entry" onclick="toggleFreeTextTool()"><span> Add In-Canvas Free Text</span><span class="hotkey">Ctrl+T</span></div>
- <div class="dmenu-entry" onclick="toggleFindReplaceHud()"><span> Find &amp; Replace...</span><span class="hotkey">Ctrl+F</span></div>
  <div class="dmenu-entry" onclick="switchTab('editor')"><span> Open In-Place Block Editor</span></div>
  <div class="dmenu-divider"></div>
  <div class="dmenu-entry" onclick="prevSlide()"><span>Previous Slide</span><span class="hotkey">Left</span></div>
@@ -5147,6 +5163,49 @@ html.ldoc-unlicensed body {
           <span style="font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;align-self:center;margin-right:2px;white-space:nowrap;letter-spacing:0.5px">Add Element:</span>
           <button type="button" onclick="edScrollAddElements(-220)" class="ed-nav-scroll-btn" title="Scroll elements left" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:var(--text2);width:22px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;flex-shrink:0;transition:all .12s">‹</button>
           <div id="ed-add-elements-list" style="display:flex;align-items:center;gap:5px;flex:1;overflow-x:auto;white-space:nowrap;padding:2px 2px 4px 2px;min-width:0">
+            <!-- Vector Shape Dropdown -->
+            <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
+              <button class="ed-add-btn" type="button" onclick="toggleEdShapeMenu(event)" data-keywords="shape vector rect circle triangle star arrow hexagon callout" style="background:linear-gradient(135deg,rgba(56,189,248,.25),rgba(99,102,241,.25));color:#38bdf8;border-color:rgba(56,189,248,.5);font-weight:700">🔷 + Shape ▾</button>
+              <div id="ed-shapes-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(56,189,248,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:180px;padding:4px 0">
+                <div onclick="edAddBlock('shape', 'rectangle');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">▭ Rectangle</div>
+                <div onclick="edAddBlock('shape', 'rounded_rectangle');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">▢ Rounded Rectangle</div>
+                <div onclick="edAddBlock('shape', 'circle');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⚪ Circle</div>
+                <div onclick="edAddBlock('shape', 'ellipse');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⬭ Ellipse</div>
+                <div onclick="edAddBlock('shape', 'triangle');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">△ Triangle</div>
+                <div onclick="edAddBlock('shape', 'star');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⭐ 5-Point Star</div>
+                <div onclick="edAddBlock('shape', 'polygon');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⬡ Polygon (Hexagon)</div>
+                <div onclick="edAddBlock('shape', 'arrow');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">➔ Arrow</div>
+                <div onclick="edAddBlock('shape', 'line');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">― Line Segment</div>
+                <div onclick="edAddBlock('shape', 'callout');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">💬 Callout Bubble</div>
+                <div onclick="edAddBlock('shape', 'heart');toggleEdShapeMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">❤️ Heart</div>
+              </div>
+            </div>
+
+            <!-- Simulation Dropdown -->
+            <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
+              <button class="ed-add-btn" type="button" onclick="toggleEdSimMenu(event)" data-keywords="simulation physics math projectile pendulum epidemic sir ohms law oscillator compound interest" style="background:rgba(167,139,250,.2);color:#c084fc;border-color:rgba(167,139,250,.4);font-weight:700">🔬 + Sim ▾</button>
+              <div id="ed-sims-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(167,139,250,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:200px;padding:4px 0">
+                <div onclick="edAddBlock('simulation', 'projectile_motion');toggleEdSimMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(167,139,250,0.2)'" onmouseout="this.style.background='transparent'">🚀 Projectile Motion</div>
+                <div onclick="edAddBlock('simulation', 'ohms_law');toggleEdSimMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(167,139,250,0.2)'" onmouseout="this.style.background='transparent'">⚡ Ohm's Law Circuit</div>
+                <div onclick="edAddBlock('simulation', 'harmonic_oscillator');toggleEdSimMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(167,139,250,0.2)'" onmouseout="this.style.background='transparent'">⏱️ Harmonic Oscillator</div>
+                <div onclick="edAddBlock('simulation', 'compound_interest');toggleEdSimMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(167,139,250,0.2)'" onmouseout="this.style.background='transparent'">📈 Compound Interest</div>
+              </div>
+            </div>
+
+            <!-- Quiz Button -->
+            <button class="ed-add-btn" data-keywords="quiz test question interactive choice assessment learning" onclick="edAddBlock('quiz')" style="background:rgba(236,72,153,.2);color:#f472b6;border-color:rgba(236,72,153,.4);font-weight:700">❓ + Quiz</button>
+
+            <!-- Chart Dropdown -->
+            <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
+              <button class="ed-add-btn" type="button" onclick="toggleEdChartMenu(event)" data-keywords="chart bar line pie doughnut graph data visualizer" style="background:rgba(16,185,129,.2);color:#34d399;border-color:rgba(16,185,129,.4);font-weight:700">📊 + Chart ▾</button>
+              <div id="ed-charts-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(16,185,129,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:160px;padding:4px 0">
+                <div onclick="edAddBlock('chart', 'bar');toggleEdChartMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(16,185,129,0.2)'" onmouseout="this.style.background='transparent'">📊 Bar Chart</div>
+                <div onclick="edAddBlock('chart', 'line');toggleEdChartMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(16,185,129,0.2)'" onmouseout="this.style.background='transparent'">📈 Line Chart</div>
+                <div onclick="edAddBlock('chart', 'pie');toggleEdChartMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(16,185,129,0.2)'" onmouseout="this.style.background='transparent'">🥧 Pie Chart</div>
+                <div onclick="edAddBlock('chart', 'doughnut');toggleEdChartMenu()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(16,185,129,0.2)'" onmouseout="this.style.background='transparent'">🍩 Doughnut Chart</div>
+              </div>
+            </div>
+
             <button class="ed-add-btn" data-keywords="free text write note draft draw annotate pen" onclick="toggleFreeTextTool()" style="background:rgba(245,158,11,.25);color:#fef08a;border-color:var(--gold);font-weight:700">✍️ Free Text</button>
             <button class="ed-add-btn" data-keywords="pretext chip inline interactive badge button pay register token" onclick="openCustomChipModal()" style="background:rgba(56,189,248,.2);color:#7dd3fc;border-color:rgba(56,189,248,.4);font-weight:700">🏷️ +Chip</button>
             <button class="ed-add-btn" data-keywords="columns split magazine pretext 2-col 3-col 4-col balance" onclick="splitActiveTextIntoColumns(2)" style="background:rgba(192,132,252,.2);color:#c084fc;border-color:rgba(192,132,252,.4);font-weight:700">📰 2-Col</button>
@@ -5210,6 +5269,45 @@ html.ldoc-unlicensed body {
       </div>
     </div>
     <button class="slide-tool-btn" onclick="toggleFreeTextTool()" title="Write dynamic styled text" style="padding:2px 8px;font-size:11px">✍️ Add Text</button>
+    <!-- Align Dropdown -->
+    <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
+      <button class="slide-tool-btn" onclick="toggleEdAlignMenu(event)" title="Align selected blocks / text" style="padding:2px 8px;font-size:11px">📐 Align ▾</button>
+      <div id="ed-align-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(56,189,248,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:140px;padding:4px 0">
+        <div onclick="ldocUiAlign('left');toggleEdAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⇤ Align Left</div>
+        <div onclick="ldocUiAlign('center');toggleEdAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⇹ Align Center</div>
+        <div onclick="ldocUiAlign('right');toggleEdAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⇥ Align Right</div>
+        <div onclick="ldocUiAlign('top');toggleEdAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⤒ Align Top</div>
+        <div onclick="ldocUiAlign('middle');toggleEdAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⬍ Align Middle</div>
+        <div onclick="ldocUiAlign('bottom');toggleEdAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⤓ Align Bottom</div>
+      </div>
+    </div>
+
+    <!-- Distribute Dropdown -->
+    <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
+      <button class="slide-tool-btn" onclick="toggleEdDistributeMenu(event)" title="Distribute selected elements evenly" style="padding:2px 8px;font-size:11px">↔ Distribute ▾</button>
+      <div id="ed-distribute-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(56,189,248,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:160px;padding:4px 0">
+        <div onclick="ldocUiDistribute('horizontal');toggleEdDistributeMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">↔ Horizontally</div>
+        <div onclick="ldocUiDistribute('vertical');toggleEdDistributeMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">↕ Vertically</div>
+      </div>
+    </div>
+
+    <!-- Group / Ungroup Buttons -->
+    <button class="slide-tool-btn" onclick="ldocUiGroup()" title="Group selected elements into a single unit" style="padding:2px 8px;font-size:11px">🔗 Group</button>
+    <button class="slide-tool-btn" onclick="ldocUiUngroup()" title="Ungroup container back to separate elements" style="padding:2px 8px;font-size:11px">🔓 Ungroup</button>
+    <!-- Z-Order Layer Depth Dropdown -->
+    <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
+      <button class="slide-tool-btn" onclick="toggleEdZOrderMenu(event)" title="Adjust layer depth order" style="padding:2px 8px;font-size:11px">📑 Layer ▾</button>
+      <div id="ed-zorder-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(56,189,248,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:150px;padding:4px 0">
+        <div onclick="ldocUiZOrder('forward');toggleEdZOrderMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">▲ Bring Forward</div>
+        <div onclick="ldocUiZOrder('backward');toggleEdZOrderMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">▼ Send Backward</div>
+        <div onclick="ldocUiZOrder('front');toggleEdZOrderMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⤊ Bring to Front</div>
+        <div onclick="ldocUiZOrder('back');toggleEdZOrderMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⤋ Send to Back</div>
+      </div>
+    </div>
+    <!-- Brand Kit & WCAG Suite -->
+    <button class="slide-tool-btn highlight" onclick="ldocOpenBrandModal()" title="Brand Kit, Color Palette & WCAG 2.2 Contrast" style="padding:2px 8px;font-size:11px">🎨 Brand Kit</button>
+    <!-- Reactive Document DAG Panel -->
+    <button class="slide-tool-btn highlight" onclick="ldocOpenReactivePanel()" title="Reactive Document Engine & Dependency DAG" style="padding:2px 8px;font-size:11px;color:#c084fc;border-color:rgba(192,132,252,0.4)">⚡ Reactive</button>
     <button class="slide-tool-btn highlight" onclick="loadPretextLivingShowcase()" title="Load full Pretext Interactive Showcase" style="padding:2px 8px;font-size:11px">⚡ Showcase</button>
     <button class="close-preview" onclick="edToggleLivePreview()" title="Collapse Live Preview" style="margin-left:4px">✕</button>
   </div>
@@ -10576,6 +10674,15 @@ init() {
  this.fitCameraToObject();
  }
 
+ setExplosionFactor(factor) {
+ if (!this.explodedController && this.mesh && window.LDoc3DInspector && window.LDoc3DInspector.ExplodedViewController) {
+ this.explodedController = new window.LDoc3DInspector.ExplodedViewController(this.mesh, { multiplier: 2.0 });
+ }
+ if (this.explodedController) {
+ this.explodedController.setExplosionFactor(factor);
+ }
+ }
+
  loadMeshFromJSON(meshData) {
  if (this.mesh) {
  this.scene.remove(this.mesh);
@@ -12217,6 +12324,68 @@ function renderBlockNode(node,parent){
  p.innerHTML=window.sanitizeClipboardHtml ? window.sanitizeClipboardHtml(node.value || text || '') : (node.value || text || '');
  parent.appendChild(p);break;
  }
+ case 'shape':{
+   const wrap = document.createElement('div');
+   wrap.className = 'ldoc-canvas-shape-wrap';
+   wrap.style.cssText = 'margin:14px 0;position:relative;display:inline-block;';
+   if (window.LDocShapeEngine && typeof window.LDocShapeEngine.generateSvgMarkup === 'function') {
+     wrap.innerHTML = window.LDocShapeEngine.generateSvgMarkup(node);
+   } else {
+     wrap.style.cssText += 'padding:16px;background:' + ((node.style && node.style.fill) || '#6366f1') + ';border-radius:10px;color:#fff;font-weight:700;';
+     wrap.textContent = (node.label && node.label.text) || node.shape_type || 'Vector Shape';
+   }
+   parent.appendChild(wrap);
+   break;
+ }
+ case 'image_card':{
+   const wrap = document.createElement('div');
+   wrap.className = 'ldoc-image-card-wrap';
+   const w = node.width || 320;
+   const h = node.height || 220;
+   const flt = node.filters || {};
+   const filterCss = `brightness(${flt.brightness !== undefined ? flt.brightness : 100}%) contrast(${flt.contrast !== undefined ? flt.contrast : 100}%) saturate(${flt.saturation !== undefined ? flt.saturation : 100}%) grayscale(${flt.grayscale || 0}%) blur(${flt.blur || 0}px)`;
+   const transCss = `${node.flipH ? 'scaleX(-1)' : ''} ${node.flipV ? 'scaleY(-1)' : ''}`.trim();
+   const clipStyle = node.mask === 'circle' ? 'border-radius:50%;' : (node.mask === 'rounded' ? 'border-radius:16px;' : `border-radius:${node.borderRadius || 8}px;`);
+   wrap.style.cssText = `margin:14px 0;width:${w}px;max-width:100%;height:${h}px;overflow:hidden;${clipStyle}box-shadow:0 8px 24px rgba(0,0,0,0.5);background:#111;position:relative;`;
+   if (node.url) {
+     wrap.innerHTML = `<img src="${node.url}" alt="${node.alt || 'Image'}" style="width:100%;height:100%;object-fit:${node.objectFit || 'cover'};filter:${filterCss};transform:${transCss || 'none'};display:block;" />`;
+   } else {
+      wrap.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:13px;">🖼️ Image Card</div>`;
+    }
+    parent.appendChild(wrap);
+    break;
+  }
+  case 'diagram':{
+    const wrap = document.createElement('div');
+    wrap.className = 'ldoc-canvas-diagram-wrap';
+    wrap.style.cssText = 'margin:14px 0;position:relative;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px;overflow:auto;';
+    if (node.title) {
+      const dTitle = document.createElement('div');
+      dTitle.style.cssText = 'font-size:12px;font-weight:700;color:#38bdf8;margin-bottom:8px';
+      dTitle.textContent = '🗺️ ' + node.title;
+      wrap.appendChild(dTitle);
+    }
+    if (window.LDocDiagramEngine && typeof window.LDocDiagramEngine.renderDiagramSvg === 'function') {
+      wrap.innerHTML += window.LDocDiagramEngine.renderDiagramSvg(node);
+    } else {
+      wrap.innerHTML += '<div style="color:#94a3b8;font-size:12px">Diagram Engine Ready</div>';
+    }
+    parent.appendChild(wrap);
+    break;
+  }
+  case 'custom_path':
+  case 'path':{
+    const wrap = document.createElement('div');
+    wrap.className = 'ldoc-canvas-path-wrap';
+    wrap.style.cssText = 'margin:14px 0;position:relative;display:flex;justify-content:center;';
+    if (window.LDocVectorEditor && typeof window.LDocVectorEditor.renderPathSvg === 'function') {
+      wrap.innerHTML = window.LDocVectorEditor.renderPathSvg(node);
+    } else {
+      wrap.innerHTML = '<svg width="200" height="80"><path d="' + (node.pathData || 'M 10 40 L 190 40') + '" stroke="' + (node.stroke || '#38bdf8') + '" stroke-width="2" fill="none"/></svg>';
+    }
+    parent.appendChild(wrap);
+    break;
+  }
     case 'chart':{
       const card = document.createElement('div');
       card.className = 'chart-card';
@@ -13329,6 +13498,17 @@ function renderBlockNode(node,parent){
  viewer.loadMeshFromJSON(modelData);
  }
 
+ if (node.explosionFactor !== undefined) {
+ setTimeout(() => viewer.setExplosionFactor(node.explosionFactor), 150);
+ }
+ if (node.wireframe || node.material_mode === 'wireframe') {
+ viewer.setMaterialMode('wireframe');
+ }
+ window._ldocActiveExplodedControllers = window._ldocActiveExplodedControllers || {};
+ window._ldocActiveExplodedControllers[node.id] = viewer;
+ window._ldocActive3DRoots = window._ldocActive3DRoots || {};
+ window._ldocActive3DRoots[node.id] = viewer.mesh;
+
  spinBtn.onclick=()=>{
  const on=viewer.toggleAutoRotate();
  spinBtn.classList.toggle('active', on);
@@ -13451,6 +13631,43 @@ function renderBlockNode(node,parent){
  }
  case 'quantum_sim':{
  renderQuantumSim(node, parent);
+ break;
+ }
+ case 'simulation':{
+ const simWrap = document.createElement('div');
+ simWrap.className = 'ldoc-sim-block-wrapper';
+ if (window.LDocReactiveEngine && typeof window.LDocReactiveEngine.generateSimulationCard === 'function') {
+ simWrap.innerHTML = window.LDocReactiveEngine.generateSimulationCard(node);
+ } else {
+ simWrap.style.cssText = 'padding:16px;background:rgba(15,23,42,0.9);border:1px solid #38bdf8;border-radius:12px;color:#f8fafc;margin:16px 0;';
+ simWrap.innerHTML = `<strong>⚡ Reactive Simulation:</strong> ${node.title || node.preset || 'Dynamic System'}`;
+ }
+ parent.appendChild(simWrap);
+ break;
+ }
+ case 'quiz':{
+ const quizWrap = document.createElement('div');
+ quizWrap.className = 'ldoc-quiz-block-wrapper';
+ if (window.LDocQuizEngine && typeof window.LDocQuizEngine.generateQuizCard === 'function') {
+ quizWrap.innerHTML = window.LDocQuizEngine.generateQuizCard(node);
+ if (window.LDocQuizEngine.registerQuizSpec) {
+ window.LDocQuizEngine.registerQuizSpec('quiz_' + (node.id || 'default'), node);
+ }
+ } else {
+ quizWrap.style.cssText = 'padding:16px;background:rgba(18,18,32,0.9);border:1px solid #a855f7;border-radius:12px;color:#f8fafc;margin:16px 0;';
+ quizWrap.innerHTML = `<strong>🎯 Knowledge Check:</strong> ${node.title || 'Interactive Assessment'}`;
+ }
+ parent.appendChild(quizWrap);
+ break;
+ }
+ case 'group':{
+ const grpWrap = document.createElement('div');
+ grpWrap.className = 'ldoc-group-block-wrapper';
+ grpWrap.style.cssText = 'position:relative;border:1px dashed rgba(56,189,248,0.4);border-radius:12px;padding:12px;margin:16px 0;background:rgba(56,189,248,0.03);';
+ if (node.children && Array.isArray(node.children)) {
+ node.children.forEach(child => renderBlockNode(child, grpWrap));
+ }
+ parent.appendChild(grpWrap);
  break;
  }
  case 'balance_tuner':case 'horology_tuner':{
@@ -14585,12 +14802,47 @@ async function saveDoc(){
  }
 }
 
+window.loadProceduralDocument = async function(seed, category, subtype) {
+  if (!window.LDocTemplateEngine) return false;
+  try {
+    const recipe = window.LDocTemplateEngine.generateRecipe(seed, category, subtype);
+    const ast = window.LDocTemplateEngine.materializeAst(recipe);
+    const manifest = {
+      title: ast.title || recipe.title,
+      author: ast.author || recipe.author,
+      page_count: (ast.pages || []).length,
+      lang: 'en'
+    };
+    const extractedPages = (ast.pages || []).map((p, idx) => ({
+      num: idx + 1,
+      title: p.title || `Page ${idx + 1}`,
+      content: { root: { children: p.blocks || [] } },
+      floating_texts: p.floating_texts || [],
+      layout: p.layout || {}
+    }));
+    await renderDirectPresentation(manifest, extractedPages);
+    if (typeof showToast === 'function') {
+      showToast(`✓ Procedural Blueprint Loaded: ${recipe.title} (Seed #${recipe.seed})`, 'ok');
+    }
+    return true;
+  } catch(err) {
+    console.warn('Procedural load error:', err);
+    return false;
+  }
+};
+
 (async()=>{
  const params=new URLSearchParams(window.location.search);
  const tab=params.get('tab');
  if(tab==='converter'||tab==='editor'||tab==='docs'||tab==='templates') switchTab(tab);
  const id=params.get('doc');
  const load=params.get('load');
+ const templateSeed=params.get('templateSeed');
+
+ if (templateSeed) {
+   const success = await window.loadProceduralDocument(templateSeed, params.get('category'), params.get('subtype'));
+   if (success) return;
+ }
 
  // Check if opened via Creator Build & Open transfer
  if (load === 'transfer' || sessionStorage.getItem('ldoc_transfer_doc')) {
@@ -15485,7 +15737,7 @@ function edTriggerDirectUpload(kind) {
  input.click();
 }
 
-function edAddBlock(type) {
+function edAddBlock(type, subType) {
   let page = (typeof edPages !== 'undefined') ? edPages.find(p => p.id === edCurrentPage) : null;
   if (!page && typeof edPages !== 'undefined' && edPages.length > 0) {
     page = edPages[0];
@@ -15547,6 +15799,76 @@ function edAddBlock(type) {
   else if (type === 'orbit_sim') { b.body = 'earth'; b.craft_name = 'Orbital Satellite'; b.altitude = 400; }
   else if (type === 'arr_projector') { b.saas_name = 'ARR Revenue Model'; b.start_arr = 1000000; b.growth_rate = 10; b.multiple = 15; }
   else if (type === 'tilt_card') { b.title = 'Interactive 3D Card'; b.angle = 15; b.depth = 1000; b.sheen = 'gold'; b.text = 'Interactive 3D perspective card.'; }
+  else if (type === 'shape') {
+    b.type = 'shape';
+    const sType = subType || 'rounded_rect';
+    b.shape = sType;
+    b.shape_type = sType;
+    b.width = 240;
+    b.height = 140;
+    b.fill = '#38bdf8';
+    b.fillType = 'solid';
+    b.gradient = { type: 'linear', angle: 45, stops: [{ offset: 0, color: '#38bdf8' }, { offset: 1, color: '#818cf8' }] };
+    b.stroke = '#ffffff';
+    b.strokeWidth = 2;
+    b.radius = 16;
+    b.rotation = 0;
+    b.opacity = 1;
+    b.style = {
+      fill: b.fill,
+      stroke: b.stroke,
+      strokeWidth: b.strokeWidth,
+      cornerRadius: b.radius,
+      opacity: b.opacity,
+      gradient: null
+    };
+    b.label = { text: 'Shape Label', color: '#ffffff', fontSize: 16 };
+  }
+  else if (type === 'simulation') {
+    b.type = 'simulation';
+    const pType = subType || 'projectile_motion';
+    const normType = (pType === 'projectile' ? 'projectile_motion' : (pType === 'pendulum' ? 'harmonic_oscillator' : pType));
+    b.simType = normType;
+    b.preset = normType;
+    b.title = normType === 'harmonic_oscillator' ? 'Harmonic Oscillator' : (normType === 'ohms_law' ? "Ohm's Law & Power" : (normType === 'compound_interest' ? 'Investment Growth Model' : 'Kinematic Projectile Simulation'));
+    b.variables = [
+      { name: 'velocity', value: 30 },
+      { name: 'angle', value: 45 },
+      { name: 'gravity', value: 9.81 }
+    ];
+  }
+  else if (type === 'quiz') {
+    b.type = 'quiz';
+    b.title = 'Interactive Knowledge Check';
+    b.questions = [
+      {
+        id: 'q1',
+        type: 'single_select',
+        question: 'What is the primary architectural advantage of the LDOCX format?',
+        options: [
+          'Self-contained single-file container with zero external cloud dependencies',
+          'Requires an active cloud server connection to render pages',
+          'Restricted to plain static markdown without interactive capabilities'
+        ],
+        correctIndex: 0,
+        hint: 'Think about offline durability and airgapped environments.',
+        explanation: 'LDOCX bundles self-contained interactive runtimes, 3D engines, and sandboxes directly in an encrypted Merkle container.'
+      }
+    ];
+  }
+  else if (type === 'chart') {
+    b.type = 'chart';
+    b.chart_type = subType || 'bar';
+    b.title = 'Quarterly Performance Metric';
+    b.labels = ['Q1', 'Q2', 'Q3', 'Q4'];
+    b.data = [18, 35, 62, 98];
+    b.colors = ['#38bdf8', '#818cf8', '#c084fc', '#34d399'];
+  }
+  else if (type === 'group') {
+    b.type = 'group';
+    b.name = 'Element Group';
+    b.children = [];
+  }
 
   page.blocks.push(b);
   edPushUndo();
@@ -15843,6 +16165,10 @@ function edRenderBlocks() {
  <button class="toolbar-btn ed-empty-element-btn" data-keywords="arr projector revenue financial forecast growth" style="padding:6px 12px;font-size:12px;border-color:rgba(16,185,129,.4);color:#10b981" onclick="edAddBlock('arr_projector')"> + ARR</button>
  <button class="toolbar-btn ed-empty-element-btn" data-keywords="tilt card 3d holographic perspective" style="padding:6px 12px;font-size:12px;border-color:rgba(244,63,94,.4);color:#f43f5e" onclick="edAddBlock('tilt_card')"> + 3D Tilt</button>
  <button class="toolbar-btn ed-empty-element-btn" data-keywords="jsx canvas sandbox react tailwind babel chartjs threejs upload" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('jsx_canvas')"> + Live Sandbox</button>
+ <button class="toolbar-btn ed-empty-element-btn" data-keywords="shape vector rect circle triangle star arrow" style="padding:6px 12px;font-size:12px;border-color:rgba(56,189,248,.4);color:#38bdf8" onclick="edAddBlock('shape', 'rounded_rect')">🔷 + Shape</button>
+ <button class="toolbar-btn ed-empty-element-btn" data-keywords="simulation physics projectile pendulum epidemic" style="padding:6px 12px;font-size:12px;border-color:rgba(167,139,250,.4);color:#c084fc" onclick="edAddBlock('simulation', 'projectile')">🔬 + Simulation</button>
+ <button class="toolbar-btn ed-empty-element-btn" data-keywords="quiz assessment interactive test question" style="padding:6px 12px;font-size:12px;border-color:rgba(236,72,153,.4);color:#f472b6" onclick="edAddBlock('quiz')">❓ + Quiz</button>
+ <button class="toolbar-btn ed-empty-element-btn" data-keywords="chart bar line pie doughnut graph data" style="padding:6px 12px;font-size:12px;border-color:rgba(16,185,129,.4);color:#34d399" onclick="edAddBlock('chart', 'bar')">📊 + Chart</button>
  </div>
  `;
  panel.appendChild(e);
@@ -15850,19 +16176,37 @@ function edRenderBlocks() {
  }
 
  const icons = {
- heading: '', paragraph: '', quote: '', list: '', table: '', code: '',
- web_image: '🖼️', web_audio: '', web_video: '', '3d_model': '', ai: '',
- form: '', feature_grid: '🌟', live_feed: '📡', preorder: '', button: '🔘',
- jsx_canvas: '', interactive_sandbox: '', particles: '', particle_canvas: '',
- water_effect: '', fluid_canvas: '',
- throttle_dyno: '', dyno_sandbox: '', orbit_sim: '🛰️',
- arr_projector: '', tilt_card: ''
+ heading: '🏷️', paragraph: '📝', quote: '📜', list: '📋', table: '📊', code: '💻',
+ web_image: '🖼️', web_audio: '🎵', web_video: '🎬', '3d_model': '📦', ai: '⚡',
+ form: '📑', feature_grid: '🌟', live_feed: '📡', preorder: '💎', button: '🔘',
+ jsx_canvas: '⚡', interactive_sandbox: '⚡', particles: '✨', particle_canvas: '✨',
+ water_effect: '🌊', fluid_canvas: '🌊',
+ throttle_dyno: '🏎️', dyno_sandbox: '🏎️', orbit_sim: '🛰️',
+ arr_projector: '📈', tilt_card: '📐',
+ shape: '🔷', simulation: '🔬', quiz: '❓', chart: '📊', group: '🔗', image_card: '🖼️'
  };
 
  page.blocks.forEach(block => {
  const div = document.createElement('div');
  div.className = 'ed-block';
  div.id = 'blk_' + block.id;
+
+ const cb = document.createElement('input');
+ cb.type = 'checkbox';
+ cb.className = 'ed-block-select-cb';
+ cb.title = 'Select block for alignment / grouping';
+ cb.dataset.blockId = block.id;
+ cb.style.cssText = 'cursor:pointer;accent-color:#38bdf8;margin-right:6px;';
+ cb.checked = (window.__edSelectedBlockIds || []).includes(block.id);
+ cb.onchange = () => {
+ if (!window.__edSelectedBlockIds) window.__edSelectedBlockIds = [];
+ if (cb.checked) {
+ if (!window.__edSelectedBlockIds.includes(block.id)) window.__edSelectedBlockIds.push(block.id);
+ } else {
+ window.__edSelectedBlockIds = window.__edSelectedBlockIds.filter(id => id !== block.id);
+ }
+ };
+ div.appendChild(cb);
 
  const tl = document.createElement('div');
  tl.className = 'ed-block-type';
@@ -16366,6 +16710,53 @@ function edRenderBlocks() {
  btnUrl.onclick = () => { curMode = 'url'; renderImageSourceMode(); };
  renderImageSourceMode();
 
+  // ── Image Filters & Masking Suite ──
+  if (!block.filters) block.filters = { brightness: 100, contrast: 100, saturation: 100, blur: 0, grayscale: 0 };
+  const fltBox = document.createElement('div');
+  fltBox.style.cssText = 'background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:8px;margin-top:6px';
+  fltBox.innerHTML = `
+    <div style="font-size:10.5px;font-weight:700;color:var(--gold);margin-bottom:6px">🎨 Image Filters &amp; Masking:</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+      <div>
+        <label style="font-size:9.5px;color:var(--text3);display:block">BRIGHTNESS: <span id="br_val_${block.id}">${block.filters.brightness}%</span></label>
+        <input type="range" min="0" max="200" value="${block.filters.brightness}" style="width:100%;accent-color:#38bdf8"
+               oninput="block.filters.brightness=+this.value;document.getElementById('br_val_${block.id}').textContent=this.value+'%';edUpdateLivePreview();" />
+      </div>
+      <div>
+        <label style="font-size:9.5px;color:var(--text3);display:block">CONTRAST: <span id="co_val_${block.id}">${block.filters.contrast}%</span></label>
+        <input type="range" min="0" max="200" value="${block.filters.contrast}" style="width:100%;accent-color:#38bdf8"
+               oninput="block.filters.contrast=+this.value;document.getElementById('co_val_${block.id}').textContent=this.value+'%';edUpdateLivePreview();" />
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+      <div>
+        <label style="font-size:9.5px;color:var(--text3);display:block">SATURATION: <span id="sa_val_${block.id}">${block.filters.saturation}%</span></label>
+        <input type="range" min="0" max="200" value="${block.filters.saturation}" style="width:100%;accent-color:#38bdf8"
+               oninput="block.filters.saturation=+this.value;document.getElementById('sa_val_${block.id}').textContent=this.value+'%';edUpdateLivePreview();" />
+      </div>
+      <div>
+        <label style="font-size:9.5px;color:var(--text3);display:block">BLUR: <span id="bl_val_${block.id}">${block.filters.blur}px</span></label>
+        <input type="range" min="0" max="20" value="${block.filters.blur}" style="width:100%;accent-color:#38bdf8"
+               oninput="block.filters.blur=+this.value;document.getElementById('bl_val_${block.id}').textContent=this.value+'px';edUpdateLivePreview();" />
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap">
+      <button type="button" class="find-btn" id="fliph_btn_${block.id}" style="font-size:10px;padding:3px 8px;${block.flipH ? 'background:#38bdf8;color:#0a0a14' : ''}"
+              onclick="block.flipH = !block.flipH; this.style.background = block.flipH ? '#38bdf8' : ''; this.style.color = block.flipH ? '#0a0a14' : ''; edUpdateLivePreview();">⇄ Flip H</button>
+      <button type="button" class="find-btn" id="flipv_btn_${block.id}" style="font-size:10px;padding:3px 8px;${block.flipV ? 'background:#38bdf8;color:#0a0a14' : ''}"
+              onclick="block.flipV = !block.flipV; this.style.background = block.flipV ? '#38bdf8' : ''; this.style.color = block.flipV ? '#0a0a14' : ''; edUpdateLivePreview();">⇅ Flip V</button>
+      <select class="find-btn" style="font-size:10px;padding:3px 6px"
+              onchange="block.mask = this.value; edUpdateLivePreview();">
+        <option value="" ${!block.mask ? 'selected' : ''}>No Mask</option>
+        <option value="circle" ${block.mask === 'circle' ? 'selected' : ''}>⚪ Circle Mask</option>
+        <option value="rounded" ${block.mask === 'rounded' ? 'selected' : ''}>▢ Rounded Mask</option>
+        <option value="star" ${block.mask === 'star' ? 'selected' : ''}>⭐ Star Mask</option>
+        <option value="hexagon" ${block.mask === 'hexagon' ? 'selected' : ''}>⬡ Hexagon Mask</option>
+      </select>
+    </div>
+  `;
+  div.appendChild(fltBox);
+
  } else if (block.type === 'web_audio') {
  mk('input', 'Track Title / Soundtrack Name', block.label || block.value || '', v => { block.label = block.value = v; edUpdateLivePreview(); });
 
@@ -16691,6 +17082,152 @@ function edRenderBlocks() {
  mat.onchange = () => { block.material_mode = mat.value; edUpdateLivePreview(); };
  matDiv.appendChild(mat);
  div.appendChild(matDiv);
+
+    // ── 3D Exploded View & Engineering Controls ──
+    const engSec = document.createElement('div');
+    engSec.style.cssText = 'margin-top:10px;padding:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px';
+    engSec.innerHTML = '<div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:6px">⚙️ ENGINEERING 3D CONTROLS</div>';
+
+    // 3D Transform: Position X/Y/Z, Rotation X/Y/Z, Scale
+    const tfSec = document.createElement('div');
+    tfSec.style.cssText = 'margin-bottom:8px;padding:6px 8px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px';
+    tfSec.innerHTML = '<div style="font-size:10px;font-weight:700;color:var(--gold);margin-bottom:4px">📐 3D TRANSFORM (POSITION, ROTATION, SCALE)</div>';
+    
+    if (!block.transform) block.transform = { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, scale: 1.0 };
+    const tf = block.transform;
+
+    const posRow = document.createElement('div');
+    posRow.style.cssText = 'display:grid;grid-template-columns:repeat(3, 1fr);gap:4px;margin-bottom:4px';
+    ['x', 'y', 'z'].forEach(axis => {
+      const w = document.createElement('div');
+      w.innerHTML = `<label style="font-size:9px;color:var(--text3);display:block">POS ${axis.toUpperCase()}</label>`;
+      const inp = document.createElement('input');
+      inp.type = 'number'; inp.step = '0.1'; inp.value = tf[axis] !== undefined ? tf[axis] : 0;
+      inp.style.cssText = 'width:100%;padding:3px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px';
+      inp.oninput = () => { tf[axis] = parseFloat(inp.value) || 0; edUpdateLivePreview(); };
+      w.appendChild(inp);
+      posRow.appendChild(w);
+    });
+    tfSec.appendChild(posRow);
+
+    const rotRow = document.createElement('div');
+    rotRow.style.cssText = 'display:grid;grid-template-columns:repeat(3, 1fr) 1fr;gap:4px';
+    ['rx', 'ry', 'rz'].forEach(axis => {
+      const w = document.createElement('div');
+      w.innerHTML = `<label style="font-size:9px;color:var(--text3);display:block">ROT ${axis.slice(1).toUpperCase()}°</label>`;
+      const inp = document.createElement('input');
+      inp.type = 'number'; inp.value = tf[axis] !== undefined ? tf[axis] : 0;
+      inp.style.cssText = 'width:100%;padding:3px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px';
+      inp.oninput = () => { tf[axis] = parseInt(inp.value, 10) || 0; edUpdateLivePreview(); };
+      w.appendChild(inp);
+      rotRow.appendChild(w);
+    });
+
+    const scWrap = document.createElement('div');
+    scWrap.innerHTML = '<label style="font-size:9px;color:var(--text3);display:block">SCALE</label>';
+    const scInp = document.createElement('input');
+    scInp.type = 'number'; scInp.step = '0.1'; scInp.min = '0.1'; scInp.max = '10'; scInp.value = tf.scale !== undefined ? tf.scale : 1.0;
+    scInp.style.cssText = 'width:100%;padding:3px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px';
+    scInp.oninput = () => { tf.scale = parseFloat(scInp.value) || 1.0; edUpdateLivePreview(); };
+    scWrap.appendChild(scInp);
+    rotRow.appendChild(scWrap);
+    tfSec.appendChild(rotRow);
+    engSec.appendChild(tfSec);
+
+    // Exploded View Slider (0.0 - 2.0 / 0 - 200%)
+    const expRow = document.createElement('div');
+    expRow.style.cssText = 'margin-bottom:8px';
+    const expVal = block.explosionFactor !== undefined ? Math.round(block.explosionFactor * 100) : 0;
+    expRow.innerHTML = `<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:2px">
+      <span>EXPLODED VIEW DISPLACEMENT (0.0 – 2.0)</span><span id="exp-val-${block.id}">${(expVal/100).toFixed(2)}x (${expVal}%)</span>
+    </div>`;
+    const expSlide = document.createElement('input');
+    expSlide.type = 'range';
+    expSlide.min = '0';
+    expSlide.max = '200';
+    expSlide.value = expVal;
+    expSlide.style.cssText = 'width:100%;accent-color:var(--gold);cursor:pointer';
+    expSlide.oninput = (e) => {
+      const v = parseInt(e.target.value, 10) / 100;
+      block.explosionFactor = v;
+      const valSpan = document.getElementById(`exp-val-${block.id}`);
+      if (valSpan) valSpan.textContent = v.toFixed(2) + 'x (' + Math.round(v * 100) + '%)';
+      if (window._ldocActiveExplodedControllers && window._ldocActiveExplodedControllers[block.id]) {
+        window._ldocActiveExplodedControllers[block.id].setExplosionFactor(v);
+      }
+      edUpdateLivePreview();
+    };
+    expRow.appendChild(expSlide);
+    engSec.appendChild(expRow);
+
+    // Wireframe & Lighting Row
+    const wfRow = document.createElement('div');
+    wfRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px';
+    const wfLabel = document.createElement('label');
+    wfLabel.style.cssText = 'display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text);cursor:pointer';
+    const wfCb = document.createElement('input');
+    wfCb.type = 'checkbox';
+    wfCb.checked = block.material_mode === 'wireframe' || block.wireframe === true;
+    wfCb.onchange = () => {
+      block.wireframe = wfCb.checked;
+      if (wfCb.checked) block.material_mode = 'wireframe';
+      else if (block.material_mode === 'wireframe') block.material_mode = 'cyber_hologram';
+      edUpdateLivePreview();
+    };
+    wfLabel.appendChild(wfCb);
+    wfLabel.appendChild(document.createTextNode('📐 Wireframe Mode'));
+    wfRow.appendChild(wfLabel);
+
+    const lightSel = document.createElement('select');
+    lightSel.style.cssText = 'flex:1;padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:11px';
+    [['studio', 'Studio Light'], ['cyber', 'Neon Cyber'], ['sunset', 'Warm Sunset'], ['direct', 'High Key CAD']].forEach(([lv, lt]) => {
+      const opt = document.createElement('option');
+      opt.value = lv; opt.textContent = lt;
+      if ((block.lighting || 'studio') === lv) opt.selected = true;
+      lightSel.appendChild(opt);
+    });
+    lightSel.onchange = () => {
+      block.lighting = lightSel.value;
+      edUpdateLivePreview();
+    };
+    wfRow.appendChild(lightSel);
+    engSec.appendChild(wfRow);
+
+    // Parts Hierarchy Tree
+    const partsWrap = document.createElement('div');
+    partsWrap.style.cssText = 'font-size:11px;border-top:1px solid rgba(255,255,255,0.06);padding-top:6px';
+    partsWrap.innerHTML = '<div style="font-size:10px;font-weight:700;color:var(--text3);margin-bottom:4px">PARTS HIERARCHY TREE</div>';
+    const defaultParts = block.parts || [
+      { id: 'chassis', name: 'Main Chassis Base', visible: true },
+      { id: 'housing', name: 'Upper Protective Shell', visible: true },
+      { id: 'actuator', name: 'Precision Actuator Core', visible: true },
+      { id: 'sensor_rig', name: 'Optical Sensor Array', visible: true }
+    ];
+    block.parts = defaultParts;
+    defaultParts.forEach(p => {
+      const pRow = document.createElement('div');
+      pRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:3px 4px;border-radius:4px;margin-bottom:2px;background:rgba(255,255,255,0.02)';
+      pRow.innerHTML = `<span>⚙️ ${escapeHtml(p.name)}</span>`;
+      const tgl = document.createElement('button');
+      tgl.type = 'button';
+      tgl.className = 'find-btn';
+      tgl.style.cssText = 'font-size:10px;padding:2px 6px;' + (p.visible !== false ? 'color:#22c55e' : 'color:#ef4444');
+      tgl.textContent = p.visible !== false ? '👁️ Visible' : '🚫 Hidden';
+      tgl.onclick = () => {
+        p.visible = !(p.visible !== false);
+        tgl.textContent = p.visible ? '👁️ Visible' : '🚫 Hidden';
+        tgl.style.color = p.visible ? '#22c55e' : '#ef4444';
+        if (window.LDoc3DInspector && window.LDoc3DInspector.isolatePart && window._ldocActive3DRoots && window._ldocActive3DRoots[block.id]) {
+          if (!p.visible) window.LDoc3DInspector.isolatePart(window._ldocActive3DRoots[block.id], p.id);
+          else window.LDoc3DInspector.resetIsolation(window._ldocActive3DRoots[block.id]);
+        }
+        edUpdateLivePreview();
+      };
+      pRow.appendChild(tgl);
+      partsWrap.appendChild(pRow);
+    });
+    engSec.appendChild(partsWrap);
+    div.appendChild(engSec);
 
  } else if (block.type === 'feature_grid') {
  const hl = document.createElement('div'); hl.style.cssText = 'font-size:11px;color:var(--text3);margin-bottom:4px'; hl.textContent = 'Card Grid Format: Badge | Title | Description (one card per line)'; div.appendChild(hl);
@@ -17165,7 +17702,853 @@ function edRenderBlocks() {
  sSel.onchange = () => { block.sheen = sSel.value; edUpdateLivePreview(); };
  r.appendChild(aInp); r.appendChild(dInp); r.appendChild(sSel);
  div.appendChild(r);
- }
+  } else if (block.type === 'shape') {
+    if (!block.style) block.style = {};
+    if (!block.props) block.props = {};
+    const shapeTypes = [
+      ['rounded_rect', '▢ Rounded Rectangle'],
+      ['rect', '▭ Rectangle'],
+      ['circle', '⚪ Circle'],
+      ['ellipse', '⬭ Ellipse'],
+      ['triangle', '△ Triangle'],
+      ['star', '⭐ 5-Point Star'],
+      ['polygon_hexagon', '⬡ Hexagon'],
+      ['callout_speech', '💬 Speech Bubble'],
+      ['callout_thought', '💭 Thought Bubble'],
+      ['arrow_right', '➔ Arrow Right'],
+      ['arrow_double', '↔ Double Arrow'],
+      ['heart', '❤️ Heart Primitive']
+    ];
+
+    // Primitive Type Selector
+    const typeRow = document.createElement('div');
+    typeRow.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:6px';
+    const typeLbl = document.createElement('span');
+    typeLbl.style.cssText = 'font-size:11px;font-weight:700;color:var(--gold);min-width:70px';
+    typeLbl.textContent = 'Shape Type:';
+    const typeSel = document.createElement('select');
+    typeSel.style.cssText = 'flex:1;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px';
+    shapeTypes.forEach(([val, lbl]) => {
+      const opt = document.createElement('option');
+      opt.value = val;
+      opt.textContent = lbl;
+      if (val === (block.shape || block.shape_type || 'rounded_rect')) opt.selected = true;
+      typeSel.appendChild(opt);
+    });
+    typeSel.onchange = () => {
+      block.shape = typeSel.value;
+      block.shape_type = typeSel.value;
+      edRenderShapeSpecificProps();
+      edUpdateLivePreview();
+    };
+    typeRow.appendChild(typeLbl);
+    typeRow.appendChild(typeSel);
+    div.appendChild(typeRow);
+
+    // Geometry: Position X/Y and Dimensions Width/Height
+    const geomRow = document.createElement('div');
+    geomRow.style.cssText = 'display:grid;grid-template-columns:repeat(4, 1fr);gap:4px;margin-bottom:6px';
+    const mkGeomInp = (lbl, val, min, max, cb) => {
+      const w = document.createElement('div');
+      w.innerHTML = `<label style="font-size:9.5px;color:var(--text3);display:block;margin-bottom:2px">${lbl}</label>`;
+      const inp = document.createElement('input');
+      inp.type = 'number'; inp.min = min; inp.max = max; inp.value = val;
+      inp.style.cssText = 'width:100%;padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:#fff;font-size:11px';
+      inp.oninput = () => { cb(parseInt(inp.value, 10) || 0); edUpdateLivePreview(); };
+      w.appendChild(inp);
+      return w;
+    };
+    geomRow.appendChild(mkGeomInp('X (PX)', block.x !== undefined ? block.x : (block.left || 50), -500, 2000, v => { block.x = block.left = v; }));
+    geomRow.appendChild(mkGeomInp('Y (PX)', block.y !== undefined ? block.y : (block.top || 50), -500, 2000, v => { block.y = block.top = v; }));
+    geomRow.appendChild(mkGeomInp('WIDTH', block.width || 240, 20, 1600, v => { block.width = v; }));
+    geomRow.appendChild(mkGeomInp('HEIGHT', block.height || 140, 20, 1600, v => { block.height = v; }));
+    div.appendChild(geomRow);
+
+    // Fill Mode & Gradient Suite (Solid, Linear, Radial)
+    const fillSec = document.createElement('div');
+    fillSec.style.cssText = 'background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:6px;margin-bottom:6px';
+    const fillTop = document.createElement('div');
+    fillTop.style.cssText = 'display:grid;grid-template-columns:95px 1fr 1fr;gap:6px;align-items:center';
+    const fModeSel = document.createElement('select');
+    fModeSel.style.cssText = 'padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:#fff;font-size:11px';
+    [['solid', 'Solid Fill'], ['linear', 'Linear Grad'], ['radial', 'Radial Grad']].forEach(([v, l]) => {
+      const o = document.createElement('option'); o.value = v; o.textContent = l;
+      const curMode = block.gradient ? (block.gradient.type || 'linear') : (block.fillType || 'solid');
+      if (v === curMode) o.selected = true;
+      fModeSel.appendChild(o);
+    });
+
+    const fColor1 = document.createElement('input');
+    fColor1.type = 'color';
+    fColor1.value = block.fill || (block.gradient && block.gradient.stops && block.gradient.stops[0] && block.gradient.stops[0].color) || '#38bdf8';
+    fColor1.title = 'Primary / Start Color';
+    fColor1.style.cssText = 'width:100%;height:26px;padding:1px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;cursor:pointer';
+
+    const fColor2 = document.createElement('input');
+    fColor2.type = 'color';
+    fColor2.value = (block.gradient && block.gradient.stops && block.gradient.stops[1] && block.gradient.stops[1].color) || '#818cf8';
+    fColor2.title = 'Secondary / End Color';
+    fColor2.style.cssText = 'width:100%;height:26px;padding:1px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;cursor:pointer';
+
+    const gradControlsRow = document.createElement('div');
+    gradControlsRow.style.cssText = 'margin-top:6px;display:flex;gap:8px;align-items:center';
+
+    const updateGradUi = () => {
+      const m = fModeSel.value;
+      fColor2.style.display = m === 'solid' ? 'none' : 'block';
+      gradControlsRow.innerHTML = '';
+      if (m === 'linear') {
+        const ang = (block.gradient && block.gradient.angle !== undefined) ? block.gradient.angle : 45;
+        gradControlsRow.innerHTML = `<label style="font-size:9.5px;color:var(--text3);min-width:65px">ANGLE: <span id="ang_val_${block.id}">${ang}°</span></label>`;
+        const angInp = document.createElement('input');
+        angInp.type = 'range'; angInp.min = '0'; angInp.max = '360'; angInp.value = ang;
+        angInp.style.cssText = 'flex:1;accent-color:#38bdf8;cursor:pointer';
+        angInp.oninput = () => {
+          if (!block.gradient) block.gradient = { type: 'linear', stops: [{ offset: 0, color: fColor1.value }, { offset: 1, color: fColor2.value }] };
+          block.gradient.angle = parseInt(angInp.value, 10);
+          block.style.gradient = block.gradient;
+          const lbl = gradControlsRow.querySelector(`#ang_val_${block.id}`);
+          if (lbl) lbl.textContent = angInp.value + '°';
+          edUpdateLivePreview();
+        };
+        gradControlsRow.appendChild(angInp);
+      } else if (m === 'radial') {
+        const cx = (block.gradient && block.gradient.cx) ? parseInt(block.gradient.cx, 10) : 50;
+        const cy = (block.gradient && block.gradient.cy) ? parseInt(block.gradient.cy, 10) : 50;
+        gradControlsRow.innerHTML = `<label style="font-size:9.5px;color:var(--text3);white-space:nowrap">CENTER X/Y: <span id="rad_xy_${block.id}">${cx}% / ${cy}%</span></label>`;
+        const cxInp = document.createElement('input');
+        cxInp.type = 'range'; cxInp.min = '0'; cxInp.max = '100'; cxInp.value = cx;
+        cxInp.style.cssText = 'flex:1;accent-color:#38bdf8;cursor:pointer';
+        const cyInp = document.createElement('input');
+        cyInp.type = 'range'; cyInp.min = '0'; cyInp.max = '100'; cyInp.value = cy;
+        cyInp.style.cssText = 'flex:1;accent-color:#38bdf8;cursor:pointer';
+        const onRadCenterChange = () => {
+          if (!block.gradient) block.gradient = { type: 'radial', stops: [{ offset: 0, color: fColor1.value }, { offset: 1, color: fColor2.value }] };
+          block.gradient.cx = cxInp.value + '%';
+          block.gradient.cy = cyInp.value + '%';
+          block.style.gradient = block.gradient;
+          const lbl = gradControlsRow.querySelector(`#rad_xy_${block.id}`);
+          if (lbl) lbl.textContent = cxInp.value + '% / ' + cyInp.value + '%';
+          edUpdateLivePreview();
+        };
+        cxInp.oninput = onRadCenterChange;
+        cyInp.oninput = onRadCenterChange;
+        gradControlsRow.appendChild(cxInp);
+        gradControlsRow.appendChild(cyInp);
+      }
+    };
+
+    fModeSel.onchange = () => {
+      const m = fModeSel.value;
+      block.fillType = m;
+      if (m === 'solid') {
+        block.gradient = null;
+        block.style.gradient = null;
+        block.fill = fColor1.value;
+        block.style.fill = fColor1.value;
+      } else {
+        block.gradient = {
+          type: m,
+          angle: 45,
+          cx: '50%',
+          cy: '50%',
+          stops: [{ offset: 0, color: fColor1.value }, { offset: 1, color: fColor2.value }]
+        };
+        block.style.gradient = block.gradient;
+      }
+      updateGradUi();
+      edUpdateLivePreview();
+    };
+
+    fColor1.oninput = () => {
+      block.fill = fColor1.value;
+      block.style.fill = fColor1.value;
+      if (block.gradient && block.gradient.stops) {
+        block.gradient.stops[0].color = fColor1.value;
+        block.style.gradient = block.gradient;
+      }
+      edUpdateLivePreview();
+    };
+
+    fColor2.oninput = () => {
+      if (!block.gradient) block.gradient = { type: fModeSel.value === 'radial' ? 'radial' : 'linear', angle: 45, stops: [{ offset: 0, color: fColor1.value }, { offset: 1, color: fColor2.value }] };
+      if (!block.gradient.stops) block.gradient.stops = [{ offset: 0, color: fColor1.value }, { offset: 1, color: fColor2.value }];
+      block.gradient.stops[1].color = fColor2.value;
+      block.style.gradient = block.gradient;
+      edUpdateLivePreview();
+    };
+
+    fillTop.appendChild(fModeSel);
+    fillTop.appendChild(fColor1);
+    fillTop.appendChild(fColor2);
+    fillSec.appendChild(fillTop);
+    fillSec.appendChild(gradControlsRow);
+    updateGradUi();
+    div.appendChild(fillSec);
+
+    // Stroke Color, Width, Dash Style & Stroke Opacity
+    const strokeRow = document.createElement('div');
+    strokeRow.style.cssText = 'display:grid;grid-template-columns:36px 75px 1fr 75px;gap:6px;margin-bottom:6px;align-items:center';
+    const sColor = document.createElement('input');
+    sColor.type = 'color';
+    sColor.value = block.stroke || '#ffffff';
+    sColor.title = 'Stroke Color';
+    sColor.style.cssText = 'width:100%;height:26px;padding:1px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;cursor:pointer';
+    sColor.oninput = () => { block.stroke = block.style.stroke = sColor.value; edUpdateLivePreview(); };
+
+    const sStyleSel = document.createElement('select');
+    sStyleSel.style.cssText = 'padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:#fff;font-size:10.5px';
+    [['solid', 'Solid —'], ['dashed', 'Dashed --'], ['dotted', 'Dotted ··']].forEach(([v, l]) => {
+      const o = document.createElement('option'); o.value = v; o.textContent = l;
+      if (v === (block.style.strokeDash || block.strokeDash || 'solid')) o.selected = true;
+      sStyleSel.appendChild(o);
+    });
+    sStyleSel.onchange = () => {
+      block.strokeDash = block.style.strokeDash = sStyleSel.value;
+      edUpdateLivePreview();
+    };
+
+    const sWidthWrap = document.createElement('div');
+    sWidthWrap.innerHTML = `<label style="font-size:9.5px;color:var(--text3);display:block">WIDTH: <span id="sw_val_${block.id}">${block.strokeWidth !== undefined ? block.strokeWidth : 2}px</span></label>`;
+    const sWidth = document.createElement('input');
+    sWidth.type = 'range'; sWidth.min = '0'; sWidth.max = '20';
+    sWidth.value = block.strokeWidth !== undefined ? block.strokeWidth : 2;
+    sWidth.style.cssText = 'width:100%;accent-color:#38bdf8;cursor:pointer';
+    sWidth.oninput = () => {
+      block.strokeWidth = block.style.strokeWidth = parseInt(sWidth.value, 10);
+      const lbl = div.querySelector(`#sw_val_${block.id}`);
+      if (lbl) lbl.textContent = sWidth.value + 'px';
+      edUpdateLivePreview();
+    };
+    sWidthWrap.appendChild(sWidth);
+
+    const sOpWrap = document.createElement('div');
+    const curStkOp = Math.round((block.style.strokeOpacity !== undefined ? block.style.strokeOpacity : 1) * 100);
+    sOpWrap.innerHTML = `<label style="font-size:9.5px;color:var(--text3);display:block">STROKE OP: <span id="s_op_val_${block.id}">${curStkOp}%</span></label>`;
+    const sOpInp = document.createElement('input');
+    sOpInp.type = 'range'; sOpInp.min = '0'; sOpInp.max = '100'; sOpInp.value = curStkOp;
+    sOpInp.style.cssText = 'width:100%;accent-color:#38bdf8;cursor:pointer';
+    sOpInp.oninput = () => {
+      const op = parseInt(sOpInp.value, 10) / 100;
+      block.strokeOpacity = block.style.strokeOpacity = op;
+      const lbl = div.querySelector(`#s_op_val_${block.id}`);
+      if (lbl) lbl.textContent = sOpInp.value + '%';
+      edUpdateLivePreview();
+    };
+    sOpWrap.appendChild(sOpInp);
+
+    strokeRow.appendChild(sColor);
+    strokeRow.appendChild(sStyleSel);
+    strokeRow.appendChild(sWidthWrap);
+    strokeRow.appendChild(sOpWrap);
+    div.appendChild(strokeRow);
+
+    // Shape-Specific Properties Container
+    const shapeSpecificContainer = document.createElement('div');
+    shapeSpecificContainer.style.cssText = 'background:rgba(56,189,248,0.03);border:1px dashed rgba(56,189,248,0.25);border-radius:6px;padding:6px;margin-bottom:6px';
+    div.appendChild(shapeSpecificContainer);
+
+    const edRenderShapeSpecificProps = () => {
+      shapeSpecificContainer.innerHTML = '';
+      const st = (block.shape || block.shape_type || 'rounded_rect').toLowerCase();
+
+      if (st.includes('rounded')) {
+        const radWrap = document.createElement('div');
+        const curR = block.radius || block.style.cornerRadius || 16;
+        radWrap.innerHTML = `<div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--text3);margin-bottom:2px"><span>CORNER RADIUS</span><span id="rad_val_${block.id}">${curR}px</span></div>`;
+        const radInp = document.createElement('input');
+        radInp.type = 'range'; radInp.min = '0'; radInp.max = '60'; radInp.value = curR;
+        radInp.style.cssText = 'width:100%;accent-color:#38bdf8;cursor:pointer';
+        radInp.oninput = () => {
+          block.radius = block.style.cornerRadius = parseInt(radInp.value, 10);
+          const lbl = shapeSpecificContainer.querySelector(`#rad_val_${block.id}`);
+          if (lbl) lbl.textContent = radInp.value + 'px';
+          edUpdateLivePreview();
+        };
+        radWrap.appendChild(radInp);
+        shapeSpecificContainer.appendChild(radWrap);
+      } else if (st.includes('star')) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px';
+        const pts = (block.props && block.props.points) || 5;
+        const ir = Math.round(((block.props && block.props.innerRadius) || 0.45) * 100);
+        row.innerHTML = `
+          <div>
+            <label style="font-size:9.5px;color:var(--text3);display:block">STAR POINTS: <span id="pts_val_${block.id}">${pts}</span></label>
+            <input type="range" min="3" max="12" value="${pts}" style="width:100%;accent-color:#38bdf8;cursor:pointer" id="inp_pts_${block.id}">
+          </div>
+          <div>
+            <label style="font-size:9.5px;color:var(--text3);display:block">INNER RADIUS: <span id="ir_val_${block.id}">${ir}%</span></label>
+            <input type="range" min="10" max="90" value="${ir}" style="width:100%;accent-color:#38bdf8;cursor:pointer" id="inp_ir_${block.id}">
+          </div>
+        `;
+        shapeSpecificContainer.appendChild(row);
+        const pInp = row.querySelector(`#inp_pts_${block.id}`);
+        pInp.oninput = () => {
+          if (!block.props) block.props = {};
+          block.props.points = parseInt(pInp.value, 10);
+          row.querySelector(`#pts_val_${block.id}`).textContent = pInp.value;
+          edUpdateLivePreview();
+        };
+        const rInp = row.querySelector(`#inp_ir_${block.id}`);
+        rInp.oninput = () => {
+          if (!block.props) block.props = {};
+          block.props.innerRadius = parseInt(rInp.value, 10) / 100;
+          row.querySelector(`#ir_val_${block.id}`).textContent = rInp.value + '%';
+          edUpdateLivePreview();
+        };
+      } else if (st.includes('polygon') || st.includes('hexagon')) {
+        const sides = (block.props && block.props.points) || 6;
+        const wrap = document.createElement('div');
+        wrap.innerHTML = `<div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--text3);margin-bottom:2px"><span>POLYGON SIDES</span><span id="poly_sides_${block.id}">${sides}</span></div>`;
+        const inp = document.createElement('input');
+        inp.type = 'range'; inp.min = '3'; inp.max = '12'; inp.value = sides;
+        inp.style.cssText = 'width:100%;accent-color:#38bdf8;cursor:pointer';
+        inp.oninput = () => {
+          if (!block.props) block.props = {};
+          block.props.points = parseInt(inp.value, 10);
+          const lbl = shapeSpecificContainer.querySelector(`#poly_sides_${block.id}`);
+          if (lbl) lbl.textContent = inp.value;
+          edUpdateLivePreview();
+        };
+        wrap.appendChild(inp);
+        shapeSpecificContainer.appendChild(wrap);
+      } else if (st.includes('callout')) {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex;align-items:center;gap:6px';
+        wrap.innerHTML = '<span style="font-size:9.5px;color:var(--text3);min-width:70px">POINTER SIDE:</span>';
+        const sel = document.createElement('select');
+        sel.style.cssText = 'flex:1;padding:3px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px';
+        [['bottom', 'Bottom ⤓'], ['top', 'Top ⤒'], ['left', 'Left ⇤'], ['right', 'Right ⇥']].forEach(([v, l]) => {
+          const o = document.createElement('option'); o.value = v; o.textContent = l;
+          if (v === ((block.props && block.props.pointerSide) || 'bottom')) o.selected = true;
+          sel.appendChild(o);
+        });
+        sel.onchange = () => {
+          if (!block.props) block.props = {};
+          block.props.pointerSide = sel.value;
+          edUpdateLivePreview();
+        };
+        wrap.appendChild(sel);
+        shapeSpecificContainer.appendChild(wrap);
+      } else {
+        shapeSpecificContainer.style.display = 'none';
+        return;
+      }
+      shapeSpecificContainer.style.display = 'block';
+    };
+    edRenderShapeSpecificProps();
+
+    // Rotation & Opacity
+    const rotRow = document.createElement('div');
+    rotRow.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px';
+    const rotWrap = document.createElement('div');
+    rotWrap.innerHTML = `<label style="font-size:9.5px;color:var(--text3);display:block">ROTATION: <span id="rot_val_${block.id}">${block.rotation || 0}°</span></label>`;
+    const rotInp = document.createElement('input');
+    rotInp.type = 'range'; rotInp.min = '-180'; rotInp.max = '180'; rotInp.value = block.rotation || 0;
+    rotInp.style.cssText = 'width:100%;accent-color:#38bdf8;cursor:pointer';
+    rotInp.oninput = () => {
+      block.rotation = parseInt(rotInp.value, 10);
+      const lbl = div.querySelector(`#rot_val_${block.id}`);
+      if (lbl) lbl.textContent = rotInp.value + '°';
+      edUpdateLivePreview();
+    };
+    rotWrap.appendChild(rotInp);
+
+    const opWrap = document.createElement('div');
+    const curOp = Math.round((block.opacity !== undefined ? block.opacity : 1) * 100);
+    opWrap.innerHTML = `<label style="font-size:9.5px;color:var(--text3);display:block">SHAPE OPACITY: <span id="op_val_${block.id}">${curOp}%</span></label>`;
+    const opInp = document.createElement('input');
+    opInp.type = 'range'; opInp.min = '10'; opInp.max = '100'; opInp.value = curOp;
+    opInp.style.cssText = 'width:100%;accent-color:#38bdf8;cursor:pointer';
+    opInp.oninput = () => {
+      block.opacity = block.style.opacity = parseInt(opInp.value, 10) / 100;
+      const lbl = div.querySelector(`#op_val_${block.id}`);
+      if (lbl) lbl.textContent = opInp.value + '%';
+      edUpdateLivePreview();
+    };
+    opWrap.appendChild(opInp);
+    rotRow.appendChild(rotWrap);
+    rotRow.appendChild(opWrap);
+    div.appendChild(rotRow);
+
+    // Label / Typography Inside Shape with Alignment Controls
+    if (!block.label) block.label = { text: '', color: '#ffffff', fontSize: 16, align: 'center' };
+    const lblSec = document.createElement('div');
+    lblSec.style.cssText = 'background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:6px';
+    const lblRow1 = document.createElement('div');
+    lblRow1.style.cssText = 'display:grid;grid-template-columns:1fr 36px 65px;gap:6px;align-items:center;margin-bottom:4px';
+
+    const lblTxt = document.createElement('input');
+    lblTxt.placeholder = 'Shape label text...';
+    lblTxt.value = block.label.text || '';
+    lblTxt.style.cssText = 'padding:4px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:#fff;font-size:11.5px';
+    lblTxt.oninput = () => { block.label.text = lblTxt.value; edUpdateLivePreview(); };
+
+    const lblCol = document.createElement('input');
+    lblCol.type = 'color';
+    lblCol.value = block.label.color || '#ffffff';
+    lblCol.title = 'Label Text Color';
+    lblCol.style.cssText = 'width:100%;height:26px;padding:1px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;cursor:pointer';
+    lblCol.oninput = () => { block.label.color = lblCol.value; edUpdateLivePreview(); };
+
+    const lblSz = document.createElement('input');
+    lblSz.type = 'number'; lblSz.min = '10'; lblSz.max = '48';
+    lblSz.value = block.label.fontSize || 16;
+    lblSz.title = 'Font Size (px)';
+    lblSz.style.cssText = 'width:100%;padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:#fff;font-size:11px';
+    lblSz.oninput = () => { block.label.fontSize = parseInt(lblSz.value, 10) || 16; edUpdateLivePreview(); };
+
+    lblRow1.appendChild(lblTxt);
+    lblRow1.appendChild(lblCol);
+    lblRow1.appendChild(lblSz);
+    lblSec.appendChild(lblRow1);
+
+    const alignRow = document.createElement('div');
+    alignRow.style.cssText = 'display:flex;align-items:center;gap:4px;justify-content:flex-end';
+    alignRow.innerHTML = '<span style="font-size:9.5px;color:var(--text3);margin-right:4px">ALIGN:</span>';
+    [['left', '⇤ Left'], ['center', '⇥⇤ Center'], ['right', '⇥ Right']].forEach(([al, txt]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'find-btn';
+      btn.textContent = txt;
+      btn.style.cssText = 'font-size:10px;padding:2px 6px;' + ((block.label.align || 'center') === al ? 'background:rgba(56,189,248,0.25);color:#38bdf8;border-color:#38bdf8' : '');
+      btn.onclick = () => {
+        block.label.align = al;
+        alignRow.querySelectorAll('button').forEach(b => { b.style.background = ''; b.style.color = ''; b.style.borderColor = ''; });
+        btn.style.background = 'rgba(56,189,248,0.25)';
+        btn.style.color = '#38bdf8';
+        btn.style.borderColor = '#38bdf8';
+        edUpdateLivePreview();
+      };
+      alignRow.appendChild(btn);
+    });
+    lblSec.appendChild(alignRow);
+    div.appendChild(lblSec);
+
+  } else if (block.type === 'simulation') {
+    const simPresets = [
+      ['projectile_motion', '🚀 Kinematic Projectile Motion'],
+      ['harmonic_oscillator', '⏱️ Damped Harmonic Oscillator (Pendulum)'],
+      ['ohms_law', "⚡ Ohm's Law & Electric Power Circuit"],
+      ['compound_interest', '📈 Compound Investment & Valuation Model']
+    ];
+    mk('input', 'Simulation Title', block.title || 'Dynamic Simulation', v => { block.title = v; edUpdateLivePreview(); });
+
+    const pRow = document.createElement('div');
+    pRow.style.cssText = 'display:flex;align-items:center;gap:8px;margin:6px 0';
+    const pLbl = document.createElement('span');
+    pLbl.style.cssText = 'font-size:11px;font-weight:700;color:var(--gold);min-width:60px';
+    pLbl.textContent = 'Preset:';
+    const pSel = document.createElement('select');
+    pSel.style.cssText = 'flex:1;padding:5px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px';
+    simPresets.forEach(([v, l]) => {
+      const opt = document.createElement('option');
+      opt.value = v; opt.textContent = l;
+      if (v === (block.preset || block.simType || 'projectile_motion')) opt.selected = true;
+      pSel.appendChild(opt);
+    });
+    pRow.appendChild(pLbl);
+    pRow.appendChild(pSel);
+    div.appendChild(pRow);
+
+    // Dynamic Variables Table
+    const vSec = document.createElement('div');
+    vSec.style.cssText = 'margin:8px 0;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:8px';
+    const vHeader = document.createElement('div');
+    vHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:6px';
+    vHeader.innerHTML = '<span style="font-size:10.5px;font-weight:700;color:var(--gold)">DYNAMIC SIMULATION VARIABLES</span>';
+    const addVarBtn = document.createElement('button');
+    addVarBtn.type = 'button';
+    addVarBtn.className = 'find-btn';
+    addVarBtn.style.cssText = 'font-size:10px;padding:2px 8px;color:#38bdf8';
+    addVarBtn.textContent = '➕ Add Variable';
+    vHeader.appendChild(addVarBtn);
+    vSec.appendChild(vHeader);
+
+    const initPresetVars = (prKey) => {
+      if (window.LDocReactiveEngine && window.LDocReactiveEngine.SIMULATION_PRESETS && window.LDocReactiveEngine.SIMULATION_PRESETS[prKey]) {
+        try {
+          const dag = window.LDocReactiveEngine.SIMULATION_PRESETS[prKey]();
+          const vars = [];
+          dag.nodes.forEach(n => {
+            if (n.type === 'slider' || n.type === 'input') {
+              vars.push({ name: n.name, label: n.label, min: n.min, max: n.max, step: n.step, value: n.value, unit: n.unit || '' });
+            }
+          });
+          return vars;
+        } catch (_) {}
+      }
+      return [
+        { name: 'velocity', label: 'Launch Velocity', min: 1, max: 100, step: 1, value: 30, unit: 'm/s' },
+        { name: 'angle', label: 'Launch Angle', min: 0, max: 90, step: 1, value: 45, unit: '°' },
+        { name: 'gravity', label: 'Gravity', min: 1, max: 25, step: 0.1, value: 9.8, unit: 'm/s²' }
+      ];
+    };
+
+    if (!Array.isArray(block.variables) || !block.variables.length) {
+      block.variables = initPresetVars(pSel.value);
+    }
+
+    const vListWrap = document.createElement('div');
+    vListWrap.style.cssText = 'display:flex;flex-direction:column;gap:4px';
+    vSec.appendChild(vListWrap);
+
+    const renderVars = () => {
+      vListWrap.innerHTML = '';
+      block.variables.forEach((v, idx) => {
+        const vRow = document.createElement('div');
+        vRow.style.cssText = 'display:grid;grid-template-columns:1fr 45px 45px 45px 45px 24px;gap:4px;align-items:center';
+
+        const nameInp = document.createElement('input');
+        nameInp.placeholder = 'Name'; nameInp.value = v.label || v.name;
+        nameInp.title = 'Variable Label / Identifier';
+        nameInp.style.cssText = 'padding:3px 5px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:10.5px';
+        nameInp.oninput = () => { v.label = v.name = nameInp.value; edUpdateLivePreview(); };
+
+        const minInp = document.createElement('input');
+        minInp.type = 'number'; minInp.placeholder = 'Min'; minInp.value = v.min !== undefined ? v.min : 0;
+        minInp.title = 'Minimum Value';
+        minInp.style.cssText = 'padding:3px 4px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:10.5px';
+        minInp.oninput = () => { v.min = parseFloat(minInp.value) || 0; edUpdateLivePreview(); };
+
+        const maxInp = document.createElement('input');
+        maxInp.type = 'number'; maxInp.placeholder = 'Max'; maxInp.value = v.max !== undefined ? v.max : 100;
+        maxInp.title = 'Maximum Value';
+        maxInp.style.cssText = 'padding:3px 4px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:10.5px';
+        maxInp.oninput = () => { v.max = parseFloat(maxInp.value) || 100; edUpdateLivePreview(); };
+
+        const valInp = document.createElement('input');
+        valInp.type = 'number'; valInp.placeholder = 'Val'; valInp.value = v.value !== undefined ? v.value : 10;
+        valInp.title = 'Current / Default Value';
+        valInp.style.cssText = 'padding:3px 4px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#38bdf8;font-size:10.5px;font-weight:700';
+        valInp.oninput = () => { v.value = parseFloat(valInp.value) || 0; edUpdateLivePreview(); };
+
+        const unitInp = document.createElement('input');
+        unitInp.placeholder = 'Unit'; unitInp.value = v.unit || '';
+        unitInp.title = 'Unit (e.g. m/s, kg, V)';
+        unitInp.style.cssText = 'padding:3px 4px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#cbd5e1;font-size:10.5px';
+        unitInp.oninput = () => { v.unit = unitInp.value; edUpdateLivePreview(); };
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button'; delBtn.textContent = '✕'; delBtn.className = 'find-btn';
+        delBtn.title = 'Delete Variable';
+        delBtn.style.cssText = 'color:#ef4444;padding:2px 4px;font-size:10px';
+        delBtn.onclick = () => {
+          block.variables.splice(idx, 1);
+          renderVars();
+          edUpdateLivePreview();
+        };
+
+        vRow.appendChild(nameInp);
+        vRow.appendChild(minInp);
+        vRow.appendChild(maxInp);
+        vRow.appendChild(valInp);
+        vRow.appendChild(unitInp);
+        vRow.appendChild(delBtn);
+        vListWrap.appendChild(vRow);
+      });
+    };
+
+    addVarBtn.onclick = () => {
+      block.variables.push({ name: 'param_' + (block.variables.length + 1), label: 'New Param', min: 0, max: 100, step: 1, value: 25, unit: '' });
+      renderVars();
+      edUpdateLivePreview();
+    };
+
+    pSel.onchange = () => {
+      block.preset = block.simType = pSel.value;
+      block.variables = initPresetVars(pSel.value);
+      renderVars();
+      edUpdateLivePreview();
+    };
+    renderVars();
+    div.appendChild(vSec);
+
+    // Formula Editor with Real-Time AST Syntax Validator
+    const fSec = document.createElement('div');
+    fSec.style.cssText = 'margin-top:6px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:8px';
+    fSec.innerHTML = '<div style="font-size:10.5px;font-weight:700;color:var(--gold);margin-bottom:4px">SIMULATION FORMULA EXPRESSION</div>';
+    
+    const fInp = document.createElement('textarea');
+    fInp.rows = 2;
+    fInp.placeholder = 'e.g. (velocity * sin(deg2rad(angle))) / gravity';
+    fInp.value = block.formula || (pSel.value === 'ohms_law' ? 'voltage / resistance' : (pSel.value === 'compound_interest' ? 'principal * pow(1 + rate/100, years)' : '(velocity^2 * sin(deg2rad(2 * angle))) / gravity'));
+    fInp.style.cssText = 'width:100%;padding:6px;background:var(--surface);border:1px solid var(--border);border-radius:5px;color:#fff;font-family:monospace;font-size:11px';
+
+    const statusBadge = document.createElement('div');
+    statusBadge.style.cssText = 'font-size:10px;margin-top:4px;display:flex;align-items:center;gap:4px';
+
+    const validateFormula = (expr) => {
+      block.formula = expr;
+      try {
+        if (window.LDocReactiveEngine && window.LDocReactiveEngine.parseExpression) {
+          window.LDocReactiveEngine.parseExpression(expr);
+        }
+        statusBadge.innerHTML = '<span style="color:#22c55e">✓ Expression Valid (Evaluated via Safe AST Math Engine)</span>';
+      } catch (err) {
+        statusBadge.innerHTML = `<span style="color:#ef4444">⚠️ Syntax Warning: ${escapeHtml(err.message)}</span>`;
+      }
+      edUpdateLivePreview();
+    };
+
+    fInp.oninput = () => validateFormula(fInp.value);
+    fSec.appendChild(fInp);
+    fSec.appendChild(statusBadge);
+    validateFormula(fInp.value);
+    div.appendChild(fSec);
+
+  } else if (block.type === 'quiz') {
+    mk('input', 'Quiz Assessment Title', block.title || 'Interactive Knowledge Check', v => { block.title = v; edUpdateLivePreview(); });
+    
+    // Passing Score and Question Type Row
+    const qCfgRow = document.createElement('div');
+    qCfgRow.style.cssText = 'display:grid;grid-template-columns:1fr 100px;gap:6px;margin:6px 0';
+    
+    if (!block.questions || !block.questions.length) {
+      block.questions = [{ id: 'q1', type: 'single_select', question: 'Enter question prompt...', options: ['Option A', 'Option B', 'Option C'], correctIndex: 0, hint: '', explanation: '' }];
+    }
+    const q0 = block.questions[0];
+
+    const typeSel = document.createElement('select');
+    typeSel.style.cssText = 'padding:4px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:#fff;font-size:11px';
+    [['single_select', 'Single Choice'], ['true_false', 'True / False'], ['numeric', 'Numeric Target']].forEach(([v, l]) => {
+      const o = document.createElement('option'); o.value = v; o.textContent = l;
+      if (v === (q0.type || 'single_select')) o.selected = true;
+      typeSel.appendChild(o);
+    });
+
+    const passInp = document.createElement('input');
+    passInp.type = 'number'; passInp.min = '10'; passInp.max = '100';
+    passInp.value = block.passingScore || 70;
+    passInp.title = 'Passing Score (%)';
+    passInp.placeholder = 'Pass %';
+    passInp.style.cssText = 'padding:4px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:#fff;font-size:11px';
+    passInp.oninput = () => { block.passingScore = parseInt(passInp.value, 10) || 70; edUpdateLivePreview(); };
+
+    qCfgRow.appendChild(typeSel);
+    qCfgRow.appendChild(passInp);
+    div.appendChild(qCfgRow);
+
+    mk('textarea', 'Question Prompt...', q0.question || '', v => { q0.question = v; edUpdateLivePreview(); }, { rows: 2 });
+
+    const dynamicQuizArea = document.createElement('div');
+    dynamicQuizArea.style.cssText = 'margin:6px 0;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:8px';
+    div.appendChild(dynamicQuizArea);
+
+    const renderQuizQuestionTypeUi = () => {
+      dynamicQuizArea.innerHTML = '';
+      const curType = q0.type || 'single_select';
+
+      if (curType === 'single_select') {
+        dynamicQuizArea.innerHTML = '<div style="font-size:10.5px;font-weight:700;color:var(--gold);margin-bottom:6px">Answer Choices (Radio indicates correct choice):</div>';
+        const listWrap = document.createElement('div');
+        listWrap.style.cssText = 'display:flex;flex-direction:column;gap:4px';
+        
+        (q0.options || []).forEach((opt, idx) => {
+          const oRow = document.createElement('div');
+          oRow.style.cssText = 'display:flex;align-items:center;gap:6px';
+          const rad = document.createElement('input');
+          rad.type = 'radio'; rad.name = 'correct_' + block.id;
+          rad.checked = (q0.correctIndex === idx);
+          rad.onchange = () => { q0.correctIndex = idx; edUpdateLivePreview(); };
+
+          const oInp = document.createElement('input');
+          oInp.value = opt;
+          oInp.style.cssText = 'flex:1;padding:4px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px';
+          oInp.oninput = () => { q0.options[idx] = oInp.value; edUpdateLivePreview(); };
+
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button'; delBtn.textContent = '✕'; delBtn.className = 'find-btn';
+          delBtn.style.cssText = 'color:#ef4444;border-color:rgba(239,68,68,0.3);padding:2px 6px;font-size:10px';
+          delBtn.onclick = () => {
+            if (q0.options.length > 2) {
+              q0.options.splice(idx, 1);
+              if (q0.correctIndex >= q0.options.length) q0.correctIndex = 0;
+              renderQuizQuestionTypeUi();
+              edUpdateLivePreview();
+            } else {
+              showToast('Quiz must have at least 2 options.', 'err');
+            }
+          };
+          oRow.appendChild(rad); oRow.appendChild(oInp); oRow.appendChild(delBtn);
+          listWrap.appendChild(oRow);
+        });
+
+        const addBtn = document.createElement('button');
+        addBtn.type = 'button'; addBtn.className = 'find-btn';
+        addBtn.style.cssText = 'margin-top:6px;font-size:10px;padding:3px 8px;color:#38bdf8';
+        addBtn.textContent = '➕ Add Choice';
+        addBtn.onclick = () => {
+          q0.options.push(`New Option ${q0.options.length + 1}`);
+          renderQuizQuestionTypeUi();
+          edUpdateLivePreview();
+        };
+        dynamicQuizArea.appendChild(listWrap);
+        dynamicQuizArea.appendChild(addBtn);
+
+      } else if (curType === 'true_false') {
+        dynamicQuizArea.innerHTML = '<div style="font-size:10.5px;font-weight:700;color:var(--gold);margin-bottom:6px">Select Correct Boolean Answer:</div>';
+        const tfWrap = document.createElement('div');
+        tfWrap.style.cssText = 'display:flex;gap:16px;align-items:center';
+        
+        const isTrue = q0.correctAnswer === true || q0.correctAnswer === 'true';
+        tfWrap.innerHTML = `
+          <label style="display:flex;align-items:center;gap:4px;color:#fff;font-size:11px;cursor:pointer">
+            <input type="radio" name="tf_${block.id}" value="true" ${isTrue ? 'checked' : ''}> True
+          </label>
+          <label style="display:flex;align-items:center;gap:4px;color:#fff;font-size:11px;cursor:pointer">
+            <input type="radio" name="tf_${block.id}" value="false" ${!isTrue ? 'checked' : ''}> False
+          </label>
+        `;
+        tfWrap.querySelectorAll('input').forEach(rad => {
+          rad.onchange = () => { q0.correctAnswer = (rad.value === 'true'); edUpdateLivePreview(); };
+        });
+        dynamicQuizArea.appendChild(tfWrap);
+
+      } else if (curType === 'numeric') {
+        dynamicQuizArea.innerHTML = '<div style="font-size:10.5px;font-weight:700;color:var(--gold);margin-bottom:6px">Numeric Target & Tolerance:</div>';
+        const numWrap = document.createElement('div');
+        numWrap.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px';
+        numWrap.innerHTML = `
+          <div>
+            <label style="font-size:9.5px;color:var(--text3);display:block">CORRECT TARGET</label>
+            <input type="number" step="any" value="${q0.correctValue !== undefined ? q0.correctValue : 42}" style="width:100%;padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px" id="num_target_${block.id}">
+          </div>
+          <div>
+            <label style="font-size:9.5px;color:var(--text3);display:block">TOLERANCE (±)</label>
+            <input type="number" step="any" value="${q0.tolerance !== undefined ? q0.tolerance : 0.01}" style="width:100%;padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px" id="num_tol_${block.id}">
+          </div>
+        `;
+        numWrap.querySelector(`#num_target_${block.id}`).oninput = (e) => { q0.correctValue = parseFloat(e.target.value) || 0; edUpdateLivePreview(); };
+        numWrap.querySelector(`#num_tol_${block.id}`).oninput = (e) => { q0.tolerance = parseFloat(e.target.value) || 0; edUpdateLivePreview(); };
+        dynamicQuizArea.appendChild(numWrap);
+      }
+    };
+
+    typeSel.onchange = () => {
+      q0.type = typeSel.value;
+      renderQuizQuestionTypeUi();
+      edUpdateLivePreview();
+    };
+    renderQuizQuestionTypeUi();
+
+    mk('input', 'Hint for users (optional)', q0.hint || '', v => { q0.hint = v; edUpdateLivePreview(); });
+    mk('textarea', 'Explanation revealed after submission...', q0.explanation || '', v => { q0.explanation = v; edUpdateLivePreview(); }, { rows: 2 });
+
+  } else if (block.type === 'chart') {
+    mk('input', 'Chart Title', block.title || 'Performance Metric', v => { block.title = v; edUpdateLivePreview(); });
+    
+    // Type & Legend Toggle Row
+    const cTopRow = document.createElement('div');
+    cTopRow.style.cssText = 'display:grid;grid-template-columns:1fr auto;gap:8px;margin:6px 0;align-items:center';
+
+    const cSel = document.createElement('select');
+    cSel.style.cssText = 'padding:5px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12px';
+    [['bar', '📊 Bar Chart'], ['line', '📈 Line Chart'], ['pie', '🥧 Pie Chart'], ['doughnut', '🍩 Doughnut Chart']].forEach(([v, l]) => {
+      const opt = document.createElement('option');
+      opt.value = v; opt.textContent = l;
+      if (v === (block.chart_type || 'bar')) opt.selected = true;
+      cSel.appendChild(opt);
+    });
+    cSel.onchange = () => {
+      block.chart_type = cSel.value;
+      edUpdateLivePreview();
+    };
+
+    const legWrap = document.createElement('label');
+    legWrap.style.cssText = 'display:flex;align-items:center;gap:4px;color:var(--text);font-size:11px;cursor:pointer;white-space:nowrap';
+    const legCb = document.createElement('input');
+    legCb.type = 'checkbox';
+    legCb.checked = block.showLegend !== false;
+    legCb.onchange = () => {
+      block.showLegend = legCb.checked;
+      edUpdateLivePreview();
+    };
+    legWrap.appendChild(legCb);
+    legWrap.appendChild(document.createTextNode('Show Legend'));
+
+    cTopRow.appendChild(cSel);
+    cTopRow.appendChild(legWrap);
+    div.appendChild(cTopRow);
+
+    // Dynamic Data Table Editor
+    const dtSec = document.createElement('div');
+    dtSec.style.cssText = 'margin:6px 0;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:8px';
+    const dtHeader = document.createElement('div');
+    dtHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:6px';
+    dtHeader.innerHTML = '<span style="font-size:10.5px;font-weight:700;color:var(--gold)">CHART DATA TABLE (LABELS & VALUES)</span>';
+    const addRowBtn = document.createElement('button');
+    addRowBtn.type = 'button'; addRowBtn.className = 'find-btn';
+    addRowBtn.style.cssText = 'font-size:10px;padding:2px 8px;color:#38bdf8';
+    addRowBtn.textContent = '➕ Add Row';
+    dtHeader.appendChild(addRowBtn);
+    dtSec.appendChild(dtHeader);
+
+    if (!Array.isArray(block.labels) || !block.labels.length) block.labels = ['Q1', 'Q2', 'Q3', 'Q4'];
+    if (!Array.isArray(block.data) || !block.data.length) block.data = [25, 45, 70, 95];
+
+    const dtRowsWrap = document.createElement('div');
+    dtRowsWrap.style.cssText = 'display:flex;flex-direction:column;gap:4px';
+    dtSec.appendChild(dtRowsWrap);
+
+    const renderChartDataRows = () => {
+      dtRowsWrap.innerHTML = '';
+      block.labels.forEach((lbl, idx) => {
+        const dRow = document.createElement('div');
+        dRow.style.cssText = 'display:grid;grid-template-columns:1fr 80px 24px;gap:6px;align-items:center';
+
+        const lblInp = document.createElement('input');
+        lblInp.value = lbl;
+        lblInp.placeholder = 'Label';
+        lblInp.style.cssText = 'padding:3px 6px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px';
+        lblInp.oninput = () => { block.labels[idx] = lblInp.value; edUpdateLivePreview(); };
+
+        const valInp = document.createElement('input');
+        valInp.type = 'number';
+        valInp.value = block.data[idx] !== undefined ? block.data[idx] : 0;
+        valInp.placeholder = 'Value';
+        valInp.style.cssText = 'padding:3px 6px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:#38bdf8;font-size:11px;font-weight:700';
+        valInp.oninput = () => { block.data[idx] = parseFloat(valInp.value) || 0; edUpdateLivePreview(); };
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button'; delBtn.textContent = '✕'; delBtn.className = 'find-btn';
+        delBtn.style.cssText = 'color:#ef4444;border-color:rgba(239,68,68,0.3);padding:2px 4px;font-size:10px';
+        delBtn.onclick = () => {
+          if (block.labels.length > 1) {
+            block.labels.splice(idx, 1);
+            block.data.splice(idx, 1);
+            renderChartDataRows();
+            edUpdateLivePreview();
+          } else {
+            showToast('Chart must have at least one data row.', 'err');
+          }
+        };
+
+        dRow.appendChild(lblInp);
+        dRow.appendChild(valInp);
+        dRow.appendChild(delBtn);
+        dtRowsWrap.appendChild(dRow);
+      });
+    };
+
+    addRowBtn.onclick = () => {
+      block.labels.push(`Point ${block.labels.length + 1}`);
+      block.data.push(Math.round(Math.random() * 80 + 20));
+      renderChartDataRows();
+      edUpdateLivePreview();
+    };
+
+    renderChartDataRows();
+    div.appendChild(dtSec);
+
+  } else if (block.type === 'group') {
+    mk('input', 'Group Name', block.name || 'Element Group', v => { block.name = v; edUpdateLivePreview(); });
+    const gHint = document.createElement('div');
+    gHint.style.cssText = 'font-size:11.5px;color:#38bdf8;padding:6px 0';
+    gHint.textContent = `🔗 Group contains ${(block.children || []).length} bundled elements. Click "Ungroup" in the toolbar to unpack.`;
+    div.appendChild(gHint);
+  }
 
  panel.appendChild(div);
  });
@@ -21799,6 +23182,767 @@ window.loadPretextLivingShowcase = function() {
     showToast('⚡ Pretext Living Showcase Loaded! Drag the video card to watch 120fps water-flow reflow in action.', 'ok', 5000);
   }
 };
+
+// ── Dropdown Menu Toggles ──
+window.toggleEdShapeMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('ed-shapes-menu') || document.getElementById('ed-shape-dropdown-menu');
+  if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+};
+
+window.toggleEdSimMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('ed-sims-menu') || document.getElementById('ed-sim-dropdown-menu');
+  if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+};
+
+window.toggleEdChartMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('ed-charts-menu') || document.getElementById('ed-chart-dropdown-menu');
+  if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+};
+
+window.toggleEdAlignMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('ed-align-menu');
+  if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+};
+
+window.toggleEdDistributeMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('ed-distribute-menu');
+  if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+};
+
+window.toggleEdZOrderMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('ed-zorder-menu');
+  if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+};
+
+document.addEventListener('click', (e) => {
+  ['ed-shapes-menu', 'ed-shape-dropdown-menu', 'ed-sims-menu', 'ed-sim-dropdown-menu', 'ed-charts-menu', 'ed-chart-dropdown-menu', 'ed-align-menu', 'ed-distribute-menu', 'ed-zorder-menu'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.contains(e.target) && !e.target.closest('.slide-tool-btn') && !e.target.closest('.ed-add-btn')) {
+      el.style.display = 'none';
+    }
+  });
+});
+
+// ── Multi-Element Selection Getter ──
+window.edGetSelectedBlockIds = function() {
+  const cbs = document.querySelectorAll('.ed-block-select-cb:checked');
+  const ids = Array.from(cbs).map(cb => cb.dataset.blockId).filter(Boolean);
+  if (ids.length > 0) return ids;
+  if (window.edSelectedBlockId) return [window.edSelectedBlockId];
+  return [];
+};
+
+// ── Alignment & Distribution Suite ──
+window.ldocUiAlign = function(dir) {
+  const page = (typeof edPages !== 'undefined' && Array.isArray(edPages)) ? (edPages.find(p => p.id === edCurrentPage) || edPages[0]) : null;
+  if (!page || !Array.isArray(page.blocks)) return;
+  const selIds = window.edGetSelectedBlockIds();
+  if (selIds.length < 2) {
+    if (typeof showToast === 'function') showToast('Select at least 2 elements with checkboxes to align.', 'info');
+    return;
+  }
+  const selectedBlocks = page.blocks.filter(b => selIds.includes(String(b.id)) || selIds.includes(b.id));
+  if (selectedBlocks.length < 2) return;
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  selectedBlocks.forEach(b => {
+    const x = b.x !== undefined ? b.x : (b.left || 50);
+    const y = b.y !== undefined ? b.y : (b.top || 50);
+    const w = b.width || 200;
+    const h = b.height || 100;
+    if (x < minX) minX = x;
+    if (y < minY) minY = y;
+    if (x + w > maxX) maxX = x + w;
+    if (y + h > maxY) maxY = y + h;
+  });
+  const bbox = { x: minX, y: minY, width: Math.max(0, maxX - minX), height: Math.max(0, maxY - minY) };
+
+  selectedBlocks.forEach(b => {
+    const w = b.width || 200;
+    const h = b.height || 100;
+    switch (dir) {
+      case 'left': b.x = bbox.x; b.left = bbox.x; break;
+      case 'center': { const cx = Math.round(bbox.x + (bbox.width - w) / 2); b.x = cx; b.left = cx; break; }
+      case 'right': { const rx = bbox.x + bbox.width - w; b.x = rx; b.left = rx; break; }
+      case 'top': b.y = bbox.y; b.top = bbox.y; break;
+      case 'middle': { const my = Math.round(bbox.y + (bbox.height - h) / 2); b.y = my; b.top = my; break; }
+      case 'bottom': { const by = bbox.y + bbox.height - h; b.y = by; b.top = by; break; }
+    }
+  });
+  if (typeof edPushUndo === 'function') edPushUndo();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  if (typeof showToast === 'function') showToast(`Aligned ${dir}`, 'ok');
+  window.ldocMarkDirty && window.ldocMarkDirty();
+};
+
+window.ldocUiDistribute = function(axis) {
+  const page = (typeof edPages !== 'undefined' && Array.isArray(edPages)) ? (edPages.find(p => p.id === edCurrentPage) || edPages[0]) : null;
+  if (!page || !Array.isArray(page.blocks)) return;
+  const selIds = window.edGetSelectedBlockIds();
+  if (selIds.length < 3) {
+    if (typeof showToast === 'function') showToast('Select at least 3 elements with checkboxes to distribute.', 'info');
+    return;
+  }
+  const selected = page.blocks.filter(b => selIds.includes(String(b.id)) || selIds.includes(b.id));
+  if (selected.length < 3) return;
+
+  if (axis === 'horizontal') {
+    selected.sort((a, b) => ((a.x !== undefined ? a.x : (a.left || 0)) - (b.x !== undefined ? b.x : (b.left || 0))));
+    const first = selected[0];
+    const last = selected[selected.length - 1];
+    const startX = first.x !== undefined ? first.x : (first.left || 0);
+    const endX = (last.x !== undefined ? last.x : (last.left || 0)) + (last.width || 0);
+    let totalW = 0;
+    selected.forEach(s => totalW += (s.width || 0));
+    const gap = Math.max(0, (endX - startX - totalW) / (selected.length - 1));
+    let curX = startX;
+    selected.forEach(s => {
+      s.x = Math.round(curX);
+      s.left = Math.round(curX);
+      curX += (s.width || 0) + gap;
+    });
+  } else {
+    selected.sort((a, b) => ((a.y !== undefined ? a.y : (a.top || 0)) - (b.y !== undefined ? b.y : (b.top || 0))));
+    const first = selected[0];
+    const last = selected[selected.length - 1];
+    const startY = first.y !== undefined ? first.y : (first.top || 0);
+    const endY = (last.y !== undefined ? last.y : (last.top || 0)) + (last.height || 0);
+    let totalH = 0;
+    selected.forEach(s => totalH += (s.height || 0));
+    const gap = Math.max(0, (endY - startY - totalH) / (selected.length - 1));
+    let curY = startY;
+    selected.forEach(s => {
+      s.y = Math.round(curY);
+      s.top = Math.round(curY);
+      curY += (s.height || 0) + gap;
+    });
+  }
+  if (typeof edPushUndo === 'function') edPushUndo();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  if (typeof showToast === 'function') showToast(`Distributed ${axis}ly`, 'ok');
+  window.ldocMarkDirty && window.ldocMarkDirty();
+};
+
+window.ldocUiGroup = function() {
+  const page = (typeof edPages !== 'undefined' && Array.isArray(edPages)) ? (edPages.find(p => p.id === edCurrentPage) || edPages[0]) : null;
+  if (!page || !Array.isArray(page.blocks)) return;
+  const selIds = window.edGetSelectedBlockIds();
+  if (selIds.length < 2) {
+    if (typeof showToast === 'function') showToast('Select at least 2 elements with checkboxes to group.', 'info');
+    return;
+  }
+  const toGroup = [];
+  const remaining = [];
+  page.blocks.forEach(b => {
+    if (selIds.includes(String(b.id)) || selIds.includes(b.id)) toGroup.push(b);
+    else remaining.push(b);
+  });
+  if (toGroup.length < 2) return;
+
+  const groupNode = {
+    id: 'grp_' + Math.random().toString(36).slice(2, 9),
+    type: 'group',
+    name: `Group (${toGroup.length} items)`,
+    children: toGroup,
+    width: Math.max(...toGroup.map(c => c.width || 300)),
+    height: toGroup.reduce((sum, c) => sum + (c.height || 100), 0)
+  };
+  remaining.push(groupNode);
+  page.blocks = remaining;
+
+  if (typeof edRenderBlocks === 'function') edRenderBlocks();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  if (typeof showToast === 'function') showToast(`Grouped ${toGroup.length} elements`, 'ok');
+  window.ldocMarkDirty && window.ldocMarkDirty();
+};
+
+window.ldocUiUngroup = function() {
+  const page = (typeof edPages !== 'undefined' && Array.isArray(edPages)) ? (edPages.find(p => p.id === edCurrentPage) || edPages[0]) : null;
+  if (!page || !Array.isArray(page.blocks)) return;
+  const selIds = window.edGetSelectedBlockIds();
+  const groupsToUnpack = page.blocks.filter(b => b.type === 'group' && (selIds.length === 0 || selIds.includes(String(b.id)) || selIds.includes(b.id)));
+  if (groupsToUnpack.length === 0) {
+    if (typeof showToast === 'function') showToast('Select a group element to ungroup.', 'info');
+    return;
+  }
+  const newBlocks = [];
+  page.blocks.forEach(b => {
+    if (groupsToUnpack.includes(b)) {
+      if (Array.isArray(b.children)) {
+        newBlocks.push(...b.children);
+      }
+    } else {
+      newBlocks.push(b);
+    }
+  });
+  page.blocks = newBlocks;
+
+  if (typeof edRenderBlocks === 'function') edRenderBlocks();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  if (typeof showToast === 'function') showToast(`Ungrouped elements`, 'ok');
+  window.ldocMarkDirty && window.ldocMarkDirty();
+};
+
+// ── Z-Order Layer Depth Reordering ──
+window.ldocUiZOrder = function(dir) {
+  const page = (typeof edPages !== 'undefined' && Array.isArray(edPages)) ? (edPages.find(p => p.id === edCurrentPage) || edPages[0]) : null;
+  if (!page || !Array.isArray(page.blocks)) return;
+  const selIds = window.edGetSelectedBlockIds();
+  if (!selIds.length) {
+    if (typeof showToast === 'function') showToast('Select at least one block to reorder layer.', 'info');
+    return;
+  }
+  const targetId = selIds[0];
+  const idx = page.blocks.findIndex(b => String(b.id) === String(targetId) || b.id === targetId);
+  if (idx < 0) return;
+  const b = page.blocks[idx];
+
+  if (dir === 'forward' && idx < page.blocks.length - 1) {
+    page.blocks.splice(idx, 1);
+    page.blocks.splice(idx + 1, 0, b);
+  } else if (dir === 'backward' && idx > 0) {
+    page.blocks.splice(idx, 1);
+    page.blocks.splice(idx - 1, 0, b);
+  } else if (dir === 'front' && idx < page.blocks.length - 1) {
+    page.blocks.splice(idx, 1);
+    page.blocks.push(b);
+  } else if (dir === 'back' && idx > 0) {
+    page.blocks.splice(idx, 1);
+    page.blocks.unshift(b);
+  }
+
+  if (typeof edRenderBlocks === 'function') edRenderBlocks();
+  if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+  if (typeof showToast === 'function') showToast(`Layer moved ${dir}`, 'ok');
+  window.ldocMarkDirty && window.ldocMarkDirty();
+};
+
+// ── WCAG 2.2 Contrast Checker & Full Brand Kit Suite ──
+window.ldocOpenBrandModal = function() {
+  const existing = document.getElementById('ldoc-contrast-modal');
+  if (existing) { existing.remove(); return; }
+
+  const modal = document.createElement('div');
+  modal.id = 'ldoc-contrast-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px';
+
+  let palette = {
+    primary: '#38bdf8',
+    secondary: '#818cf8',
+    accent: '#f59e0b',
+    bg: '#0f172a',
+    text: '#ffffff'
+  };
+
+  function calcRatio(f, b) {
+    if (window.LDocEditorCore && typeof window.LDocEditorCore.checkWcagContrast === 'function') {
+      return window.LDocEditorCore.checkWcagContrast(f, b);
+    }
+    function lum(hex) {
+      hex = hex.replace('#','');
+      const rgb = [parseInt(hex.slice(0,2),16)||0, parseInt(hex.slice(2,4),16)||0, parseInt(hex.slice(4,6),16)||0].map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+    }
+    const l1 = lum(f), l2 = lum(b);
+    const r = (Math.max(l1,l2) + 0.05) / (Math.min(l1,l2) + 0.05);
+    const rounded = Math.round(r * 100) / 100;
+    return { ratio: rounded, normalAA: rounded >= 4.5, largeAA: rounded >= 3.0, normalAAA: rounded >= 7.0, largeAAA: rounded >= 4.5 };
+  }
+
+  modal.innerHTML = `
+    <div style="background:#0f172a;border:1.5px solid rgba(255,255,255,0.15);border-radius:16px;padding:24px;width:100%;max-width:540px;box-shadow:0 20px 60px rgba(0,0,0,0.9);color:#f8fafc;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="margin:0;font-size:16px;font-weight:800;color:#38bdf8">🎨 Brand Kit & WCAG 2.2 Accessibility Suite</h3>
+        <button type="button" style="background:none;border:none;color:#94a3b8;font-size:16px;cursor:pointer" onclick="document.getElementById('ldoc-contrast-modal').remove()">✕</button>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:6px">PALETTE PRESETS</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="find-btn" style="font-size:11px;padding:4px 8px" onclick="setPreset('#38bdf8','#818cf8','#f59e0b','#0f172a','#ffffff')">Midnight Neon</button>
+          <button type="button" class="find-btn" style="font-size:11px;padding:4px 8px" onclick="setPreset('#f59e0b','#fbbf24','#ec4899','#0a0a14','#fef08a')">Cyber Gold</button>
+          <button type="button" class="find-btn" style="font-size:11px;padding:4px 8px" onclick="setPreset('#0284c7','#0ea5e9','#10b981','#f8fafc','#0f172a')">Light Clean</button>
+          <button type="button" class="find-btn" style="font-size:11px;padding:4px 8px" onclick="setPreset('#10b981','#34d399','#06b6d4','#061e16','#e2e8f0')">Emerald Horizon</button>
+        </div>
+      </div>
+
+      <!-- 5 Color Palette Pickers -->
+      <div style="display:grid;grid-template-columns:repeat(5, 1fr);gap:8px;margin-bottom:16px">
+        <div>
+          <label style="font-size:10px;color:#94a3b8;display:block;margin-bottom:2px">PRIMARY</label>
+          <input type="color" id="bk-primary" value="${palette.primary}" style="width:100%;height:32px;border:none;border-radius:6px;cursor:pointer;background:none">
+        </div>
+        <div>
+          <label style="font-size:10px;color:#94a3b8;display:block;margin-bottom:2px">SECONDARY</label>
+          <input type="color" id="bk-secondary" value="${palette.secondary}" style="width:100%;height:32px;border:none;border-radius:6px;cursor:pointer;background:none">
+        </div>
+        <div>
+          <label style="font-size:10px;color:#94a3b8;display:block;margin-bottom:2px">ACCENT</label>
+          <input type="color" id="bk-accent" value="${palette.accent}" style="width:100%;height:32px;border:none;border-radius:6px;cursor:pointer;background:none">
+        </div>
+        <div>
+          <label style="font-size:10px;color:#94a3b8;display:block;margin-bottom:2px">BACKGROUND</label>
+          <input type="color" id="bk-bg" value="${palette.bg}" style="width:100%;height:32px;border:none;border-radius:6px;cursor:pointer;background:none">
+        </div>
+        <div>
+          <label style="font-size:10px;color:#94a3b8;display:block;margin-bottom:2px">TEXT</label>
+          <input type="color" id="bk-text" value="${palette.text}" style="width:100%;height:32px;border:none;border-radius:6px;cursor:pointer;background:none">
+        </div>
+      </div>
+
+      <!-- Apply Buttons -->
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <button type="button" class="find-btn" id="bk-apply-sel" style="flex:1;padding:6px;font-size:11.5px;color:#38bdf8;border-color:rgba(56,189,248,0.4)">Apply to Selection</button>
+        <button type="button" class="find-btn" id="bk-apply-theme" style="flex:1;padding:6px;font-size:11.5px;color:#a78bfa;border-color:rgba(167,139,250,0.4)">Apply to Theme</button>
+      </div>
+
+      <!-- Live WCAG Contrast Section -->
+      <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:6px">WCAG 2.2 TEXT & BACKGROUND CONTRAST</div>
+      <div id="wcag-preview" style="padding:14px;border-radius:10px;background:${palette.bg};color:${palette.text};text-align:center;margin-bottom:12px;border:1px solid rgba(255,255,255,0.1)">
+        <div style="font-size:16px;font-weight:700">Sample Heading Text (Large)</div>
+        <div style="font-size:12px;margin-top:4px">Sample body copy demonstrating WCAG contrast verification.</div>
+      </div>
+      <div id="wcag-results" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px"></div>
+
+      <div style="display:flex;justify-content:flex-end;margin-top:16px">
+        <button type="button" class="ed-add-btn" style="background:#0284c7;color:#fff;border:none;padding:6px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer" onclick="document.getElementById('ldoc-contrast-modal').remove()">Done</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const priInp = document.getElementById('bk-primary');
+  const secInp = document.getElementById('bk-secondary');
+  const accInp = document.getElementById('bk-accent');
+  const bgInp = document.getElementById('bk-bg');
+  const txtInp = document.getElementById('bk-text');
+  const prev = document.getElementById('wcag-preview');
+  const res = document.getElementById('wcag-results');
+
+  function update() {
+    prev.style.color = palette.text;
+    prev.style.background = palette.bg;
+    priInp.value = palette.primary;
+    secInp.value = palette.secondary;
+    accInp.value = palette.accent;
+    bgInp.value = palette.bg;
+    txtInp.value = palette.text;
+
+    const data = calcRatio(palette.text, palette.bg);
+    const badge = (pass, label) => `<span style="display:inline-block;padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;${pass ? 'background:rgba(34,197,94,0.2);color:#4ade80;border:1px solid rgba(34,197,94,0.4)' : 'background:rgba(239,68,68,0.2);color:#f87171;border:1px solid rgba(239,68,68,0.4)'}">${label}: ${pass ? 'PASS ✓' : 'FAIL ✕'}</span>`;
+
+    res.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:12px;color:#94a3b8">Contrast Ratio:</span>
+        <span style="font-size:18px;font-weight:900;color:${data.normalAA ? '#4ade80' : '#f87171'}">${data.ratio} : 1</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        ${badge(data.normalAA, 'WCAG AA Normal (4.5:1)')}
+        ${badge(data.largeAA, 'WCAG AA Large (3.0:1)')}
+        ${badge(data.normalAAA, 'WCAG AAA Normal (7.0:1)')}
+        ${badge(data.largeAAA, 'WCAG AAA Large (4.5:1)')}
+      </div>
+    `;
+  }
+
+  window.setPreset = function(pri, sec, acc, b, t) {
+    palette = { primary: pri, secondary: sec, accent: acc, bg: b, text: t };
+    update();
+  };
+
+  priInp.oninput = () => { palette.primary = priInp.value; update(); };
+  secInp.oninput = () => { palette.secondary = secInp.value; update(); };
+  accInp.oninput = () => { palette.accent = accInp.value; update(); };
+  bgInp.oninput = () => { palette.bg = bgInp.value; update(); };
+  txtInp.oninput = () => { palette.text = txtInp.value; update(); };
+
+  document.getElementById('bk-apply-sel').onclick = () => {
+    const selIds = window.edGetSelectedBlockIds();
+    const page = (typeof edPages !== 'undefined' && Array.isArray(edPages)) ? (edPages.find(p => p.id === edCurrentPage) || edPages[0]) : null;
+    if (!page || !selIds.length) {
+      if (typeof showToast === 'function') showToast('Select at least one element with checkboxes first.', 'info');
+      return;
+    }
+    let count = 0;
+    page.blocks.forEach(b => {
+      if (selIds.includes(String(b.id)) || selIds.includes(b.id)) {
+        if (b.type === 'shape') {
+          b.fill = palette.primary;
+          if (!b.style) b.style = {};
+          b.style.fill = palette.primary;
+          count++;
+        } else if (b.type === 'heading' || b.type === 'paragraph' || b.type === 'quote') {
+          if (!b.style) b.style = {};
+          b.style.color = palette.text;
+          count++;
+        }
+      }
+    });
+    if (typeof edRenderBlocks === 'function') edRenderBlocks();
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+    if (typeof showToast === 'function') showToast(`Applied brand palette to ${count} element(s).`, 'ok');
+    window.ldocMarkDirty && window.ldocMarkDirty();
+  };
+
+  document.getElementById('bk-apply-theme').onclick = () => {
+    const page = (typeof edPages !== 'undefined' && Array.isArray(edPages)) ? (edPages.find(p => p.id === edCurrentPage) || edPages[0]) : null;
+    if (page) {
+      page.theme = page.theme || {};
+      Object.assign(page.theme, palette);
+    }
+    document.documentElement.style.setProperty('--primary', palette.primary);
+    document.documentElement.style.setProperty('--accent', palette.accent);
+    if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+    if (typeof showToast === 'function') showToast('Applied brand theme across living document!', 'ok');
+    window.ldocMarkDirty && window.ldocMarkDirty();
+  };
+
+  update();
+};
+window.ldocOpenContrastModal = window.ldocOpenBrandModal;
+
+// ── Reactive Document Authoring Panel ──
+window.ldocOpenReactivePanel = function() {
+  const existing = document.getElementById('ldoc-reactive-modal');
+  if (existing) { existing.remove(); return; }
+
+  const curPage = (typeof edPages !== 'undefined' && Array.isArray(edPages)) ? (edPages.find(p => p.id === edCurrentPage) || edPages[0]) : null;
+  if (!curPage) return;
+
+  if (!curPage.variables || !curPage.variables.length) {
+    curPage.variables = [
+      { name: 'velocity', type: 'input', value: 30, min: 1, max: 100, step: 1, unit: 'm/s' },
+      { name: 'angle', type: 'input', value: 45, min: 0, max: 90, step: 1, unit: '°' },
+      { name: 'gravity', type: 'input', value: 9.81, min: 1, max: 25, step: 0.1, unit: 'm/s²' },
+      { name: 'range', type: 'formula', formula: '(velocity^2 * sin(deg2rad(2 * angle))) / gravity', value: 0, unit: 'm' }
+    ];
+  }
+
+  const modal = document.createElement('div');
+  modal.id = 'ldoc-reactive-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px';
+
+  modal.innerHTML = `
+    <div style="background:#0f172a;border:1.5px solid rgba(168,85,247,0.4);border-radius:16px;padding:24px;width:100%;max-width:680px;box-shadow:0 20px 60px rgba(0,0,0,0.9);color:#f8fafc;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <h3 style="margin:0;font-size:16px;font-weight:800;color:#c084fc">⚡ Reactive Document Variables & DAG Dependency Engine</h3>
+        <button type="button" style="background:none;border:none;color:#94a3b8;font-size:16px;cursor:pointer" onclick="document.getElementById('ldoc-reactive-modal').remove()">✕</button>
+      </div>
+      <div style="font-size:11.5px;color:#94a3b8;margin-bottom:14px">Define interactive variables, formula expressions, and reactive DAG flows that recalculate deterministically without eval().</div>
+
+      <!-- Variables Table -->
+      <div style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:var(--gold)">DOCUMENT VARIABLES:</span>
+          <button type="button" class="find-btn" id="rx-add-var" style="font-size:10.5px;padding:3px 8px;color:#38bdf8">➕ Add Variable</button>
+        </div>
+        <div id="rx-var-table" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px"></div>
+      </div>
+
+      <!-- Visual Dependency DAG -->
+      <div style="margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:6px">VISUAL DAG DEPENDENCY MAP:</div>
+        <div id="rx-dag-map" style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px;min-height:50px;display:flex;flex-wrap:wrap;gap:8px;align-items:center"></div>
+      </div>
+
+      <!-- Live Interactive Testing Sliders -->
+      <div style="margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:var(--gold);margin-bottom:6px">INTERACTIVE LIVE TEST SANDBOX:</div>
+        <div id="rx-test-sliders" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px"></div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;margin-top:16px">
+        <button type="button" class="ed-add-btn" style="background:#9333ea;color:#fff;border:none;padding:6px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer" onclick="document.getElementById('ldoc-reactive-modal').remove()">Done</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  function checkSyntax(formula) {
+    if (!formula || !formula.trim()) return { ok: true, msg: 'Empty expression' };
+    try {
+      if (window.LDocReactiveEngine && typeof window.LDocReactiveEngine.parseExpression === 'function') {
+        window.LDocReactiveEngine.parseExpression(formula);
+        return { ok: true, msg: 'Valid syntax' };
+      }
+      const safeRegex = /^[a-zA-Z0-9_\s\+\-\*\/\^\(\)\.\,\%\<\>\=\!\?]+$/;
+      if (!safeRegex.test(formula)) return { ok: false, msg: 'Illegal characters' };
+      return { ok: true, msg: 'Valid syntax' };
+    } catch(err) {
+      return { ok: false, msg: err.message };
+    }
+  }
+
+  function renderTable() {
+    const cont = document.getElementById('rx-var-table');
+    if (!cont) return;
+    cont.innerHTML = '';
+
+    curPage.variables.forEach((v, idx) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:grid;grid-template-columns:100px 80px 1fr 1fr 30px;gap:6px;align-items:center;margin-bottom:6px';
+
+      const nameInp = document.createElement('input');
+      nameInp.value = v.name;
+      nameInp.style.cssText = 'padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px';
+      nameInp.oninput = () => { v.name = nameInp.value; renderDAG(); renderSliders(); };
+
+      const typeSel = document.createElement('select');
+      typeSel.style.cssText = 'padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px';
+      typeSel.innerHTML = '<option value="input">Input</option><option value="formula">Formula</option>';
+      typeSel.value = v.type;
+      typeSel.onchange = () => { v.type = typeSel.value; renderTable(); renderDAG(); renderSliders(); };
+
+      const valInp = document.createElement('input');
+      valInp.value = v.type === 'formula' ? (v.formula || '') : (v.value !== undefined ? v.value : 0);
+      valInp.placeholder = v.type === 'formula' ? 'Expression (e.g. a * 2)' : 'Default Value';
+      valInp.style.cssText = 'padding:4px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:#fff;font-size:11px';
+      valInp.oninput = () => {
+        if (v.type === 'formula') v.formula = valInp.value;
+        else v.value = parseFloat(valInp.value) || 0;
+        renderDAG(); renderSliders();
+      };
+
+      const statusSpan = document.createElement('span');
+      statusSpan.style.cssText = 'font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+      if (v.type === 'formula') {
+        const syn = checkSyntax(v.formula);
+        statusSpan.textContent = syn.ok ? '✓ Valid' : '✕ Error';
+        statusSpan.style.color = syn.ok ? '#4ade80' : '#f87171';
+      } else {
+        statusSpan.textContent = `[${v.min || 0} .. ${v.max || 100}] ${v.unit || ''}`;
+        statusSpan.style.color = '#94a3b8';
+      }
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.textContent = '✕';
+      delBtn.className = 'find-btn';
+      delBtn.style.cssText = 'color:#ef4444;border-color:rgba(239,68,68,0.3);padding:2px 6px;font-size:10px';
+      delBtn.onclick = () => {
+        curPage.variables.splice(idx, 1);
+        renderTable(); renderDAG(); renderSliders();
+      };
+
+      row.appendChild(nameInp);
+      row.appendChild(typeSel);
+      row.appendChild(valInp);
+      row.appendChild(statusSpan);
+      row.appendChild(delBtn);
+      cont.appendChild(row);
+    });
+  }
+
+  function renderDAG() {
+    const dagCont = document.getElementById('rx-dag-map');
+    if (!dagCont) return;
+    dagCont.innerHTML = '';
+
+    curPage.variables.forEach(v => {
+      const chip = document.createElement('div');
+      chip.style.cssText = `padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px;${v.type==='input' ? 'background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8' : 'background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);color:#c084fc'}`;
+      chip.innerHTML = `<span>${v.type === 'input' ? '⚡' : 'ƒ'}</span><span>${escapeHtml(v.name)}</span>`;
+      dagCont.appendChild(chip);
+    });
+  }
+
+  function renderSliders() {
+    const sldCont = document.getElementById('rx-test-sliders');
+    if (!sldCont) return;
+    sldCont.innerHTML = '';
+
+    const inputs = curPage.variables.filter(v => v.type === 'input');
+    const formulas = curPage.variables.filter(v => v.type === 'formula');
+
+    inputs.forEach(inpVar => {
+      const row = document.createElement('div');
+      row.style.cssText = 'margin-bottom:8px';
+      row.innerHTML = `<div style="display:flex;justify-content:space-between;font-size:11px;color:#e2e8f0;margin-bottom:2px">
+        <span>${escapeHtml(inpVar.name)}:</span><strong id="rx_val_${inpVar.name}">${inpVar.value} ${inpVar.unit || ''}</strong>
+      </div>`;
+      const sld = document.createElement('input');
+      sld.type = 'range';
+      sld.min = inpVar.min !== undefined ? inpVar.min : 0;
+      sld.max = inpVar.max !== undefined ? inpVar.max : 100;
+      sld.step = inpVar.step !== undefined ? inpVar.step : 1;
+      sld.value = inpVar.value;
+      sld.style.cssText = 'width:100%;accent-color:#a855f7;cursor:pointer';
+      sld.oninput = (e) => {
+        inpVar.value = parseFloat(e.target.value);
+        const l = document.getElementById(`rx_val_${inpVar.name}`);
+        if (l) l.textContent = `${inpVar.value} ${inpVar.unit || ''}`;
+        recalcFormulas();
+      };
+      row.appendChild(sld);
+      sldCont.appendChild(row);
+    });
+
+    const fWrap = document.createElement('div');
+    fWrap.id = 'rx-computed-outputs';
+    fWrap.style.cssText = 'margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06)';
+    sldCont.appendChild(fWrap);
+    recalcFormulas();
+  }
+
+  function recalcFormulas() {
+    const fWrap = document.getElementById('rx-computed-outputs');
+    if (!fWrap) return;
+    fWrap.innerHTML = '<div style="font-size:10px;color:var(--gold);font-weight:700;margin-bottom:4px">COMPUTED FORMULA OUTPUTS:</div>';
+
+    const vals = {};
+    curPage.variables.filter(v => v.type === 'input').forEach(v => { vals[v.name] = v.value; });
+
+    curPage.variables.filter(v => v.type === 'formula').forEach(fVar => {
+      let outVal = 0;
+      try {
+        if (window.LDocReactiveEngine && typeof window.LDocReactiveEngine.evaluateSafeExpression === 'function') {
+          outVal = window.LDocReactiveEngine.evaluateSafeExpression(fVar.formula, vals);
+        } else {
+          // Safe evaluation fallback
+          outVal = 0;
+        }
+      } catch(err) {
+        outVal = 'Error';
+      }
+      fVar.value = typeof outVal === 'number' ? Math.round(outVal * 100) / 100 : outVal;
+      const fRow = document.createElement('div');
+      fRow.style.cssText = 'display:flex;justify-content:space-between;font-size:11px;padding:3px 0;color:#c084fc';
+      fRow.innerHTML = `<span>ƒ(${escapeHtml(fVar.name)}) =</span><strong>${fVar.value} ${fVar.unit || ''}</strong>`;
+      fWrap.appendChild(fRow);
+    });
+  }
+
+  document.getElementById('rx-add-var').onclick = () => {
+    const num = curPage.variables.length + 1;
+    curPage.variables.push({ name: 'var_' + num, type: 'input', value: 10, min: 0, max: 100, step: 1, unit: '' });
+    renderTable(); renderDAG(); renderSliders();
+  };
+
+  renderTable();
+  renderDAG();
+  renderSliders();
+};
+
+// ── Reliability UX: Autosave State & Crash Recovery ──
+let _ldocStudioDirty = false;
+let _ldocAutosaveDebounce = null;
+
+window.ldocMarkDirty = function() {
+  _ldocStudioDirty = true;
+  ldocUpdateAutosaveIndicator('Saving...');
+  clearTimeout(_ldocAutosaveDebounce);
+  _ldocAutosaveDebounce = setTimeout(() => {
+    try {
+      if (typeof edPages !== 'undefined' && Array.isArray(edPages)) {
+        const spec = (typeof buildSpec === 'function') ? buildSpec() : { title: document.title || 'Living Document', pages: edPages };
+        spec._autosaveTime = Date.now();
+        localStorage.setItem('ldoc_studio_autosave', JSON.stringify(spec));
+        localStorage.setItem('ldoc_studio_autosave_time', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+        ldocUpdateAutosaveIndicator('Saved');
+        _ldocStudioDirty = false;
+      }
+    } catch(err) {
+      console.warn('Autosave error:', err);
+      ldocUpdateAutosaveIndicator('Offline Draft Cached');
+    }
+  }, 1000);
+};
+
+window.ldocUpdateAutosaveIndicator = function(status) {
+  const ind = document.getElementById('sb-autosave-indicator');
+  if (ind) {
+    if (status === 'Saving...') {
+      ind.innerHTML = '<span>⏳</span><span>Saving...</span>';
+      ind.style.color = '#f59e0b';
+    } else if (status === 'Saved') {
+      const t = localStorage.getItem('ldoc_studio_autosave_time') || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      ind.innerHTML = `<span>✓</span><span>Saved ${t}</span>`;
+      ind.style.color = '#22c55e';
+    } else if (status === 'Offline Draft Cached') {
+      ind.innerHTML = '<span>💾</span><span>Offline Cached</span>';
+      ind.style.color = '#38bdf8';
+    } else if (status === 'Error') {
+      ind.innerHTML = '<span>✕</span><span>Save Error</span>';
+      ind.style.color = '#ef4444';
+    }
+  }
+};
+
+window.ldocInitCrashRecovery = function(storageKey, onRestore, onDiscard) {
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.pages || parsed.pages.length === 0) return;
+
+    const savedTime = localStorage.getItem(storageKey + '_time') || (parsed._autosaveTime ? new Date(parsed._autosaveTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'previous session');
+
+    const banner = document.createElement('div');
+    banner.id = 'ldoc-crash-recovery-banner';
+    banner.style.cssText = 'position:fixed;top:18px;left:50%;transform:translateX(-50%);background:#0f172a;border:1.5px solid #38bdf8;border-radius:12px;padding:12px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 12px 40px rgba(0,0,0,0.85);z-index:99999;backdrop-filter:blur(16px);';
+    banner.innerHTML = `
+      <div style="font-size:22px">💾</div>
+      <div>
+        <div style="font-size:12.5px;font-weight:700;color:#f8fafc">Unsaved draft recovered from ${savedTime}</div>
+        <div style="font-size:11px;color:#94a3b8">Restore your recovered workspace or discard the draft?</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-left:6px">
+        <button type="button" id="ldoc-btn-restore-draft" style="background:#0284c7;color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:11.5px;font-weight:700;cursor:pointer">Restore Draft</button>
+        <button type="button" id="ldoc-btn-discard-draft" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:6px 12px;font-size:11.5px;font-weight:700;cursor:pointer">Discard</button>
+      </div>
+    `;
+    document.body.appendChild(banner);
+
+    document.getElementById('ldoc-btn-restore-draft').onclick = () => {
+      banner.remove();
+      if (typeof onRestore === 'function') onRestore(parsed);
+      if (typeof showToast === 'function') showToast('✓ Draft workspace restored successfully.', 'ok');
+    };
+
+    document.getElementById('ldoc-btn-discard-draft').onclick = () => {
+      banner.remove();
+      localStorage.removeItem(storageKey);
+      localStorage.removeItem(storageKey + '_time');
+      if (typeof onDiscard === 'function') onDiscard();
+      if (typeof showToast === 'function') showToast('Draft discarded.', 'info');
+    };
+  } catch(err) {
+    console.warn('Crash recovery error:', err);
+  }
+};
+
+window.addEventListener('beforeunload', (e) => {
+  if (_ldocStudioDirty) {
+    e.preventDefault();
+    e.returnValue = 'You have unsaved changes in your document.';
+    return e.returnValue;
+  }
+});
+
+// Initialize Crash Recovery check after UI stabilizes
+setTimeout(() => {
+  window.ldocInitCrashRecovery('ldoc_studio_autosave', (spec) => {
+    if (spec && Array.isArray(spec.pages) && spec.pages.length > 0) {
+      if (typeof loadSpec === 'function') {
+        loadSpec(spec);
+      } else {
+        edPages = spec.pages;
+        if (typeof edRenderPagesList === 'function') edRenderPagesList();
+        if (typeof edSelectPage === 'function') edSelectPage(edPages[0].id);
+        if (typeof edUpdateLivePreview === 'function') edUpdateLivePreview();
+      }
+    }
+  });
+}, 800);
 </script>
 </body>
 </html>

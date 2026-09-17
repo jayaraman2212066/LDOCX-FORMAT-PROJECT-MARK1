@@ -28,7 +28,16 @@ const testSuites = [
   { section: 'Section 8', name: 'Architecture Conformance', script: 'test_section8_arch.js' },
   { section: 'Section 9', name: 'Regression Sweep (B1–B9)', script: 'test_section9_regression.js' },
   { section: 'Section 10', name: 'Pretext UI/UX 8 Master Features', script: 'test_pretext_ui_ux.js' },
-  { section: 'Section 11', name: 'Multi-User Concurrency & Integrity', script: 'test_section11_multi_user_load_integrity.js' }
+  { section: 'Section 11', name: 'Multi-User Concurrency & Integrity', script: 'test_section11_multi_user_load_integrity.js' },
+  { section: 'Section 12', name: 'Canva Pro Creative Engine & Vector Shapes', script: 'test_canva_pro_features.js' },
+  { section: 'Section 13', name: 'Living Document Runtime (Reactive DAG, 3D & Quiz)', script: 'test_living_document_runtime.js' },
+  { section: 'Section 14', name: 'Production Safety, QA & Corpus Verification', script: 'test_production_safety_qa.js' },
+  { section: 'Section 15', name: 'Creative Runtime, Blueprints & Vector Geometry', script: 'test_section15_creative_runtime_and_blueprints.js' },
+  { section: 'Section 16', name: 'Deep 2D Polygon Boolean Clipping Engine', script: 'test_section16_boolean_geometry_deep.js' },
+  { section: 'Section 17', name: 'Path Editing, Precision Transforms & Layer Sync', script: 'test_section17_professional_path_transforms_layers.js' },
+  { section: 'Section 18', name: 'Multi-Script Typography & Pretext Hardening', script: 'test_section18_typography_unicode_multiscript.js' },
+  { section: 'Section 19', name: 'Template Quality Validator & Virtual Catalog Scale', script: 'test_section19_template_validator_and_scale.js' },
+  { section: 'Section 20', name: 'Adversarial Security, Stress & User Journeys A–H', script: 'test_section20_adversarial_security_and_stress.js' }
 ];
 
 const results = [];

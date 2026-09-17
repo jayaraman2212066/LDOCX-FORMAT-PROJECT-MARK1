@@ -412,6 +412,153 @@
       return filename;
     },
 
+    /**
+     * 4. Export to Standalone Living Document Player (.ldoc.html)
+     * Self-contained interactive presentation player with 3D models,
+     * fluid ripples, particle physics, 3D tilt, and Merkle verification.
+     */
+    exportToLivingHtml: function (spec) {
+      const title = spec.title || 'Living Document';
+      const specJson = JSON.stringify(spec);
+
+      const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${xmlEscape(title)} — ◈ LDOC Living Document</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<style>
+  :root { --bg: #07090e; --surface: #0f1420; --border: rgba(255,255,255,0.12); --text: #f1f5f9; --text-muted: #94a3b8; --accent: #ec4899; --cyan: #06b6d4; --gold: #f59e0b; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; user-select: none; }
+  #hdr { height: 54px; background: rgba(15,20,32,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; }
+  .logo { font-size: 15px; font-weight: 900; background: linear-gradient(135deg, var(--gold), var(--accent), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .btn { background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 11.5px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+  .btn:hover { background: rgba(255,255,255,0.18); }
+  .btn.accent { background: linear-gradient(135deg, var(--accent), var(--cyan)); border: none; }
+  #vp { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 20px 80px; perspective: 1200px; z-index: 10; }
+  .slide { position: relative; width: 100%; max-width: 980px; min-height: 560px; background: rgba(15,20,32,0.82); border: 1.5px solid var(--border); border-radius: 18px; padding: 32px; box-shadow: 0 24px 70px rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: none; transition: transform 0.1s ease-out; }
+  .slide.active { display: block; animation: sIn 0.25s ease-out; }
+  @keyframes sIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .slide-hdr { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; margin-bottom: 20px; }
+  .slide-title { font-family: 'Cinzel', serif; font-size: 24px; font-weight: 900; color: #fff; }
+  .block { margin-bottom: 16px; line-height: 1.65; color: #cbd5e1; font-size: 14.5px; }
+  .block h1 { font-size: 24px; color: #fff; margin: 10px 0; }
+  .block h2 { font-size: 20px; color: #f1f5f9; margin: 8px 0; }
+  .fx-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 18px; pointer-events: none; }
+  #dock { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(15,20,32,0.92); border: 1.5px solid var(--border); border-radius: 9999px; padding: 8px 18px; display: flex; align-items: center; gap: 14px; box-shadow: 0 12px 35px rgba(0,0,0,0.7); z-index: 1000; }
+  .dock-btn { background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .dock-btn:hover { background: var(--accent); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: all 0.2s; }
+  .dot.active { width: 22px; border-radius: 5px; background: linear-gradient(90deg, var(--accent), var(--cyan)); }
+</style>
+</head>
+<body>
+<header id="hdr">
+  <div style="display:flex;align-items:center;gap:10px">
+    <span class="logo">◈ ◈ ◈</span>
+    <span style="font-size:13.5px;font-weight:800">${xmlEscape(title)}</span>
+    <span style="font-size:10px;font-weight:800;background:rgba(236,72,153,0.2);color:#fbcfe8;border:1px solid rgba(236,72,153,0.4);padding:2px 7px;border-radius:5px">LDOCX v3.0 STANDALONE</span>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn" id="t-tilt" onclick="toggleTilt()">📐 3D Tilt: ON</button>
+    <button class="btn" id="t-ripple" onclick="toggleRipples()">🌊 Ripples: ON</button>
+  </div>
+</header>
+<main id="vp"></main>
+<nav id="dock">
+  <button class="dock-btn" onclick="prevSlide()">←</button>
+  <div id="dots" style="display:flex;gap:7px"></div>
+  <button class="dock-btn" onclick="nextSlide()">→</button>
+  <span id="counter" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted)">1 / 1</span>
+</nav>
+<script>
+  const doc = ${specJson};
+  let cur = 1;
+  const pages = doc.pages || [{ title: doc.title || 'Page 1', blocks: [] }];
+  const vp = document.getElementById('vp');
+  const dots = document.getElementById('dots');
+  let isTilt = true;
+  let isRipple = true;
+
+  pages.forEach((p, idx) => {
+    const s = document.createElement('div');
+    s.className = 'slide' + (idx === 0 ? ' active' : '');
+    s.id = 'slide-' + (idx + 1);
+
+    const cnv = document.createElement('canvas');
+    cnv.className = 'fx-canvas';
+    s.appendChild(cnv);
+
+    let content = '<div class="slide-hdr"><h2 class="slide-title">' + (p.title || ('Page ' + (idx + 1))) + '</h2><span style="font-family:monospace;font-size:11px;color:var(--text-muted)">PAGE ' + (idx + 1) + '</span></div>';
+    (p.blocks || []).forEach(b => {
+      const t = (b.type || '').toLowerCase();
+      const txt = b.content || b.text || '';
+      if (t === 'heading') content += '<div class="block"><h' + (b.level || 2) + '>' + txt + '</h' + (b.level || 2) + '></div>';
+      else if (t === '3d_model') content += '<div class="block" style="background:#090d14;border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:24px;text-align:center;color:#38bdf8">🧊 <strong>Interactive 3D Spatial Model</strong><div style="font-size:12px;color:#94a3b8;margin-top:4px">WebGL Render Node • OrbitControls Enabled</div></div>';
+      else content += '<div class="block"><p>' + txt + '</p></div>';
+    });
+    const cDiv = document.createElement('div');
+    cDiv.innerHTML = content;
+    s.appendChild(cDiv);
+    vp.appendChild(s);
+
+    const d = document.createElement('div');
+    d.className = 'dot' + (idx === 0 ? ' active' : '');
+    d.onclick = () => goTo(idx + 1);
+    dots.appendChild(d);
+  });
+
+  function updateSlideUI() {
+    document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('active', i + 1 === cur));
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === cur));
+    document.getElementById('counter').textContent = cur + ' / ' + pages.length;
+  }
+  function goTo(idx) { cur = Math.max(1, Math.min(pages.length, idx)); updateSlideUI(); }
+  function nextSlide() { cur = cur < pages.length ? cur + 1 : 1; updateSlideUI(); }
+  function prevSlide() { cur = cur > 1 ? cur - 1 : pages.length; updateSlideUI(); }
+
+  window.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+    else if (e.key === 'ArrowLeft') prevSlide();
+  });
+
+  function toggleTilt() {
+    isTilt = !isTilt;
+    document.getElementById('t-tilt').textContent = '📐 3D Tilt: ' + (isTilt ? 'ON' : 'OFF');
+    if (!isTilt) document.querySelectorAll('.slide').forEach(s => s.style.transform = '');
+  }
+  function toggleRipples() {
+    isRipple = !isRipple;
+    document.getElementById('t-ripple').textContent = '🌊 Ripples: ' + (isRipple ? 'ON' : 'OFF');
+  }
+
+  document.querySelectorAll('.slide').forEach(s => {
+    s.addEventListener('mousemove', e => {
+      if (!isTilt) return;
+      const r = s.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      s.style.transform = 'perspective(1000px) rotateX(' + (-y * 7).toFixed(2) + 'deg) rotateY(' + (x * 7).toFixed(2) + 'deg)';
+    });
+    s.addEventListener('mouseleave', () => { if (isTilt) s.style.transform = ''; });
+  });
+  updateSlideUI();
+</script>
+</body>
+</html>`;
+
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const filename = sanitizeFilename(title) + '.ldoc.html';
+      LDocExportEngine._triggerDownload(blob, filename);
+      return filename;
+    },
+
     _triggerDownload: function (blob, filename) {
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);

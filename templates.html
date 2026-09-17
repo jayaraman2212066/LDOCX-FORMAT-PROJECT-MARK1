@@ -357,6 +357,141 @@
       font-size: 12.5px;
       color: #64748b;
     }
+    /* Procedural Generator Panel */
+    .hub-gen-panel {
+      background: rgba(19, 26, 43, 0.7);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 0 auto 36px;
+      max-width: 1000px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      text-align: left;
+    }
+    .hub-gen-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .hub-gen-title h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hub-gen-title span.capacity {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .hub-gen-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+    @media (max-width: 820px) {
+      .hub-gen-controls { grid-template-columns: 1fr; }
+    }
+    .hub-control-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .hub-control-group select, .hub-control-group input {
+      width: 100%;
+      background: #090c14;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #fff;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border 0.15s;
+    }
+    .hub-control-group select:focus, .hub-control-group input:focus {
+      border-color: #a855f7;
+    }
+    .hub-seed-wrap {
+      display: flex;
+      gap: 6px;
+    }
+    .hub-seed-wrap button {
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .hub-seed-wrap button:hover {
+      background: #334155;
+      color: #fff;
+    }
+    .hub-btn-generate {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      border: none;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 11px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+    }
+    .hub-btn-generate:hover {
+      background: linear-gradient(135deg, #6d28d9, #4338ca);
+      transform: translateY(-1px);
+    }
+    .hub-palette-swatches {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin: 10px 0;
+      padding: 6px 10px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 6px;
+    }
+    .hub-palette-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .hub-section-heading {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      margin: 36px 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
   </style>
 </head>
 <body>
@@ -401,16 +536,80 @@
 
     <!-- Category Filter Buttons -->
     <div class="hub-filters">
-      <button class="hub-filter-btn active" onclick="setFilter('all')">All Blueprints (4)</button>
+      <button class="hub-filter-btn active" onclick="setFilter('all')">All Blueprints</button>
       <button class="hub-filter-btn" onclick="setFilter('finance')">📊 Executive &amp; Finance</button>
       <button class="hub-filter-btn" onclick="setFilter('science')">⚛️ Science &amp; Quantum</button>
       <button class="hub-filter-btn" onclick="setFilter('pitch')">🚀 Venture &amp; Pitch</button>
       <button class="hub-filter-btn" onclick="setFilter('robotics')">🤖 Hardware &amp; 3D CAD</button>
+      <button class="hub-filter-btn" onclick="setFilter('education')">🎓 Interactive Quizzes</button>
+      <button class="hub-filter-btn" onclick="setFilter('interactive')">⚡ STEM Simulations</button>
     </div>
+
+    <!-- Procedural Generator Console -->
+    <section class="hub-gen-panel">
+      <div class="hub-gen-title">
+        <h3><span>⚡</span> Procedural Blueprint Generator</h3>
+        <span class="capacity">✦ 36,000,000+ Deterministic Combinations</span>
+      </div>
+      <div class="hub-gen-controls">
+        <div class="hub-control-group">
+          <label for="procCatSelect">Master Category (10)</label>
+          <select id="procCatSelect" onchange="onCategorySelectChange()">
+            <option value="all">All 10 Categories</option>
+            <option value="marketing">Marketing &amp; Growth</option>
+            <option value="social">Social &amp; Visual Media</option>
+            <option value="document">Documents &amp; Formal Reports</option>
+            <option value="presentation">Keynotes &amp; Pitches</option>
+            <option value="education">Education &amp; Interactive Quizzes</option>
+            <option value="event">Events, Cards &amp; Invitations</option>
+            <option value="business">Business &amp; Strategy</option>
+            <option value="personal">Personal &amp; Creative</option>
+            <option value="technical">Technical Architecture &amp; Specs</option>
+            <option value="interactive">Interactive STEM &amp; Simulations</option>
+          </select>
+        </div>
+        <div class="hub-control-group">
+          <label for="procSubtypeSelect">Archetype / Subtype</label>
+          <select id="procSubtypeSelect">
+            <option value="all">Any Archetype (Dynamic)</option>
+          </select>
+        </div>
+        <div class="hub-control-group">
+          <label for="procSeedInput">Deterministic Seed</label>
+          <div class="hub-seed-wrap">
+            <input type="text" id="procSeedInput" placeholder="e.g. 1048576 or custom">
+            <button type="button" onclick="randomizeSeed()" title="Generate Random Seed">🎲 Random</button>
+          </div>
+        </div>
+        <div>
+          <button type="button" class="hub-btn-generate" onclick="generateProceduralGrid()">
+            <span>✨</span>
+            <span>Generate Blueprints</span>
+          </button>
+        </div>
+      </div>
+    </section>
   </section>
 
   <!-- Models & Templates Cards Grid -->
   <main class="hub-container">
+    <!-- Procedural Section Heading -->
+    <div class="hub-section-heading">
+      <span>✨</span>
+      <span>Procedural Generated Blueprints</span>
+      <span id="procCountBadge" style="font-size:11.5px;font-weight:700;color:#94a3b8;background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:12px">12 Dynamic Combinations</span>
+    </div>
+    
+    <!-- Dynamic Procedural Blueprints Grid -->
+    <div class="hub-grid" id="proceduralGrid" style="margin-bottom:48px"></div>
+
+    <!-- Curated Section Heading -->
+    <div class="hub-section-heading">
+      <span>★</span>
+      <span>Curated Master Blueprints</span>
+      <span style="font-size:11.5px;font-weight:700;color:#f59e0b;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);padding:2px 8px;border-radius:12px">4 Enterprise Decks</span>
+    </div>
+
     <div class="hub-grid" id="templatesGrid">
 
       <!-- Template 1: Financial Annual Report -->
@@ -561,13 +760,258 @@
     <div style="margin-top:8px;font-size:11.5px;color:#475569">All templates run offline locally without cloud dependencies. Licensed under Open Living Specification.</div>
   </footer>
 
+  <script src="ldoc-template-engine.js"></script>
   <script>
     let activeFilter = 'all';
+
+    const SUBTYPES_MAP = {
+      marketing: [
+        { id: 'infographic_poster', name: 'Infographic Poster' },
+        { id: 'product_launch_sheet', name: 'Product Launch Sheet' },
+        { id: 'sales_flyer', name: 'Sales Flyer' },
+        { id: 'feature_comparison', name: 'Feature Comparison' },
+        { id: 'event_invitation', name: 'Event Invitation' },
+        { id: 'coupon_voucher', name: 'Coupon Voucher' },
+        { id: 'billboard_banner', name: 'Billboard Banner' },
+        { id: 'social_campaign', name: 'Social Campaign' }
+      ],
+      social: [
+        { id: 'instagram_post', name: 'Instagram Square / Post' },
+        { id: 'youtube_thumbnail', name: 'YouTube Video Thumbnail' },
+        { id: 'linkedin_banner', name: 'LinkedIn Header Banner' },
+        { id: 'tiktok_slide', name: 'TikTok / Reel Slide' },
+        { id: 'pinterest_pin', name: 'Pinterest Tall Pin' },
+        { id: 'twitter_header', name: 'Twitter / X Banner' },
+        { id: 'story_visual', name: 'Vertical Story Visual' },
+        { id: 'podcast_cover', name: 'Podcast Square Cover' }
+      ],
+      document: [
+        { id: 'executive_summary', name: 'Executive Summary' },
+        { id: 'whitepaper_brief', name: 'Whitepaper Brief' },
+        { id: 'meeting_agenda', name: 'Meeting Agenda' },
+        { id: 'invoice_billing', name: 'Invoice & Billing Sheet' },
+        { id: 'formal_memo', name: 'Formal Strategic Memo' },
+        { id: 'compliance_audit', name: 'Compliance & Audit Report' },
+        { id: 'press_release', name: 'Press Release' },
+        { id: 'letterhead_memo', name: 'Executive Letterhead' }
+      ],
+      presentation: [
+        { id: 'pitch_deck', name: 'Startup Pitch Deck' },
+        { id: 'investor_update', name: 'Quarterly Investor Update' },
+        { id: 'sales_keynote', name: 'Enterprise Sales Keynote' },
+        { id: 'webinar_deck', name: 'Live Webinar Deck' },
+        { id: 'team_all_hands', name: 'Company All-Hands' },
+        { id: 'product_roadmap', name: 'Product Roadmap Vision' },
+        { id: 'quarterly_review', name: 'Executive QBR Deck' },
+        { id: 'conference_keynote', name: 'Conference Keynote' }
+      ],
+      education: [
+        { id: 'interactive_quiz', name: 'Interactive Quiz Assessment' },
+        { id: 'lecture_presentation', name: 'Lecture Presentation' },
+        { id: 'flashcard_deck', name: 'Study Flashcard Deck' },
+        { id: 'syllabus_guide', name: 'Course Syllabus Guide' },
+        { id: 'scientific_lab_report', name: 'Scientific Lab Report' },
+        { id: 'curriculum_summary', name: 'Curriculum Summary' },
+        { id: 'student_handout', name: 'Student Interactive Handout' },
+        { id: 'training_manual', name: 'Employee Training Manual' }
+      ],
+      event: [
+        { id: 'wedding_invitation', name: 'Elegant Wedding Invitation' },
+        { id: 'party_flyer', name: 'Festive Celebration Flyer' },
+        { id: 'conference_badge', name: 'Conference Attendee Badge' },
+        { id: 'gala_ticket', name: 'VIP Gala Admission Ticket' },
+        { id: 'concert_poster', name: 'Concert & Music Poster' },
+        { id: 'anniversary_card', name: 'Anniversary Celebration Card' },
+        { id: 'greeting_card', name: 'Seasonal Greeting Card' },
+        { id: 'rsvp_schedule', name: 'Event RSVP & Run of Show' }
+      ],
+      business: [
+        { id: 'business_plan', name: 'Comprehensive Business Plan' },
+        { id: 'financial_report', name: 'Dynamic Financial Report' },
+        { id: 'org_chart', name: 'Organizational Team Chart' },
+        { id: 'strategy_canvas', name: 'Strategic Value Canvas' },
+        { id: 'kpi_dashboard', name: 'Executive KPI Dashboard' },
+        { id: 'brand_guidelines', name: 'Brand Style Guidelines' },
+        { id: 'project_proposal', name: 'Commercial Project Proposal' },
+        { id: 'swot_analysis', name: 'Strategic SWOT Analysis' }
+      ],
+      personal: [
+        { id: 'resume_cv', name: 'Modern Professional CV' },
+        { id: 'portfolio_showcase', name: 'Design Portfolio Showcase' },
+        { id: 'meal_planner', name: 'Weekly Nutrition & Meal Plan' },
+        { id: 'travel_itinerary', name: 'Travel & Expedition Itinerary' },
+        { id: 'budget_tracker', name: 'Personal Cashflow Budget' },
+        { id: 'wedding_planner', name: 'Wedding Coordination Plan' },
+        { id: 'photo_album', name: 'Living Photo Album' },
+        { id: 'habit_tracker', name: 'Daily Habit & Streak Tracker' }
+      ],
+      technical: [
+        { id: 'api_specification', name: 'REST & GraphQL API Spec' },
+        { id: 'system_architecture', name: 'Distributed System Arch' },
+        { id: 'database_schema', name: 'Relational Database Schema' },
+        { id: 'network_topology', name: 'Cloud Network Topology' },
+        { id: 'incident_postmortem', name: 'Reliability Postmortem' },
+        { id: 'rfc_proposal', name: 'Engineering RFC Proposal' },
+        { id: 'circuit_schematic', name: 'Hardware Circuit Schematic' },
+        { id: 'maintenance_protocol', name: 'Industrial Maintenance Protocol' }
+      ],
+      interactive: [
+        { id: 'physics_pendulum_sim', name: 'Harmonic Pendulum Simulation' },
+        { id: 'projectile_motion_sim', name: '2D Projectile Physics Sim' },
+        { id: 'circuit_ohm_analyzer', name: "Ohm's Law Circuit Analyzer" },
+        { id: 'gravitational_orbital_sim', name: 'Two-Body Orbital Gravity Sim' },
+        { id: 'elastic_collision_sim', name: '2D Elastic Collision Sandbox' },
+        { id: 'rc_filter_sim', name: 'RC Low-Pass Filter Step Sim' },
+        { id: 'mortgage_calculator', name: 'Amortization Mortgage Calculator' },
+        { id: 'beam_bending_sim', name: 'Structural Beam Bending Simulator' }
+      ]
+    };
+
+    function onCategorySelectChange() {
+      const cat = document.getElementById('procCatSelect').value;
+      const subSelect = document.getElementById('procSubtypeSelect');
+      subSelect.innerHTML = '<option value="all">Any Archetype (Dynamic)</option>';
+
+      if (cat !== 'all' && SUBTYPES_MAP[cat]) {
+        SUBTYPES_MAP[cat].forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.textContent = s.name;
+          subSelect.appendChild(opt);
+        });
+      }
+    }
+
+    function randomizeSeed() {
+      const rnd = Math.floor(Math.random() * 9000000) + 1000000;
+      document.getElementById('procSeedInput').value = rnd;
+    }
+
+    function generateProceduralGrid() {
+      const grid = document.getElementById('proceduralGrid');
+      if (!grid) return;
+
+      const engine = window.LDocTemplateEngine;
+      if (!engine) {
+        console.warn('LDocTemplateEngine not loaded.');
+        return;
+      }
+
+      const catVal = document.getElementById('procCatSelect').value;
+      const subVal = document.getElementById('procSubtypeSelect').value;
+      let seedVal = document.getElementById('procSeedInput').value.trim();
+      if (!seedVal) {
+        seedVal = Math.floor(Math.random() * 9000000) + 1000000;
+        document.getElementById('procSeedInput').value = seedVal;
+      }
+
+      grid.innerHTML = '';
+      const items = [];
+
+      if (subVal !== 'all' && catVal !== 'all') {
+        for (let i = 0; i < 12; i++) {
+          const s = (parseInt(seedVal, 10) || 1048576) + i * 7919;
+          items.push(engine.generateRecipe(s, catVal, subVal));
+        }
+      } else {
+        const cat = catVal === 'all' ? 'all' : catVal;
+        const catalog = engine.browseCatalog({
+          pageIndex: 0,
+          pageSize: 12,
+          category: cat,
+          seed: seedVal
+        });
+        items.push(...catalog.items);
+      }
+
+      document.getElementById('procCountBadge').textContent = `${items.length} Dynamic Combinations (Seed #${seedVal})`;
+
+      items.forEach(recipe => {
+        const article = document.createElement('article');
+        article.className = 'hub-card';
+        article.setAttribute('data-category', recipe.category);
+        article.setAttribute('data-keywords', `${recipe.category} ${recipe.subtype} ${recipe.title} ${recipe.layoutId} ${recipe.paletteId}`);
+
+        const p = recipe.palette || { bg: '#0b0f19', surface: '#111726', text: '#f8fafc', primary: '#7c3aed', secondary: '#38bdf8' };
+        const t = recipe.typography || { heading: 'Plus Jakarta Sans', body: 'Plus Jakarta Sans' };
+
+        const featBadges = [];
+        featBadges.push(`<span class="hub-cap-badge">📄 ${recipe.pageCount} ${recipe.pageCount === 1 ? 'Page' : 'Pages'}</span>`);
+        featBadges.push(`<span class="hub-cap-badge">🔤 ${t.heading.split(' ')[0]}</span>`);
+        if (recipe.features.hasSimulation) featBadges.push(`<span class="hub-cap-badge" style="color:#38bdf8">⚡ Simulation</span>`);
+        if (recipe.features.hasChart) featBadges.push(`<span class="hub-cap-badge" style="color:#10b981">📊 Reactive Chart</span>`);
+        if (recipe.features.hasQuiz) featBadges.push(`<span class="hub-cap-badge" style="color:#f59e0b">🎓 Quiz Engine</span>`);
+        if (recipe.features.has3D) featBadges.push(`<span class="hub-cap-badge" style="color:#c084fc">🎲 3D WebGL</span>`);
+
+        article.innerHTML = `
+          <div class="hub-card-header">
+            <span class="hub-card-tag ${recipe.category}">${recipe.category.toUpperCase()} • ${recipe.subtype.replace(/_/g, ' ')}</span>
+            <div class="hub-card-stats">
+              <span>Seed #${recipe.seed}</span>
+            </div>
+          </div>
+          <h2 class="hub-card-title">${recipe.title}</h2>
+          <div class="hub-card-author">
+            <span>By <b>${recipe.author}</b></span>
+            <span style="color:#34d399">✓ Procedural AST</span>
+          </div>
+          <p class="hub-card-desc">${recipe.desc}</p>
+          
+          <div class="hub-palette-swatches" title="Palette: ${p.name || recipe.paletteId}">
+            <span style="font-size:10px;color:#94a3b8;margin-right:4px">Palette:</span>
+            <div class="hub-palette-dot" style="background:${p.bg}" title="Background: ${p.bg}"></div>
+            <div class="hub-palette-dot" style="background:${p.surface}" title="Surface: ${p.surface}"></div>
+            <div class="hub-palette-dot" style="background:${p.primary}" title="Primary: ${p.primary}"></div>
+            <div class="hub-palette-dot" style="background:${p.secondary}" title="Secondary: ${p.secondary}"></div>
+            <div class="hub-palette-dot" style="background:${p.text}" title="Text: ${p.text}"></div>
+            <span style="font-size:10px;color:#cbd5e1;margin-left:4px">${p.name || ''}</span>
+          </div>
+
+          <div class="hub-badges-row">
+            ${featBadges.join('')}
+          </div>
+
+          <div class="hub-actions-row">
+            <a href="/studio?templateSeed=${recipe.seed}&category=${recipe.category}&subtype=${recipe.subtype}" class="hub-btn-edit">
+              <span>✏️</span>
+              <span>Live Edit in LDOC Studio</span>
+            </a>
+            <a href="/creator?templateSeed=${recipe.seed}&category=${recipe.category}&subtype=${recipe.subtype}" class="hub-btn-sub" title="Open in Creator">🎨 Creator</a>
+            <button type="button" class="hub-btn-sub" onclick="copyRecipe('${recipe.seed}', '${recipe.category}', '${recipe.subtype}')" title="Copy Deterministic JSON Recipe">📋</button>
+          </div>
+        `;
+        grid.appendChild(article);
+      });
+
+      // Filter based on current search input if any
+      const query = document.getElementById('hubSearchInput').value;
+      if (query) filterTemplates(query);
+    }
+
+    function copyRecipe(seed, category, subtype) {
+      const engine = window.LDocTemplateEngine;
+      if (!engine) return;
+      const recipe = engine.generateRecipe(parseInt(seed, 10), category, subtype);
+      navigator.clipboard.writeText(JSON.stringify(recipe, null, 2)).then(() => {
+        alert(`✓ Copied deterministic recipe for Seed #${seed} (${recipe.title}) to clipboard!`);
+      }).catch(() => {
+        prompt('Copy Recipe JSON:', JSON.stringify(recipe));
+      });
+    }
 
     function setFilter(category) {
       activeFilter = category;
       document.querySelectorAll('.hub-filter-btn').forEach(btn => btn.classList.remove('active'));
       event.currentTarget.classList.add('active');
+
+      const catSelect = document.getElementById('procCatSelect');
+      if (category === 'all') {
+        catSelect.value = 'all';
+      } else if (catSelect.querySelector(`option[value="${category}"]`)) {
+        catSelect.value = category;
+      }
+      onCategorySelectChange();
+      generateProceduralGrid();
       filterTemplates(document.getElementById('hubSearchInput').value);
     }
 
@@ -578,8 +1022,8 @@
       cards.forEach(card => {
         const cat = card.getAttribute('data-category');
         const kw = card.getAttribute('data-keywords') || '';
-        const title = card.querySelector('.hub-card-title').textContent.toLowerCase();
-        const desc = card.querySelector('.hub-card-desc').textContent.toLowerCase();
+        const title = (card.querySelector('.hub-card-title')?.textContent || '').toLowerCase();
+        const desc = (card.querySelector('.hub-card-desc')?.textContent || '').toLowerCase();
 
         const matchesCat = (activeFilter === 'all' || cat === activeFilter);
         const matchesQuery = !query || title.includes(query) || desc.includes(query) || kw.includes(query);
@@ -591,6 +1035,13 @@
         }
       });
     }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      randomizeSeed();
+      onCategorySelectChange();
+      generateProceduralGrid();
+    });
   </script>
 </body>
 </html>

@@ -77,6 +77,9 @@ class ChromeController {
     this.ws.onmessage = (event) => {
       try {
         const msg = JSON.parse(event.data);
+        if (msg.method && this.onEvent) {
+          try { this.onEvent(msg.method, msg.params); } catch (_) {}
+        }
         if (msg.id && this.callbacks.has(msg.id)) {
           const cb = this.callbacks.get(msg.id);
           this.callbacks.delete(msg.id);
