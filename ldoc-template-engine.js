@@ -102,12 +102,6 @@
       tag: 'interactive',
       icon: '⚡',
       subtypes: ['living_dag_dashboard', '3d_cad_exploded_view', 'kinematic_physics_lab', 'circuit_ohm_analyzer', 'harmonic_pendulum_study']
-    },
-    living_typography: {
-      name: 'Living Typography (Powered by Pretext)',
-      tag: 'living_typography',
-      icon: '✦',
-      subtypes: ['editorial_spread', 'magazine_feature', 'hero_kinetic_stat', 'callout_pullquote', 'multi_column_gazette', 'technical_wrap_datasheet']
     }
   };
 
@@ -255,8 +249,7 @@
           hasQuiz: layout.hasQuiz || (catKey === 'education'),
           hasChart: layout.hasChart || (catKey === 'finance' || catKey === 'business'),
           has3D: layout.has3D || (catKey === 'engineering' || catKey === 'interactive'),
-          hasReactiveTable: catKey === 'finance' || catKey === 'product',
-          hasLivingTypography: catKey === 'living_typography' || catKey === 'creator' || catKey === 'marketing'
+          hasReactiveTable: catKey === 'finance' || catKey === 'product'
         }
       };
     },
@@ -484,53 +477,6 @@
               height: 250
             });
             currentY += 270;
-          } else if (recipe.category === 'living_typography' || (recipe.features && recipe.features.hasLivingTypography)) {
-            // Living Typography Block with Obstacle Flow
-            page.blocks.push({
-              id: `living_obs_${pageNum}`,
-              type: 'shape',
-              shapeType: 'rounded_rect',
-              x: 240,
-              y: currentY + 15,
-              width: 140,
-              height: 100,
-              obstacle: {
-                enabled: true,
-                margin: 16,
-                shape: 'rectangle',
-                flowMode: 'wrap-both'
-              },
-              style: { fill: p.surface, stroke: p.accent, strokeWidth: 1.5, cornerRadius: 8 }
-            });
-            page.floating_texts.push({
-              id: `ft_living_obs_lbl_${pageNum}`,
-              text: '🛡️ Flow Obstacle\n(Drag in Canvas)',
-              left: 250,
-              top: currentY + 45,
-              width: 120,
-              fontSize: 11,
-              fontFamily: t.body,
-              color: p.accent
-            });
-            page.floating_texts.push({
-              id: `ft_living_flow_${pageNum}`,
-              text: `Living Typography in LDOCX delivers dynamic spatial text flow powered by the Pretext engine. As interactive cards, media frames, and 3D viewports are moved or resized across the canvas, words automatically recalculate their horizontal intervals in under 0.2ms without causing DOM reflow thrashing. Every character renders with crisp sub-pixel fidelity across Editor, Viewer, and Presentation modes.`,
-              left: 40,
-              top: currentY,
-              width: 720,
-              fontSize: 15,
-              lineHeight: 25,
-              fontFamily: t.body,
-              color: p.text,
-              livingTypography: {
-                enabled: true,
-                flowMode: 'wrap-both',
-                margin: 16,
-                columns: recipe.subtype === 'multi_column_gazette' ? 2 : 1,
-                columnGap: 28
-              }
-            });
-            currentY += 150;
           } else {
             // Text Block with Pretext
             page.blocks.push({

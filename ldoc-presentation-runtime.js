@@ -67,9 +67,6 @@
     body.ldoc-presenting .smart-guide,
     body.ldoc-presenting .node-control,
     body.ldoc-presenting .mode-pill-container,
-    body.ldoc-presenting #ldoc-flow-guides-overlay,
-    body.ldoc-presenting #ldoc-living-typography-drawer,
-    body.ldoc-presenting #ldoc-obstacle-inspector,
     body.ldoc-presenting .fx-menu-dropdown {
       display: none !important;
       visibility: hidden !important;
@@ -96,7 +93,7 @@
       padding: 0 !important;
       border: none !important;
       background: transparent !important;
-      z-index: var(--z-canvas-main, 10) !important;
+      z-index: 99990 !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
@@ -134,7 +131,7 @@
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(0);
-      z-index: var(--z-presentation-hud, 1400) !important;
+      z-index: 999999;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -442,10 +439,7 @@
     exit() {
       if (!this.state.active) return false;
 
-      // 1. Exit native Electron or browser fullscreen if active
-      if (typeof window !== 'undefined' && window.electronAPI && typeof window.electronAPI.setFullScreen === 'function') {
-        try { window.electronAPI.setFullScreen(false); } catch (e) {}
-      }
+      // 1. Exit browser fullscreen if active
       if (typeof document !== 'undefined') {
         if (document.fullscreenElement || document.webkitFullscreenElement) {
           try {
@@ -649,14 +643,6 @@
 
     // ── FULLSCREEN API ──
     requestFullscreen() {
-      if (typeof window !== 'undefined' && window.electronAPI && typeof window.electronAPI.setFullScreen === 'function') {
-        try {
-          window.electronAPI.setFullScreen(true);
-          this.state.isFullscreen = true;
-          this._updateControls();
-          return;
-        } catch (e) {}
-      }
       if (typeof document === 'undefined') return;
       const el = document.documentElement;
       try {
@@ -671,14 +657,6 @@
     }
 
     exitFullscreen() {
-      if (typeof window !== 'undefined' && window.electronAPI && typeof window.electronAPI.setFullScreen === 'function') {
-        try {
-          window.electronAPI.setFullScreen(false);
-          this.state.isFullscreen = false;
-          this._updateControls();
-          return;
-        } catch (e) {}
-      }
       if (typeof document === 'undefined') return;
       try {
         if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
@@ -687,12 +665,6 @@
     }
 
     toggleFullscreen() {
-      if (typeof window !== 'undefined' && window.electronAPI && typeof window.electronAPI.setFullScreen === 'function') {
-        this.state.isFullscreen = !this.state.isFullscreen;
-        try { window.electronAPI.setFullScreen(this.state.isFullscreen); } catch (e) {}
-        this._updateControls();
-        return;
-      }
       if (typeof document === 'undefined') return;
       if (document.fullscreenElement || document.webkitFullscreenElement) {
         this.exitFullscreen();
@@ -714,7 +686,7 @@
       if (!controls) {
         controls = document.createElement('div');
         controls.id = 'ldoc-pres-controls';
-        (document.getElementById("ldoc-overlay-root") || document.body).appendChild(controls);
+        document.body.appendChild(controls);
       }
 
       const showNav = this.state.totalPages > 1;

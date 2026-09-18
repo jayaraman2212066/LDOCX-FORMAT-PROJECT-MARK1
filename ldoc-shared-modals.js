@@ -324,7 +324,7 @@
             </div>
           </div>
         `;
-        (document.getElementById("ldoc-overlay-root") || document.body).appendChild(modal);
+        document.body.appendChild(modal);
       }
       return modal;
     },
@@ -422,11 +422,7 @@
             { id: 'pres_prev', label: 'Previous Page / Slide', category: 'Presentation', icon: '←', shortcut: 'Left' },
             { id: 'toggle_tilt', label: 'Toggle 3D Perspective Tilt', category: 'View', icon: '🕶️', shortcut: 'Ctrl+M' },
             { id: 'cloud_vault', label: 'Open Cloud Documents Vault', category: 'Cloud', icon: '☁️' },
-            { id: 'version_history', label: 'Revisions & Version History', category: 'Cloud', icon: '↺' },
-            { id: 'toggle_living_typography', label: 'Toggle Living Typography Studio Drawer', category: 'Typography', icon: '✦', shortcut: 'Alt+T' },
-            { id: 'toggle_flow_guides', label: 'Toggle Typography Spatial Flow Guides', category: 'Typography', icon: '〰️' },
-            { id: 'living_editorial_spread', label: 'Insert Living Typography Editorial Spread', category: 'Typography', icon: '📰' },
-            { id: 'living_autofit_text', label: 'Auto-Fit Selected Text to Frame', category: 'Typography', icon: '🗜️' }
+            { id: 'version_history', label: 'Revisions & Version History', category: 'Cloud', icon: '↺' }
           ];
 
       const q = (query || '').toLowerCase().trim();
@@ -507,18 +503,6 @@
         if (global.ldocPresentation) global.ldocPresentation.nextPage();
       } else if (actionId === 'pres_prev') {
         if (global.ldocPresentation) global.ldocPresentation.prevPage();
-      } else if (actionId === 'toggle_living_typography') {
-        if (global.LDocLivingTypography) global.LDocLivingTypography.toggleDrawer();
-      } else if (actionId === 'toggle_flow_guides') {
-        if (global.LDocLivingTypography) global.LDocLivingTypography.toggleFlowGuides();
-      } else if (actionId === 'living_editorial_spread') {
-        if (global.LDocLivingTypography) global.LDocLivingTypography.createEditorialSpread();
-      } else if (actionId === 'living_autofit_text') {
-        if (global.LDocLivingTypography) {
-          const sel = document.querySelector('.ldoc-ambient-text.selected, .ldoc-ambient-text.active');
-          if (sel) global.LDocLivingTypography.autoFitText(sel);
-          else global.LDocLivingTypography.triggerAutoFit();
-        }
       } else if (typeof global.showToast === 'function') {
         global.showToast(`Executed: ${actionId}`, 'info');
       }
@@ -883,71 +867,3 @@
   global.showProceduralModal = function () { LDocModals.showProceduralModal(); };
 
 })(typeof window !== 'undefined' ? window : this);
-
-  // ── Developer UI Layer Inspector (Ctrl+Shift+Z) & Global Esc Key Cascade ──
-  window.addEventListener('keydown', function (e) {
-    // 1. Toggle Layer Inspector (Ctrl + Shift + Z)
-    if (e.ctrlKey && e.shiftKey && (e.key === 'Z' || e.key === 'z')) {
-      e.preventDefault();
-      let inspector = document.getElementById('ldoc-layer-inspector-overlay');
-      if (!inspector) {
-        inspector = document.createElement('div');
-        inspector.id = 'ldoc-layer-inspector-overlay';
-        inspector.innerHTML = `
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;border-bottom:1px solid #38bdf8;padding-bottom:4px">
-            <b style="color:#38bdf8">🔍 LDOC Layer Inspector</b>
-            <button onclick="this.parentElement.parentElement.classList.remove('active')" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:14px">✕</button>
-          </div>
-          <div id="ldoc-layer-inspector-content" style="line-height:1.6"></div>
-        `;
-        document.body.appendChild(inspector);
-      }
-      const isActive = inspector.classList.toggle('active');
-      if (isActive) {
-        const updateInfo = () => {
-          const contentEl = document.getElementById('ldoc-layer-inspector-content');
-          if (!contentEl) return;
-          const openDrawers = Array.from(document.querySelectorAll('#left.open, #center.open, #right.open, #fx-wizard-sidebar.open, #ai-helper-panel.open, #help-drawer[style*="flex"], #pages-overlay.open')).map(el => el.id);
-          const openModals = Array.from(document.querySelectorAll('.ldoc-cloud-modal-overlay.active, #popup-elements-modal.open, #command-palette-modal.active')).map(el => el.id);
-          const backdropActive = document.querySelector('#drawer-backdrop.active, #help-drawer-backdrop.active, #pages-overlay.open') !== null;
-          contentEl.innerHTML = `
-            <div><b>Open Drawers (850):</b> ${openDrawers.length ? openDrawers.join(', ') : 'None'}</div>
-            <div><b>Drawer Backdrop (800):</b> ${backdropActive ? 'ACTIVE' : 'Inactive'}</div>
-            <div><b>Active Modals (1050):</b> ${openModals.length ? openModals.join(', ') : 'None'}</div>
-            <div><b>Portaling Root:</b> ${document.getElementById('ldoc-overlay-root') ? 'Mounted (#ldoc-overlay-root)' : 'Fallback (body)'}</div>
-          `;
-        };
-        updateInfo();
-      }
-    }
-
-    // 2. Strict Escape Key Dismissal Cascade (Topmost Dismissal First)
-    if (e.key === 'Escape') {
-      // Tier 1: Command Palette
-      const palette = document.getElementById('ldoc-command-palette-modal') || document.getElementById('command-palette-modal');
-      if (palette && (palette.classList.contains('active') || palette.classList.contains('open'))) {
-        palette.classList.remove('active', 'open');
-        e.stopPropagation();
-        return;
-      }
-      // Tier 2: Modals
-      const activeModal = document.querySelector('.ldoc-cloud-modal-overlay.active, #popup-elements-modal.open, #ast-inspector-modal.active');
-      if (activeModal) {
-        activeModal.classList.remove('active', 'open');
-        e.stopPropagation();
-        return;
-      }
-      // Tier 3: Drawers
-      const openDrawer = document.querySelector('#fx-wizard-sidebar.open, #ai-helper-panel.open, #help-drawer[style*="flex"], #pages-overlay.open, #left.open, #center.open, #right.open');
-      if (openDrawer) {
-        if (typeof closeAllDrawers === 'function') {
-          closeAllDrawers();
-        } else {
-          openDrawer.classList.remove('open');
-          if (openDrawer.id === 'help-drawer') openDrawer.style.display = 'none';
-        }
-        e.stopPropagation();
-        return;
-      }
-    }
-  });

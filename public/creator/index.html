@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="ldoc-layer-tokens.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LDOC Creator</title>
@@ -30,7 +31,7 @@
   align-items: center;
   padding: 0 8px;
   user-select: none;
-  z-index: 10000;
+  z-index: var(--z-editor-chrome, 100) !important;
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 12px;
   color: #cbd5e1;
@@ -99,7 +100,7 @@
   padding: 6px;
   display: none;
   flex-direction: column;
-  z-index: 10001;
+  z-index: var(--z-dropdown, 500) !important;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
 }
@@ -183,7 +184,7 @@
   transform: translate(-50%, calc(-50% + 20px));
   opacity: 0;
   pointer-events: none;
-  z-index: 9500;
+  z-index: var(--z-modal-content, 1050) !important;
   background: rgba(14, 16, 28, 0.97);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
@@ -380,7 +381,7 @@ body::before{
   background: rgba(4, 4, 10, 0.6);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 1040;
+  z-index: var(--z-drawer-backdrop, 800) !important;
   display: none;
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -403,7 +404,7 @@ body::before{
   -webkit-backdrop-filter: blur(32px) !important;
   border-right: 1.5px solid rgba(167, 139, 250, 0.35) !important;
   box-shadow: 16px 0 60px rgba(0, 0, 0, 0.92) !important;
-  z-index: 1050 !important;
+  z-index: var(--z-drawer-content, 850) !important;
   display: flex !important;
   flex-direction: column !important;
   overflow-y: auto !important;
@@ -490,7 +491,7 @@ body::before{
   -webkit-backdrop-filter: blur(32px) !important;
   border-right: 1.5px solid rgba(167, 139, 250, 0.35) !important;
   box-shadow: 16px 0 60px rgba(0, 0, 0, 0.92) !important;
-  z-index: 1060 !important;
+  z-index: var(--z-drawer-content, 850) !important;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
@@ -550,7 +551,7 @@ body::before{
   -webkit-backdrop-filter: blur(32px) !important;
   border-left: 1.5px solid rgba(245, 158, 11, 0.35) !important;
   box-shadow: -16px 0 60px rgba(0, 0, 0, 0.92) !important;
-  z-index: 1050 !important;
+  z-index: var(--z-drawer-content, 850) !important;
   display: flex !important;
   flex-direction: column !important;
   overflow-y: auto !important;
@@ -630,7 +631,7 @@ body::before{
  height:min(520px, calc(100vh - 90px));max-height:calc(100vh - 90px);
  background:rgba(15,15,25,.98);border:1px solid rgba(245,158,11,.4);
  border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.85);
- display:none;flex-direction:column;z-index:500;overflow:hidden;
+ display:none;flex-direction:column;z-index: var(--z-drawer-content, 850) !important;overflow:hidden;
  backdrop-filter:blur(16px);
 }
 #ai-helper-panel.open{display:flex}
@@ -889,7 +890,7 @@ body::before{
 #fx-wizard-sidebar{
   position:fixed;top: 84px !important;right:0;bottom: 25px !important;width:clamp(360px,32vw,440px);overflow:hidden;
   background:rgba(12,12,22,.98);backdrop-filter:blur(24px);
-  border-left:1.5px solid var(--accent);z-index:999;
+  border-left:1.5px solid var(--accent);z-index: var(--z-drawer-content, 850) !important;
   transform:translateX(105%);
   visibility:hidden;
   pointer-events:none;
@@ -2186,7 +2187,7 @@ body.creator-split-50-50 #creator-preview-pane {
   bottom: 0;
   background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(12px);
-  z-index: 100000;
+  z-index: var(--z-command-palette, 1100) !important;
   align-items: flex-start;
   justify-content: center;
   padding-top: 60px;
@@ -2270,7 +2271,7 @@ body.creator-split-50-50 #creator-preview-pane {
   border-radius: 10px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.85);
   padding: 10px 14px;
-  z-index: 10001;
+  z-index: var(--z-modal-content, 1050) !important;
   flex-direction: column;
   gap: 8px;
 }
@@ -2320,7 +2321,7 @@ body.creator-split-50-50 #creator-preview-pane {
   bottom: 0;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(16px);
-  z-index: 100000;
+  z-index: var(--z-modal-content, 1050) !important;
   align-items: center;
   justify-content: center;
 }
@@ -2370,7 +2371,7 @@ body.creator-split-50-50 #creator-preview-pane {
   border-radius: 8px;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85);
   padding: 6px 0;
-  z-index: 100002;
+  z-index: var(--z-context-menu, 900) !important;
   min-width: 190px;
 }
 .ctx-item {
@@ -3066,6 +3067,24 @@ body.creator-split-50-50 #creator-preview-pane {
 .ldoc-chip-rating { background: rgba(245, 158, 11, 0.22); border: 1px solid rgba(245, 158, 11, 0.5); color: #fbbf24; }
 .ldoc-chip-spark { background: rgba(192, 132, 252, 0.22); border: 1px solid rgba(192, 132, 252, 0.5); color: #e9d5ff; }
 
+
+/* Canva-Class Shape & Selection Suite (Phase 1) */
+.creator-shape-slide-wrap, .ldoc-canvas-shape-wrap {
+  cursor: pointer;
+  transition: outline 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.creator-shape-slide-wrap:hover, .ldoc-canvas-shape-wrap:hover {
+  outline: 1.5px dashed rgba(236, 72, 153, 0.6);
+  outline-offset: 3px;
+}
+.creator-shape-slide-wrap.selected, .ldoc-canvas-shape-wrap.selected {
+  outline: 2px solid #ec4899 !important;
+  outline-offset: 4px !important;
+  box-shadow: 0 0 18px rgba(236, 72, 153, 0.5) !important;
+}
+.creator-tb-dropdown-wrap button:hover {
+  filter: brightness(1.18);
+}
 </style>
   
 </head>
@@ -3137,6 +3156,7 @@ body.creator-split-50-50 #creator-preview-pane {
     <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
       <div class="dmenu-btn">Drawers &amp; Tools ▾</div>
       <div class="dmenu-dropdown">
+        <div class="dmenu-entry" onclick="if(window.LDocLivingTypography){window.LDocLivingTypography.toggleDrawer()}"><span>✦ Living Typography Studio</span><span class="hotkey">Alt+T</span></div>
         <div class="dmenu-entry" onclick="togglePagesDrawer()"><span>📑 Document Pages &amp; Meta</span></div>
         <div class="dmenu-entry" onclick="toggleBlocksDrawer()"><span>🧩 Block Editor Inspector</span></div>
         <div class="dmenu-entry" onclick="toggleElementsPopup()"><span>➕ Element Palette Dock</span></div>
@@ -3186,6 +3206,81 @@ body.creator-split-50-50 #creator-preview-pane {
     <button class="btn" id="toggle-pages-btn" onclick="togglePagesDrawer()" style="padding:5px 12px;font-size:12px;gap:6px">📑 Pages &amp; Meta</button>
     <button class="btn" id="toggle-blocks-btn" onclick="toggleBlocksDrawer()" style="padding:5px 12px;font-size:12px;gap:6px">🧩 Edit Blocks</button>
     <button class="btn" id="toggle-elements-btn" onclick="toggleElementsPopup()" style="padding:5px 12px;font-size:12px;gap:6px">➕ Add Element</button>
+    <button class="btn" id="btn-living-typography" onclick="if(window.LDocLivingTypography){window.LDocLivingTypography.toggleDrawer()}" title="✦ Living Typography (Dynamic Text &amp; Obstacle Flow)" style="padding:5px 12px;font-size:12px;gap:6px;background:linear-gradient(135deg,rgba(168,85,247,0.25),rgba(59,130,246,0.22));border:1px solid #a855f7;color:#e9d5ff;font-weight:700">✦ Living Type</button>
+
+    <!-- Top Toolbar Vector Shape Picker (Phase 1) -->
+    <div class="creator-tb-dropdown-wrap" style="position:relative;display:inline-flex;align-items:center">
+      <button class="btn" id="tb-shapes-btn" onclick="toggleCreatorToolbarShapeMenu(event)" title="Insert Vector Shape Primitive" style="padding:5px 12px;font-size:12px;gap:6px;border-color:#ec4899;color:#f472b6;font-weight:700">
+        <span>🔷 Shapes</span><span>▾</span>
+      </button>
+      <div id="cr-tb-shapes-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:6px;background:rgba(15,23,42,0.98);backdrop-filter:blur(16px);border:1.5px solid #ec4899;border-radius:12px;padding:8px;width:240px;z-index: var(--z-dropdown, 500);box-shadow:0 16px 36px rgba(0,0,0,0.85)">
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#f472b6;padding:4px 8px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:6px">CANVA-CLASS VECTOR SHAPES</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('rectangle')"><span>▭</span><span>Rectangle</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('rounded_rect')"><span>▢</span><span>Rounded</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('circle')"><span>⚪</span><span>Circle</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('ellipse')"><span>⬭</span><span>Ellipse</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('triangle')"><span>△</span><span>Triangle</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('star')"><span>⭐</span><span>Star</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('hexagon')"><span>⬡</span><span>Hexagon</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('badge')"><span>🛡️</span><span>Badge</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('banner')"><span>🎗️</span><span>Banner</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('callout_speech')"><span>💬</span><span>Speech Callout</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('callout_thought')"><span>💭</span><span>Thought Callout</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('arrow_double')"><span>⬌</span><span>Double Arrow</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('arrow')"><span>➔</span><span>Arrow</span></button>
+          <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px;display:flex;align-items:center;gap:6px" onclick="creatorAddShapeAndFocus('heart')"><span>❤️</span><span>Heart</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alignment, Distribution & Group Suite in Creator #tb -->
+    <div style="display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);padding:2px 6px;border-radius:8px">
+      <div style="position:relative;display:inline-flex;align-items:center">
+        <button class="btn" id="cr-tb-align-btn" onclick="toggleCreatorToolbarAlignMenu(event)" title="Align Selected Elements" style="padding:4px 8px;font-size:11.5px;gap:4px">
+          <span>📐 Align</span><span>▾</span>
+        </button>
+        <div id="cr-tb-align-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:rgba(15,23,42,0.98);backdrop-filter:blur(16px);border:1px solid rgba(236,72,153,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index: var(--z-dropdown, 500);min-width:140px;padding:4px 0">
+          <div onclick="window.creatorAlign('left');closeCreatorToolbarAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">⇤ Align Left</div>
+          <div onclick="window.creatorAlign('center');closeCreatorToolbarAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">⇹ Align Center</div>
+          <div onclick="window.creatorAlign('right');closeCreatorToolbarAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">⇥ Align Right</div>
+          <div onclick="window.creatorAlign('top');closeCreatorToolbarAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">⤒ Align Top</div>
+          <div onclick="window.creatorAlign('middle');closeCreatorToolbarAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">⬍ Align Middle</div>
+          <div onclick="window.creatorAlign('bottom');closeCreatorToolbarAlignMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">⤓ Align Bottom</div>
+        </div>
+      </div>
+      <div style="position:relative;display:inline-flex;align-items:center">
+        <button class="btn" id="cr-tb-distribute-btn" onclick="toggleCreatorToolbarDistributeMenu(event)" title="Distribute Elements Evenly" style="padding:4px 8px;font-size:11.5px;gap:4px">
+          <span>↔ Distribute</span><span>▾</span>
+        </button>
+        <div id="cr-tb-distribute-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:rgba(15,23,42,0.98);backdrop-filter:blur(16px);border:1px solid rgba(236,72,153,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index: var(--z-dropdown, 500);min-width:160px;padding:4px 0">
+          <div onclick="window.creatorDistribute('horizontal');closeCreatorToolbarDistributeMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">↔ Horizontally</div>
+          <div onclick="window.creatorDistribute('vertical');closeCreatorToolbarDistributeMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">↕ Vertically</div>
+        </div>
+      </div>
+      <span style="color:rgba(255,255,255,0.2);margin:0 1px">|</span>
+      <button class="btn" onclick="window.creatorGroup()" title="Group Selected Elements (Ctrl+G)" style="padding:4px 8px;font-size:11.5px;color:#38bdf8">🔗 Group</button>
+      <button class="btn" onclick="window.creatorUngroup()" title="Ungroup Container (Ctrl+Shift+G)" style="padding:4px 8px;font-size:11.5px;color:#38bdf8">🔓 Ungroup</button>
+      <span style="color:rgba(255,255,255,0.2);margin:0 1px">|</span>
+      <!-- Z-Order Layering Controls (Phase 2) -->
+      <div style="position:relative;display:inline-flex;align-items:center">
+        <button class="btn" id="cr-tb-zorder-btn" onclick="toggleCreatorToolbarZOrderMenu(event)" title="Layer Depth & Z-Order (Front/Back/Forward/Backward)" style="padding:4px 8px;font-size:11.5px;gap:4px">
+          <span>📑 Layers</span><span>▾</span>
+        </button>
+        <div id="cr-tb-zorder-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:rgba(15,23,42,0.98);backdrop-filter:blur(16px);border:1px solid rgba(236,72,153,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index: var(--z-dropdown, 500);min-width:150px;padding:4px 0">
+          <div onclick="window.creatorZOrder('front');closeCreatorToolbarZOrderMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">⤊ Bring to Front</div>
+          <div onclick="window.creatorZOrder('forward');closeCreatorToolbarZOrderMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">▲ Bring Forward</div>
+          <div onclick="window.creatorZOrder('backward');closeCreatorToolbarZOrderMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">▼ Send Backward</div>
+          <div onclick="window.creatorZOrder('back');closeCreatorToolbarZOrderMenu()" style="padding:6px 12px;font-size:11px;color:#e2e8f0;cursor:pointer" onmouseover="this.style.background='rgba(236,72,153,0.2)'" onmouseout="this.style.background='transparent'">⤋ Send to Back</div>
+        </div>
+      </div>
+      <span style="color:rgba(255,255,255,0.2);margin:0 1px">|</span>
+      <!-- Brand Kit & Accessibility in Creator Top Toolbar (Phase 7) -->
+      <button class="btn" id="cr-tb-brand-btn" onclick="window.creatorOpenBrandModal()" title="Brand Kit & WCAG 2.2 Accessibility" style="padding:4px 8px;font-size:11.5px;color:#f59e0b">🎨 Brand Kit</button>
+      <!-- Reactive Variables & DAG in Creator Top Toolbar (Phase 9) -->
+      <button class="btn" id="cr-tb-reactive-btn" onclick="window.creatorOpenReactivePanel()" title="Reactive Document Authoring & DAG Sandbox" style="padding:4px 8px;font-size:11.5px;color:#a855f7">⚡ Reactive</button>
+    </div>
+
     <button class="btn" id="toggle-right-btn" onclick="toggleRightDrawer()" style="padding:5px 12px;font-size:12px;gap:6px">⚡ Actions &amp; Templates</button>
     <button class="btn" id="fx-wizard-btn" onclick="toggleFxWizard()" style="padding:5px 12px;font-size:12px;gap:6px;background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.35)">⚜ FX Wizard</button>
   </div>
@@ -3333,7 +3428,7 @@ body.creator-split-50-50 #creator-preview-pane {
       <!-- Vector Shape Picker Dropdown -->
       <div style="position:relative;display:inline-block" id="cr-shape-picker-wrap">
         <button type="button" class="add-btn" onclick="toggleCrShapeMenu(event)" style="border-color:#ec4899;color:#f472b6;font-weight:700">🎨 Vector Shape ▾</button>
-        <div id="cr-shape-dropdown-menu" style="display:none;position:absolute;bottom:100%;left:0;margin-bottom:6px;background:#0f172a;border:1.5px solid #ec4899;border-radius:10px;padding:8px;width:240px;box-shadow:0 12px 35px rgba(0,0,0,0.85);z-index:99999;backdrop-filter:blur(12px)">
+        <div id="cr-shape-dropdown-menu" style="display:none;position:absolute;bottom:100%;left:0;margin-bottom:6px;background:#0f172a;border:1.5px solid #ec4899;border-radius:10px;padding:8px;width:240px;box-shadow:0 12px 35px rgba(0,0,0,0.85);z-index: var(--z-dropdown, 500);backdrop-filter:blur(12px)">
           <div style="font-size:10px;font-weight:800;color:#f472b6;margin-bottom:6px;text-transform:uppercase">CANVA-CLASS VECTOR SHAPES</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
             <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:4px 6px" onclick="addBlock('shape','rectangle');toggleCrShapeMenu()">⬛ Rectangle</button>
@@ -3355,7 +3450,7 @@ body.creator-split-50-50 #creator-preview-pane {
       <!-- Reactive Simulation Dropdown -->
       <div style="position:relative;display:inline-block" id="cr-sim-picker-wrap">
         <button type="button" class="add-btn" onclick="toggleCrSimMenu(event)" style="border-color:#38bdf8;color:#38bdf8;font-weight:700">⚡ Simulation ▾</button>
-        <div id="cr-sim-dropdown-menu" style="display:none;position:absolute;bottom:100%;left:0;margin-bottom:6px;background:#0f172a;border:1.5px solid #38bdf8;border-radius:10px;padding:8px;width:260px;box-shadow:0 12px 35px rgba(0,0,0,0.85);z-index:99999;backdrop-filter:blur(12px)">
+        <div id="cr-sim-dropdown-menu" style="display:none;position:absolute;bottom:100%;left:0;margin-bottom:6px;background:#0f172a;border:1.5px solid #38bdf8;border-radius:10px;padding:8px;width:260px;box-shadow:0 12px 35px rgba(0,0,0,0.85);z-index: var(--z-dropdown, 500);backdrop-filter:blur(12px)">
           <div style="font-size:10px;font-weight:800;color:#38bdf8;margin-bottom:6px;text-transform:uppercase">REACTIVE SIMULATION PRESETS</div>
           <div style="display:flex;flex-direction:column;gap:4px">
             <button type="button" class="find-btn" style="text-align:left;font-size:11px;padding:5px 8px" onclick="addBlock('simulation','projectile_motion');toggleCrSimMenu()">🚀 Projectile Motion</button>
@@ -3435,7 +3530,7 @@ body.creator-split-50-50 #creator-preview-pane {
         <button class="mode-pill-btn active" id="c-mode-dropdown-btn" onclick="toggleCreatorModeDropdown(event)" style="padding:4px 12px;font-size:11.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.16);border-radius:8px;color:#f8fafc;cursor:pointer" title="Select Visual Presentation Style">
           <span id="c-mode-current-label">📜 Paper</span> ▾
         </button>
-        <div id="creator-mode-dropdown-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(245,158,11,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:180px;padding:4px 0">
+        <div id="creator-mode-dropdown-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(245,158,11,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index: var(--z-dropdown, 500);min-width:180px;padding:4px 0">
           <div class="mode-pill-item" id="c-mode-paper" onclick="setCreatorPresentationMode('paper')" style="padding:6px 14px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(245,158,11,0.2)'" onmouseout="this.style.background='transparent'">📜 Paper</div>
           <div class="mode-pill-item" id="c-mode-glass" onclick="setCreatorPresentationMode('glass')" style="padding:6px 14px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(245,158,11,0.2)'" onmouseout="this.style.background='transparent'">💎 Glass</div>
           <div class="mode-pill-item" id="c-mode-deck" onclick="setCreatorPresentationMode('deck')" style="padding:6px 14px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:8px" onmouseover="this.style.background='rgba(245,158,11,0.2)'" onmouseout="this.style.background='transparent'">🎬 Deck</div>
@@ -3455,7 +3550,7 @@ body.creator-split-50-50 #creator-preview-pane {
         <div class="slide-tool-group">
           <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
             <button class="slide-tool-btn purple" id="creator-split-cols-btn" onclick="toggleCreatorColumnMenu(event)" title="Multi-Column Magazine Balance: 2-Col (Classic), 3-Col, 4-Col, or Drop-Cap with Pretext arithmetic!">📰 2-Col ▾</button>
-            <div id="creator-cols-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(192,132,252,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:160px;padding:4px 0">
+            <div id="creator-cols-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(192,132,252,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index: var(--z-dropdown, 500);min-width:160px;padding:4px 0">
               <div onclick="splitActiveTextIntoColumns(2)" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(192,132,252,0.2)'" onmouseout="this.style.background='transparent'">📰 2 Columns (Classic)</div>
               <div onclick="splitActiveTextIntoColumns(3)" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(192,132,252,0.2)'" onmouseout="this.style.background='transparent'">📰 3 Columns (Editorial)</div>
               <div onclick="splitActiveTextIntoColumns(4)" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(192,132,252,0.2)'" onmouseout="this.style.background='transparent'">📰 4 Columns (Digest)</div>
@@ -3471,7 +3566,7 @@ body.creator-split-50-50 #creator-preview-pane {
           </button>
           <div class="slide-tool-dropdown-wrap" style="position:relative;display:inline-block">
             <button class="slide-tool-btn" id="creator-add-video-btn" onclick="toggleCreatorObstacleMenu(event)" title="Insert Dynamic Obstacles: 16:9 Video cards, avatars, quotes, and shapes that text flows around!">🎬 Add Video ▾</button>
-            <div id="creator-obstacle-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(56,189,248,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:180px;padding:4px 0">
+            <div id="creator-obstacle-menu" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(56,189,248,0.4);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index: var(--z-dropdown, 500);min-width:180px;padding:4px 0">
               <div onclick="promptInsertSlideVideo()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">🎬 16:9 Video Card (YouTube/MP4)</div>
               <div onclick="spawnCircularObstacleCard()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">🔵 Circular Avatar / Badge</div>
               <div onclick="spawnInteractiveQuoteCard()" style="padding:6px 12px;font-size:11.5px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">💬 Callout Quote Card</div>
@@ -3681,6 +3776,7 @@ body.creator-split-50-50 #creator-preview-pane {
 <script src="ldoc-config.js"></script>
 <script src="ldoc-toast.js"></script>
 <script src="ldoc-text-layout.js"></script>
+<script src="ldoc-living-typography.js"></script>
 <script src="ldoc-shape-engine.js"></script>
 <script src="ldoc-reactive-engine.js"></script>
 <script src="ldoc-3d-inspector.js"></script>
@@ -3696,6 +3792,18 @@ body.creator-split-50-50 #creator-preview-pane {
 <script src="ldoc-timeline-engine.js"></script>
 <script src="ldoc-plugin-api.js"></script>
 <script src="ldoc-presentation-runtime.js"></script>
+<script src="ldoc-ai-engine.js"></script>
+<script src="ldoc-chart-pro.js"></script>
+<script src="ldoc-icon-system.js"></script>
+<script src="ldoc-math-forms.js"></script>
+<script src="ldoc-canvas-enhancements.js"></script>
+<script src="ldoc-creative-suite.js"></script>
+<script src="vendor/three.min.js"></script>
+<script>if (typeof THREE === 'undefined') { document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>'); }</script>
+<script src="vendor/GLTFLoader.js"></script>
+<script>if (typeof THREE !== 'undefined' && !THREE.GLTFLoader) { document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"><\/script>'); }</script>
+<script src="vendor/chart.min.js"></script>
+<script>if (typeof Chart === 'undefined') { document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>'); }</script>
 <script>
 const isLocalServer = typeof window !== 'undefined' && 
   (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') && 
@@ -4017,10 +4125,18 @@ let isFxWizardLandscape = false;
 
 function toggleFxWizard() {
   const sidebar = document.getElementById('fx-wizard-sidebar');
+  const backdrop = document.getElementById('drawer-backdrop');
+  const btn = document.getElementById('fx-wizard-btn');
   if (!sidebar) return;
   const isOpen = sidebar.classList.toggle('open');
+  if (btn) btn.classList.toggle('active', isOpen);
   if (isOpen) {
     initWizardCanvases();
+    if (backdrop) backdrop.classList.add('active');
+  } else {
+    if (backdrop && !document.querySelector('#left.open, #center.open, #right.open, #popup-elements-modal.open, #ai-helper-panel.open')) {
+      backdrop.classList.remove('active');
+    }
   }
 }
 
@@ -5315,7 +5431,7 @@ function renderCreatorFloatingTexts() {
         <button class="hud-btn hud-save" style="background:#10b981;color:#fff;font-weight:700;padding:3px 10px;border-radius:6px;font-size:11px;cursor:pointer;border:none;box-shadow:0 0 10px rgba(16,185,129,.4)" onclick="saveFtToPaper('${ft.id}')" title="Permanently stamp this text into slide paper and block list">💾 Save to Paper</button>
         <div class="hud-chip-dropdown-wrap" style="position:relative;display:inline-block">
           <button class="hud-btn hud-chip" onclick="toggleFtChipMenu('${ft.id}', event)" title="Insert Pretext Inline Chip" style="background:rgba(56,189,248,0.2);color:#7dd3fc;border:1px solid rgba(56,189,248,0.4);border-radius:6px;font-size:11px;padding:3px 8px;cursor:pointer;font-weight:700">🏷️ +Chip</button>
-          <div class="hud-chip-menu" id="ft-chip-menu-${ft.id}" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(56,189,248,0.35);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index:99999;min-width:150px;padding:4px 0">
+          <div class="hud-chip-menu" id="ft-chip-menu-${ft.id}" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#0d1117;border:1px solid rgba(56,189,248,0.35);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,0.85);z-index: var(--z-dropdown, 500);min-width:150px;padding:4px 0">
             <div class="ft-chip-item" onclick="insertChipToken('${ft.id}', '[chip: Verified]', event)" style="padding:5px 10px;font-size:11px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">🏷️ Tag Badge</div>
             <div class="ft-chip-item" onclick="insertChipToken('${ft.id}', '[btn: Learn More]', event)" style="padding:5px 10px;font-size:11px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">⚡ Action Button</div>
             <div class="ft-chip-item" onclick="insertChipToken('${ft.id}', '[pay: $49]', event)" style="padding:5px 10px;font-size:11px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='rgba(56,189,248,0.2)'" onmouseout="this.style.background='transparent'">💳 Inline Pay ($49)</div>
@@ -5895,8 +6011,17 @@ function renderCreatorSlideBlock(b, container) {
     container.appendChild(wrap);
   } else if (t === 'shape') {
     const wrap = document.createElement('div');
-    wrap.className = 'creator-shape-slide-wrap';
-    wrap.style.cssText = 'margin:12px 0;position:relative;display:inline-block;';
+    wrap.className = 'creator-shape-slide-wrap' + ((window.__creatorSelectedBlockIds && window.__creatorSelectedBlockIds.includes(b.id)) ? ' selected' : '');
+    wrap.dataset.blockId = b.id;
+    const rot = b.rotation || (b.style && b.style.rotation) || 0;
+    const op = b.opacity !== undefined ? b.opacity : ((b.style && b.style.opacity !== undefined) ? b.style.opacity : 1);
+    const posX = b.x !== undefined ? b.x : (b.left !== undefined ? b.left : null);
+    const posY = b.y !== undefined ? b.y : (b.top !== undefined ? b.top : null);
+    let posStyle = 'margin:12px 8px;position:relative;display:inline-block;vertical-align:top;cursor:pointer;';
+    if (posX !== null && posY !== null) {
+      posStyle += 'left:' + posX + 'px;top:' + posY + 'px;';
+    }
+    wrap.style.cssText = posStyle + 'opacity:' + op + ';transform:rotate(' + rot + 'deg);transform-origin:center center;transition:outline 0.15s, box-shadow 0.15s;';
     const shapeEngine = window.LDocShapeEngine;
     if (shapeEngine && typeof shapeEngine.generateSvgMarkup === 'function') {
       wrap.innerHTML = shapeEngine.generateSvgMarkup(b);
@@ -5904,6 +6029,13 @@ function renderCreatorSlideBlock(b, container) {
       wrap.style.cssText += 'padding:16px;background:' + ((b.style && b.style.fill) || '#6366f1') + ';border-radius:10px;color:#fff;font-weight:700;';
       wrap.textContent = (b.label && b.label.text) || b.shape_type || 'Vector Shape';
     }
+    wrap.title = 'Click to select & inspect shape';
+    wrap.onclick = function(e) {
+      e.stopPropagation();
+      if (typeof window.creatorSelectBlockFromCanvas === 'function') {
+        window.creatorSelectBlockFromCanvas(b.id, e.shiftKey || e.ctrlKey);
+      }
+    };
     container.appendChild(wrap);
   } else if (t === 'image_card') {
     const wrap = document.createElement('div');
@@ -6190,6 +6322,11 @@ ${escapeHtml(b.prompt || 'No code specified.')}
     `;
     container.appendChild(card);
     setTimeout(() => {
+      if (window.LDocChartPro && (typeof Chart === 'undefined' || !['bar', 'line', 'pie', 'doughnut'].includes(cType))) {
+        const wrapEl = card.querySelector('div[style*="height"]');
+        if (wrapEl) wrapEl.innerHTML = window.LDocChartPro.renderToSvg(b);
+        return;
+      }
       if (typeof Chart !== 'undefined') {
         const cv = document.getElementById(cid);
         if (cv) {
@@ -6216,6 +6353,9 @@ ${escapeHtml(b.prompt || 'No code specified.')}
             }
           });
         }
+      } else if (window.LDocChartPro) {
+        const wrapEl = card.querySelector('div[style*="height"]');
+        if (wrapEl) wrapEl.innerHTML = window.LDocChartPro.renderToSvg(b);
       }
     }, 50);
   } else if (t === 'shape') {
@@ -6227,6 +6367,44 @@ ${escapeHtml(b.prompt || 'No code specified.')}
     } else {
       wrap.style.cssText += 'padding:16px;background:' + ((b.style && b.style.fill) || b.fill || '#6366f1') + ';border-radius:10px;color:#fff;font-weight:700;';
       wrap.textContent = (b.label && b.label.text) || b.shape_type || 'Vector Shape';
+    }
+    container.appendChild(wrap);
+  } else if (t === 'icon') {
+    const wrap = document.createElement('div');
+    wrap.className = 'ldoc-canvas-icon-wrap';
+    const iconName = b.icon || b.icon_name || b.name || 'star';
+    const opts = {
+      size: b.size || 48,
+      stroke: b.color || b.stroke || '#38bdf8',
+      fill: b.fill || 'none',
+      strokeWidth: b.strokeWidth !== undefined ? b.strokeWidth : 2
+    };
+    wrap.style.cssText = 'margin:12px 0;display:inline-flex;align-items:center;justify-content:center;';
+    if (window.LDocIconSystem && typeof window.LDocIconSystem.renderIcon === 'function') {
+      wrap.innerHTML = window.LDocIconSystem.renderIcon(iconName, opts);
+    } else {
+      wrap.innerHTML = `<span style="font-size:${opts.size}px;color:${opts.stroke}">⭐</span>`;
+    }
+    container.appendChild(wrap);
+  } else if (t === 'math' || t === 'latex') {
+    const wrap = document.createElement('div');
+    wrap.className = 'ldoc-canvas-math-wrap';
+    wrap.style.cssText = 'margin:14px 0;padding:12px 18px;background:rgba(255,255,255,0.02);border:1px solid rgba(168,85,247,0.3);border-radius:12px;display:flex;align-items:center;justify-content:center;overflow-x:auto;';
+    const expr = b.latex || b.value || b.text || 'E = mc^2';
+    if (window.LDocMathForms && typeof window.LDocMathForms.renderMathSvg === 'function') {
+      wrap.innerHTML = window.LDocMathForms.renderMathSvg(expr, { fontSize: b.fontSize || 24, color: b.color || '#f8fafc' });
+    } else {
+      wrap.innerHTML = `<span style="font-family:serif;font-size:20px;color:#fff">${escapeHtml(expr)}</span>`;
+    }
+    container.appendChild(wrap);
+  } else if (t === 'interactive_form') {
+    const wrap = document.createElement('div');
+    wrap.className = 'ldoc-canvas-interactive-form-wrap';
+    wrap.style.cssText = 'margin:14px 0;padding:14px;background:rgba(15,23,42,0.85);border:1px solid rgba(56,189,248,0.3);border-radius:12px;';
+    if (window.LDocMathForms && typeof window.LDocMathForms.renderInteractiveFormField === 'function') {
+      wrap.innerHTML = window.LDocMathForms.renderInteractiveFormField(b);
+    } else {
+      wrap.innerHTML = `<label style="font-size:11px;font-weight:700;color:var(--gold);display:block;margin-bottom:4px">${escapeHtml(b.label || 'Interactive Field')}</label><input type="${b.formType || 'text'}" class="btn" style="width:100%;padding:7px 10px" placeholder="${escapeHtml(b.placeholder || 'Enter value...')}">`;
     }
     container.appendChild(wrap);
   } else if (t === 'group') {
@@ -7207,6 +7385,26 @@ function addBlock(type, subType){
     b.fill = 'rgba(56, 189, 248, 0.12)';
     b.closed = false;
   }
+  else if(type==='icon'){
+    b.icon = subType || 'star';
+    b.size = 48;
+    b.color = '#38bdf8';
+    b.strokeWidth = 2;
+    b.fill = 'none';
+  }
+  else if(type==='math'){
+    b.latex = subType || '\\int_{0}^{\\infty} e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}';
+    b.fontSize = 24;
+    b.color = '#38bdf8';
+  }
+  else if(type==='interactive_form'){
+    b.formType = subType || 'text';
+    b.label = 'Interactive Field';
+    b.varName = 'field_val';
+    b.value = '';
+    b.min = 0;
+    b.max = 100;
+  }
   p.blocks.push(b);renderBlocks();updateStats();updateCreatorLivePreview();
 }
 function deleteBlock(id){
@@ -7419,6 +7617,163 @@ function restoreAutoSavedWorkspace() {
 }
 
 // ── Dropdown Toggles for Creator ──
+// ── Creator Toolbar Phase 1 Additions ──
+window.toggleCreatorToolbarShapeMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('cr-tb-shapes-menu');
+  if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+};
+
+window.toggleCreatorToolbarAlignMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('cr-tb-align-menu');
+  if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+};
+
+window.closeCreatorToolbarAlignMenu = function() {
+  const m = document.getElementById('cr-tb-align-menu');
+  if (m) m.style.display = 'none';
+};
+
+window.toggleCreatorToolbarDistributeMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('cr-tb-distribute-menu');
+  if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+};
+
+window.closeCreatorToolbarDistributeMenu = function() {
+  const m = document.getElementById('cr-tb-distribute-menu');
+  if (m) m.style.display = 'none';
+};
+
+// ── Phase 2: Creator Toolbar Z-Order Helpers ──
+window.toggleCreatorToolbarZOrderMenu = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('cr-tb-zorder-menu');
+  if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'block' : 'none';
+};
+
+window.closeCreatorToolbarZOrderMenu = function() {
+  const m = document.getElementById('cr-tb-zorder-menu');
+  if (m) m.style.display = 'none';
+};
+
+// ── Phase 10: Crash Recovery Banner in Creator ──
+window.creatorCheckCrashRecovery = function() {
+  try {
+    const raw = localStorage.getItem('ldoc_crash_snapshot') || localStorage.getItem('ldoc_creator_backup');
+    if (!raw) return;
+    const snap = JSON.parse(raw);
+    if (!snap || (!snap.pages && !snap.slides)) return;
+
+    const banner = document.createElement('div');
+    banner.id = 'creator-crash-banner';
+    banner.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);background:#1e1b4b;border:1.5px solid #ec4899;border-radius:12px;padding:10px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 12px 36px rgba(0,0,0,0.8);z-index:999999;color:#f8fafc;font-size:12.5px';
+    banner.innerHTML = `
+      <span style="font-size:18px">⚠️</span>
+      <span><strong>Unsaved Draft Recovered:</strong> Auto-saved backup from ${new Date(snap.timestamp || Date.now()).toLocaleTimeString()} available.</span>
+      <div style="display:flex;gap:8px">
+        <button id="cr-crash-restore" style="padding:4px 12px;background:#ec4899;color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer">Restore Draft</button>
+        <button id="cr-crash-discard" style="padding:4px 10px;background:rgba(255,255,255,0.1);color:#94a3b8;border:none;border-radius:6px;cursor:pointer">Discard</button>
+      </div>
+    `;
+    document.body.appendChild(banner);
+
+    document.getElementById('cr-crash-restore').onclick = () => {
+      if (snap.pages && Array.isArray(snap.pages)) pages = snap.pages;
+      if (typeof renderBlocks === 'function') renderBlocks();
+      if (typeof updateCreatorLivePreview === 'function') updateCreatorLivePreview();
+      toast('Draft recovered successfully!', 'ok');
+      banner.remove();
+    };
+    document.getElementById('cr-crash-discard').onclick = () => {
+      localStorage.removeItem('ldoc_crash_snapshot');
+      localStorage.removeItem('ldoc_creator_backup');
+      banner.remove();
+    };
+  } catch (e) {}
+};
+setTimeout(window.creatorCheckCrashRecovery, 1000);
+
+window.creatorAddShapeAndFocus = function(shapeType) {
+  const m = document.getElementById('cr-tb-shapes-menu');
+  if (m) m.style.display = 'none';
+  if (!Array.isArray(pages) || pages.length === 0) {
+    if (typeof addPage === 'function') addPage();
+  }
+  const curPage = (Array.isArray(pages) && pages.length > 0) ? (pages.find(p => p.id === currentPage) || pages[0]) : null;
+  if (!curPage) return;
+
+  addBlock('shape', shapeType);
+
+  const center = document.getElementById('center');
+  if (center && center.style.display === 'none' && typeof toggleBlocksDrawer === 'function') {
+    toggleBlocksDrawer();
+  }
+
+  const newBlock = curPage.blocks[curPage.blocks.length - 1];
+  if (newBlock) {
+    window.__creatorSelectedBlockIds = [newBlock.id];
+    document.querySelectorAll('.creator-block-select-cb').forEach(cb => {
+      cb.checked = (cb.dataset.blockId === String(newBlock.id));
+    });
+    setTimeout(() => {
+      const card = document.getElementById('cr_blk_' + newBlock.id);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.style.transition = 'box-shadow 0.2s, border-color 0.2s';
+        card.style.boxShadow = '0 0 0 2px #ec4899, 0 8px 24px rgba(236,72,153,0.35)';
+        card.style.borderColor = '#ec4899';
+        setTimeout(() => {
+          card.style.boxShadow = '';
+          card.style.borderColor = '';
+        }, 2000);
+      }
+    }, 80);
+  }
+};
+
+window.creatorSelectBlockFromCanvas = function(blockId, isMulti) {
+  if (!window.__creatorSelectedBlockIds) window.__creatorSelectedBlockIds = [];
+  if (!isMulti) {
+    window.__creatorSelectedBlockIds = [blockId];
+    document.querySelectorAll('.creator-shape-slide-wrap.selected, .ldoc-canvas-shape-wrap.selected').forEach(el => el.classList.remove('selected'));
+  } else {
+    const idx = window.__creatorSelectedBlockIds.indexOf(blockId);
+    if (idx === -1) window.__creatorSelectedBlockIds.push(blockId);
+    else window.__creatorSelectedBlockIds.splice(idx, 1);
+  }
+
+  document.querySelectorAll('.creator-shape-slide-wrap').forEach(el => {
+    if (window.__creatorSelectedBlockIds.includes(el.dataset.blockId)) {
+      el.classList.add('selected');
+    } else {
+      el.classList.remove('selected');
+    }
+  });
+
+  document.querySelectorAll('.creator-block-select-cb').forEach(cb => {
+    cb.checked = window.__creatorSelectedBlockIds.includes(cb.dataset.blockId);
+  });
+
+  const center = document.getElementById('center');
+  if (center && center.style.display === 'none' && typeof toggleBlocksDrawer === 'function') {
+    toggleBlocksDrawer();
+  }
+
+  const card = document.getElementById('cr_blk_' + blockId);
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.style.transition = 'box-shadow 0.2s, border-color 0.2s';
+    card.style.boxShadow = '0 0 0 2px #ec4899, 0 8px 24px rgba(236,72,153,0.35)';
+    card.style.borderColor = '#ec4899';
+    setTimeout(() => {
+      card.style.boxShadow = '';
+      card.style.borderColor = '';
+    }, 2500);
+  }
+};
+
 window.toggleCrShapeMenu = function(e) {
   if (e) e.stopPropagation();
   const m = document.getElementById('cr-shape-dropdown-menu');
@@ -7597,6 +7952,8 @@ window.creatorUngroup = function() {
   scheduleAutoSave();
   toast('Ungrouped elements', 'ok');
 };
+window.crGroupSelected = window.creatorGroup;
+window.crUngroupSelected = window.creatorUngroup;
 
 // ── Z-Order Layer Ordering in Creator ──
 window.creatorZOrder = function(dir) {
@@ -8069,6 +8426,21 @@ window.addEventListener('keydown', (e) => {
     buildDoc();
     return;
   }
+
+  // Group: Ctrl+G
+  if (cmd && !e.shiftKey && (e.key === 'G' || e.key === 'g')) {
+    e.preventDefault();
+    if (typeof creatorGroup === 'function') creatorGroup();
+    return;
+  }
+
+  // Ungroup: Ctrl+Shift+G
+  if (cmd && e.shiftKey && (e.key === 'G' || e.key === 'g')) {
+    e.preventDefault();
+    if (typeof creatorUngroup === 'function') creatorUngroup();
+    return;
+  }
+
 
   // Ctrl + Z: Undo
   if (cmd && (e.key === 'Z' || e.key === 'z') && !e.shiftKey) {
@@ -8657,28 +9029,62 @@ function renderBlocks(){
       mRow.appendChild(mSel);
       imgSec.appendChild(mRow);
 
-      // Client-Side Zero-Cost Background Removal Button
+      // Image Creative Suite Controls (Zero-Cost Client-Side)
+      const btnGrid = document.createElement('div');
+      btnGrid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px';
+
       const bgRemBtn = document.createElement('button');
       bgRemBtn.type = 'button';
       bgRemBtn.className = 'btn';
-      bgRemBtn.style.cssText = 'width:100%;margin-top:8px;padding:6px;font-size:11px;font-weight:700;background:rgba(124,58,237,0.18);border:1px solid #7c3aed;color:#c084fc;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:6px';
-      bgRemBtn.innerHTML = '<span>🪄</span><span>Remove Background (Client-Side $0)</span>';
-      bgRemBtn.onclick = async () => {
+      bgRemBtn.style.cssText = 'padding:6px;font-size:11px;font-weight:700;background:rgba(16,185,129,0.18);border:1px solid #10b981;color:#34d399;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:4px';
+      bgRemBtn.innerHTML = '<span>✂️</span><span>Remove BG</span>';
+      bgRemBtn.onclick = () => {
         if (!b.src) { toast('Please upload or enter an image URL first', 'err'); return; }
-        if (!window.LDocImageEngine) { toast('LDocImageEngine not loaded', 'err'); return; }
-        try {
-          toast('Analyzing edges and removing background locally…', 'ok');
-          const res = await window.LDocImageEngine.removeBackgroundClientSide(b.src, { tolerance: 28 });
-          b.src = res.dataUrl;
-          b.bg_removed = true;
-          toast('✓ Background removed cleanly via zero-cost client-side canvas', 'ok');
-          renderBlocks();
-          updateCreatorLivePreview();
-        } catch(err) {
-          toast('Background removal failed: ' + err.message, 'err');
+        if (window.LDocCreativeSuite && typeof window.LDocCreativeSuite.openBackgroundRemovalModal === 'function') {
+          window.LDocCreativeSuite.openBackgroundRemovalModal(b, (transparentPng) => {
+            b.src = transparentPng;
+            b.bg_removed = true;
+            renderBlocks();
+            updateCreatorLivePreview();
+          });
+        } else if (window.LDocImageEngine) {
+          toast('Removing background...', 'ok');
+          window.LDocImageEngine.removeBackgroundClientSide(b.src, { tolerance: 28 }).then(res => {
+            b.src = res.dataUrl;
+            b.bg_removed = true;
+            renderBlocks();
+            updateCreatorLivePreview();
+            toast('✓ Background removed cleanly', 'ok');
+          }).catch(err => toast('Background removal failed: ' + err.message, 'err'));
         }
       };
-      imgSec.appendChild(bgRemBtn);
+
+      const magicLayBtn = document.createElement('button');
+      magicLayBtn.type = 'button';
+      magicLayBtn.className = 'btn';
+      magicLayBtn.style.cssText = 'padding:6px;font-size:11px;font-weight:700;background:rgba(168,85,247,0.18);border:1px solid #a855f7;color:#c084fc;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:4px';
+      magicLayBtn.innerHTML = '<span>🪄</span><span>Magic Layers</span>';
+      magicLayBtn.onclick = () => {
+        if (!b.src) { toast('Please upload or enter an image URL first', 'err'); return; }
+        if (window.LDocCreativeSuite && typeof window.LDocCreativeSuite.openMagicLayersModal === 'function') {
+          window.LDocCreativeSuite.openMagicLayersModal(b, (layers) => {
+            const curP = pages.find(p => p.id === currentPage);
+            if (curP && Array.isArray(layers) && layers.length > 0) {
+              const fgLayer = layers.find(l => l.id.includes('fg'));
+              if (fgLayer) b.src = fgLayer.src;
+              layers.forEach(l => {
+                if (!l.id.includes('fg')) curP.blocks.push(l);
+              });
+            }
+            renderBlocks();
+            updateCreatorLivePreview();
+          });
+        }
+      };
+
+      btnGrid.appendChild(bgRemBtn);
+      btnGrid.appendChild(magicLayBtn);
+      imgSec.appendChild(btnGrid);
 
       div.appendChild(imgSec);
 
@@ -10464,6 +10870,8 @@ function closeAllDrawers() {
   if (modal) modal.classList.remove('open');
   const wiz = document.getElementById('fx-wizard-sidebar');
   if (wiz) wiz.classList.remove('open');
+  const aiPanel = document.getElementById('ai-helper-panel');
+  if (aiPanel) aiPanel.classList.remove('open');
 
   ['toggle-pages-btn', 'toggle-blocks-btn', 'toggle-right-btn', 'toggle-elements-btn', 'fx-wizard-btn'].forEach(bid => {
     const b = document.getElementById(bid);
@@ -11457,7 +11865,9 @@ window.addEventListener('DOMContentLoaded', () => {
       <button class="add-btn" onclick="addBlockAndClose('shape','hexagon')">⬡ Hexagon</button>
       <button class="add-btn" onclick="addBlockAndClose('shape','badge')">🛡️ Badge</button>
       <button class="add-btn" onclick="addBlockAndClose('shape','banner')">🎗️ Banner</button>
-      <button class="add-btn" onclick="addBlockAndClose('shape','callout')">💬 Callout</button>
+      <button class="add-btn" onclick="addBlockAndClose('shape','callout_speech')">💬 Speech Callout</button>
+      <button class="add-btn" onclick="addBlockAndClose('shape','callout_thought')">💭 Thought Callout</button>
+      <button class="add-btn" onclick="addBlockAndClose('shape','arrow_double')">⬌ Double Arrow</button>
       <button class="add-btn" onclick="addBlockAndClose('shape','arrow')">➔ Arrow</button>
     </div>
   </div>
@@ -11501,6 +11911,52 @@ window.addEventListener('DOMContentLoaded', () => {
       <button class="add-btn" onclick="addBlockAndClose('button')">🔘 Interactive Button / Link</button>
       <button class="add-btn" onclick="addBlockAndClose('preorder')" style="border-color:#34d399;color:#34d399">💳 Stripe Checkout Pre-Order</button>
       <button class="add-btn" onclick="addBlockAndClose('form')">📑 Webhook Lead Form</button>
+    </div>
+  </div>
+
+  <div class="elements-grid-category">
+    <div class="elements-category-title">📊 Data Visualizations &amp; Advanced Charts Pro (15+ Types)</div>
+    <div class="elements-button-grid">
+      <button class="add-btn" onclick="toggleElementsPopup();if(window.LDocCreativeSuite)window.LDocCreativeSuite.openChartProModal((t,cfg)=>addBlock('chart',t))" style="border-color:#10b981;color:#34d399;font-weight:700">🚀 Chart Pro Studio (15+ Types &amp; CSV)</button>
+      <button class="add-btn" onclick="addBlockAndClose('chart','bar')">📊 Bar Chart</button>
+      <button class="add-btn" onclick="addBlockAndClose('chart','line')">📈 Line Chart</button>
+      <button class="add-btn" onclick="addBlockAndClose('chart','pie')">🥧 Pie Chart</button>
+      <button class="add-btn" onclick="addBlockAndClose('chart','area')">📉 Area Chart</button>
+      <button class="add-btn" onclick="addBlockAndClose('chart','radar')">🕸️ Radar Chart</button>
+      <button class="add-btn" onclick="addBlockAndClose('chart','gauge')">⏱️ Gauge Meter</button>
+    </div>
+  </div>
+
+  <div class="elements-grid-category">
+    <div class="elements-category-title">⭐ Parametric Vector Icons (100+ Icons)</div>
+    <div class="elements-button-grid">
+      <button class="add-btn" onclick="toggleElementsPopup();if(window.LDocCreativeSuite)window.LDocCreativeSuite.openIconPicker(ic=>addBlock('icon',ic))" style="border-color:#38bdf8;color:#38bdf8;font-weight:700">⭐ Open 100+ Vector Icon Picker</button>
+      <button class="add-btn" onclick="addBlockAndClose('icon','star')">⭐ Star</button>
+      <button class="add-btn" onclick="addBlockAndClose('icon','heart')">❤️ Heart</button>
+      <button class="add-btn" onclick="addBlockAndClose('icon','shield')">🛡️ Shield</button>
+      <button class="add-btn" onclick="addBlockAndClose('icon','check')">✓ Checkmark</button>
+      <button class="add-btn" onclick="addBlockAndClose('icon','sparkles')">✨ Sparkles</button>
+      <button class="add-btn" onclick="addBlockAndClose('icon','bolt')">⚡ Lightning Bolt</button>
+    </div>
+  </div>
+
+  <div class="elements-grid-category">
+    <div class="elements-category-title">∑ Advanced Mathematics &amp; Reactive Form Inputs</div>
+    <div class="elements-button-grid">
+      <button class="add-btn" onclick="toggleElementsPopup();if(window.LDocCreativeSuite)window.LDocCreativeSuite.openMathModal(tex=>addBlock('math',tex))" style="border-color:#c084fc;color:#c084fc;font-weight:700">∑ LaTeX Math Studio</button>
+      <button class="add-btn" onclick="addBlockAndClose('math')">📐 Formula (Integral)</button>
+      <button class="add-btn" onclick="addBlockAndClose('interactive_form','slider')">🎛️ Reactive Slider</button>
+      <button class="add-btn" onclick="addBlockAndClose('interactive_form','checkbox')">🔘 Toggle Checkbox</button>
+      <button class="add-btn" onclick="addBlockAndClose('interactive_form','dropdown')">📑 Dropdown Select</button>
+      <button class="add-btn" onclick="addBlockAndClose('interactive_form','signature')">✍️ Signature Canvas</button>
+    </div>
+  </div>
+
+  <div class="elements-grid-category">
+    <div class="elements-category-title">🤖 Local AI Assistant &amp; 5.44B Procedural Templates</div>
+    <div class="elements-button-grid">
+      <button class="add-btn" onclick="toggleElementsPopup();if(window.LDocCreativeSuite)window.LDocCreativeSuite.openAiModal()" style="border-color:#f59e0b;color:#fef08a;font-weight:700">🤖 Local AI Copilot ($0 Cloud Cost)</button>
+      <button class="add-btn" onclick="toggleElementsPopup();if(window.LDocCreativeSuite)window.LDocCreativeSuite.openTemplateExplorerModal(tpl=>toast('Template applied','ok'))" style="border-color:#38bdf8;color:#7dd3fc;font-weight:700">🎨 5.44B Procedural Templates</button>
     </div>
   </div>
 </div>
@@ -11597,6 +12053,10 @@ window.addEventListener('DOMContentLoaded', () => {
   <div class="ctx-divider"></div>
   <div class="ctx-item" onclick="ctxMenuAction('inspect_ast')"><span>💻 Inspect AST JSON</span><span style="font-size:10px;opacity:.6">Ctrl+~</span></div>
   <div class="ctx-item" onclick="ctxMenuAction('find')"><span>🔍 Find in Slide</span><span style="font-size:10px;opacity:.6">Ctrl+F</span></div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item" onclick="ctxMenuAction('living_typography_flow')"><span>✦ Living Flow / Wrap</span><span style="font-size:10px;opacity:.6">Wrap</span></div>
+  <div class="ctx-item" onclick="ctxMenuAction('make_obstacle')"><span>🛡️ Flow Obstacle Wrap</span><span style="font-size:10px;opacity:.6">Avoid</span></div>
+  <div class="ctx-item" onclick="ctxMenuAction('autofit_text')"><span>🗜️ Auto-Fit Text Frame</span><span style="font-size:10px;opacity:.6">Fit</span></div>
   <div class="ctx-divider"></div>
   <div class="ctx-item" onclick="ctxMenuAction('delete')" style="color:#f87171"><span>🗑 Delete Block</span><span style="font-size:10px;opacity:.6">Del</span></div>
 </div>
@@ -12055,6 +12515,22 @@ function ctxMenuAction(act) {
     toggleAstInspector();
   } else if (act === 'find') {
     toggleFindReplaceHud();
+  } else if (act === 'living_typography_flow') {
+    if (window.LDocLivingTypography) {
+      const el = document.querySelector(`[data-block-id="${contextTargetBlockId}"], [data-id="${contextTargetBlockId}"]`);
+      if (el) window.LDocLivingTypography.openInspectorForElement(el);
+      else window.LDocLivingTypography.toggleDrawer();
+    }
+  } else if (act === 'make_obstacle') {
+    if (window.LDocLivingTypography) {
+      const el = document.querySelector(`[data-block-id="${contextTargetBlockId}"], [data-id="${contextTargetBlockId}"]`);
+      if (el) window.LDocLivingTypography.registerObstacle(el, { enabled: true, flowMode: 'wrap-both' });
+    }
+  } else if (act === 'autofit_text') {
+    if (window.LDocLivingTypography) {
+      const el = document.querySelector(`[data-block-id="${contextTargetBlockId}"], [data-id="${contextTargetBlockId}"]`);
+      if (el) window.LDocLivingTypography.autoFitText(el);
+    }
   }
 }
 
@@ -12124,7 +12600,7 @@ function setMobileView(tab) {
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  z-index: 100010;
+  z-index: var(--z-modal-backdrop, 1000) !important;
   align-items: center;
   justify-content: center;
   padding: 16px;
@@ -13213,5 +13689,9 @@ window.openPretextInspectorModal = function() {
 };
 
 </script>
+</div>
+</div>
+<div id="ldoc-overlay-root"></div>
+<div id="ldoc-toast-root"></div>
 </body>
 </html>
