@@ -411,6 +411,15 @@
             { id: 'insert_diagram', label: 'Insert Flowchart / Mindmap Diagram', category: 'Insert', icon: '🗺️' },
             { id: 'insert_simulation', label: 'Insert STEM Physics Simulation', category: 'Insert', icon: '⚛️' },
             { id: 'insert_path', label: 'Insert Bézier Vector Shape', category: 'Insert', icon: '🎨' },
+            { id: 'pres_enter', label: 'Enter Presentation Mode', category: 'Presentation', icon: '▶', shortcut: 'Ctrl+F5' },
+            { id: 'pres_exit', label: 'Exit Presentation Mode', category: 'Presentation', icon: '✕', shortcut: 'Esc' },
+            { id: 'pres_fs', label: 'Toggle Fullscreen', category: 'Presentation', icon: '⛶', shortcut: 'F11' },
+            { id: 'pres_fit', label: 'Fit to Screen', category: 'Presentation', icon: '🗜️', shortcut: '0' },
+            { id: 'pres_zoom_in', label: 'Zoom In', category: 'Presentation', icon: '＋', shortcut: '+' },
+            { id: 'pres_zoom_out', label: 'Zoom Out', category: 'Presentation', icon: '−', shortcut: '-' },
+            { id: 'pres_reset_view', label: 'Reset View (100%)', category: 'Presentation', icon: '1:1', shortcut: '1' },
+            { id: 'pres_next', label: 'Next Page / Slide', category: 'Presentation', icon: '→', shortcut: 'Right' },
+            { id: 'pres_prev', label: 'Previous Page / Slide', category: 'Presentation', icon: '←', shortcut: 'Left' },
             { id: 'toggle_tilt', label: 'Toggle 3D Perspective Tilt', category: 'View', icon: '🕶️', shortcut: 'Ctrl+M' },
             { id: 'cloud_vault', label: 'Open Cloud Documents Vault', category: 'Cloud', icon: '☁️' },
             { id: 'version_history', label: 'Revisions & Version History', category: 'Cloud', icon: '↺' }
@@ -474,6 +483,26 @@
         else window.print();
       } else if (actionId === 'toggle_tilt') {
         if (typeof global.toggle3DPerspectiveTilt === 'function') global.toggle3DPerspectiveTilt();
+      } else if (actionId === 'pres_enter') {
+        if (typeof global.enterPresentationMode === 'function') global.enterPresentationMode();
+        else if (global.ldocPresentation) global.ldocPresentation.enter();
+      } else if (actionId === 'pres_exit') {
+        if (typeof global.exitPresentationMode === 'function') global.exitPresentationMode();
+        else if (global.ldocPresentation) global.ldocPresentation.exit();
+      } else if (actionId === 'pres_fs') {
+        if (global.ldocPresentation) global.ldocPresentation.toggleFullscreen();
+      } else if (actionId === 'pres_fit') {
+        if (global.ldocPresentation) global.ldocPresentation.fitToScreen();
+      } else if (actionId === 'pres_zoom_in') {
+        if (global.ldocPresentation) global.ldocPresentation.zoomIn();
+      } else if (actionId === 'pres_zoom_out') {
+        if (global.ldocPresentation) global.ldocPresentation.zoomOut();
+      } else if (actionId === 'pres_reset_view') {
+        if (global.ldocPresentation) global.ldocPresentation.zoom100();
+      } else if (actionId === 'pres_next') {
+        if (global.ldocPresentation) global.ldocPresentation.nextPage();
+      } else if (actionId === 'pres_prev') {
+        if (global.ldocPresentation) global.ldocPresentation.prevPage();
       } else if (typeof global.showToast === 'function') {
         global.showToast(`Executed: ${actionId}`, 'info');
       }

@@ -48,7 +48,8 @@ const coreModules = [
   'ldoc-image-engine.js',
   'ldoc-diagram-engine.js',
   'ldoc-timeline-engine.js',
-  'ldoc-plugin-api.js'
+  'ldoc-plugin-api.js',
+  'ldoc-presentation-runtime.js'
 ];
 
 const syncTargets = [
@@ -80,7 +81,8 @@ coreModules.forEach(mod => {
   if (mod === 'ldoc-text-layout.js' || mod === 'ldoc-parser.js' || mod === 'ldoc-validator.js' || mod === 'ldoc-shape-engine.js' ||
       mod === 'ldoc-reactive-engine.js' || mod === 'ldoc-3d-inspector.js' || mod === 'ldoc-quiz-engine.js' ||
       mod === 'ldoc-template-engine.js' || mod === 'ldoc-vector-editor.js' || mod === 'ldoc-image-engine.js' ||
-      mod === 'ldoc-diagram-engine.js' || mod === 'ldoc-timeline-engine.js' || mod === 'ldoc-plugin-api.js') {
+      mod === 'ldoc-diagram-engine.js' || mod === 'ldoc-timeline-engine.js' || mod === 'ldoc-plugin-api.js' ||
+      mod === 'ldoc-presentation-runtime.js') {
     fs.copyFileSync(srcFile, path.join(rootDir, 'packages', 'ldoc-sdk', mod));
   }
 

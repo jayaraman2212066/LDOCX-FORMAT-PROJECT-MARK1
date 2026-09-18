@@ -156,6 +156,10 @@ class ChromeController {
     } catch (e) {}
   }
 
+  async stop() {
+    return this.close();
+  }
+
   _httpGet(url) {
     return new Promise((resolve, reject) => {
       http.get(url, (res) => {

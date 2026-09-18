@@ -37,7 +37,8 @@ const testSuites = [
   { section: 'Section 17', name: 'Path Editing, Precision Transforms & Layer Sync', script: 'test_section17_professional_path_transforms_layers.js' },
   { section: 'Section 18', name: 'Multi-Script Typography & Pretext Hardening', script: 'test_section18_typography_unicode_multiscript.js' },
   { section: 'Section 19', name: 'Template Quality Validator & Virtual Catalog Scale', script: 'test_section19_template_validator_and_scale.js' },
-  { section: 'Section 20', name: 'Adversarial Security, Stress & User Journeys A–H', script: 'test_section20_adversarial_security_and_stress.js' }
+  { section: 'Section 20', name: 'Adversarial Security, Stress & User Journeys A–H', script: 'test_section20_adversarial_security_and_stress.js' },
+  { section: 'Section 21', name: 'Universal Presentation Runtime & Whole-Product Conformance', script: 'test_section21_presentation_runtime.js' }
 ];
 
 const results = [];

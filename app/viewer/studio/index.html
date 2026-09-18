@@ -4159,6 +4159,7 @@ canvas, .three-canvas-wrap, #viewer-stage, #page-canvas, .conv-living-sheet {
 <script src="ldoc-diagram-engine.js"></script>
 <script src="ldoc-timeline-engine.js"></script>
 <script src="ldoc-plugin-api.js"></script>
+<script src="ldoc-presentation-runtime.js"></script>
 <!-- Local Offline Vendor Libraries (Zero Outsource / 100% Offline Standalone) -->
 <script src="vendor/three.min.js"></script>
 <script>if(typeof THREE==='undefined'&&typeof navigator!=='undefined'&&navigator.onLine)document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
@@ -4690,6 +4691,8 @@ html.ldoc-unlicensed body {
  <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
  <div class="dmenu-btn">View ▾</div>
  <div class="dmenu-dropdown">
+ <div class="dmenu-entry" onclick="if(typeof enterPresentationMode==='function'){enterPresentationMode();}else if(window.ldocPresentation){window.ldocPresentation.enter();}"><span>▶ Start Presentation Mode</span><span class="hotkey">Ctrl+F5</span></div>
+ <div class="dmenu-divider"></div>
  <div class="dmenu-section-hdr">Presentation Artifact Modes</div>
  <div class="dmenu-entry" onclick="setPresentationMode('paper')"><span> Clean Document Paper</span></div>
  <div class="dmenu-entry" onclick="setPresentationMode('glass')"><span> Frosted Glass Mode</span></div>
@@ -4791,7 +4794,20 @@ html.ldoc-unlicensed body {
  <button class="toolbar-btn" id="open-btn" onclick="document.getElementById('file-input').click()">&#128194; Open .ldocx</button>
  <button class="toolbar-btn" id="ed-open-btn" onclick="document.getElementById('ed-file-input').click()" style="display:none"> Open</button>
  <input type="file" id="ed-file-input" accept=".ldocx,.ldoc" style="display:none" onchange="edOpenLdocxFile(event)">
- <button class="toolbar-btn primary" id="save-btn" onclick="saveDoc()" style="display:inline-flex;align-items:center;gap:6px" title="Save / Export .ldocx package">&#128190; Save .ldocx</button>
+  <button class="toolbar-btn primary" id="save-btn" onclick="saveDoc()" style="display:inline-flex;align-items:center;gap:6px" title="Save / Export .ldocx package">&#128190; Save .ldocx</button>
+  <!-- Primary Universal Presentation Button (v3.0.0) -->
+  <div class="pres-dropdown-wrap" style="position:relative;display:inline-flex;align-items:center">
+    <button class="toolbar-btn primary" id="toolbar-present-btn" onclick="if(typeof enterPresentationMode==='function'){enterPresentationMode();}else if(window.ldocPresentation){window.ldocPresentation.enter();}" title="Start Presentation Mode (Ctrl+F5)" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:1.5px solid #60a5fa;color:#ffffff;font-weight:700;box-shadow:0 0 14px rgba(59,130,246,0.4);gap:6px;display:inline-flex;align-items:center">
+      <span>▶</span><span>Present</span>
+    </button>
+    <button class="toolbar-btn primary" id="toolbar-present-dd-btn" onclick="togglePresentDropdown(event)" title="Presentation Options" style="padding:5px 6px;margin-left:1px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border:1.5px solid #60a5fa;border-left:none;color:#ffffff">▾</button>
+    <div id="present-dropdown-menu" style="display:none;position:absolute;top:100%;right:0;margin-top:6px;background:rgba(15,23,42,0.96);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:6px;min-width:210px;z-index:9999;box-shadow:0 16px 36px rgba(0,0,0,0.8)">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#93c5fd;padding:4px 8px;letter-spacing:1px">Presentation Runtime</div>
+      <div class="dmenu-entry" onclick="enterPresentationMode(); closePresentDropdown();"><span>▶ Present from Beginning</span><span class="hotkey">Ctrl+F5</span></div>
+      <div class="dmenu-entry" onclick="enterPresentationMode({page: typeof currentSlidePage !== 'undefined' ? currentSlidePage : 1}); closePresentDropdown();"><span>▶ Present from Current Page</span></div>
+      <div class="dmenu-entry" onclick="enterPresentationMode({fullscreen: true}); closePresentDropdown();"><span>⛶ Fullscreen Presentation</span></div>
+    </div>
+  </div>
  <button class="toolbar-btn" onclick="toggleFindReplaceHud()" title="Find in Document (Ctrl+F)" style="gap:5px;display:inline-flex;align-items:center"><span></span><span>Find</span></button>
  <button class="toolbar-btn" onclick="printDocument()" title="Print or Save to PDF (Ctrl+P)" style="gap:5px;display:inline-flex;align-items:center;background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;font-weight:700"><span>🖨️</span><span>Print to PDF</span></button>
   <button class="toolbar-btn" id="toolbar-license-btn" onclick="openLicenseActivationModal()" title="In-App License &amp; Payment Gateway" style="display:none;gap:6px;align-items:center;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(234,88,12,0.25));border:1.5px solid #f59e0b;color:#fef08a;font-weight:700;cursor:pointer"><span>🔑</span><span id="toolbar-license-text">Redeem License</span></button>
@@ -5725,6 +5741,21 @@ html.ldoc-unlicensed body {
  <div style="color:#94a3b8"><span style="color:#fef08a;font-family:monospace;font-weight:700">F1</span>: Help Drawer</div>
  <div style="color:#94a3b8"><span style="color:#fef08a;font-family:monospace;font-weight:700">Double Click</span>: Free Text Box</div>
  <div style="color:#94a3b8"><span style="color:#fef08a;font-family:monospace;font-weight:700">Drag Splitter</span>: Resize Panes</div>
+ </div>
+ </div>
+
+ <!-- Universal Presentation Runtime Shortcuts (v3.0.0) -->
+ <div style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.25);border-radius:10px;padding:14px;margin-top:12px">
+ <div style="font-size:11px;font-weight:800;color:#60a5fa;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">▶ Presentation Runtime Shortcuts</div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
+ <div style="color:#94a3b8"><span style="color:#93c5fd;font-family:monospace;font-weight:700">Ctrl + F5</span>: Present Mode</div>
+ <div style="color:#94a3b8"><span style="color:#93c5fd;font-family:monospace;font-weight:700">Esc</span>: Exit Presentation</div>
+ <div style="color:#94a3b8"><span style="color:#93c5fd;font-family:monospace;font-weight:700">← / →</span>: Previous / Next Slide</div>
+ <div style="color:#94a3b8"><span style="color:#93c5fd;font-family:monospace;font-weight:700">Space</span>: Advance Slide</div>
+ <div style="color:#94a3b8"><span style="color:#93c5fd;font-family:monospace;font-weight:700">+ / -</span>: Zoom In / Zoom Out</div>
+ <div style="color:#94a3b8"><span style="color:#93c5fd;font-family:monospace;font-weight:700">0 / 1</span>: Fit Screen / 100% Zoom</div>
+ <div style="color:#94a3b8"><span style="color:#93c5fd;font-family:monospace;font-weight:700">Space + Drag</span>: Canvas Pan</div>
+ <div style="color:#94a3b8"><span style="color:#93c5fd;font-family:monospace;font-weight:700">F11 / ⛶</span>: Fullscreen Mode</div>
  </div>
  </div>
 
@@ -20274,12 +20305,39 @@ async function downloadCurrentDocument() {
  }
 }
 
+window.togglePresentDropdown = function(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('present-dropdown-menu');
+  if (m) m.style.display = m.style.display === 'block' ? 'none' : 'block';
+};
+
+window.closePresentDropdown = function() {
+  const m = document.getElementById('present-dropdown-menu');
+  if (m) m.style.display = 'none';
+};
+
+document.addEventListener('click', () => {
+  const m = document.getElementById('present-dropdown-menu');
+  if (m) m.style.display = 'none';
+});
+
 window.initFormatPopover();
 
 // ── ⌨️ Global Studio & Viewer Shortcuts ─────────────────────────────
 window.addEventListener('keydown', (e) => {
  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
  const cmd = isMac ? e.metaKey : e.ctrlKey;
+
+  // Ctrl+F5: Launch Universal Presentation Mode
+  if (cmd && e.key === 'F5') {
+    const tag = document.activeElement ? document.activeElement.tagName : '';
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && !document.activeElement.isContentEditable) {
+      e.preventDefault();
+      if (typeof enterPresentationMode === 'function') enterPresentationMode();
+      else if (window.ldocPresentation) window.ldocPresentation.enter();
+      return;
+    }
+  }
 
  // Ctrl+F / Cmd+F: Find in Document HUD
  if (cmd && (e.key === 'f' || e.key === 'F')) {

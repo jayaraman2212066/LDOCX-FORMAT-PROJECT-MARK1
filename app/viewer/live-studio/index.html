@@ -3829,6 +3829,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <script src="ldoc-parser.js"></script>
 <script src="ldoc-editor-core.js"></script>
 <script src="ldoc-shared-modals.js"></script>
+<script src="ldoc-presentation-runtime.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
@@ -3894,6 +3895,8 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
  <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
  <div class="dmenu-btn">View ▾</div>
  <div class="dmenu-dropdown">
+ <div class="dmenu-entry" onclick="if(typeof enterPresentationMode==='function'){enterPresentationMode();}else if(window.ldocPresentation){window.ldocPresentation.enter();}"><span>▶ Start Presentation Mode</span><span class="hotkey">Ctrl+F5</span></div>
+ <div class="dmenu-divider"></div>
  <div class="dmenu-section-hdr">Presentation Artifact Modes</div>
  <div class="dmenu-entry" onclick="setPresentationMode('paper')"><span> Clean Document Paper</span></div>
  <div class="dmenu-entry" onclick="setPresentationMode('glass')"><span> Frosted Glass Mode</span></div>
@@ -4373,6 +4376,9 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
  </div>
 
   <div class="slide-tools-container">
+    <button class="slide-tool-btn primary" id="live-present-btn" onclick="if(typeof enterPresentationMode==='function'){enterPresentationMode();}else if(window.ldocPresentation){window.ldocPresentation.enter();}" title="Start Presentation Mode (Ctrl+F5)" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:1.5px solid #60a5fa;color:#ffffff;font-weight:700;box-shadow:0 0 12px rgba(59,130,246,0.4);gap:6px;display:inline-flex;align-items:center">
+      <span>▶</span><span>Present</span>
+    </button>
     <div class="slide-tool-group">
       <button class="slide-tool-btn purple" id="pretext-split-cols-btn" onclick="splitActiveTextIntoColumns(2)" title="Multi-Column Magazine Balance: Split paragraph into 2 balanced columns with Pretext arithmetic!">📰 2-Col</button>
       <button class="slide-tool-btn highlight" id="fit-slide-text-btn" onclick="shrinkActiveTextToFit()" title="One-Click Shrink to Fit: Binary-search font size in &lt;0.2ms to fit active text box!">🗜️ Fit</button>

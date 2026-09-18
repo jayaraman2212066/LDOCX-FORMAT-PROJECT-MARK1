@@ -1778,7 +1778,17 @@
         { id: 'toggle_rulers', label: 'Toggle Metric Rulers', category: 'view', icon: '📏', action: () => this.toggleRulers() },
         { id: 'save_doc', label: 'Save Document Spec (.ldocx)', category: 'export', icon: '💾', action: () => this.saveActiveDocument() },
         { id: 'undo', label: 'Undo Operation (Ctrl+Z)', category: 'edit', icon: '↶', action: () => this.undo() },
-        { id: 'redo', label: 'Redo Operation (Ctrl+Y)', category: 'edit', icon: '↷', action: () => this.redo() }
+        { id: 'redo', label: 'Redo Operation (Ctrl+Y)', category: 'edit', icon: '↷', action: () => this.redo() },
+        { id: 'pres_mode', label: 'Presentation Mode', category: 'presentation', icon: '▶', action: () => (typeof global.enterPresentationMode === 'function' ? global.enterPresentationMode() : global.ldocPresentation?.enter()) },
+        { id: 'pres_enter', label: 'Enter Presentation Mode', category: 'presentation', icon: '▶', action: () => (typeof global.enterPresentationMode === 'function' ? global.enterPresentationMode() : global.ldocPresentation?.enter()) },
+        { id: 'pres_exit', label: 'Exit Presentation Mode', category: 'presentation', icon: '✕', action: () => (typeof global.exitPresentationMode === 'function' ? global.exitPresentationMode() : global.ldocPresentation?.exit()) },
+        { id: 'pres_fs', label: 'Toggle Fullscreen', category: 'presentation', icon: '⛶', action: () => global.ldocPresentation?.toggleFullscreen() },
+        { id: 'pres_fit', label: 'Fit to Screen', category: 'presentation', icon: '🗜️', action: () => global.ldocPresentation?.fitToScreen() },
+        { id: 'pres_zoom_in', label: 'Zoom In', category: 'presentation', icon: '＋', action: () => global.ldocPresentation?.zoomIn() },
+        { id: 'pres_zoom_out', label: 'Zoom Out', category: 'presentation', icon: '−', action: () => global.ldocPresentation?.zoomOut() },
+        { id: 'pres_reset_view', label: 'Reset View (100%)', category: 'presentation', icon: '1:1', action: () => global.ldocPresentation?.zoom100() },
+        { id: 'pres_next', label: 'Next Page / Slide', category: 'presentation', icon: '→', action: () => global.ldocPresentation?.nextPage() },
+        { id: 'pres_prev', label: 'Previous Page / Slide', category: 'presentation', icon: '←', action: () => global.ldocPresentation?.prevPage() }
       ];
     },
 

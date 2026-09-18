@@ -3112,6 +3112,8 @@ body.creator-split-50-50 #creator-preview-pane {
     <div class="dmenu-item" onclick="toggleDesktopMenu(this, event)">
       <div class="dmenu-btn">View ▾</div>
       <div class="dmenu-dropdown">
+        <div class="dmenu-entry" onclick="if(typeof enterPresentationMode==='function'){enterPresentationMode();}else if(window.ldocPresentation){window.ldocPresentation.enter();}"><span>▶ Start Presentation Mode</span><span class="hotkey">Ctrl+F5</span></div>
+        <div class="dmenu-divider"></div>
         <div class="dmenu-section-hdr">Layout Configuration</div>
         <div class="dmenu-entry" onclick="setCreatorLayoutMode('presentation')"><span>🖥️ Full Presentation View (100% Canvas)</span></div>
         <div class="dmenu-entry" onclick="setCreatorLayoutMode('split')"><span>🛠️ Side-by-Side Split View</span></div>
@@ -3190,6 +3192,7 @@ body.creator-split-50-50 #creator-preview-pane {
 
   <span class="spacer"></span>
   <button class="btn" onclick="clearAll()" style="padding:5px 12px;font-size:12px">🗑 Clear</button>
+  <button class="btn primary" id="creator-present-btn" onclick="if(typeof enterPresentationMode==='function'){enterPresentationMode();}else if(window.ldocPresentation){window.ldocPresentation.enter();}" title="Start Presentation Mode (Ctrl+F5)" style="padding:5px 14px;font-size:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:1px solid #60a5fa;color:#ffffff;font-weight:700;box-shadow:0 0 10px rgba(59,130,246,0.4)">▶ Present</button>
   <button class="btn green" id="build-btn" onclick="buildDoc()" style="padding:5px 14px;font-size:12px">▶ Build &amp; Open</button>
   <button class="btn primary" id="dl-btn" onclick="downloadDoc()" style="padding:5px 14px;font-size:12px">⬇ Download .ldocx</button>
 </div>
@@ -3692,6 +3695,7 @@ body.creator-split-50-50 #creator-preview-pane {
 <script src="ldoc-diagram-engine.js"></script>
 <script src="ldoc-timeline-engine.js"></script>
 <script src="ldoc-plugin-api.js"></script>
+<script src="ldoc-presentation-runtime.js"></script>
 <script>
 const isLocalServer = typeof window !== 'undefined' && 
   (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') && 
