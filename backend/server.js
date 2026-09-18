@@ -70,16 +70,38 @@ function parseJsonBody(req) {
   });
 }
 
-function authenticateUser(req) {
-  const authHeader = req.headers['authorization'] || '';
-  if (authHeader.startsWith('Bearer ')) {
-    return verifyToken(authHeader.slice(7));
+const { getAuthTokenFromReq } = require('./cookie_helper');
+
+function wrapResponse(res) {
+  if (!res.status) {
+    res.status = function(code) {
+      this.statusCode = code;
+      return this;
+    };
+  }
+  if (!res.json) {
+    res.json = function(data) {
+      if (!this.getHeader('Content-Type')) {
+        this.setHeader('Content-Type', 'application/json');
+      }
+      this.end(JSON.stringify(data));
+      return this;
+    };
+  }
+  return res;
+}
+
+async function authenticateUser(req) {
+  const token = getAuthTokenFromReq(req);
+  if (token) {
+    return await verifyToken(token);
   }
   return null;
 }
 
 const server = http.createServer(async (req, res) => {
   handleCors(req, res);
+  wrapResponse(res);
   if (req.method === 'OPTIONS') {
     res.writeHead(200);
     return res.end();
@@ -93,7 +115,7 @@ const server = http.createServer(async (req, res) => {
   }
   const parsedUrl = url.parse(req.url, true);
   const pathname = parsedUrl.pathname.replace(/\/$/, '');
-  const user = authenticateUser(req);
+  const user = await authenticateUser(req);
 
   try {
     // ── HEALTH & STATUS ─────────────────────────────────────────────────────
@@ -111,10 +133,8 @@ const server = http.createServer(async (req, res) => {
 
     // ── AUTHENTICATION ──────────────────────────────────────────────────────
     if (pathname === '/api/auth/register' && req.method === 'POST') {
-      const body = await parseJsonBody(req);
-      const regRes = await register(body);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify(regRes));
+      req.body = await parseJsonBody(req);
+      return require('./handlers/auth/register')(req, res);
     }
 
     if (pathname.startsWith('/api/auth/oauth') || pathname.startsWith('/api/auth/callback')) {
@@ -122,19 +142,26 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (pathname === '/api/auth/login' && req.method === 'POST') {
-      const body = await parseJsonBody(req);
-      const loginRes = await login(body);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify(loginRes));
+      req.body = await parseJsonBody(req);
+      return require('./handlers/auth/login')(req, res);
+    }
+
+    if (pathname === '/api/auth/logout' && (req.method === 'POST' || req.method === 'GET')) {
+      return require('./handlers/auth/logout')(req, res);
+    }
+
+    if (pathname === '/api/auth/forgot-password' && req.method === 'POST') {
+      req.body = await parseJsonBody(req);
+      return require('./handlers/auth/forgot-password')(req, res);
+    }
+
+    if (pathname === '/api/auth/reset-password' && req.method === 'POST') {
+      req.body = await parseJsonBody(req);
+      return require('./handlers/auth/reset-password')(req, res);
     }
 
     if (pathname === '/api/auth/me' && req.method === 'GET') {
-      if (!user) {
-        res.writeHead(401, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ error: 'Unauthorized' }));
-      }
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ ok: true, user }));
+      return require('./handlers/auth/me')(req, res);
     }
 
     // ── DOCUMENTS CRUD & AUTO-SAVE ──────────────────────────────────────────

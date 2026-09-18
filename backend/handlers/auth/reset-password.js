@@ -1,11 +1,10 @@
-const { login } = require('../../auth_service');
+const { resetPasswordWithToken } = require('../../auth_service');
 const { checkAuthRateLimit, registerAuthFailure, registerAuthSuccess } = require('../../auth_rate_limiter');
-const { setAuthCookie } = require('../../cookie_helper');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   let body = {};
@@ -15,26 +14,26 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Invalid JSON body' });
   }
 
-  const email = body.email || '';
+  const token = body.token || '';
+  const newPassword = body.password || '';
 
-  // 1. Enforce Authentication Rate Limiting
-  const rateCheck = checkAuthRateLimit(req, email);
+  // 1. Rate Limiting Check
+  const rateCheck = checkAuthRateLimit(req);
   if (!rateCheck.allowed) {
     res.setHeader('Retry-After', rateCheck.retryAfterSeconds);
     return res.status(429).json({
       error: 'Too Many Requests',
-      message: 'Too many failed login attempts. Account temporarily throttled. Please try again in 15 minutes.'
+      message: 'Too many attempts. Please try again in 15 minutes.'
     });
   }
 
-  // 2. Authenticate
+  // 2. Perform reset
   try {
-    const r = await login(body);
-    registerAuthSuccess(req, email);
-    setAuthCookie(res, r.token);
-    return res.status(200).json(r);
+    const result = await resetPasswordWithToken(token, newPassword);
+    registerAuthSuccess(req);
+    return res.status(200).json(result);
   } catch (err) {
-    registerAuthFailure(req, email);
-    return res.status(401).json({ error: 'Invalid email or password' });
+    registerAuthFailure(req);
+    return res.status(400).json({ error: err.message });
   }
 };

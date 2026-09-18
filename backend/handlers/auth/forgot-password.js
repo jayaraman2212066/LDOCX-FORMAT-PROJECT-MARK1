@@ -1,11 +1,10 @@
-const { register } = require('../../auth_service');
-const { checkAuthRateLimit, registerAuthFailure, registerAuthSuccess } = require('../../auth_rate_limiter');
-const { setAuthCookie } = require('../../cookie_helper');
+const { createPasswordResetToken } = require('../../auth_service');
+const { checkAuthRateLimit } = require('../../auth_rate_limiter');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   let body = {};
@@ -23,18 +22,22 @@ module.exports = async (req, res) => {
     res.setHeader('Retry-After', rateCheck.retryAfterSeconds);
     return res.status(429).json({
       error: 'Too Many Requests',
-      message: 'Too many registration attempts from this source. Please try again later.'
+      message: 'Too many password reset requests. Please try again in 15 minutes.'
     });
   }
 
-  // 2. Register
-  try {
-    const r = await register(body);
-    registerAuthSuccess(req, email);
-    setAuthCookie(res, r.token);
-    return res.status(200).json(r);
-  } catch (err) {
-    registerAuthFailure(req, email);
-    return res.status(400).json({ error: err.message });
+  // 2. Generate single-use reset token
+  const result = await createPasswordResetToken(email);
+
+  // In development/test mode, provide resetToken for automated test harness verification
+  const responseData = {
+    ok: true,
+    message: result.message
+  };
+
+  if (process.env.NODE_ENV !== 'production' && result.rawToken) {
+    responseData._dev_reset_token = result.rawToken;
   }
+
+  return res.status(200).json(responseData);
 };

@@ -1,5 +1,6 @@
 const { executeAiChatProxy } = require('../../ai_proxy');
 const { verifyToken } = require('../../auth_service');
+const { getAuthTokenFromReq } = require('../../cookie_helper');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -7,8 +8,8 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const auth = req.headers['authorization'] || '';
-  const user = auth.startsWith('Bearer ') ? verifyToken(auth.slice(7)) : null;
+  const token = getAuthTokenFromReq(req);
+  const user = token ? await verifyToken(token) : null;
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     const r = await executeAiChatProxy(body, user);

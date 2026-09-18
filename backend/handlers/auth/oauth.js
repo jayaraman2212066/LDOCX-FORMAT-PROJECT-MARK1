@@ -1,8 +1,10 @@
 // OAuth 2.0 Single Sign-On Handler (Google & GitHub)
-// LDOC Studio Living Document Suite
+// Hardened with anti-CSRF state validation, HttpOnly session cookies, and secure error handling
 const https = require('https');
+const crypto = require('crypto');
 const db = require('../../db');
 const { signToken } = require('../../auth_service');
+const { setAuthCookie, getCookie } = require('../../cookie_helper');
 
 const fs = require('fs');
 const path = require('path');
@@ -57,6 +59,18 @@ function httpsRequest(url, options = {}, postData = null) {
   });
 }
 
+function setStateCookie(res, state) {
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+  const secureFlag = isProd ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `oauth_state=${encodeURIComponent(state)}; Path=/; HttpOnly; SameSite=Lax${secureFlag}; Max-Age=600`);
+}
+
+function clearStateCookie(res) {
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+  const secureFlag = isProd ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `oauth_state=; Path=/; HttpOnly; SameSite=Lax${secureFlag}; Max-Age=0`);
+}
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -69,15 +83,19 @@ module.exports = async (req, res) => {
 
   // 1. Google OAuth Initiation
   if (pathname === '/api/auth/oauth/google') {
+    const state = crypto.randomBytes(24).toString('hex');
+    setStateCookie(res, state);
     const redirectUri = `${baseUrl}/api/auth/callback/google`;
+
     if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
       const demoUser = await getOrCreateOAuthUser('google_user@gmail.com', 'Google Workspace User', 'google');
       const token = signToken({ id: demoUser.id, email: demoUser.email, plan: demoUser.plan });
+      setAuthCookie(res, token);
       const target = `${baseUrl}/live-studio?auth=success&provider=google&token=${token}&user=${encodeURIComponent(JSON.stringify(demoUser))}`;
       res.writeHead(302, { Location: target });
       return res.end();
     }
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(GOOGLE_CLIENT_ID)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=openid%20email%20profile&access_type=offline&prompt=select_account`;
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(GOOGLE_CLIENT_ID)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=openid%20email%20profile&access_type=offline&prompt=select_account&state=${state}`;
     res.writeHead(302, { Location: googleAuthUrl });
     return res.end();
   }
@@ -85,11 +103,21 @@ module.exports = async (req, res) => {
   // 2. Google OAuth Callback
   if (pathname === '/api/auth/callback/google') {
     const code = parsedUrl.searchParams.get('code');
+    const state = parsedUrl.searchParams.get('state');
+    const storedState = getCookie(req, 'oauth_state');
+    clearStateCookie(res);
+
     const redirectUri = `${baseUrl}/api/auth/callback/google`;
     if (!code) {
       res.writeHead(302, { Location: `${baseUrl}/live-studio?auth_error=No+authorization+code+returned` });
       return res.end();
     }
+
+    if (GOOGLE_CLIENT_ID && (!state || state !== storedState)) {
+      res.writeHead(302, { Location: `${baseUrl}/live-studio?auth_error=Invalid+state+parameter+CSRF+protection` });
+      return res.end();
+    }
+
     try {
       const postData = new URLSearchParams({
         code,
@@ -117,6 +145,7 @@ module.exports = async (req, res) => {
 
       const user = await getOrCreateOAuthUser(profile.email, profile.name || profile.given_name, 'google');
       const token = signToken({ id: user.id, email: user.email, plan: user.plan });
+      setAuthCookie(res, token);
 
       res.writeHead(302, {
         Location: `${baseUrl}/live-studio?auth=success&provider=google&token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`
@@ -132,15 +161,19 @@ module.exports = async (req, res) => {
 
   // 3. GitHub OAuth Initiation
   if (pathname === '/api/auth/oauth/github') {
+    const state = crypto.randomBytes(24).toString('hex');
+    setStateCookie(res, state);
     const redirectUri = `${baseUrl}/api/auth/callback/github`;
+
     if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
       const demoUser = await getOrCreateOAuthUser('github_coder@github.com', 'GitHub Developer User', 'github');
       const token = signToken({ id: demoUser.id, email: demoUser.email, plan: demoUser.plan });
+      setAuthCookie(res, token);
       const target = `${baseUrl}/live-studio?auth=success&provider=github&token=${token}&user=${encodeURIComponent(JSON.stringify(demoUser))}`;
       res.writeHead(302, { Location: target });
       return res.end();
     }
-    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(GITHUB_CLIENT_ID)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=user:email`;
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${encodeURIComponent(GITHUB_CLIENT_ID)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=user:email&state=${state}`;
     res.writeHead(302, { Location: githubAuthUrl });
     return res.end();
   }
@@ -148,10 +181,20 @@ module.exports = async (req, res) => {
   // 4. GitHub OAuth Callback
   if (pathname === '/api/auth/callback/github') {
     const code = parsedUrl.searchParams.get('code');
+    const state = parsedUrl.searchParams.get('state');
+    const storedState = getCookie(req, 'oauth_state');
+    clearStateCookie(res);
+
     if (!code) {
       res.writeHead(302, { Location: `${baseUrl}/live-studio?auth_error=No+authorization+code+returned` });
       return res.end();
     }
+
+    if (GITHUB_CLIENT_ID && (!state || state !== storedState)) {
+      res.writeHead(302, { Location: `${baseUrl}/live-studio?auth_error=Invalid+state+parameter+CSRF+protection` });
+      return res.end();
+    }
+
     try {
       const postData = JSON.stringify({
         client_id: GITHUB_CLIENT_ID,
@@ -200,6 +243,7 @@ module.exports = async (req, res) => {
 
       const user = await getOrCreateOAuthUser(email, name, 'github');
       const token = signToken({ id: user.id, email: user.email, plan: user.plan });
+      setAuthCookie(res, token);
 
       res.writeHead(302, {
         Location: `${baseUrl}/live-studio?auth=success&provider=github&token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`
@@ -221,6 +265,7 @@ module.exports = async (req, res) => {
       if (!email) return res.status(400).json({ error: 'Email required' });
       const user = await getOrCreateOAuthUser(email, name || email.split('@')[0], provider || 'oauth');
       const token = signToken({ id: user.id, email: user.email, plan: user.plan });
+      setAuthCookie(res, token);
       return res.status(200).json({ ok: true, token, user });
     } catch (e) {
       return res.status(500).json({ error: e.message });

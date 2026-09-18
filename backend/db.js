@@ -69,6 +69,18 @@ const db = {
     async findById(id) {
       return readTable('users').find(u => u.id === id) || null;
     },
+    async findByResetToken(tokenHash) {
+      if (!tokenHash) return null;
+      return readTable('users').find(u => u.password_reset_token === tokenHash) || null;
+    },
+    async update(id, updateData) {
+      const rows = readTable('users');
+      const idx = rows.findIndex(u => u.id === id);
+      if (idx === -1) return null;
+      rows[idx] = { ...rows[idx], ...updateData, updated_at: new Date().toISOString() };
+      writeTable('users', rows);
+      return rows[idx];
+    },
     async create(userData) {
       const rows = readTable('users');
       const newUser = {
@@ -77,11 +89,37 @@ const db = {
         name: userData.name || userData.email.split('@')[0],
         password_hash: userData.password_hash,
         plan: userData.plan || 'free',
+        failed_attempts: 0,
+        locked_until: null,
+        password_reset_token: null,
+        password_reset_expires: null,
         created_at: new Date().toISOString()
       };
       rows.push(newUser);
       writeTable('users', rows);
       return newUser;
+    }
+  },
+  revoked_tokens: {
+    async revoke(token, expiresAt) {
+      if (!token) return;
+      const rows = readTable('revoked_tokens');
+      const now = Math.floor(Date.now() / 1000);
+      // Clean up expired entries while adding new
+      const cleaned = rows.filter(r => (r.expires_at || 0) > now);
+      cleaned.push({
+        token_hash: crypto.createHash('sha256').update(token).digest('hex'),
+        revoked_at: now,
+        expires_at: expiresAt || (now + 86400)
+      });
+      writeTable('revoked_tokens', cleaned);
+    },
+    async isRevoked(token) {
+      if (!token) return true;
+      const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+      const rows = readTable('revoked_tokens');
+      const now = Math.floor(Date.now() / 1000);
+      return rows.some(r => r.token_hash === tokenHash && (r.expires_at || 0) > now);
     }
   },
   documents: {
