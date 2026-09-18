@@ -17,7 +17,7 @@ function generateLicenseKey(prefix) {
 
 async function createLemonCheckoutSession(data) {
   data = data || {};
-  const variantId = data.variantId || process.env.LEMON_SQUEEZY_VARIANT_ID || '';
+  const variantId = data.variantId || process.env.LEMON_SQUEEZY_VARIANT_ID || '16851c1c-6dfb-4607-bf8b-81c3427594d1';
   const customData = data.customData || {};
   const email = data.email || '';
   const name = data.name || '';
@@ -75,7 +75,7 @@ async function createLemonCheckoutSession(data) {
     }
   }
 
-  const checkoutUrl = 'https://jay-app.lemonsqueezy.com/checkout';
+  const checkoutUrl = 'https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1';
   return {
     ok: true,
     provider: 'lemonsqueezy',
