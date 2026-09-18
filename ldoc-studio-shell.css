@@ -1,0 +1,1223 @@
+/**
+ * LDOCX Studio Professional Creative Application Shell
+ * Design System Tokens, Layout Shell, Top Menubar, Tool Rail,
+ * Contextual Shelves, Inspector, Floating Mini-Toolbar & Status Bar.
+ */
+
+:root {
+  /* ── Core Palette (Workstation Dark Default) ────────────────────────────── */
+  --ldoc-bg: #090c15;
+  --ldoc-surface: #0f1422;
+  --ldoc-surface-elevated: #151b2e;
+  --ldoc-surface-card: #1c243c;
+  --ldoc-surface-hover: #222c48;
+  --ldoc-surface-active: #293556;
+  --ldoc-border: rgba(255, 255, 255, 0.08);
+  --ldoc-border-subtle: rgba(255, 255, 255, 0.04);
+  --ldoc-border-focus: #38bdf8;
+  --ldoc-border-accent: rgba(56, 189, 248, 0.35);
+
+  /* ── Typography & Foregrounds ─────────────────────────────────────────── */
+  --ldoc-text: #f8fafc;
+  --ldoc-text-secondary: #94a3b8;
+  --ldoc-text-muted: #64748b;
+  --ldoc-text-inverse: #090c15;
+
+  /* ── Accents & Gradients ───────────────────────────────────────────────── */
+  --ldoc-accent: #38bdf8;
+  --ldoc-accent-hover: #7dd3fc;
+  --ldoc-accent-glow: rgba(56, 189, 248, 0.25);
+  --ldoc-accent-purple: #a855f7;
+  --ldoc-accent-emerald: #10b981;
+  --ldoc-accent-gold: #f59e0b;
+  --ldoc-accent-rose: #f43f5e;
+  --ldoc-gradient-primary: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+  --ldoc-gradient-gold: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%);
+  --ldoc-gradient-living: linear-gradient(135deg, #a855f7 0%, #38bdf8 100%);
+
+  /* ── Canvas Workspace ─────────────────────────────────────────────────── */
+  --ldoc-canvas-bg: #07090f;
+  --ldoc-canvas-dot: rgba(255, 255, 255, 0.07);
+  --ldoc-selection-outline: #38bdf8;
+  --ldoc-selection-fill: rgba(56, 189, 248, 0.12);
+  --ldoc-smart-guide: #ec4899;
+
+  /* ── Dimensions ───────────────────────────────────────────────────────── */
+  --ldoc-top-bar-height: 48px;
+  --ldoc-tool-rail-width: 56px;
+  --ldoc-context-shelf-width: 320px;
+  --ldoc-inspector-width: 310px;
+  --ldoc-status-bar-height: 32px;
+  --ldoc-ruler-size: 20px;
+
+  /* ── Typography System ────────────────────────────────────────────────── */
+  --ldoc-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --ldoc-font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --ldoc-font-heading: 'Cinzel', serif;
+
+  /* ── Shadows & Radii ──────────────────────────────────────────────────── */
+  --ldoc-radius-xs: 4px;
+  --ldoc-radius-sm: 6px;
+  --ldoc-radius-md: 10px;
+  --ldoc-radius-lg: 14px;
+  --ldoc-radius-xl: 18px;
+  --ldoc-radius-pill: 9999px;
+
+  --ldoc-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --ldoc-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --ldoc-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.7);
+  --ldoc-shadow-glow: 0 0 24px rgba(56, 189, 248, 0.2);
+
+  /* ── Motion ───────────────────────────────────────────────────────────── */
+  --ldoc-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ldoc-transition-fast: 120ms var(--ldoc-ease);
+  --ldoc-transition-normal: 200ms var(--ldoc-ease);
+  --ldoc-transition-slow: 320ms var(--ldoc-ease);
+}
+
+/* ── Light Theme Override ────────────────────────────────────────────────── */
+[data-theme="light"], .ldoc-theme-light {
+  --ldoc-bg: #f8fafc;
+  --ldoc-surface: #ffffff;
+  --ldoc-surface-elevated: #f1f5f9;
+  --ldoc-surface-card: #e2e8f0;
+  --ldoc-surface-hover: #cbd5e1;
+  --ldoc-surface-active: #94a3b8;
+  --ldoc-border: rgba(0, 0, 0, 0.08);
+  --ldoc-border-subtle: rgba(0, 0, 0, 0.04);
+  --ldoc-border-focus: #0284c7;
+  --ldoc-border-accent: rgba(2, 132, 199, 0.35);
+
+  --ldoc-text: #0f172a;
+  --ldoc-text-secondary: #475569;
+  --ldoc-text-muted: #64748b;
+  --ldoc-text-inverse: #f8fafc;
+
+  --ldoc-canvas-bg: #e2e8f0;
+  --ldoc-canvas-dot: rgba(0, 0, 0, 0.1);
+  --ldoc-selection-outline: #0284c7;
+  --ldoc-selection-fill: rgba(2, 132, 199, 0.12);
+
+  --ldoc-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --ldoc-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --ldoc-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.14);
+}
+
+/* ── Master Application Shell Structure ─────────────────────────────────── */
+#ldoc-studio-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--ldoc-bg);
+  color: var(--ldoc-text);
+  font-family: var(--ldoc-font-sans);
+  position: relative;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Top Application Bar ─────────────────────────────────────────────────── */
+#ldoc-top-bar {
+  height: var(--ldoc-top-bar-height);
+  background: var(--ldoc-surface);
+  border-bottom: 1px solid var(--ldoc-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  z-index: var(--z-editor-chrome, 100);
+  flex-shrink: 0;
+  -webkit-app-region: drag;
+}
+
+#ldoc-top-bar * {
+  -webkit-app-region: no-drag;
+}
+
+.ldoc-top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ldoc-brand-cluster {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ldoc-brand-logo {
+  width: 28px;
+  height: 28px;
+  background: var(--ldoc-gradient-primary);
+  border-radius: var(--ldoc-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.4);
+}
+
+.ldoc-brand-title {
+  font-family: var(--ldoc-font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: var(--ldoc-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.ldoc-doc-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--ldoc-border);
+  border-radius: var(--ldoc-radius-sm);
+  padding: 3px 8px;
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-doc-title-wrapper:focus-within {
+  border-color: var(--ldoc-border-focus);
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.ldoc-doc-title-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ldoc-text);
+  font-size: 12.5px;
+  font-weight: 600;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ldoc-save-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ldoc-text-muted);
+  font-weight: 500;
+  padding: 0 4px;
+}
+
+.ldoc-save-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ldoc-accent-emerald);
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-save-badge.dirty .ldoc-save-dot {
+  background: var(--ldoc-accent-gold);
+}
+
+/* ── Menubar Cluster ─────────────────────────────────────────────────────── */
+.ldoc-menubar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 8px;
+}
+
+.ldoc-menu-item {
+  position: relative;
+}
+
+.ldoc-menu-trigger {
+  background: transparent;
+  border: none;
+  color: var(--ldoc-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 9px;
+  border-radius: var(--ldoc-radius-xs);
+  cursor: pointer;
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-menu-trigger:hover, .ldoc-menu-trigger.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ldoc-text);
+}
+
+.ldoc-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background: var(--ldoc-surface-elevated);
+  border: 1px solid var(--ldoc-border);
+  border-radius: var(--ldoc-radius-md);
+  box-shadow: var(--ldoc-shadow-lg);
+  min-width: 220px;
+  padding: 6px 0;
+  z-index: var(--z-dropdown, 500);
+  display: none;
+  backdrop-filter: blur(20px);
+}
+
+.ldoc-menu-dropdown.open {
+  display: block;
+}
+
+.ldoc-menu-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 14px;
+  font-size: 12px;
+  color: var(--ldoc-text);
+  cursor: pointer;
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-menu-entry:hover {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--ldoc-accent);
+}
+
+.ldoc-menu-entry .hotkey {
+  font-size: 10.5px;
+  color: var(--ldoc-text-muted);
+  font-family: var(--ldoc-font-mono);
+}
+
+.ldoc-menu-divider {
+  height: 1px;
+  background: var(--ldoc-border);
+  margin: 5px 0;
+}
+
+/* ── Top Bar Right Cluster ───────────────────────────────────────────────── */
+.ldoc-top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ldoc-btn-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ldoc-radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--ldoc-border);
+  color: var(--ldoc-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--ldoc-transition-fast);
+  font-size: 13px;
+}
+
+.ldoc-btn-icon:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: var(--ldoc-text);
+  border-color: var(--ldoc-border-focus);
+}
+
+.ldoc-btn-living-type {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.22), rgba(56, 189, 248, 0.22));
+  border: 1.5px solid var(--ldoc-accent-purple);
+  color: #e9d5ff;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: var(--ldoc-radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-btn-living-type:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(56, 189, 248, 0.35));
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.3);
+  transform: translateY(-1px);
+}
+
+.ldoc-btn-present {
+  background: var(--ldoc-gradient-primary);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: var(--ldoc-radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.35);
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-btn-present:hover {
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.55);
+  transform: translateY(-1px);
+}
+
+.ldoc-btn-export, .ldoc-btn-share {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--ldoc-border);
+  color: var(--ldoc-text);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: var(--ldoc-radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-btn-export:hover, .ldoc-btn-share:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--ldoc-border-focus);
+}
+
+.ldoc-pro-badge {
+  background: var(--ldoc-gradient-gold);
+  color: #fff;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: var(--ldoc-radius-pill);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-pro-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.5);
+}
+
+/* ── Middle Workspace Row ───────────────────────────────────────────────── */
+#ldoc-workspace-row {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Left Tool Rail ─────────────────────────────────────────────────────── */
+#ldoc-tool-rail {
+  width: var(--ldoc-tool-rail-width);
+  background: var(--ldoc-surface);
+  border-right: 1px solid var(--ldoc-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  gap: 4px;
+  z-index: var(--z-editor-chrome, 100);
+  flex-shrink: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+#ldoc-tool-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.ldoc-rail-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--ldoc-radius-md);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--ldoc-text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--ldoc-transition-fast);
+  position: relative;
+  font-size: 16px;
+  padding: 0;
+}
+
+.ldoc-rail-btn .rail-label {
+  font-size: 8.5px;
+  font-weight: 600;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+}
+
+.ldoc-rail-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ldoc-text);
+}
+
+.ldoc-rail-btn.active {
+  background: rgba(56, 189, 248, 0.14);
+  color: var(--ldoc-accent);
+  border-color: var(--ldoc-border-accent);
+}
+
+.ldoc-rail-btn.add-btn {
+  background: var(--ldoc-gradient-primary);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.4);
+  margin-bottom: 6px;
+}
+
+.ldoc-rail-btn.add-btn:hover {
+  transform: scale(1.05);
+}
+
+.ldoc-rail-divider {
+  width: 28px;
+  height: 1px;
+  background: var(--ldoc-border);
+  margin: 4px 0;
+}
+
+/* ── Contextual Flyout Shelf ────────────────────────────────────────────── */
+#ldoc-context-shelf {
+  width: var(--ldoc-context-shelf-width);
+  background: var(--ldoc-surface-elevated);
+  border-right: 1px solid var(--ldoc-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 95;
+  flex-shrink: 0;
+  position: relative;
+  transition: margin-left 0.22s var(--ldoc-ease), opacity 0.2s var(--ldoc-ease);
+  overflow: hidden;
+}
+
+#ldoc-context-shelf.collapsed {
+  margin-left: calc(-1 * var(--ldoc-context-shelf-width));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ldoc-shelf-header {
+  height: 44px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--ldoc-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ldoc-shelf-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ldoc-text);
+  letter-spacing: 0.02em;
+}
+
+.ldoc-shelf-close {
+  background: transparent;
+  border: none;
+  color: var(--ldoc-text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: var(--ldoc-radius-xs);
+  padding: 4px;
+}
+
+.ldoc-shelf-close:hover {
+  color: var(--ldoc-text);
+}
+
+.ldoc-shelf-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+}
+
+/* ── Visual Cards inside Shelf ──────────────────────────────────────────── */
+.ldoc-shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.ldoc-shelf-card {
+  background: var(--ldoc-surface-card);
+  border: 1px solid var(--ldoc-border);
+  border-radius: var(--ldoc-radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--ldoc-transition-fast);
+  text-align: center;
+}
+
+.ldoc-shelf-card:hover {
+  background: var(--ldoc-surface-hover);
+  border-color: var(--ldoc-border-focus);
+  transform: translateY(-2px);
+  box-shadow: var(--ldoc-shadow-sm);
+}
+
+.ldoc-shelf-card-icon {
+  font-size: 24px;
+}
+
+.ldoc-shelf-card-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ldoc-text);
+}
+
+/* ── Central Living Canvas Workspace ────────────────────────────────────── */
+#ldoc-canvas-workspace {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--ldoc-canvas-bg);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Rulers */
+#ldoc-ruler-corner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--ldoc-ruler-size);
+  height: var(--ldoc-ruler-size);
+  background: var(--ldoc-surface);
+  border-right: 1px solid var(--ldoc-border);
+  border-bottom: 1px solid var(--ldoc-border);
+  z-index: 80;
+}
+
+#ldoc-ruler-h {
+  position: absolute;
+  top: 0;
+  left: var(--ldoc-ruler-size);
+  right: 0;
+  height: var(--ldoc-ruler-size);
+  background: var(--ldoc-surface);
+  border-bottom: 1px solid var(--ldoc-border);
+  z-index: 75;
+  overflow: hidden;
+}
+
+#ldoc-ruler-v {
+  position: absolute;
+  top: var(--ldoc-ruler-size);
+  left: 0;
+  bottom: 0;
+  width: var(--ldoc-ruler-size);
+  background: var(--ldoc-surface);
+  border-right: 1px solid var(--ldoc-border);
+  z-index: 75;
+  overflow: hidden;
+}
+
+#ldoc-canvas-viewport {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  margin-top: var(--ldoc-ruler-size);
+  margin-left: var(--ldoc-ruler-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: radial-gradient(var(--ldoc-canvas-dot) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ── Floating Contextual Mini-Toolbar ───────────────────────────────────── */
+#ldoc-floating-toolbar {
+  position: absolute;
+  z-index: var(--z-mini-toolbar, 400);
+  background: rgba(15, 20, 34, 0.94);
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: var(--ldoc-radius-pill);
+  padding: 4px 8px;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), 0 0 16px rgba(56, 189, 248, 0.2);
+  pointer-events: auto;
+  transition: opacity 0.15s var(--ldoc-ease);
+}
+
+#ldoc-floating-toolbar.active {
+  display: inline-flex;
+}
+
+.ldoc-ftb-btn {
+  background: transparent;
+  border: none;
+  color: var(--ldoc-text-secondary);
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: var(--ldoc-radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-ftb-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--ldoc-text);
+}
+
+.ldoc-ftb-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  color: var(--ldoc-accent);
+}
+
+.ldoc-ftb-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--ldoc-border);
+  margin: 0 2px;
+}
+
+/* ── Right Inspector Panel ──────────────────────────────────────────────── */
+#ldoc-inspector-panel {
+  width: var(--ldoc-inspector-width);
+  background: var(--ldoc-surface);
+  border-left: 1px solid var(--ldoc-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 95;
+  flex-shrink: 0;
+  transition: margin-right 0.22s var(--ldoc-ease), opacity 0.2s var(--ldoc-ease);
+}
+
+#ldoc-inspector-panel.collapsed {
+  margin-right: calc(-1 * var(--ldoc-inspector-width));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ldoc-inspector-header {
+  height: 44px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--ldoc-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ldoc-inspector-title-cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ldoc-inspector-icon {
+  font-size: 14px;
+  color: var(--ldoc-accent);
+}
+
+.ldoc-inspector-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ldoc-text);
+}
+
+.ldoc-inspector-type-pill {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--ldoc-accent);
+  padding: 2px 6px;
+  border-radius: var(--ldoc-radius-xs);
+  letter-spacing: 0.05em;
+}
+
+.ldoc-inspector-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+/* ── Inspector Accordions & Field Groups ────────────────────────────────── */
+.ldoc-accordion {
+  border-bottom: 1px solid var(--ldoc-border);
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+}
+
+.ldoc-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ldoc-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border-radius: var(--ldoc-radius-xs);
+}
+
+.ldoc-accordion-header:hover {
+  color: var(--ldoc-text);
+}
+
+.ldoc-accordion-content {
+  padding: 8px 4px 4px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ldoc-field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ldoc-field-label {
+  font-size: 11.5px;
+  color: var(--ldoc-text-secondary);
+  font-weight: 500;
+}
+
+.ldoc-field-input-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ldoc-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--ldoc-border);
+  border-radius: var(--ldoc-radius-sm);
+  color: var(--ldoc-text);
+  font-size: 12px;
+  padding: 5px 8px;
+  outline: none;
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-input:focus {
+  border-color: var(--ldoc-border-focus);
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.ldoc-input-sm {
+  width: 60px;
+  text-align: center;
+}
+
+.ldoc-slider {
+  flex: 1;
+  accent-color: var(--ldoc-accent);
+  cursor: pointer;
+}
+
+.ldoc-select {
+  background: var(--ldoc-surface-card);
+  border: 1px solid var(--ldoc-border);
+  border-radius: var(--ldoc-radius-sm);
+  color: var(--ldoc-text);
+  font-size: 11.5px;
+  padding: 5px 8px;
+  outline: none;
+  cursor: pointer;
+}
+
+.ldoc-color-picker {
+  -webkit-appearance: none;
+  border: 1px solid var(--ldoc-border);
+  border-radius: var(--ldoc-radius-sm);
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+}
+
+.ldoc-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.ldoc-color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: var(--ldoc-radius-sm);
+}
+
+/* ── Living Typography Pretext Controls inside Inspector ───────────────── */
+.ldoc-living-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--ldoc-radius-pill);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(56, 189, 248, 0.2));
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #e9d5ff;
+}
+
+/* ── Bottom Status & Viewport HUD ───────────────────────────────────────── */
+#ldoc-status-bar {
+  height: var(--ldoc-status-bar-height);
+  background: var(--ldoc-surface);
+  border-top: 1px solid var(--ldoc-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 11px;
+  color: var(--ldoc-text-muted);
+  z-index: var(--z-editor-chrome, 100);
+  flex-shrink: 0;
+}
+
+.ldoc-status-left, .ldoc-status-center, .ldoc-status-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ldoc-status-btn {
+  background: transparent;
+  border: none;
+  color: var(--ldoc-text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 6px;
+  border-radius: var(--ldoc-radius-xs);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-status-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ldoc-text);
+}
+
+.ldoc-zoom-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Unified Insert Modal (+ Add) ────────────────────────────────────────── */
+#ldoc-insert-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  z-index: var(--z-modal-content, 1050);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#ldoc-insert-modal.active {
+  display: flex;
+}
+
+.ldoc-insert-box {
+  width: 680px;
+  max-height: 80vh;
+  background: var(--ldoc-surface-elevated);
+  border: 1px solid var(--ldoc-border-focus);
+  border-radius: var(--ldoc-radius-xl);
+  box-shadow: var(--ldoc-shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: ldocPopIn 0.2s var(--ldoc-ease);
+}
+
+@keyframes ldocPopIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.ldoc-insert-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--ldoc-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ldoc-insert-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ldoc-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ldoc-insert-search-input {
+  width: 240px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--ldoc-border);
+  border-radius: var(--ldoc-radius-pill);
+  padding: 6px 14px;
+  color: var(--ldoc-text);
+  font-size: 12px;
+  outline: none;
+}
+
+.ldoc-insert-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ldoc-insert-section-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ldoc-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.ldoc-insert-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.ldoc-insert-card {
+  background: var(--ldoc-surface-card);
+  border: 1px solid var(--ldoc-border);
+  border-radius: var(--ldoc-radius-md);
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--ldoc-transition-fast);
+  text-align: center;
+}
+
+.ldoc-insert-card:hover {
+  background: var(--ldoc-surface-hover);
+  border-color: var(--ldoc-border-focus);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.ldoc-insert-card-icon {
+  font-size: 22px;
+}
+
+.ldoc-insert-card-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ldoc-text);
+}
+
+.ldoc-insert-card-sub {
+  font-size: 10px;
+  color: var(--ldoc-text-muted);
+}
+
+/* ── Pro License Modal ──────────────────────────────────────────────────── */
+#ldoc-pro-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(14px);
+  z-index: var(--z-modal-content, 1050);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#ldoc-pro-modal.active {
+  display: flex;
+}
+
+.ldoc-pro-box {
+  width: 480px;
+  background: var(--ldoc-surface-elevated);
+  border: 1.5px solid var(--ldoc-accent-gold);
+  border-radius: var(--ldoc-radius-xl);
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: ldocPopIn 0.2s var(--ldoc-ease);
+}
+
+.ldoc-pro-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ldoc-pro-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ldoc-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ldoc-pro-btn-buy {
+  background: var(--ldoc-gradient-gold);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 10px 18px;
+  border-radius: var(--ldoc-radius-md);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-pro-btn-buy:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(245, 158, 11, 0.6);
+}
+
+/* ── Interactive Living Indicator Badges ────────────────────────────────── */
+.ldoc-live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: var(--ldoc-radius-pill);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: var(--ldoc-transition-fast);
+}
+
+.ldoc-live-indicator.reactive {
+  background: rgba(56, 189, 248, 0.16);
+  border: 1px solid var(--ldoc-accent);
+  color: var(--ldoc-accent);
+}
+
+.ldoc-live-indicator.living-type {
+  background: rgba(168, 85, 247, 0.16);
+  border: 1px solid var(--ldoc-accent-purple);
+  color: #e9d5ff;
+}
+
+.ldoc-live-indicator:hover {
+  transform: scale(1.04);
+}
+
+/* ── Responsive Adaptations (Mobile & Tablet) ───────────────────────────── */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw;
+}
+
+@media (max-width: 900px) {
+  #ldoc-inspector-panel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    box-shadow: var(--ldoc-shadow-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .ldoc-menubar {
+    display: none !important;
+  }
+  .ldoc-doc-title-wrapper {
+    max-width: 130px;
+  }
+  .ldoc-btn-share, #ldoc-status-coords, #ldoc-status-btn-rulers, #ldoc-status-btn-snap {
+    display: none !important;
+  }
+  #ldoc-context-shelf {
+    position: absolute;
+    left: var(--ldoc-tool-rail-width);
+    top: 0;
+    bottom: 0;
+    box-shadow: var(--ldoc-shadow-lg);
+  }
+  #desktop-menubar {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #ldoc-top-bar {
+    padding: 0 8px;
+    gap: 6px;
+    overflow-x: hidden;
+  }
+  .ldoc-brand-title {
+    display: none !important;
+  }
+  .ldoc-btn-living-type span:last-child {
+    display: none;
+  }
+  .ldoc-btn-present span:last-child {
+    display: none;
+  }
+  #ldoc-status-stats {
+    display: none;
+  }
+  #desktop-menubar {
+    display: none !important;
+  }
+  #ldoc-studio-shell {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  body {
+    overflow-x: hidden;
+  }
+}
+

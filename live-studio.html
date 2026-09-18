@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="ldoc-layer-tokens.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>LDOCX Living Document Studio</title>
@@ -44,7 +45,7 @@
  align-items: center;
  padding: 0 8px;
  user-select: none;
- z-index: 10000;
+ z-index: var(--z-editor-chrome, 100) !important;
  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
  font-size: 12px;
  color: #cbd5e1;
@@ -113,7 +114,7 @@
  padding: 6px;
  display: none;
  flex-direction: column;
- z-index: 10001;
+ z-index: var(--z-dropdown, 500) !important;
  backdrop-filter: blur(24px);
  -webkit-backdrop-filter: blur(24px);
 }
@@ -464,7 +465,7 @@ body::before{
 /* ── Pages Popup Overlay ────────────────────────────────────────────────────── */
 #pages-toggle-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;flex-shrink:0}
 #pages-toggle-btn:hover{background:var(--border);border-color:var(--gold);color:var(--gold)}
-#pages-overlay{position:fixed;inset:0;z-index:300;display:none}
+#pages-overlay{position:fixed;inset:0;z-index:var(--z-drawer-backdrop, 800) !important;display:none}
 #pages-overlay.open{display:block}
 #pages-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px)}
 #pages-panel{position:absolute;top:54px;left:0;width:270px;height:calc(100vh - 54px);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .25s ease;box-shadow:6px 0 28px rgba(0,0,0,.5)}
@@ -1142,7 +1143,7 @@ body.mode-paper .page-paper-layer {
 #fx-wizard-sidebar{
  position:fixed;top:54px;right:0;bottom:0;width:clamp(360px,32vw,440px);overflow:hidden;
  background:rgba(12,12,22,.98);backdrop-filter:blur(24px);
- border-left:1.5px solid var(--gold);z-index:100001;
+ border-left:1.5px solid var(--gold);z-index:var(--z-drawer-content, 850) !important;
  transform:translateX(105%);
  visibility:hidden;
  pointer-events:none;
@@ -3821,6 +3822,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
 <script src="ldoc-config.js"></script>
 <script src="ldoc-toast.js"></script>
 <script src="ldoc-text-layout.js"></script>
+<script src="ldoc-living-typography.js"></script>
 <script src="ldoc-shape-engine.js"></script>
 <script src="ldoc-reactive-engine.js"></script>
 <script src="ldoc-3d-inspector.js"></script>
@@ -3978,6 +3980,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
  <button class="tab-btn" id="tab-templates" onclick="switchTab('templates')"><span style="margin-right:4px">🏛️</span>Vault</button>
  <button class="tab-btn" id="tab-docs" onclick="switchTab('docs')"><span style="margin-right:4px">📂</span>Documents</button>
  <a href="creator.html" style="background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.35);color:var(--accent);font-size:12.5px;font-weight:700;padding:5px 14px;border-radius:8px;text-decoration:none;margin-left:4px;display:inline-flex;align-items:center;gap:5px"><span style="font-size:13px">🎨</span>Visual Creator</a>
+ <button class="toolbar-btn" id="live-living-type-btn" onclick="if(window.LDocLivingTypography){window.LDocLivingTypography.toggleDrawer()}" title="✦ Living Typography (Dynamic Text &amp; Obstacle Flow)" style="background:linear-gradient(135deg,rgba(168,85,247,0.25),rgba(59,130,246,0.22));border:1.5px solid #a855f7;color:#e9d5ff;font-weight:700;display:inline-flex;align-items:center;gap:5px;padding:5px 10px"><span style="font-size:13px">✦</span><span>Living Type</span></button>
 
  <span class="doc-title" id="doc-title">No document loaded</span>
  <span id="validation-badge"></span>
@@ -4416,17 +4419,8 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
  </div>
  </div>
 
- <!-- Pages overlay popup -->
- <div id="pages-overlay">
- <div id="pages-backdrop" onclick="closePagesPanel()"></div>
- <div id="pages-panel">
- <div id="pages-panel-header">
- <span>Pages</span>
- <button id="pages-panel-close" onclick="closePagesPanel()">&#10005;</button>
- </div>
- <div id="page-list"></div>
- </div>
- </div>
+<!-- Pages overlay popup -->
+ 
 
  <!-- Universal Document Converter Panel -->
  <div id="converter-panel">
@@ -5079,7 +5073,7 @@ fs.writeFileSync(<span style="color:#f59e0b">'audited_report.ldocx'</span>, comp
 </div>
 
 <!-- Help, Architecture & Security Guide, and Technical Specification Drawer -->
-<div id="help-drawer" style="display:none;position:fixed;top:0;right:0;width:520px;max-width:92vw;height:100vh;background:rgba(14,16,28,0.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:1.5px solid var(--gold,#f59e0b);box-shadow:-12px 0 40px rgba(0,0,0,0.85);z-index:10000;flex-direction:column;animation:slideInRight 0.25s ease-out">
+<div id="help-drawer" style="display:none;position:fixed;top:0;right:0;width:520px;max-width:92vw;height:100vh;background:rgba(14,16,28,0.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:1.5px solid var(--gold,#f59e0b);box-shadow:-12px 0 40px rgba(0,0,0,0.85);z-index:var(--z-drawer-content, 850) !important;flex-direction:column;animation:slideInRight 0.25s ease-out">
  <div style="padding:16px 20px;background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(124,58,237,0.18));border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between">
  <div style="display:flex;align-items:center;gap:10px">
  <span style="font-size:22px"></span>
@@ -18740,7 +18734,7 @@ function setMobileView(tab) {
  background: rgba(0, 0, 0, 0.75);
  backdrop-filter: blur(14px);
  -webkit-backdrop-filter: blur(14px);
- z-index: 100010;
+ z-index: var(--z-modal-backdrop, 1000) !important;
  align-items: center;
  justify-content: center;
  padding: 16px;
@@ -19579,6 +19573,10 @@ window.addEventListener('keydown', (e) => {
  <button type="submit" id="lead-submit-btn" class="ldoc-cloud-btn" style="width:100%;padding:10px"> Confirm VIP Reservation</button>
  </form>
  <div id="lead-result-container" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
 <!-- Legal, Intellectual Property & Apache-2.0 Security Modal -->
 <div id="legal-security-modal" class="ldoc-cloud-modal-overlay">
  <div class="ldoc-cloud-modal-box" style="width:680px;max-width:95vw">
@@ -19721,7 +19719,6 @@ console.log('%c LDOCX Living Document Studio v2.5.0\\n%cCopyright (c) 2026 J AI 
       </div>
     </div>
   </div>
-</div>
 </div>
 
 <!-- ═════════════════════════════════════════════════════════════════════════ -->
@@ -20388,7 +20385,7 @@ window.openPretextInspectorModal = function() {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'pretext-parity-inspector-modal';
-    modal.style.cssText = `position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);z-index:999999;display:flex;align-items:center;justify-content:center;padding:20px;`;
+    modal.style.cssText = `position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);z-index:var(--z-modal-backdrop, 1000);display:flex;align-items:center;justify-content:center;padding:20px;`;
     document.body.appendChild(modal);
   }
 
@@ -20590,7 +20587,7 @@ window.openProFeaturesModal = function() {
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'pro-features-modal';
-    modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(7,10,19,0.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;animation:proModalFadeIn 0.22s ease;font-family:\'Plus Jakarta Sans\',-apple-system,BlinkMacSystemFont,sans-serif;';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(7,10,19,0.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:var(--z-modal-backdrop, 1000);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;animation:proModalFadeIn 0.22s ease;font-family:\'Plus Jakarta Sans\',-apple-system,BlinkMacSystemFont,sans-serif;';
     document.body.appendChild(modal);
 
     modal.addEventListener('click', function(e) {
@@ -20773,5 +20770,16 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 
+<!-- Pages overlay popup (Hoisted to top-level Overlay Root) -->
+<div id="pages-overlay" onclick="closePagesPanel()"></div>
+<div id="pages-panel">
+ <div id="pages-panel-header">
+ <span>Pages</span>
+ <button id="pages-panel-close" onclick="closePagesPanel()">&#10005;</button>
+ </div>
+ <div id="page-list"></div>
+</div>
+<div id="ldoc-overlay-root"></div>
+<div id="ldoc-toast-root"></div>
 </body>
 </html>

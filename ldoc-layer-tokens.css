@@ -1,0 +1,358 @@
+/**
+ * LDOCX Centralized Layer & Z-Index Token Architecture
+ * Standardized 18-Tier Scale across Studio, Creator, Viewer, Live Studio, Templates & Presentation
+ * 
+ * Invariants:
+ *  - Drawer Content (850) > Drawer Backdrop (800)
+ *  - Modal Content (1050) > Modal Backdrop (1000) > Drawer Content (850)
+ *  - Command Palette (1100) > Modal Content (1050)
+ *  - Toast (1200) > Command Palette (1100)
+ *  - Presentation HUD (1400) > Canvas (10)
+ *  - License Gate (1500) > Everything
+ */
+
+:root {
+  /* ── 18 Standardized Stacking Tiers ── */
+  --z-base-doc: 0;              /* Base document flow */
+  --z-canvas-fx: 5;             /* Ambient visual fx (water, particles, canvas shaders) */
+  --z-canvas-main: 10;          /* Primary document & slide canvas */
+  --z-canvas-objects: 20;       /* In-canvas shapes, text blocks, media objects */
+  --z-selection-handles: 30;    /* Transform handles, Bézier control points, bounding boxes */
+  --z-editor-chrome: 100;       /* Top menubar, toolbar, status bar */
+  --z-dock-bar: 150;            /* Bottom audio player bar, view mode switchers */
+  --z-side-panel: 200;          /* Docked sidebars (Pages list, Block list, Property inspector) */
+  --z-floating-toolbar: 400;    /* Floating format HUD, in-canvas quick actions */
+  --z-dropdown: 500;            /* Menubar & toolbar dropdown menus */
+  --z-popover: 600;             /* Color pickers, icon selectors, math formulas, obstacle menus */
+  --z-tooltip: 700;             /* Hover tooltips & shortcut hints */
+  --z-drawer-backdrop: 800;     /* Backdrop behind side drawers */
+  --z-drawer-content: 850;      /* Side drawers (Help, FX Wizard, AI Copilot, Pages drawer) */
+  --z-context-menu: 900;        /* Right-click contextual menus */
+  --z-modal-backdrop: 1000;     /* Dimmer backdrop for dialogs & modals */
+  --z-modal-content: 1050;      /* Modals (Layers, Health, Blueprint, Cloud Vault, Versions, Billing) */
+  --z-command-palette: 1100;    /* Spotlight Command Palette (Ctrl+K / Ctrl+Shift+P) */
+  --z-toast-notification: 1200; /* Toast banners & snackbars */
+  --z-critical-overlay: 1300;   /* Network disconnect, critical error alerts */
+  --z-presentation-hud: 1400;   /* Universal Presentation controls, zoom bar, 3D toolset */
+  --z-license-gate: 1500;       /* In-app license redeem modal & shield */
+}
+
+/* ── Utility Classes for Strict Token Enforceability ── */
+.ldoc-z-base-doc           { z-index: var(--z-base-doc) !important; }
+.ldoc-z-canvas-fx          { z-index: var(--z-canvas-fx) !important; }
+.ldoc-z-canvas-main        { z-index: var(--z-canvas-main) !important; }
+.ldoc-z-canvas-objects     { z-index: var(--z-canvas-objects) !important; }
+.ldoc-z-selection-handles  { z-index: var(--z-selection-handles) !important; }
+.ldoc-z-editor-chrome      { z-index: var(--z-editor-chrome) !important; }
+.ldoc-z-dock-bar           { z-index: var(--z-dock-bar) !important; }
+.ldoc-z-side-panel         { z-index: var(--z-side-panel) !important; }
+.ldoc-z-floating-toolbar   { z-index: var(--z-floating-toolbar) !important; }
+.ldoc-z-dropdown           { z-index: var(--z-dropdown) !important; }
+.ldoc-z-popover            { z-index: var(--z-popover) !important; }
+.ldoc-z-tooltip            { z-index: var(--z-tooltip) !important; }
+.ldoc-z-drawer-backdrop    { z-index: var(--z-drawer-backdrop) !important; }
+.ldoc-z-drawer-content     { z-index: var(--z-drawer-content) !important; }
+.ldoc-z-context-menu       { z-index: var(--z-context-menu) !important; }
+.ldoc-z-modal-backdrop     { z-index: var(--z-modal-backdrop) !important; }
+.ldoc-z-modal-content      { z-index: var(--z-modal-content) !important; }
+.ldoc-z-command-palette    { z-index: var(--z-command-palette) !important; }
+.ldoc-z-toast              { z-index: var(--z-toast-notification) !important; }
+.ldoc-z-critical-overlay   { z-index: var(--z-critical-overlay) !important; }
+.ldoc-z-presentation-hud   { z-index: var(--z-presentation-hud) !important; }
+.ldoc-z-license-gate       { z-index: var(--z-license-gate) !important; }
+
+/* ── Global Portaling Roots ── */
+#ldoc-overlay-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: var(--z-drawer-backdrop);
+}
+#ldoc-overlay-root > * {
+  pointer-events: auto;
+}
+
+#ldoc-toast-root {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: var(--z-toast-notification);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#ldoc-toast-root > * {
+  pointer-events: auto;
+}
+
+/* ── Standardized Drawer Backdrop ── */
+.ldoc-drawer-backdrop,
+#drawer-backdrop,
+#help-drawer-backdrop,
+#pages-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(4, 4, 10, 0.65) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  z-index: var(--z-drawer-backdrop) !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ldoc-drawer-backdrop.active,
+#drawer-backdrop.active,
+#help-drawer-backdrop.active,
+#pages-overlay.active,
+#pages-overlay.open {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  display: block !important;
+}
+
+/* ── Standardized Side Drawers ── */
+.ldoc-drawer-panel,
+#left,
+#center,
+#right,
+#fx-wizard-sidebar,
+#ai-helper-panel,
+#help-drawer,
+#pages-panel {
+  z-index: var(--z-drawer-content) !important;
+  overscroll-behavior: contain;
+}
+#pages-panel {
+  transform: translateX(-100%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#pages-overlay.open + #pages-panel,
+#pages-overlay.open ~ #pages-panel,
+#pages-overlay.open #pages-panel {
+  transform: translateX(0) !important;
+}
+
+/* ── Standardized Modals & Backdrops ── */
+.ldoc-modal-backdrop,
+.ldoc-cloud-modal-overlay,
+.ldoc-popup-shell {
+  z-index: var(--z-modal-backdrop) !important;
+}
+.ldoc-modal-box,
+.ldoc-cloud-modal-box,
+#popup-elements-modal,
+#ast-inspector-modal,
+#find-replace-hud {
+  z-index: var(--z-modal-content) !important;
+}
+
+/* ── Standardized Command Palette ── */
+#command-palette-modal,
+.command-palette-container {
+  z-index: var(--z-command-palette) !important;
+}
+
+/* ── Standardized Context Menu ── */
+#ldoc-context-menu,
+.ldoc-context-menu {
+  z-index: var(--z-context-menu) !important;
+}
+
+/* ── Standardized Menubar & Dropdowns ── */
+#desktop-menubar {
+  z-index: var(--z-editor-chrome) !important;
+}
+.dmenu-dropdown,
+.studio-dropdown-menu,
+.toolbar-dropdown,
+#studio-toolbar-shapes-menu,
+#studio-toolbar-align-menu,
+#studio-toolbar-distribute-menu,
+#studio-toolbar-zorder-menu,
+#fx-dropdown-menu,
+#present-dropdown-menu,
+#pretext-cols-menu,
+#pretext-obstacle-menu,
+#ed-shapes-menu,
+#ed-sims-menu,
+#ed-charts-menu,
+#ed-align-menu,
+#ed-distribute-menu,
+#ed-zorder-menu,
+#cr-tb-shapes-menu,
+#cr-tb-align-menu,
+#cr-tb-distribute-menu,
+#cr-tb-zorder-menu,
+#cr-shape-dropdown-menu,
+#cr-sim-dropdown-menu,
+#creator-mode-dropdown-menu,
+#creator-cols-menu,
+#creator-obstacle-menu {
+  z-index: var(--z-dropdown) !important;
+}
+
+/* ── Standardized In-Canvas HUD & Popovers ── */
+#ldoc-format-popover,
+.ldoc-format-hud,
+.ldoc-popover {
+  z-index: var(--z-popover) !important;
+}
+
+/* ── Universal Presentation Controls ── */
+#presentation-hud,
+.pres-ctrl-bar,
+.presentation-floating-controls,
+body.ldoc-presenting .pres-ctrl-bar {
+  z-index: var(--z-presentation-hud) !important;
+}
+
+/* ── Mandatory License Gate Shield ── */
+.ldoc-license-gate-shield,
+#license-hub-modal,
+.ldoc-license-lockscreen {
+  z-index: var(--z-license-gate) !important;
+}
+
+/* ── Developer UI Layer Inspector (Ctrl+Shift+Z) ── */
+#ldoc-layer-inspector-overlay {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1.5px solid #38bdf8;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  color: #f8fafc;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  padding: 12px 16px;
+  z-index: var(--z-critical-overlay);
+  pointer-events: auto;
+  max-width: 480px;
+  display: none;
+}
+#ldoc-layer-inspector-overlay.active {
+  display: block;
+}
+
+/* ── Living Typography Visual Studio (Pretext Integration) ── */
+#ldoc-living-typography-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 340px;
+  max-width: 90vw;
+  height: 100vh;
+  background: rgba(13, 17, 27, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.7);
+  z-index: var(--z-drawer-content, 850) !important;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+#ldoc-living-typography-drawer.open {
+  transform: translateX(0);
+}
+
+.ldoc-preset-btn {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 8px 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+.ldoc-preset-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.ldoc-action-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #cbd5e1;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 7px 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+.ldoc-action-btn:hover {
+  background: rgba(99, 102, 241, 0.18);
+  border-color: #818cf8;
+  color: #c7d2fe;
+}
+
+.ldoc-input-select {
+  width: 100%;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: #f8fafc;
+  font-size: 12px;
+  padding: 7px 10px;
+  outline: none;
+}
+.ldoc-input-select:focus {
+  border-color: #38bdf8;
+}
+
+#ldoc-obstacle-inspector {
+  position: fixed;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid #38bdf8;
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  z-index: var(--z-popover, 600) !important;
+  width: 190px;
+}
+
+.ldoc-obs-btn {
+  flex: 1;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  color: #e2e8f0;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+.ldoc-obs-btn:hover {
+  background: #334155;
+  color: #38bdf8;
+}
+
+.ldoc-flow-obstacle {
+  touch-action: none;
+  user-select: none;
+  cursor: move;
+}
+.ldoc-flow-obstacle.dragging {
+  box-shadow: 0 0 0 2px #38bdf8, 0 12px 32px rgba(0, 0, 0, 0.6);
+  opacity: 0.92;
+  cursor: grabbing;
+}
+
+.ldoc-type-line {
+  line-height: inherit;
+}
+

@@ -1788,7 +1788,15 @@
         { id: 'pres_zoom_out', label: 'Zoom Out', category: 'presentation', icon: '−', action: () => global.ldocPresentation?.zoomOut() },
         { id: 'pres_reset_view', label: 'Reset View (100%)', category: 'presentation', icon: '1:1', action: () => global.ldocPresentation?.zoom100() },
         { id: 'pres_next', label: 'Next Page / Slide', category: 'presentation', icon: '→', action: () => global.ldocPresentation?.nextPage() },
-        { id: 'pres_prev', label: 'Previous Page / Slide', category: 'presentation', icon: '←', action: () => global.ldocPresentation?.prevPage() }
+        { id: 'pres_prev', label: 'Previous Page / Slide', category: 'presentation', icon: '←', action: () => global.ldocPresentation?.prevPage() },
+        { id: 'toggle_living_typography', label: 'Toggle Living Typography Studio Drawer', category: 'typography', icon: '✦', action: () => global.LDocLivingTypography?.toggleDrawer() },
+        { id: 'toggle_flow_guides', label: 'Toggle Typography Spatial Flow Guides', category: 'typography', icon: '〰️', action: () => global.LDocLivingTypography?.toggleFlowGuides() },
+        { id: 'living_editorial_spread', label: 'Insert Living Typography Editorial Spread', category: 'typography', icon: '📰', action: () => global.LDocLivingTypography?.createEditorialSpread() },
+        { id: 'living_autofit_text', label: 'Auto-Fit Selected Text to Frame', category: 'typography', icon: '🗜️', action: () => {
+          const sel = document.querySelector('.ldoc-ambient-text.selected, .ldoc-ambient-text.active');
+          if (sel) global.LDocLivingTypography?.autoFitText(sel);
+          else global.LDocLivingTypography?.triggerAutoFit();
+        }}
       ];
     },
 
