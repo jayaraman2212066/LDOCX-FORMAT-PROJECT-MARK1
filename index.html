@@ -5,8 +5,9 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>LDOC Studio — Documents That Compute, React &amp; Evolve (.ldocx)</title>
  <meta name="description" content="The open Living Document Format (.ldocx) & LDOC Studio: real-time execution, 3D WebGL, reactive data models, and agentic AI. Replacing static PDFs forever.">
- <link rel="icon" type="image/png" href="/ldoc_logo.png">
+ <link rel="icon" type="image/webp" href="/ldoc_logo.webp">
  <link rel="shortcut icon" href="/app.ico">
+ <link rel="preload" as="image" href="/video-poster.webp" fetchpriority="high">
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -59,10 +60,18 @@
  z-index: 1;
  }
 
- /* Top Promo Strip */
- .promo-strip {
- contain: layout style;
- min-height: 38px;
+  /* Header Container */
+  .site-header {
+    position: relative;
+    width: 100%;
+    min-height: 106px;
+    contain: layout style;
+  }
+
+  /* Top Promo Strip */
+  .promo-strip {
+    contain: layout style;
+    min-height: 38px;
  background: linear-gradient(90deg, #4c1d95, #6d28d9, #2563eb);
  color: #fff;
  font-size: 0.85rem;
@@ -368,63 +377,79 @@
  border-color: var(--card-hover);
  }
 
- /* HERO 2-COLUMN MARKETING LAYOUT (Left: Text & CTAs, Right: 4K Video Showcase) */
- .hero-split {
- display: grid;
- grid-template-columns: 1fr;
- gap: 36px;
- align-items: center;
- margin-bottom: 40px;
- text-align: center;
- }
- .hero-marketing-col {
- display: flex;
- flex-direction: column;
- align-items: center;
- text-align: center;
- }
- @media (min-width: 992px) {
- .hero-split {
-   grid-template-columns: 1.04fr 0.96fr;
-   gap: 48px;
-   text-align: left;
-   align-items: center;
- }
- .hero-marketing-col {
-   align-items: flex-start;
-   text-align: left;
- }
- .hero-video-col {
-   max-width: 100%;
-   margin-left: auto;
-   margin-right: 0;
- }
- .hero-split .hero-pill {
-   margin-left: 0;
-   margin-right: auto;
- }
- .hero-split .hero-title {
-   font-size: clamp(2.3rem, 3.1vw, 3.4rem);
-   margin-bottom: 18px;
- }
- .hero-split .hero-subtitle {
-   margin: 0 0 26px 0;
-   max-width: 100%;
-   font-size: 1.1rem;
- }
- .hero-split .hero-actions {
-   justify-content: flex-start;
-   margin-bottom: 22px;
- }
- }
- @media (max-width: 991px) {
- .hero-split .hero-title {
-   font-size: clamp(2rem, 5vw, 2.8rem);
- }
- .hero-split .hero-subtitle {
-   margin: 0 auto 28px;
- }
- }
+  /* HERO 2-COLUMN MARKETING LAYOUT (Left: Text & CTAs, Right: 4K Video Showcase) */
+  .hero-split {
+    display: grid;
+    grid-template-columns: 1.04fr 0.96fr;
+    gap: 48px;
+    text-align: left;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    contain: layout style;
+    min-height: 380px;
+  }
+  .hero-marketing-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    min-height: 340px;
+  }
+  .hero-video-col {
+    width: 100%;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: 0;
+    min-height: 340px;
+  }
+  .hero-split .hero-pill {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  .hero-split .hero-title {
+    font-size: clamp(2.3rem, 3.1vw, 3.4rem);
+    margin-bottom: 18px;
+  }
+  .hero-split .hero-subtitle {
+    margin: 0 0 26px 0;
+    max-width: 100%;
+    font-size: 1.1rem;
+  }
+  .hero-split .hero-actions {
+    justify-content: flex-start;
+    margin-bottom: 22px;
+  }
+  @media (max-width: 991px) {
+    .hero-split {
+      grid-template-columns: 1fr;
+      gap: 36px;
+      align-items: center;
+      text-align: center;
+      min-height: auto;
+    }
+    .hero-marketing-col {
+      align-items: center;
+      text-align: center;
+      min-height: auto;
+    }
+    .hero-video-col {
+      margin: 0 auto;
+      min-height: auto;
+    }
+    .hero-split .hero-pill {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-split .hero-title {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+    }
+    .hero-split .hero-subtitle {
+      margin: 0 auto 28px;
+    }
+    .hero-split .hero-actions {
+      justify-content: center;
+    }
+  }
 
  .hero-trust-chips {
  display: flex;
@@ -541,14 +566,16 @@
  border-color: #a78bfa;
  color: #fff;
  }
- .hero-sandbox-divider {
- display: flex;
- align-items: center;
- justify-content: center;
- gap: 14px;
- margin: 44px auto 30px;
- max-width: 1060px;
- }
+  .hero-sandbox-divider {
+    contain: layout style;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 44px auto 30px;
+    max-width: 1060px;
+  }
  .sandbox-divider-line {
  flex: 1;
  height: 1px;
@@ -568,17 +595,18 @@
  letter-spacing: 0.03em;
  }
 
- /* HERO INTERACTIVE LIVING DOCUMENT CANVAS */
- .hero-canvas-card {
- max-width: 1060px;
- margin: 0 auto;
- background: var(--card-bg);
- border: 1px solid var(--card-border);
- border-radius: 18px;
- overflow: hidden;
- box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(139, 92, 246, 0.15);
- text-align: left;
- }
+  /* HERO INTERACTIVE LIVING DOCUMENT CANVAS */
+  .hero-canvas-card {
+    contain: layout style;
+    max-width: 1060px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(139, 92, 246, 0.15);
+    text-align: left;
+  }
  .canvas-header {
  background: rgba(13, 19, 34, 0.95);
  padding: 14px 20px;
@@ -2836,7 +2864,7 @@
  <div class="canvas-dot dot-g" title="Maximize"></div>
  </div>
  <div class="studio-app-brand">
- <img src="/ldoc_logo.png" alt="LDOC Studio Logo" width="16" height="16" style="width:16px;height:16px;border-radius:3px;">
+ <img src="/ldoc_logo.webp" alt="LDOC Studio Logo" width="16" height="16" style="width:16px;height:16px;border-radius:3px;" decoding="async">
  <span>LDOC STUDIO</span>
  </div>
  <div class="studio-menu-actions">
@@ -5234,36 +5262,69 @@ function initHero3DCanvas() {
  });
  resizeObserver.observe(container);
 
- // 7. Animation Render Loop
- let clock = 0;
- function animateHero() {
- heroAnimFrame = requestAnimationFrame(animateHero);
- clock += 0.016;
+  // 7. High-Performance Intersection-Observed Animation Render Loop
+  let clock = 0;
+  let heroIsVisible = true;
+  let heroRenderActive = false;
+  let heroLastRenderTime = 0;
 
- if (heroOrbitActive && !heroDragState.isDragging) {
- heroDragState.rotY += 0.007;
- }
+  function renderHeroSingleFrame() {
+    clock += 0.016;
+    if (heroOrbitActive && !heroDragState.isDragging) {
+      heroDragState.rotY += 0.007;
+    }
+    const radius = heroOrbitRadius;
+    const camY = Math.sin(heroDragState.rotX) * radius + 0.35;
+    const flatDist = Math.cos(heroDragState.rotX) * radius;
+    const camX = Math.sin(heroDragState.rotY) * flatDist;
+    const camZ = Math.cos(heroDragState.rotY) * flatDist;
+    heroCamera.position.set(camX, camY, camZ);
+    heroCamera.lookAt(0, 0.35, 0);
 
- // Apply smooth camera orbit based on stable heroOrbitRadius
- const radius = heroOrbitRadius;
- const camY = Math.sin(heroDragState.rotX) * radius + 0.35;
- const flatDist = Math.cos(heroDragState.rotX) * radius;
- const camX = Math.sin(heroDragState.rotY) * flatDist;
- const camZ = Math.cos(heroDragState.rotY) * flatDist;
- heroCamera.position.set(camX, camY, camZ);
- heroCamera.lookAt(0, 0.35, 0);
+    if (heroRobotGroup) {
+      heroRobotGroup.position.y = Math.sin(clock * 2) * 0.03;
+    }
+    coreLight.intensity = 2.2 + Math.sin(clock * 4) * 0.8;
+    heroRenderer.render(heroScene, heroCamera);
+  }
 
- // Gentle breathing animation on chassis
- if (heroRobotGroup) {
- heroRobotGroup.position.y = Math.sin(clock * 2) * 0.03;
- }
+  function animateHero(now) {
+    if (!heroIsVisible || document.hidden) {
+      heroRenderActive = false;
+      return;
+    }
+    heroAnimFrame = requestAnimationFrame(animateHero);
+    if (now && now - heroLastRenderTime < 28) return;
+    heroLastRenderTime = now || 0;
+    renderHeroSingleFrame();
+  }
 
- // Pulse core light
- coreLight.intensity = 2.2 + Math.sin(clock * 4) * 0.8;
+  // Render 1 frame immediately so model is displayed instantly
+  renderHeroSingleFrame();
 
- heroRenderer.render(heroScene, heroCamera);
- }
- animateHero();
+  // IntersectionObserver to pause loop when scrolled out of view
+  if ('IntersectionObserver' in window) {
+    const heroObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        heroIsVisible = entry.isIntersecting;
+        if (heroIsVisible && !heroRenderActive && !document.hidden) {
+          heroRenderActive = true;
+          heroAnimFrame = requestAnimationFrame(animateHero);
+        }
+      });
+    }, { threshold: 0.05 });
+    heroObserver.observe(container);
+  } else {
+    heroRenderActive = true;
+    heroAnimFrame = requestAnimationFrame(animateHero);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && heroIsVisible && !heroRenderActive) {
+      heroRenderActive = true;
+      heroAnimFrame = requestAnimationFrame(animateHero);
+    }
+  });
 
  // Trigger initial slider state
  const slider = document.getElementById('hero-actuator-slider');
@@ -6654,15 +6715,48 @@ window.trackCheckoutClick = function() {
     mini3dMesh = new THREE.Mesh(geom, mat);
     mini3dScene.add(mini3dMesh);
 
-    function animate() {
-      mini3dAnimFrame = requestAnimationFrame(animate);
+    let mini3dVisible = false;
+    let mini3dActive = false;
+    let mini3dLastTime = 0;
+
+    function renderMini3dSingleFrame() {
       if (mini3dMesh) {
         mini3dMesh.rotation.x += 0.008 * mini3dSpeed;
         mini3dMesh.rotation.y += 0.012 * mini3dSpeed;
       }
       mini3dRenderer.render(mini3dScene, mini3dCamera);
     }
-    animate();
+
+    function animate(now) {
+      if (!mini3dVisible || document.hidden) {
+        mini3dActive = false;
+        return;
+      }
+      mini3dAnimFrame = requestAnimationFrame(animate);
+      if (now && now - mini3dLastTime < 28) return;
+      mini3dLastTime = now || 0;
+      renderMini3dSingleFrame();
+    }
+
+    // Render 1 frame immediately
+    renderMini3dSingleFrame();
+
+    // IntersectionObserver ensures offscreen mini 3D canvas NEVER burns CPU cycles during page load
+    if ('IntersectionObserver' in window) {
+      const miniObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          mini3dVisible = entry.isIntersecting;
+          if (mini3dVisible && !mini3dActive && !document.hidden) {
+            mini3dActive = true;
+            mini3dAnimFrame = requestAnimationFrame(animate);
+          }
+        });
+      }, { threshold: 0.05 });
+      miniObs.observe(canvas);
+    } else {
+      mini3dActive = true;
+      mini3dAnimFrame = requestAnimationFrame(animate);
+    }
   }
 
   function toggleMini3dWireframe() {
