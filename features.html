@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <script src="/three.min.js" defer onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'"></script>
+  <!-- Three.js loaded asynchronously on demand -->
   <style>
     :root {
       --bg: #090d16;
@@ -2105,6 +2105,21 @@ const LDocAuth = {
 };
 
 let currentAuthTab = 'login';
+window.triggerConfetti = function(opts) {
+  if (typeof confetti === 'function') {
+    try { confetti(opts); } catch(e){}
+    return;
+  }
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js';
+  s.onload = function() {
+    if (typeof confetti === 'function') {
+      try { confetti(opts); } catch(e){}
+    }
+  };
+  document.head.appendChild(s);
+};
+
 let currentActiveDocId = localStorage.getItem('ldoc_active_doc_id') || 'doc_current';
 
 
@@ -3202,25 +3217,72 @@ function updateFeatTorque(val) {
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+// Dynamic On-Demand Three.js Loader
+let featThreeJsLoaded = (typeof THREE !== 'undefined');
+let featThreeJsLoading = false;
+let featThreeCallbacks = [];
+
+function ensureThreeJs(cb) {
+  if (typeof THREE !== 'undefined') {
+    featThreeJsLoaded = true;
+    if (cb) cb();
+    return;
+  }
+  if (cb) featThreeCallbacks.push(cb);
+  if (featThreeJsLoading) return;
+  featThreeJsLoading = true;
+
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  script.async = true;
+  script.onload = () => {
+    featThreeJsLoaded = true;
+    featThreeJsLoading = false;
+    while (featThreeCallbacks.length) {
+      const fn = featThreeCallbacks.shift();
+      try { fn(); } catch(e){}
+    }
+  };
+  script.onerror = () => {
+    const localScript = document.createElement('script');
+    localScript.src = '/three.min.js';
+    localScript.async = true;
+    localScript.onload = () => {
+      featThreeJsLoaded = true;
+      featThreeJsLoading = false;
+      while (featThreeCallbacks.length) {
+        const fn = featThreeCallbacks.shift();
+        try { fn(); } catch(e){}
+      }
+    };
+    localScript.onerror = () => {
+      featThreeJsLoading = false;
+      const canvas = document.getElementById('feat-mesh-canvas');
+      if (canvas) initFallbackFeatCanvas(canvas);
+    };
+    document.head.appendChild(localScript);
+  };
+  document.head.appendChild(script);
+}
+
+let feat3DTriggered = false;
+function triggerFeat3D() {
+  if (feat3DTriggered) return;
+  feat3DTriggered = true;
   const canvas = document.getElementById('feat-mesh-canvas');
   if (!canvas) return;
-  if (typeof THREE !== 'undefined') {
-    initFeat3D(canvas);
-  } else {
-    let retries = 0;
-    const interval = setInterval(() => {
-      retries++;
-      if (typeof THREE !== 'undefined') {
-        clearInterval(interval);
-        initFeat3D(canvas);
-      } else if (retries >= 35) {
-        clearInterval(interval);
-        initFallbackFeatCanvas(canvas);
-      }
-    }, 80);
-  }
+  ensureThreeJs(() => initFeat3D(canvas));
+}
+
+['pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'].forEach(evt => {
+  window.addEventListener(evt, triggerFeat3D, { once: true, passive: true });
 });
+
+if ('requestIdleCallback' in window) {
+  requestIdleCallback(triggerFeat3D, { timeout: 3500 });
+} else {
+  setTimeout(triggerFeat3D, 2200);
+}
 
 function initFeat3D(canvas) {
   const container = canvas.parentElement;
@@ -3535,6 +3597,6 @@ window.setBillingCycle = function(cycle) {
   }
 };
 </script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
+<!-- confetti loaded dynamically on demand -->
 </body>
 </html>
