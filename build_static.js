@@ -34,7 +34,7 @@ routes.forEach(r => {
 // Removed /studio/try: Studio requires authentication
 
 const assets = [
-  'index.html', 'three.min.js', 'ai-brain.png', 'app.ico', 'daily-prophet.ldocx',
+  'index.html', 'three.min.js', 'three.min.js.map', 'ai-brain.png', 'app.ico', 'daily-prophet.ldocx',
   'gt6-velocity-unleashed.ldocx', 'ldoc-showcase.ldocx', 'all-features-showcase.ldocx',
   'jszip.min.js', 'ldoc_background_image.png', 'ldoc_logo.png', 'manifest.json',
   'video-poster.jpg', 'video-poster.webp', 'ai-brain.webp', 'ldoc_background_image.webp', 'ldoc_logo.webp',
