@@ -3274,14 +3274,23 @@ function triggerFeat3D() {
   ensureThreeJs(() => initFeat3D(canvas));
 }
 
-['pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel'].forEach(evt => {
+['pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel', 'mousemove', 'pointermove'].forEach(evt => {
   window.addEventListener(evt, triggerFeat3D, { once: true, passive: true });
 });
 
-if ('requestIdleCallback' in window) {
-  requestIdleCallback(triggerFeat3D, { timeout: 3500 });
+const featCanvas = document.getElementById('feat-mesh-canvas');
+if (featCanvas) {
+  ['pointerdown', 'touchstart', 'wheel', 'click'].forEach(evt => {
+    featCanvas.addEventListener(evt, triggerFeat3D, { once: true, passive: true });
+  });
+}
+
+if (document.readyState === 'complete') {
+  setTimeout(triggerFeat3D, 5000);
 } else {
-  setTimeout(triggerFeat3D, 2200);
+  window.addEventListener('load', () => {
+    setTimeout(triggerFeat3D, 5000);
+  }, { once: true, passive: true });
 }
 
 function initFeat3D(canvas) {
