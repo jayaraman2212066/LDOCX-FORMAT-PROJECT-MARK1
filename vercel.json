@@ -90,6 +90,33 @@
           "value": "default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' https://ldoc-studios.vercel.app https://jay-app.lemonsqueezy.com https://api.lemonsqueezy.com https://api.openai.com https://generativelanguage.googleapis.com; frame-src 'self' blob: data: https://jay-app.lemonsqueezy.com; object-src 'none'; base-uri 'self';"
         }
       ]
+    },
+    {
+      "source": "/(assets|downloads)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(webp|png|jpg|jpeg|svg|ico|glb|mp4|woff2)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/three.min.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ]
 }

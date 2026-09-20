@@ -10,9 +10,7 @@
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
- <script src="/three.min.js"></script>
- <script src="three.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+ <script src="/three.min.js" defer onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'"></script>
    <style>
  :root {
  --bg: #090d16;
@@ -63,6 +61,8 @@
 
  /* Top Promo Strip */
  .promo-strip {
+ contain: layout style;
+ min-height: 38px;
  background: linear-gradient(90deg, #4c1d95, #6d28d9, #2563eb);
  color: #fff;
  font-size: 0.85rem;
@@ -457,6 +457,7 @@
  margin: 0 auto;
  }
  .hero-video-embedded {
+ contain: layout style;
  position: relative;
  width: 100%;
  aspect-ratio: 16 / 9;
@@ -1720,6 +1721,7 @@
  max-width: 300px;
  font-size: 0.85rem;
  }
+ .footer-col h4,
  .footer-col h5 {
  color: #fff;
  font-size: 0.9rem;
@@ -2718,7 +2720,7 @@
  <nav class="nav-bar">
  <div class="nav-left">
  <a href="/" class="brand-logo">
- <img src="/ldoc_logo.png" alt="LDOC Logo" width="28" height="28">
+ <img src="/ldoc_logo.webp" alt="LDOC Logo" width="28" height="28" decoding="async">
  <span>LDOC STUDIO</span>
  <span class="brand-badge">.ldocx</span>
  </a>
@@ -2745,7 +2747,7 @@
  <div class="nav-actions-group">
  <button class="nav-action-btn" id="header-auth-btn" onclick="showAuthModal()">👤 Sign In</button>
  <button class="nav-action-btn" onclick="showShareModal()" title="Share LDOC Studio">🔗 Share Studio</button>
- <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button nav-action-btn" style="background:linear-gradient(135deg,rgba(245,158,11,0.22),rgba(234,88,12,0.22));border:1.5px solid #f59e0b;color:#fef08a;font-weight:700;display:inline-flex;align-items:center;gap:5px;cursor:pointer;text-decoration:none;padding:6px 14px;border-radius:6px;font-size:12.5px;" title="Buy License"><span>💳</span><span>Buy License</span></a>
+ <a href="https://jay-app.lemonsqueezy.com/checkout" target="_blank" class="lemonsqueezy-button nav-action-btn" style="background:linear-gradient(135deg,rgba(245,158,11,0.22),rgba(234,88,12,0.22));border:1.5px solid #f59e0b;color:#fef08a;font-weight:700;display:inline-flex;align-items:center;gap:5px;cursor:pointer;text-decoration:none;padding:6px 14px;border-radius:6px;font-size:12.5px;" title="Buy License"><span>💳</span><span>Buy License</span></a>
  </div>
 
  <a href="/live-studio" class="btn-launch">
@@ -2799,7 +2801,7 @@
 
      <div class="hero-video-col">
        <div class="hero-video-embedded">
-         <video id="hero-marketing-video" class="hero-video-player" width="640" height="360" muted loop playsinline preload="none" poster="/video-poster.webp" style="aspect-ratio: 16 / 9;"><source src="/upscaled-videoad2.mp4" type="video/mp4"></video>
+         <video id="hero-marketing-video" class="hero-video-player" width="640" height="360" muted loop playsinline preload="none" poster="/video-poster.webp" style="aspect-ratio: 16 / 9;" aria-label="LDOC Studio Product Showcase Video"><source src="/upscaled-videoad2.mp4" type="video/mp4"><track kind="captions" src="data:text/vtt,WEBVTT%0A%0A00:00.000%20-->%0A00:30.000%0ALDOC%20Studio%20Showcase" srclang="en" label="English" default></video>
          
          <div class="video-floating-overlay">
            <button type="button" class="video-float-btn" id="hero-video-sound-btn" onclick="toggleHeroVideoAudio()" title="Toggle Sound" aria-label="Toggle Sound">
@@ -3446,7 +3448,7 @@
               </ul>
             </div>
             <div class="card-cta-zone">
-              <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button btn-plan btn-plan-primary">
+              <a href="https://jay-app.lemonsqueezy.com/checkout" target="_blank" class="lemonsqueezy-button btn-plan btn-plan-primary">
                 <span>💳</span><span>Buy License &rarr;</span>
               </a>
               <a href="#download" class="btn-plan btn-plan-sublink">
@@ -3543,7 +3545,7 @@
      </div>
    </div>
        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
-      <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button ldoc-cloud-btn" style="background:#f59e0b;color:#000;font-weight:800;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:12px;display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer"><span>💳</span><span>Buy License</span></a>
+      <a href="https://jay-app.lemonsqueezy.com/checkout" target="_blank" class="lemonsqueezy-button ldoc-cloud-btn" style="background:#f59e0b;color:#000;font-weight:800;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:12px;display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer"><span>💳</span><span>Buy License</span></a>
     </div>
  </div>
 
@@ -4103,14 +4105,14 @@ document.addEventListener('DOMContentLoaded', function() {
  <div class="footer-grid">
  <div class="footer-brand">
  <a href="/" class="brand-logo">
- <img src="/ldoc_logo.png" alt="LDOC Logo" width="28" height="28">
+ <img src="/ldoc_logo.webp" alt="LDOC Logo" width="28" height="28" decoding="async">
  <span>LDOC STUDIO</span>
  </a>
  <p>The open living document architecture. Compute, render, and evolve beyond static PDFs.</p>
  </div>
 
            <div class="footer-col">
-            <h5>Product</h5>
+            <h4>Product</h4>
             <ul>
               <li><a href="/live-studio">Live Studio IDE</a></li>
               <li><a href="/models">Models &amp; Templates</a></li>
@@ -4120,7 +4122,7 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
 
           <div class="footer-col">
-            <h5>Specification</h5>
+            <h4>Specification</h4>
             <ul>
               <li><a href="/format">.ldocx Architecture</a></li>
               <li><a href="/docs">AST Specification</a></li>
@@ -4130,7 +4132,7 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
 
           <div class="footer-col">
-            <h5>Developers</h5>
+            <h4>Developers</h4>
             <ul>
               <li><a href="/docs">SDK Architecture Guide</a></li>
               <li><a href="/docs#sdk">Developer Integration</a></li>
@@ -4140,7 +4142,7 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
 
           <div class="footer-col">
-            <h5>Trust &amp; Legal</h5>
+            <h4>Trust &amp; Legal</h4>
             <ul>
               <li><a href="/privacy">Privacy Policy</a></li>
               <li><a href="/terms">Terms of Service</a></li>
@@ -6072,7 +6074,7 @@ window.addEventListener('load', () => {
         </div>
       </div>
 
-      <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;padding:14px;background:linear-gradient(135deg,#f59e0b,#ea580c);color:#000;font-weight:800;font-size:15px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;box-shadow:0 10px 25px rgba(245,158,11,0.35);transition:transform 0.15s ease;">
+      <a href="https://jay-app.lemonsqueezy.com/checkout" target="_blank" class="lemonsqueezy-button" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;padding:14px;background:linear-gradient(135deg,#f59e0b,#ea580c);color:#000;font-weight:800;font-size:15px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;box-shadow:0 10px 25px rgba(245,158,11,0.35);transition:transform 0.15s ease;">
         <span>💳</span><span>Buy Pro Lifetime &rarr;</span>
       </a>
       <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:10px 14px;margin-top:14px;font-size:11.5px;color:#94a3b8;line-height:1.5;">
