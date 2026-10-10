@@ -185,6 +185,7 @@
   left: 50%;
   transform: translate(-50%, calc(-50% + 20px));
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   z-index: var(--z-modal-content, 1050) !important;
   background: rgba(14, 16, 28, 0.97);
@@ -203,6 +204,7 @@
 #popup-elements-modal.open {
   transform: translate(-50%, -50%) !important;
   opacity: 1 !important;
+  visibility: visible !important;
   pointer-events: auto !important;
 }
 .elements-grid-category {

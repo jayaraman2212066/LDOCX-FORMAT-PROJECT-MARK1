@@ -73,10 +73,33 @@
     /* 3-Column Documentation Layout */
     .docs-layout {
       display: grid;
-      grid-template-columns: 260px 1fr 240px;
+      grid-template-columns: 260px minmax(0, 1fr) 240px;
       gap: 36px;
       padding: 36px 0 80px;
       align-items: start;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .docs-layout > * {
+      min-width: 0;
+      max-width: 100%;
+    }
+    @media (max-width: 1150px) {
+      .docs-layout {
+        grid-template-columns: 240px minmax(0, 1fr);
+      }
+      .docs-toc {
+        display: none;
+      }
+    }
+    @media (max-width: 768px) {
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+      .docs-sidebar {
+        display: none;
+      }
     }
 
     /* Left Nav Tree */
@@ -299,6 +322,11 @@
       display: grid;
       grid-template-columns: 1.2fr 1fr;
       gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .playground-grid {
+        grid-template-columns: 1fr;
+      }
     }
     .playground-editor {
       width: 100%;
@@ -798,10 +826,19 @@ console.log(<span style="color: #a7f3d0;">'Compiled .ldocx package size:'</span>
       setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
     }
 
-    function copySnippet(id) {
+    function copySnippet(id, btn) {
+      const targetBtn = btn || (window.event ? window.event.target : null);
       const text = document.getElementById(id).textContent;
       navigator.clipboard.writeText(text);
-      alert('Code snippet copied to clipboard!');
+      if (targetBtn && targetBtn.tagName === 'BUTTON') {
+        const orig = targetBtn.textContent;
+        targetBtn.textContent = 'Copied!';
+        targetBtn.style.color = '#34d399';
+        setTimeout(() => {
+          targetBtn.textContent = orig;
+          targetBtn.style.color = '';
+        }, 1800);
+      }
     }
 
     function executeAstSandbox() {

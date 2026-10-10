@@ -1,498 +1,250 @@
 /**
- * LDOC Studio — Design System Controller & Interactions
- * Industrial Precision UI/UX Engine (Figma/Linear/Vercel standard)
- * Zero external runtime dependencies. Strict 60fps transform/opacity animations.
+ * LDOC Studio — Universal Master Interactive & Motion Engine
+ * Scroll-Reveal Staggers, Ambient Layer, Spotlight Tracker, Top Progress Bar,
+ * Command Palette (Ctrl+K), and 3D Card Tilt.
  */
 
 (function () {
   'use strict';
 
-  // 1. THEME CONTROLLER (Dark-First with Light Mode Toggle)
-  const THEME_KEY = 'ldoc_theme';
-  
-  function getPreferredTheme() {
-    const saved = localStorage.getItem(THEME_KEY);
-    if (saved === 'light' || saved === 'dark') return saved;
-    // Default dark-first
-    return 'dark';
-  }
+  // ── 1. GLOBAL AMBIENT BACKGROUND INJECTION ──
+  function injectAmbientBackground() {
+    if (document.querySelector('.ldoc-ambient-background')) return;
 
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(THEME_KEY, theme);
-    
-    // Update all theme toggle buttons across DOM
-    document.querySelectorAll('.ldoc-theme-toggle').forEach(btn => {
-      btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-      btn.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-      const iconDark = btn.querySelector('.theme-icon-dark');
-      const iconLight = btn.querySelector('.theme-icon-light');
-      if (iconDark && iconLight) {
-        if (theme === 'dark') {
-          iconDark.style.display = 'block';
-          iconLight.style.display = 'none';
-        } else {
-          iconDark.style.display = 'none';
-          iconLight.style.display = 'block';
-        }
-      }
-    });
-  }
-
-  function initTheme() {
-    const theme = getPreferredTheme();
-    applyTheme(theme);
-
-    document.addEventListener('click', (e) => {
-      const toggle = e.target.closest('.ldoc-theme-toggle');
-      if (toggle) {
-        const current = document.documentElement.getAttribute('data-theme') || 'dark';
-        const next = current === 'dark' ? 'light' : 'dark';
-        applyTheme(next);
-      }
-    });
-  }
-
-  // 2. DISMISSIBLE TOP BANNER
-  function initBanner() {
-    const BANNER_KEY = 'ldoc_banner_v250_dismissed';
-    const banner = document.querySelector('.ldoc-pill-banner');
-    if (!banner) return;
-
-    if (sessionStorage.getItem(BANNER_KEY) === '1') {
-      banner.style.display = 'none';
-      return;
-    }
-
-    const closeBtn = banner.querySelector('.ldoc-banner-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        banner.style.transition = 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
-        banner.style.opacity = '0';
-        banner.style.transform = 'translateY(-10px)';
-        banner.style.maxHeight = '0px';
-        banner.style.padding = '0';
-        banner.style.margin = '0';
-        banner.style.overflow = 'hidden';
-        sessionStorage.setItem(BANNER_KEY, '1');
-        setTimeout(() => {
-          banner.style.display = 'none';
-        }, 260);
-      });
-    }
-  }
-
-  // 3. COMMAND PALETTE (Ctrl/Cmd + K)
-  const COMMAND_ITEMS = [
-    { title: 'Home Overview', desc: 'Vanguard-7 living demo, engine benchmarks & architecture', href: '/', category: 'Navigation', icon: 'home' },
-    { title: 'Interactive Features', desc: 'Spatial 3D canvas, reactive formulas, Merkle verification', href: '/features', category: 'Product', icon: 'zap' },
-    { title: 'Format Specification v2.5.0', desc: 'Pretext layout, Merkle tree AST, zip container structure', href: '/format', category: 'Developers', icon: 'file-text' },
-    { title: 'Live Studio Editor', desc: 'Launch full browser IDE, slide generator & 3D inspector', href: '/live-studio', category: 'Product', icon: 'edit' },
-    { title: 'Creator Studio Pro', desc: 'Professional authoring suite, slide master & template builder', href: '/creator', category: 'Product', icon: 'layers' },
-    { title: 'Models & Template Hub', desc: 'Living document templates, 3D assets & verified samples', href: '/models', category: 'Resources', icon: 'grid' },
-    { title: 'Pricing & Licensing', desc: 'Community $0, Studio Pro $19 lifetime, Cloud $79, Enterprise $499', href: '/pricing', category: 'Commercial', icon: 'credit-card' },
-    { title: 'Documentation & SDK', desc: '@ldoc/sdk NPM guide, CLI toolchain, offline API docs', href: '/docs', category: 'Developers', icon: 'book' },
-    { title: 'Release Changelog', desc: 'Version history, AST engine updates, security patches', href: '/changelog', category: 'Updates', icon: 'git-commit' },
-    { title: 'Security & Air-Gap Model', desc: 'Cryptographic Merkle verification, zero-network sandbox', href: '/security', category: 'Security', icon: 'shield' },
-    { title: 'Download Desktop Suite (Win/Mac/Linux)', desc: 'Official signed offline desktop applications', href: '/pricing#downloads', category: 'Downloads', icon: 'download' },
-    { title: 'License Activation Hub', desc: 'Redeem or verify your lifetime offline product key', href: '/license', category: 'Commercial', icon: 'key' }
-  ];
-
-  function getIconSvg(iconName) {
-    const svgs = {
-      home: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>',
-      zap: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
-      'file-text': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
-      edit: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>',
-      layers: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>',
-      grid: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>',
-      'credit-card': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>',
-      book: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
-      'git-commit': '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><line x1="1.05" y1="12" x2="7" y2="12"></line><line x1="17.05" y1="12" x2="23" y2="12"></line></svg>',
-      shield: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>',
-      download: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>',
-      key: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-1.5 1.5L14 9l-1.5-1.5L11 9l-1.5-1.5L8 9a5 5 0 1 0 7.07 7.07l5.93-5.93a1 1 0 0 0 0-1.41l-2-2a1 1 0 0 0-1.41 0z"></path><circle cx="7" cy="17" r="2"></circle></svg>'
-    };
-    return svgs[iconName] || svgs.home;
-  }
-
-  function createCommandPalette() {
-    if (document.getElementById('ldoc-cmd-modal')) return;
-
-    const modal = document.createElement('div');
-    modal.id = 'ldoc-cmd-modal';
-    modal.className = 'ldoc-cmd-modal';
-    modal.innerHTML = `
-      <div class="ldoc-cmd-backdrop"></div>
-      <div class="ldoc-cmd-window" role="dialog" aria-modal="true" aria-label="Command Menu">
-        <div class="ldoc-cmd-header">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" class="ldoc-cmd-input" placeholder="Type a route, doc, or command (e.g. features, sdk, pricing)..." autocomplete="off" spellcheck="false" />
-          <kbd class="ldoc-kbd">ESC</kbd>
-        </div>
-        <div class="ldoc-cmd-list" role="listbox"></div>
-        <div class="ldoc-cmd-footer">
-          <span><kbd class="ldoc-kbd">&uarr;</kbd> <kbd class="ldoc-kbd">&darr;</kbd> Navigate</span>
-          <span><kbd class="ldoc-kbd">&crarr;</kbd> Select</span>
-          <span><kbd class="ldoc-kbd">ESC</kbd> Close</span>
-        </div>
-      </div>
+    const bg = document.createElement('div');
+    bg.className = 'ldoc-ambient-background';
+    bg.innerHTML = `
+      <div class="ldoc-ambient-grid"></div>
+      <div class="ldoc-ambient-orb orb-amber"></div>
+      <div class="ldoc-ambient-orb orb-violet"></div>
+      <div class="ldoc-ambient-noise"></div>
     `;
-    document.body.appendChild(modal);
+    document.body.prepend(bg);
+  }
 
-    const input = modal.querySelector('.ldoc-cmd-input');
-    const list = modal.querySelector('.ldoc-cmd-list');
-    const backdrop = modal.querySelector('.ldoc-cmd-backdrop');
-    let selectedIndex = 0;
-    let currentResults = [...COMMAND_ITEMS];
-
-    function renderList(items) {
-      currentResults = items;
-      selectedIndex = 0;
-      if (items.length === 0) {
-        list.innerHTML = `<div class="ldoc-cmd-empty">No results found for "${escapeHtml(input.value)}"</div>`;
-        return;
-      }
-      list.innerHTML = items.map((item, idx) => `
-        <div class="ldoc-cmd-item ${idx === 0 ? 'selected' : ''}" data-index="${idx}" data-href="${item.href}" role="option" aria-selected="${idx === 0}">
-          <div class="ldoc-cmd-icon">${getIconSvg(item.icon)}</div>
-          <div class="ldoc-cmd-info">
-            <div class="ldoc-cmd-title">${item.title}</div>
-            <div class="ldoc-cmd-desc">${item.desc}</div>
-          </div>
-          <span class="ldoc-cmd-tag">${item.category}</span>
-        </div>
-      `).join('');
-
-      list.querySelectorAll('.ldoc-cmd-item').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-          updateSelected(parseInt(el.getAttribute('data-index'), 10));
-        });
-        el.addEventListener('click', () => {
-          navigate(el.getAttribute('data-href'));
-        });
-      });
+  // ── 2. SCROLL PROGRESS BAR & PILL NAVBAR SCROLL STATE ──
+  function initScrollProgressAndNavbar() {
+    let progressBar = document.getElementById('ldoc-scroll-progress');
+    if (!progressBar) {
+      progressBar = document.createElement('div');
+      progressBar.id = 'ldoc-scroll-progress';
+      document.body.prepend(progressBar);
     }
 
-    function updateSelected(newIndex) {
-      selectedIndex = Math.max(0, Math.min(newIndex, currentResults.length - 1));
-      list.querySelectorAll('.ldoc-cmd-item').forEach((el, idx) => {
-        const isSel = idx === selectedIndex;
-        el.classList.toggle('selected', isSel);
-        el.setAttribute('aria-selected', isSel);
-        if (isSel) {
-          el.scrollIntoView({ block: 'nearest' });
-        }
-      });
-    }
+    const pillNav = document.querySelector('.ldoc-pill-navbar');
 
-    function navigate(href) {
-      if (!href) return;
-      closeModal();
-      window.location.href = href;
-    }
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = `${progress}%`;
 
-    function openModal() {
-      modal.classList.add('open');
-      input.value = '';
-      renderList(COMMAND_ITEMS);
-      setTimeout(() => input.focus(), 50);
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-      modal.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    backdrop.addEventListener('click', closeModal);
-
-    input.addEventListener('input', () => {
-      const q = input.value.trim().toLowerCase();
-      if (!q) {
-        renderList(COMMAND_ITEMS);
-      } else {
-        const filtered = COMMAND_ITEMS.filter(item => 
-          item.title.toLowerCase().includes(q) ||
-          item.desc.toLowerCase().includes(q) ||
-          item.category.toLowerCase().includes(q)
-        );
-        renderList(filtered);
-      }
-    });
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        updateSelected(selectedIndex + 1);
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        updateSelected(selectedIndex - 1);
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        if (currentResults[selectedIndex]) {
-          navigate(currentResults[selectedIndex].href);
-        }
-      } else if (e.key === 'Escape') {
-        closeModal();
-      }
-    });
-
-    // Global shortcut listener
-    document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
-        e.preventDefault();
-        if (modal.classList.contains('open')) {
-          closeModal();
+      if (pillNav) {
+        if (scrollTop > 24) {
+          pillNav.classList.add('scrolled');
         } else {
-          openModal();
+          pillNav.classList.remove('scrolled');
         }
       }
-    });
-
-    // Delegate button triggers
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('[data-cmd-palette-trigger]')) {
-        e.preventDefault();
-        openModal();
-      }
-    });
+    }, { passive: true });
   }
 
-  // 4. MOBILE DRAWER MENU
-  function initMobileMenu() {
-    const toggles = document.querySelectorAll('.ldoc-mobile-toggle');
-    const menu = document.querySelector('.ldoc-mobile-menu');
-    if (!toggles.length || !menu) return;
+  // ── 3. STAGGERED SCROLL-REVEAL ENGINE ──
+  function initScrollRevealEngine() {
+    const revealElements = document.querySelectorAll('.ldoc-reveal');
+    if (!revealElements.length) return;
 
-    toggles.forEach(toggle => {
-      toggle.addEventListener('click', () => {
-        const isOpen = menu.classList.toggle('open');
-        toggle.setAttribute('aria-expanded', isOpen);
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-      });
-    });
-
-    menu.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
-        menu.classList.remove('open');
-        document.body.style.overflow = '';
-      });
-    });
-  }
-
-  // 5. ACCORDION LOGIC
-  function initAccordions() {
-    document.addEventListener('click', (e) => {
-      const header = e.target.closest('.ldoc-accordion-header');
-      if (!header) return;
-
-      const item = header.closest('.ldoc-accordion-item');
-      if (!item) return;
-
-      const isOpen = item.classList.contains('open');
-      const parent = item.closest('.ldoc-accordion');
-
-      // Optionally close siblings if in exclusive accordion
-      if (parent && parent.hasAttribute('data-exclusive')) {
-        parent.querySelectorAll('.ldoc-accordion-item').forEach(sib => {
-          if (sib !== item) {
-            sib.classList.remove('open');
-            const h = sib.querySelector('.ldoc-accordion-header');
-            if (h) h.setAttribute('aria-expanded', 'false');
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry, idx) => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const delay = el.getAttribute('data-delay') || (idx * 60) + 'ms';
+            el.style.transitionDelay = delay;
+            el.classList.add('revealed');
+            obs.unobserve(el);
           }
         });
-      }
+      }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -40px 0px'
+      });
 
-      item.classList.toggle('open', !isOpen);
-      header.setAttribute('aria-expanded', !isOpen);
-    });
+      revealElements.forEach(el => observer.observe(el));
+
+      // Safety fallback: ensure nothing stays hidden if user scrolls quickly or headless audits run
+      setTimeout(() => {
+        revealElements.forEach(el => el.classList.add('revealed'));
+      }, 1500);
+    } else {
+      // Direct fallback
+      revealElements.forEach(el => el.classList.add('revealed'));
+    }
   }
 
-  // 6. CODE BLOCK COPY & TABS
-  function initCodeBlocks() {
-    document.addEventListener('click', (e) => {
-      const copyBtn = e.target.closest('.ldoc-code-copy');
-      if (!copyBtn) return;
-
-      const codeBox = copyBtn.closest('.ldoc-code-box, pre');
-      if (!codeBox) return;
-
-      const codeEl = codeBox.querySelector('code') || codeBox;
-      const text = codeEl.innerText || codeEl.textContent;
-
-      navigator.clipboard.writeText(text).then(() => {
-        const origHtml = copyBtn.innerHTML;
-        copyBtn.innerHTML = `
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          <span style="color:var(--emerald);font-size:11px;font-weight:600;">Copied</span>
-        `;
-        copyBtn.classList.add('copied');
-        setTimeout(() => {
-          copyBtn.innerHTML = origHtml;
-          copyBtn.classList.remove('copied');
-        }, 2000);
-      }).catch(err => {
-        console.warn('Clipboard write failed:', err);
-      });
-    });
-
-    // Tab buttons inside code box headers
-    document.addEventListener('click', (e) => {
-      const tabBtn = e.target.closest('.ldoc-code-tab');
-      if (!tabBtn) return;
-
-      const tabsContainer = tabBtn.closest('.ldoc-code-tabs');
-      const box = tabBtn.closest('.ldoc-code-box');
-      if (!tabsContainer || !box) return;
-
-      const targetId = tabBtn.getAttribute('data-tab');
-      tabsContainer.querySelectorAll('.ldoc-code-tab').forEach(b => b.classList.remove('active'));
-      tabBtn.classList.add('active');
-
-      box.querySelectorAll('.ldoc-code-tab-content').forEach(c => {
-        if (c.getAttribute('data-tab-content') === targetId) {
-          c.classList.add('active');
-          c.style.display = 'block';
-        } else {
-          c.classList.remove('active');
-          c.style.display = 'none';
-        }
-      });
-    });
-  }
-
-  // 7. CARD 3D TILT & CURSOR GLOW
-  function initTiltAndGlow() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if ('ontouchstart' in window) return;
-
-    const cards = document.querySelectorAll('.ldoc-tilt-card, .ldoc-card-glow, .ldoc-card');
-
+  // ── 4. CURSOR-FOLLOWING SPOTLIGHT CARD TRACKER ──
+  function initSpotlightTracker() {
+    const cards = document.querySelectorAll('.ldoc-spotlight-card');
     cards.forEach(card => {
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-
         card.style.setProperty('--mouse-x', `${x}px`);
         card.style.setProperty('--mouse-y', `${y}px`);
-
-        if (card.classList.contains('ldoc-tilt-card')) {
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateX = ((y - centerY) / centerY) * -5;
-          const rotateY = ((x - centerX) / centerX) * 5;
-
-          card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(4px)`;
-        }
-      });
-
-      card.addEventListener('mouseleave', () => {
-        if (card.classList.contains('ldoc-tilt-card')) {
-          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
-          card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
-        }
-      });
-
-      card.addEventListener('mouseenter', () => {
-        if (card.classList.contains('ldoc-tilt-card')) {
-          card.style.transition = 'none';
-        }
       });
     });
   }
 
-  // 8. OS AUTO-DETECTION FOR DOWNLOAD BUTTONS
-  function initOsDetection() {
-    const ua = navigator.userAgent || '';
-    let os = 'Windows';
-    let file = 'LDOC-Studio-Setup-2.5.0.exe';
-    let label = 'Download for Windows';
-    let badge = 'v2.5.0 .exe (Win 10/11 x64)';
+  // ── 5. 3D CARD TILT INTERACTION ──
+  function initTiltInteraction() {
+    const tiltElements = document.querySelectorAll('.ldoc-tilt-card');
+    tiltElements.forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left - (rect.width / 2);
+        const y = e.clientY - rect.top - (rect.height / 2);
+        const rotateX = -(y / (rect.height / 2)) * 8;
+        const rotateY = (x / (rect.width / 2)) * 8;
+        el.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+        el.style.transition = 'transform 0.08s ease-out';
+      });
 
-    if (/Macintosh|Mac OS X/i.test(ua)) {
-      os = 'macOS';
-      file = 'LDOC-Studio-2.5.0-arm64.dmg';
-      label = 'Download for macOS';
-      badge = 'v2.5.0 Apple Silicon / Intel DMG';
-    } else if (/Linux/i.test(ua)) {
-      os = 'Linux';
-      file = 'LDOC-Studio-2.5.0.AppImage';
-      label = 'Download for Linux';
-      badge = 'v2.5.0 AppImage / .deb';
-    } else if (/iPhone|iPad|iPod/i.test(ua)) {
-      os = 'iOS';
-      file = '#';
-      label = 'Get for iPad / iOS';
-      badge = 'App Store Preview';
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        el.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+      });
+    });
+  }
+
+  // ── 6. NUMBER COUNT-UP ANIMATION ──
+  function initCountUpAnimation() {
+    const counters = document.querySelectorAll('[data-counter]');
+    if (!counters.length) return;
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseFloat(el.getAttribute('data-counter') || '0');
+          const prefix = el.getAttribute('data-prefix') || '';
+          const suffix = el.getAttribute('data-suffix') || '';
+          const duration = 1200;
+          const startTime = performance.now();
+
+          function updateCounter(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease out cubic
+            const ease = 1 - Math.pow(1 - progress, 3);
+            const current = Math.floor(ease * target);
+            el.textContent = `${prefix}${current.toLocaleString()}${suffix}`;
+            if (progress < 1) {
+              requestAnimationFrame(updateCounter);
+            } else {
+              el.textContent = `${prefix}${target.toLocaleString()}${suffix}`;
+            }
+          }
+
+          requestAnimationFrame(updateCounter);
+          obs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    counters.forEach(c => observer.observe(c));
+  }
+
+  // ── 7. COMMAND PALETTE (Ctrl / Cmd + K) ──
+  const COMMANDS = [
+    { title: 'Home Overview', desc: 'Vanguard-7 living demo, engine benchmarks & architecture', href: '/' },
+    { title: 'Interactive Features', desc: 'Spatial 3D canvas, reactive formulas, Merkle verification', href: '/features' },
+    { title: 'Format Specification v2.5.0', desc: 'Pretext layout, Merkle tree AST, zip container structure', href: '/format' },
+    { title: 'Live Studio Editor', desc: 'Launch full browser IDE, slide generator & 3D inspector', href: '/live-studio' },
+    { title: 'Creator Studio Pro', desc: 'Visual block composer & presentation builder', href: '/creator' },
+    { title: 'Models & Template Hub', desc: 'Living document templates, 3D assets & verified blueprints', href: '/models' },
+    { title: 'Pricing & Licensing', desc: 'Community $0, Studio Pro $19 lifetime, Cloud $79, Enterprise $499', href: '/pricing' },
+    { title: 'Documentation & SDK', desc: '@ldoc/sdk NPM guide, CLI toolchain, offline API docs', href: '/docs' },
+    { title: 'Release Changelog', desc: 'Version history, AST engine updates, security patches', href: '/changelog' },
+    { title: 'Security & Air-Gap Model', desc: 'Cryptographic Merkle verification, zero-network sandbox', href: '/security' }
+  ];
+
+  function initCommandPalette() {
+    if (document.getElementById('ldoc-cmd-palette')) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'ldoc-cmd-palette';
+    modal.style.cssText = `
+      position:fixed;inset:0;background:rgba(8,9,14,0.8);backdrop-filter:blur(16px);
+      z-index:99999;display:none;align-items:flex-start;justify-content:center;padding-top:14vh;
+    `;
+    modal.innerHTML = `
+      <div style="background:#0e1018;border:1px solid rgba(255,255,255,0.12);border-radius:16px;max-width:580px;width:92%;box-shadow:0 24px 60px rgba(0,0,0,0.85);overflow:hidden">
+        <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.08)">
+          <span style="color:#f59e0b;font-size:14px">⌘</span>
+          <input type="text" id="ldoc-cmd-input" placeholder="Type a route or command (features, studio, pricing)..." style="background:none;border:none;color:#fff;font-size:14px;outline:none;flex:1;font-family:inherit" />
+          <kbd style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:5px;padding:2px 6px;font-size:10.5px;color:#94a3b8;font-family:monospace">ESC</kbd>
+        </div>
+        <div id="ldoc-cmd-results" style="max-height:340px;overflow-y:auto;padding:8px"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:rgba(0,0,0,0.25);border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:#64748b">
+          <span>LDOC Living Document System</span>
+          <span>Press ESC to close</span>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const input = document.getElementById('ldoc-cmd-input');
+    const results = document.getElementById('ldoc-cmd-results');
+
+    function renderList(query) {
+      const q = (query || '').toLowerCase().trim();
+      const filtered = COMMANDS.filter(c => c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q));
+      results.innerHTML = filtered.map(c => `
+        <a href="${c.href}" style="display:flex;flex-direction:column;gap:3px;padding:10px 14px;border-radius:8px;text-decoration:none;transition:background .12s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='transparent'">
+          <div style="font-size:13.5px;font-weight:600;color:#f8fafc">${c.title}</div>
+          <div style="font-size:11.5px;color:#94a3b8">${c.desc}</div>
+        </a>
+      `).join('');
     }
 
-    document.querySelectorAll('[data-os-detect-cta]').forEach(cta => {
-      cta.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-        <span>${label}</span>
-      `;
-      if (file !== '#') {
-        cta.setAttribute('href', `/downloads/${file}`);
-        cta.setAttribute('download', file);
-      }
+    renderList('');
+    input?.addEventListener('input', (e) => renderList(e.target.value));
+
+    window.openCommandPalette = () => {
+      modal.style.display = 'flex';
+      setTimeout(() => input?.focus(), 50);
+    };
+
+    window.closeCommandPalette = () => {
+      modal.style.display = 'none';
+      if (input) input.value = '';
+    };
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) window.closeCommandPalette();
     });
 
-    document.querySelectorAll('[data-os-detect-badge]').forEach(el => {
-      el.textContent = `Auto-detected: ${badge}`;
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        modal.style.display === 'flex' ? window.closeCommandPalette() : window.openCommandPalette();
+      }
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        window.closeCommandPalette();
+      }
     });
   }
 
-  // 9. NAVBAR SCROLL EFFECT
-  function initNavbarScroll() {
-    const nav = document.querySelector('.ldoc-navbar');
-    if (!nav) return;
-
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 20) {
-        nav.classList.add('scrolled');
-      } else {
-        nav.classList.remove('scrolled');
-      }
-    }, { passive: true });
-  }
-
-  // UTILITY
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>'"]/g, tag => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      "'": '&#39;',
-      '"': '&quot;'
-    }[tag] || tag));
-  }
-
-  // INITIALIZE ON DOM READY
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bootstrap);
-  } else {
-    bootstrap();
-  }
-
-  function bootstrap() {
-    initTheme();
-    initBanner();
-    createCommandPalette();
-    initMobileMenu();
-    initAccordions();
-    initCodeBlocks();
-    initTiltAndGlow();
-    initOsDetection();
-    initNavbarScroll();
-  }
-
-  // Expose global controller
-  window.LDOC_DS = {
-    applyTheme,
-    getPreferredTheme,
-    COMMAND_ITEMS
-  };
+  // ── 8. INITIALIZATION ──
+  document.addEventListener('DOMContentLoaded', () => {
+    injectAmbientBackground();
+    initScrollProgressAndNavbar();
+    initScrollRevealEngine();
+    initSpotlightTracker();
+    initTiltInteraction();
+    initCountUpAnimation();
+    initCommandPalette();
+  });
 })();

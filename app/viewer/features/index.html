@@ -3,456 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LDOC Studio Feature Tour — LDOC Studio</title>
-  <meta name="description" content="Discover LDOC Studio features: discrete 120Hz GPU acceleration, air-gapped local disk storage, Merkle SHA-256 signing, and watermark-free PDF exports.">
+  <title>LDOC Studio Features — Documents Engineered as Living Software</title>
+  <meta name="description" content="Discover LDOC Studio features: discrete 120Hz GPU acceleration, air-gapped local disk storage, Merkle SHA-256 signing, and zero-drift Pretext typography.">
   <link rel="icon" type="image/png" href="/ldoc_logo.png">
   <link rel="shortcut icon" href="/app.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/design-system.css">
   <script defer src="/design-system.js"></script>
   <!-- Three.js loaded asynchronously on demand -->
   <style>
-    :root {
-      --bg: #08090d;
-      --bg-alt: #0c0e14;
-      --bg-subtle: #121620;
-      --card-bg: rgba(14, 17, 25, 0.75);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover: rgba(255, 255, 255, 0.16);
-      --primary: #f59e0b;
-      --primary-light: #fbbf24;
-      --primary-glow: rgba(245, 158, 11, 0.2);
-      --cobalt: #3b82f6;
-      --azure: #38bdf8;
-      --cyan: #0ea5e9;
-      --amber: #f59e0b;
-      --emerald: #10b981;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-sub: #94a3b8;
-      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-main);
-      line-height: 1.6;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* Background Ambient Gradients */
-    .ambient-bg {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      pointer-events: none;
-      z-index: 0;
-      background: 
-        radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 85% 60%, rgba(6, 182, 212, 0.10) 0%, transparent 45%),
-        radial-gradient(circle at 50% 90%, rgba(245, 158, 11, 0.06) 0%, transparent 50%);
-    }
-
-    /* Content Wrapper */
-    .page-wrap {
+    /* ── Features Page Bespoke Styling ── */
+    .hero-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 140px 24px 60px;
+      text-align: center;
       position: relative;
-      z-index: 1;
+      z-index: 10;
     }
 
-    /* Top Promo Strip */
-    .promo-strip {
-      background: linear-gradient(90deg, #1e293b, #1d4ed8, #2563eb);
-      color: #fff;
-      font-size: 0.85rem;
-      font-weight: 500;
-      padding: 8px 16px;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      letter-spacing: 0.01em;
-    }
-    .promo-strip a {
-      color: #fef08a;
-      text-decoration: underline;
-      font-weight: 600;
-      transition: opacity 0.2s;
-    }
-    .promo-strip a:hover { opacity: 0.85; }
-    .promo-badge {
-      background: rgba(255,255,255,0.2);
-      padding: 2px 8px;
-      border-radius: 99px;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
-    /* Navigation */
-    .nav-bar {
-      position: sticky;
-      top: 0;
-      background: rgba(9, 13, 22, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--card-border);
-      height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 32px;
-      z-index: 100;
-    }
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--text);
-      font-weight: 800;
-      font-size: 1.18rem;
-      letter-spacing: -0.02em;
-    }
-    .brand-logo img {
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-    }
-    .brand-badge {
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: var(--primary-light);
-      background: rgba(56, 189, 248, 0.15);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-left: 2px;
-    }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      list-style: none;
-    }
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.92rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover {
-      color: var(--text);
-    }
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .github-link {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: 1px solid var(--card-border);
-      transition: all 0.2s;
-    }
-    .github-link:hover {
-      color: var(--text);
-      border-color: var(--card-hover);
-      background: rgba(255,255,255,0.03);
-    }
-    .btn-signin {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      font-weight: 500;
-      cursor: pointer;
-      padding: 6px 12px;
-      transition: color 0.2s;
-    }
-    .btn-signin:hover { color: var(--text); }
-        /* View Mode Switcher Pill (Showcase vs Document Workspace) */
-    .view-switcher-pill {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 20px;
-      padding: 2px;
-      gap: 2px;
-    }
-    .mode-pill-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 11px;
-      border-radius: 18px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .mode-pill-btn:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.08);
-    }
-    .mode-pill-btn.active {
-      background: linear-gradient(135deg, #f59e0b, #38bdf8);
-      color: #0f0f1b;
-      font-weight: 800;
-      box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
-    }
-
-    /* Header Nav Actions (Sign In, Share, Pro) */
-    .nav-actions-group {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .nav-action-btn {
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: #f1f5f9;
-      font-size: 12.5px;
-      font-weight: 600;
-      padding: 6px 13px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      line-height: 1.2;
-    }
-    .nav-action-btn:hover {
-      background: rgba(255, 255, 255, 0.14);
-      color: #fff;
-      border-color: rgba(255, 255, 255, 0.25);
-      transform: translateY(-1px);
-    }
-    .nav-action-btn.pro-btn {
-      color: #f59e0b;
-      font-weight: 700;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.4);
-    }
-    .nav-action-btn.pro-btn:hover {
-      background: rgba(245, 158, 11, 0.25);
-      border-color: #f59e0b;
-      box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
-    }
-    .btn-launch {
-      background: linear-gradient(135deg, #38bdf8, #6366f1);
-      color: #fff;
-      font-weight: 600;
-      font-size: 0.92rem;
-      padding: 9px 20px;
-      border-radius: 8px;
-      text-decoration: none;
+    .hero-eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 4px 16px var(--primary-glow);
-      transition: all 0.2s;
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-    .btn-launch:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 22px rgba(56, 189, 248, 0.4);
-      filter: brightness(1.08);
-    }
-
-    /* Container */
-    .container {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* HERO SECTION */
-    .hero-section {
-      padding: 80px 0 60px;
-      text-align: center;
-    }
-    .hero-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      color: var(--primary-light);
       padding: 6px 16px;
-      border-radius: 99px;
-      font-size: 0.82rem;
-      font-weight: 600;
+      border-radius: var(--radius-full);
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.28);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-light);
       margin-bottom: 24px;
-    }
-    .hero-title {
-      font-size: 4rem;
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.035em;
-      margin-bottom: 24px;
-      background: linear-gradient(180deg, #ffffff 30%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero-title span {
-      background: linear-gradient(135deg, #38bdf8, #818cf8, #38bdf8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero-subtitle {
-      font-size: 1.25rem;
-      color: var(--text-muted);
-      max-width: 780px;
-      margin: 0 auto 36px;
-      font-weight: 400;
-      line-height: 1.6;
-    }
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 50px;
-    }
-    .btn-hero-primary {
-      background: linear-gradient(135deg, #38bdf8, #4f46e5);
-      color: #fff;
-      font-weight: 600;
-      font-size: 1.05rem;
-      padding: 14px 32px;
-      border-radius: 10px;
-      text-decoration: none;
-      box-shadow: 0 8px 28px rgba(99, 102, 241, 0.35);
-      transition: all 0.25s;
-      border: 1px solid rgba(255,255,255,0.2);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .btn-hero-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 34px rgba(99, 102, 241, 0.5);
-      filter: brightness(1.1);
-    }
-    .btn-hero-secondary {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 1.05rem;
-      padding: 14px 28px;
-      border-radius: 10px;
-      text-decoration: none;
-      border: 1px solid var(--card-border);
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-hero-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--card-hover);
+      letter-spacing: 0.5px;
     }
 
-    /* HERO INTERACTIVE LIVING DOCUMENT CANVAS */
-    .hero-canvas-card {
-      max-width: 1060px;
-      margin: 0 auto;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: ldocPulse 2s infinite;
+    }
+
+    @keyframes ldocPulse {
+      0%, 100% { opacity: 0.6; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+
+    .hero-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(38px, 6vw, 76px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      max-width: 980px;
+      margin-left: auto;
+      margin-right: auto;
+      background: linear-gradient(180deg, #FFFFFF 30%, rgba(255, 255, 255, 0.7) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-h1 span.amber-gradient {
+      background: linear-gradient(135deg, #F59E0B, #FBBF24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-lead {
+      font-size: clamp(16px, 1.8vw, 20px);
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 760px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Hero Canvas Window */
+    .hero-canvas-frame {
+      max-width: 1040px;
+      margin: 0 auto 100px;
+      background: rgba(14, 14, 21, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(245, 158, 11, 0.12);
       overflow: hidden;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(56, 189, 248, 0.15);
       text-align: left;
     }
-    .canvas-header {
-      background: rgba(13, 19, 34, 0.95);
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--card-border);
+
+    .canvas-titlebar {
+      background: rgba(21, 21, 31, 0.9);
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
     }
-    .canvas-dots {
+
+    .window-dots {
       display: flex;
       gap: 8px;
     }
-    .canvas-dot {
-      width: 11px; height: 11px; border-radius: 50%;
-    }
-    .dot-r { background: #ef4444; }
-    .dot-y { background: #eab308; }
-    .dot-g { background: #22c55e; }
+    .w-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .w-dot-red { background: #EF4444; }
+    .w-dot-yellow { background: #F59E0B; }
+    .w-dot-green { background: #10B981; }
+
     .canvas-tabs {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       background: rgba(255, 255, 255, 0.04);
-      padding: 4px;
-      border-radius: 8px;
+      padding: 3px;
+      border-radius: var(--radius-full);
     }
+
     .canvas-tab {
       background: transparent;
       border: none;
-      color: var(--text-muted);
-      font-size: 0.82rem;
+      color: var(--muted);
+      font-size: 12px;
       font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 6px;
+      padding: 5px 14px;
+      border-radius: var(--radius-full);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s var(--ease-spring);
     }
     .canvas-tab.active {
-      background: rgba(56, 189, 248, 0.25);
-      color: #fff;
-      border: 1px solid rgba(56, 189, 248, 0.4);
-    }
-    .canvas-action-btn {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--card-border);
-      color: var(--text);
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 6px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-    .canvas-action-btn:hover {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
+      background: rgba(245, 158, 11, 0.16);
+      color: #FFFFFF;
+      border: 1px solid rgba(245, 158, 11, 0.35);
     }
 
     .canvas-body {
@@ -461,10 +156,9 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      background: radial-gradient(circle at 50% 50%, rgba(30, 41, 67, 0.5) 0%, rgba(9, 13, 22, 0.95) 100%);
+      background: radial-gradient(circle at 50% 50%, rgba(21, 21, 31, 0.5) 0%, rgba(10, 10, 15, 0.95) 100%);
     }
 
-    /* Tab Panes */
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
@@ -475,42 +169,47 @@
       gap: 28px;
       align-items: center;
     }
+    @media (max-width: 768px) {
+      .fin-grid { grid-template-columns: 1fr; }
+    }
     .fin-controls {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
       padding: 24px;
-      border-radius: 12px;
+      border-radius: var(--radius-sm);
     }
     .fin-slider-label {
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
-      font-size: 0.9rem;
+      font-size: 13px;
       font-weight: 600;
+      color: var(--text);
     }
     .fin-slider {
       width: 100%;
       height: 6px;
-      accent-color: var(--primary);
+      accent-color: var(--accent);
       margin-bottom: 20px;
       cursor: pointer;
     }
     .fin-metric-card {
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 16px;
-      border-radius: 10px;
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 20px;
+      border-radius: var(--radius-sm);
       text-align: center;
     }
     .fin-metric-val {
       font-size: 2.2rem;
       font-weight: 800;
-      color: #38bdf8;
+      color: #38BDF8;
       font-family: var(--font-mono);
+      margin-bottom: 4px;
     }
     .fin-metric-desc {
-      font-size: 0.8rem;
-      color: var(--text-muted);
+      font-size: 12px;
+      color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -523,19 +222,19 @@
     .mesh-canvas {
       width: 100%;
       height: 320px;
-      border-radius: 12px;
-      background: rgba(0,0,0,0.3);
+      border-radius: var(--radius-sm);
+      background: rgba(0, 0, 0, 0.4);
     }
     .mesh-badge {
       position: absolute;
       bottom: 14px;
       right: 14px;
-      background: rgba(0,0,0,0.7);
-      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       padding: 4px 10px;
       border-radius: 6px;
-      font-size: 0.75rem;
-      color: var(--cyan);
+      font-size: 11px;
+      color: #22D3EE;
       font-family: var(--font-mono);
     }
 
@@ -545,21 +244,25 @@
       grid-template-columns: 1.2fr 1fr;
       gap: 20px;
     }
+    @media (max-width: 768px) {
+      .code-stage { grid-template-columns: 1fr; }
+    }
     .code-editor {
       background: #060911;
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px;
       font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: #93c5fd;
-      line-height: 1.5;
+      font-size: 13px;
+      color: #93C5FD;
+      line-height: 1.6;
+      overflow-x: auto;
     }
     .code-output {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -567,14 +270,20 @@
       text-align: center;
     }
 
-    /* SECTION TITLES */
+    /* Section Styling */
+    .section-wrap {
+      max-width: var(--max-width);
+      margin: 0 auto 120px;
+      padding: 0 24px;
+    }
+
     .section-head {
       text-align: center;
       margin-bottom: 56px;
     }
     .section-tag {
-      color: var(--primary-light);
-      font-size: 0.82rem;
+      color: var(--accent-light);
+      font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -582,3190 +291,792 @@
       display: inline-block;
     }
     .section-title {
-      font-size: 2.5rem;
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 44px);
       font-weight: 800;
       letter-spacing: -0.025em;
       margin-bottom: 16px;
-      color: #fff;
+      color: #FFFFFF;
     }
     .section-sub {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      max-width: 650px;
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 680px;
       margin: 0 auto;
-    }
-
-    /* BENEFIT GRID */
-    .benefit-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-      margin-bottom: 100px;
-    }
-    .benefit-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      padding: 32px 28px;
-      border-radius: 14px;
-      transition: all 0.3s;
-      position: relative;
-    }
-    .benefit-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--card-hover);
-      box-shadow: 0 16px 36px rgba(0,0,0,0.4), 0 0 20px var(--primary-glow);
-    }
-    .benefit-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-    }
-    .benefit-title {
-      font-size: 1.28rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: #fff;
-    }
-    .benefit-desc {
-      font-size: 0.92rem;
-      color: var(--text-muted);
       line-height: 1.6;
-      margin-bottom: 18px;
     }
-    .benefit-link {
-      color: var(--primary-light);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: gap 0.2s;
-    }
-    .benefit-link:hover { gap: 8px; }
 
-    /* CAPABILITY GRID (TECHNICAL TRUST LAYER) */
-    .capability-section {
-      background: var(--bg-alt);
-      border-top: 1px solid var(--card-border);
-      border-bottom: 1px solid var(--card-border);
-      padding: 90px 0;
-      margin-bottom: 100px;
-    }
+    /* Capability Cards */
     .capability-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
     }
-    .cap-card {
-      background: rgba(18, 26, 44, 0.4);
-      border: 1px solid var(--card-border);
-      padding: 26px;
-      border-radius: 12px;
-      font-family: var(--font-mono);
+    @media (max-width: 1024px) {
+      .capability-grid { grid-template-columns: repeat(2, 1fr); }
     }
-    .cap-badge {
-      font-size: 0.72rem;
-      color: var(--cyan);
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-bottom: 12px;
-      display: inline-block;
+    @media (max-width: 640px) {
+      .capability-grid { grid-template-columns: 1fr; }
+    }
+
+    .cap-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: all 0.25s var(--ease-spring);
+      position: relative;
+    }
+    .cap-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+    }
+    .cap-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
     }
     .cap-title {
-      font-size: 1.05rem;
+      font-family: var(--font-display);
+      font-size: 20px;
       font-weight: 700;
-      color: #fff;
-      font-family: var(--font-main);
-      margin-bottom: 8px;
+      color: #FFFFFF;
     }
     .cap-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-      font-family: var(--font-main);
-    }
-
-    /* WHAT YOU CAN BUILD (PROOF SECTION) */
-    .build-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 32px;
-      margin-bottom: 60px;
-    }
-    .build-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      overflow: hidden;
-      transition: all 0.3s;
-    }
-    .build-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--card-hover);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-    }
-    .build-thumb {
-      height: 220px;
-      background: #0d1322;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid var(--card-border);
-    }
-    .build-thumb-badge {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      background: rgba(0,0,0,0.7);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: var(--primary-light);
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
-    }
-    .build-content {
-      padding: 24px;
-    }
-    .build-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-    .build-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
+      font-size: 14px;
+      color: var(--muted);
       line-height: 1.6;
-      margin-bottom: 16px;
-    }
-    .build-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .build-tag {
-      font-size: 0.78rem;
-      color: var(--text-sub);
-      font-family: var(--font-mono);
-    }
-    .build-btn {
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--primary-light);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .build-btn:hover {
-      background: var(--primary);
-      color: #fff;
     }
 
-    /* FOUNDER STATEMENT */
-    .founder-box {
-      max-width: 860px;
-      margin: 0 auto 100px;
-      background: linear-gradient(135deg, rgba(30, 41, 67, 0.6), rgba(18, 26, 44, 0.8));
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      border-radius: 16px;
-      padding: 40px;
+    /* Vanguard-7 Interactive Showcase Console */
+    .showcase-console {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      margin-top: 48px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+    @media (max-width: 768px) {
+      .showcase-console { padding: 20px; }
+    }
+    .console-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 36px;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .console-grid { grid-template-columns: 1fr; }
+    }
+
+    .console-canvas-wrap {
+      position: relative;
+      background: #05060A;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      min-height: 380px;
+    }
+    #feat-webgl-canvas {
+      width: 100%;
+      height: 380px;
+      display: block;
+    }
+
+    .console-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .telemetry-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .telemetry-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .telemetry-num {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .telemetry-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--dim);
+      margin-top: 2px;
+    }
+
+    .tamper-box {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: all 0.2s ease;
+    }
+    .tamper-box.tampered {
+      background: rgba(244, 63, 94, 0.1);
+      border-color: rgba(244, 63, 94, 0.35);
+    }
+    .tamper-icon {
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--emerald);
+    }
+    .tamper-box.tampered .tamper-icon {
+      color: var(--rose);
+    }
+
+    /* Trust Layer 6 Cards */
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .trust-grid { grid-template-columns: 1fr; }
+    }
+    .trust-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.2s ease;
+    }
+    .trust-item:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .spec-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      padding: 2px 8px;
+      border-radius: 4px;
+      width: fit-content;
+    }
+    .trust-item-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .trust-item-desc {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* CTA Section */
+    .cta-banner {
+      background: linear-gradient(180deg, rgba(21, 21, 31, 0.8) 0%, rgba(14, 14, 21, 0.95) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 72px 32px;
       text-align: center;
       position: relative;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 50px rgba(245, 158, 11, 0.15);
     }
-    .founder-quote {
-      font-size: 1.3rem;
-      font-weight: 400;
-      color: #e2e8f0;
-      line-height: 1.6;
-      font-style: italic;
-      margin-bottom: 24px;
-    }
-    .founder-author {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #fff;
-    }
-    .founder-role {
-      font-size: 0.85rem;
-      color: var(--primary-light);
-    }
-
-      /* PRICING EDITIONS & RESPONSIVE TIERS */
-  .pricing-section {
-    padding: 60px 0 100px;
-    position: relative;
-  }
-  .pricing-billing-toggle-wrap {
-    display: flex;
-    justify-content: center;
-    margin: 14px auto 38px auto;
-  }
-  .pricing-billing-toggle {
-    display: inline-flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 999px;
-    padding: 4px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-    gap: 4px;
-  }
-  .pricing-toggle-btn {
-    padding: 9px 20px;
-    border-radius: 999px;
-    border: none;
-    background: transparent;
-    color: #94a3b8;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-main, inherit);
-  }
-  .pricing-toggle-btn:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.06);
-  }
-  .pricing-toggle-btn.active {
-    background: linear-gradient(135deg, #38bdf8, #6366f1);
-    color: #ffffff;
-    box-shadow: 0 2px 12px rgba(56, 189, 248, 0.45);
-  }
-  .pricing-toggle-btn .save-badge {
-    background: #10b981;
-    color: #000000;
-    font-size: 0.68rem;
-    font-weight: 800;
-    padding: 2px 7px;
-    border-radius: 99px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 22px;
-    align-items: stretch;
-    width: 100%;
-    margin-bottom: 40px;
-  }
-  @media (max-width: 1180px) {
-    .pricing-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-  }
-  @media (max-width: 640px) {
-    .pricing-grid {
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-    .pricing-billing-toggle {
-      flex-direction: column;
-      width: 100%;
-      border-radius: 16px;
-      padding: 6px;
-    }
-    .pricing-toggle-btn {
-      width: 100%;
-      justify-content: center;
-    }
-  }
-  .pricing-grid .pricing-card {
-    background: var(--card-bg, rgba(18, 26, 44, 0.7));
-    border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
-    border-radius: 16px;
-    padding: 34px 24px 26px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-    height: 100%;
-    box-sizing: border-box;
-  }
-  .pricing-grid .pricing-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-  }
-  .pricing-grid .pricing-card.featured {
-    border: 1.5px solid #f59e0b;
-    background: linear-gradient(180deg, rgba(30, 27, 75, 0.75) 0%, rgba(18, 26, 44, 0.9) 100%);
-    box-shadow: 0 0 32px rgba(245, 158, 11, 0.2), 0 12px 36px rgba(0, 0, 0, 0.5);
-  }
-  .pricing-grid .pricing-card.featured-cloud {
-    border: 1.5px solid #38bdf8;
-    background: linear-gradient(180deg, rgba(28, 22, 54, 0.75) 0%, rgba(18, 26, 44, 0.9) 100%);
-    box-shadow: 0 0 32px rgba(56, 189, 248, 0.2), 0 12px 36px rgba(0, 0, 0, 0.5);
-  }
-  .featured-badge {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(90deg, #f59e0b, #ea580c);
-    color: #000;
-    font-size: 0.68rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 4px 14px;
-    border-radius: 99px;
-    white-space: nowrap;
-    z-index: 10;
-    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
-  }
-  .featured-badge.badge-cloud {
-    background: linear-gradient(90deg, #38bdf8, #06b6d4);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.45);
-  }
-  .featured-badge.badge-enterprise {
-    background: linear-gradient(90deg, #3b82f6, #6366f1);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45);
-  }
-  .card-header-zone {
-    display: flex;
-    flex-direction: column;
-  }
-  .plan-name {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 6px;
-    min-height: 58px;
-    display: flex;
-    align-items: flex-start;
-    line-height: 1.25;
-  }
-  .plan-sub {
-    font-size: 0.83rem;
-    color: var(--text-muted, #94a3b8);
-    line-height: 1.45;
-    min-height: 56px;
-    margin-bottom: 14px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .plan-price-wrap {
-    min-height: 76px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-bottom: 20px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .plan-price {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .price-num {
-    font-size: 2.6rem;
-    font-weight: 800;
-    color: #fff;
-    font-family: var(--font-mono, monospace);
-    line-height: 1;
-  }
-  .price-unit {
-    font-size: 0.82rem;
-    color: var(--text-muted, #94a3b8);
-    line-height: 1.25;
-  }
-  .price-billing-sub {
-    font-size: 0.72rem;
-    color: var(--text-sub, #94a3b8);
-    margin-top: 4px;
-  }
-  .card-features-zone {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-  }
-  .plan-features {
-    list-style: none;
-    margin: 0 0 22px 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .plan-features li {
-    font-size: 0.84rem;
-    color: #cbd5e1;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    line-height: 1.35;
-  }
-  .plan-features li .chk {
-    color: var(--emerald, #10b981);
-    font-weight: 800;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .card-cta-zone {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-height: 94px;
-    justify-content: flex-end;
-  }
-  .btn-plan {
-    width: 100%;
-    padding: 11px 14px;
-    border-radius: 8px;
-    font-size: 0.88rem;
-    font-weight: 700;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    box-sizing: border-box;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.2s ease;
-  }
-  .btn-plan-secondary {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid var(--card-border, rgba(255,255,255,0.12));
-    color: #f1f5f9;
-  }
-  .btn-plan-secondary:hover {
-    background: rgba(255,255,255,0.12);
-    border-color: var(--card-hover, rgba(255,255,255,0.25));
-    color: #ffffff;
-  }
-  .btn-plan-primary {
-    background: linear-gradient(135deg, #f59e0b, #ea580c);
-    color: #000000;
-    border: none;
-    font-weight: 800;
-    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
-  }
-  .btn-plan-primary:hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.45);
-  }
-  .btn-plan-cloud {
-    background: linear-gradient(135deg, #38bdf8, #06b6d4);
-    color: #ffffff;
-    border: none;
-    font-weight: 800;
-    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35);
-  }
-  .btn-plan-cloud:hover {
-    filter: brightness(1.08);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.45);
-  }
-  .btn-plan-enterprise {
-    background: linear-gradient(135deg, #2563eb, #4f46e5);
-    color: #ffffff;
-    border: none;
-    font-weight: 800;
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
-  }
-  .btn-plan-enterprise:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45);
-  }
-  .btn-plan-sublink {
-    font-size: 0.78rem;
-    padding: 8px 10px;
-    color: #cbd5e1;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .btn-plan-sublink:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
-  }
-
-  /* FOOTER */
-    .site-footer {
-      background: #060911;
-      border-top: 1px solid var(--card-border);
-      padding: 60px 0 40px;
-      font-size: 0.88rem;
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-      gap: 32px;
-      margin-bottom: 48px;
-    }
-    .footer-brand p {
-      color: var(--text-muted);
-      margin-top: 12px;
-      max-width: 300px;
-      font-size: 0.85rem;
-    }
-    .footer-col h5 {
-      color: #fff;
-      font-size: 0.9rem;
-      font-weight: 700;
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4.5vw, 48px);
+      font-weight: 800;
+      color: #FFFFFF;
       margin-bottom: 16px;
     }
-    .footer-col ul {
-      list-style: none;
+    .cta-sub {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
     }
-    .footer-col li {
-      margin-bottom: 10px;
-    }
-    .footer-col a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-col a:hover { color: var(--text); }
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding-top: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--text-sub);
-      font-size: 0.8rem;
-    }
-
-    /* Responsive */
-    @media (max-width: 960px) {
-      .hero-title { font-size: 2.8rem; }
-      .benefit-grid { grid-template-columns: 1fr; }
-      .capability-grid { grid-template-columns: 1fr; }
-      .build-grid { grid-template-columns: 1fr; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .canvas-header { flex-direction: column; gap: 12px; align-items: flex-start; }
-      .fin-grid { grid-template-columns: 1fr; }
-      .code-stage { grid-template-columns: 1fr; }
-    }
-
-    /* Extracted Modals CSS */
-    .ldoc-cloud-modal-overlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  z-index: 100010;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-.ldoc-cloud-modal-overlay.active {
-  display: flex !important;
-}
-.ldoc-cloud-modal-box {
-  background: #0d1117;
-  border: 1.5px solid rgba(245, 158, 11, 0.45);
-  box-shadow: 0 24px 80px rgba(0,0,0,0.9), 0 0 35px rgba(245, 158, 11, 0.15);
-  border-radius: 16px;
-  width: 580px;
-  max-width: 95vw;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  color: #e2e8f0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  animation: ldocModalFadeIn 0.2s ease-out;
-}
-@keyframes ldocModalFadeIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
-}
-.ldoc-cloud-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 20px;
-  background: #161b22;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-.ldoc-cloud-modal-title {
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  color: #f59e0b;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.ldoc-cloud-modal-close {
-  background: transparent;
-  border: none;
-  color: #94a3b8;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-}
-.ldoc-cloud-modal-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
-.ldoc-cloud-modal-body {
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
-}
-.ldoc-cloud-input {
-  width: 100%;
-  box-sizing: border-box;
-  background: #090d13;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  color: #f1f5f9;
-  padding: 10px 14px;
-  font-size: 13.5px;
-  margin-bottom: 12px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.ldoc-cloud-input:focus { border-color: #f59e0b; }
-.ldoc-cloud-btn {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #000;
-  font-weight: 800;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  letter-spacing: 0.3px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
-  transition: all 0.15s;
-}
-.ldoc-cloud-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.ldoc-cloud-btn.secondary {
-  background: rgba(255,255,255,0.08);
-  color: #cbd5e1;
-  box-shadow: none;
-}
-.ldoc-cloud-btn.secondary:hover { background: rgba(255,255,255,0.14); color: #fff; }
-
-/* Pricing Tier Cards (Modal Specific) */
-.pricing-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-top: 12px;
-}
-.pricing-cards-grid .pricing-card {
-  background: #161b22;
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-.pricing-cards-grid .pricing-card.featured {
-  border-color: #f59e0b;
-  box-shadow: 0 0 25px rgba(245, 158, 11, 0.2);
-}
-.pricing-badge {
-  position: absolute;
-  top: -10px;
-  right: 14px;
-  background: #f59e0b;
-  color: #000;
-  font-size: 9.5px;
-  font-weight: 900;
-  padding: 2px 8px;
-  border-radius: 99px;
-  text-transform: uppercase;
-}
-.pricing-price {
-  font-size: 26px;
-  font-weight: 800;
-  color: #fff;
-  margin: 10px 0 4px 0;
-}
-.pricing-period { font-size: 12px; color: #94a3b8; font-weight: normal; }
-.pricing-features {
-  list-style: none;
-  padding: 0;
-  margin: 14px 0;
-  font-size: 12px;
-  line-height: 1.8;
-  color: #cbd5e1;
-  flex: 1;
-}
-.pricing-features li:before {
-  content: "✓ ";
-  color: #34d399;
-  font-weight: bold;
-}
-
-  .tech-icon-badge {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 800;
-  color: #38bdf8;
-  background: rgba(6, 182, 212, 0.12);
-  border: 1px solid rgba(6, 182, 212, 0.3);
-  padding: 3px 7px;
-  border-radius: 4px;
-  display: inline-block;
-  letter-spacing: 0.05em;
-}
-
-
-.btn-hero-primary,.btn-hero-secondary,.nav-action-btn,.build-btn,.ldoc-preset-btn{transition:transform 0.16s var(--ease-spring),box-shadow 0.16s var(--ease-spring),background-color 0.16s ease,border-color 0.16s ease;}
-.btn-hero-primary:active,.btn-hero-secondary:active,.nav-action-btn:active,.build-btn:active,.ldoc-preset-btn:active{transform:scale(0.982);}
-</style>
+  </style>
 </head>
 <body>
-  <div class="ambient-bg"></div>
 
-  <div class="page-wrap">
-    <!-- Top Dismissible Pill Banner -->
-    <div class="ldoc-pill-banner" id="ldoc-pill-banner">
-      <span class="ldoc-pill-tag">SPEC v2.5.0</span>
-      <span>Living Document Format (.ldocx) open architecture released.</span>
-      <a href="/format">Explore Open Spec &rarr;</a>
-      <button class="ldoc-pill-close" onclick="dismissPillBanner()" aria-label="Dismiss banner">&times;</button>
-    </div>
+  <!-- Floating Pill Navbar -->
+  <div class="ldoc-nav-wrapper">
+    <nav class="ldoc-pill-navbar" aria-label="Main Navigation">
+      <a href="/" class="ldoc-nav-logo">
+        <img src="/ldoc_logo.png" alt="LDOC Studio Logo">
+        <span>LDOC Studio</span>
+      </a>
 
-    <!-- Sticky Glass Navbar -->
-    <nav class="ldoc-navbar" id="ldoc-navbar">
-      <div class="ldoc-navbar-inner">
-        <div class="ldoc-nav-left">
-          <a href="/" class="ldoc-nav-logo">
-            <img src="/ldoc_logo.webp" alt="LDOC Studio Logo" width="28" height="28" />
-            <span>LDOC STUDIO</span>
-            <span class="ldoc-nav-badge">.ldocx</span>
-          </a>
-          <div class="ldoc-nav-links">
-            <a href="/format" class="ldoc-nav-link">Format</a>
-            <a href="/features" class="ldoc-nav-link active">Features</a>
-            <a href="/live-studio" class="ldoc-nav-link">Live Studio</a>
-            <a href="/models" class="ldoc-nav-link">Models Hub</a>
-            <a href="/pricing" class="ldoc-nav-link">Pricing</a>
-            <a href="/docs" class="ldoc-nav-link">Docs</a>
-            <a href="/changelog" class="ldoc-nav-link">Changelog</a>
-          </div>
-        </div>
-        <div class="ldoc-nav-right">
-          <button class="ldoc-nav-search-btn" onclick="openCmdPalette()" title="Command Palette (Ctrl+K)">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <span>Search...</span>
-            <kbd class="ldoc-kbd">Ctrl K</kbd>
-          </button>
-          <button class="ldoc-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
-            <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-            <svg class="moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          </button>
-          <button class="ldoc-btn ldoc-btn-ghost" style="padding: 6px 12px; font-size: 0.8rem;" onclick="showAuthModal()">Sign In</button>
-          <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="padding: 7px 14px; font-size: 0.82rem;">Launch Studio &rarr;</a>
-          <button class="ldoc-hamburger" id="ldoc-hamburger" onclick="toggleMobileMenu()" aria-label="Open mobile navigation">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          </button>
-        </div>
+      <div class="ldoc-nav-links">
+        <a href="/format" class="ldoc-nav-link">Format</a>
+        <a href="/features" class="ldoc-nav-link active">Features</a>
+        <a href="/live-studio" class="ldoc-nav-link">Live Studio</a>
+        <a href="/models" class="ldoc-nav-link">Models Hub</a>
+        <a href="/pricing" class="ldoc-nav-link">Pricing</a>
+        <a href="/docs" class="ldoc-nav-link">Docs</a>
+        <a href="/changelog" class="ldoc-nav-link">Changelog</a>
+      </div>
+
+      <div class="ldoc-nav-actions">
+        <a href="/live-studio" class="ldoc-btn-ghost">Launch Studio</a>
+        <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="ldoc-btn-primary">Get Pro</a>
       </div>
     </nav>
+  </div>
 
-    <!-- Mobile Drawer Menu -->
-    <div class="ldoc-mobile-drawer" id="ldoc-mobile-drawer">
-      <div class="ldoc-mobile-drawer-header">
-        <a href="/" class="ldoc-nav-logo">
-          <img src="/ldoc_logo.webp" alt="LDOC Studio Logo" width="26" height="26" />
-          <span>LDOC STUDIO</span>
+  <!-- Hero Section -->
+  <header class="hero-container">
+    <div class="hero-eyebrow ldoc-reveal">
+      <span class="pulse-dot"></span>
+      <span>NEXT-GEN COMPUTATIONAL ARCHITECTURE</span>
+    </div>
+
+    <h1 class="hero-h1 ldoc-reveal" data-delay="100ms">
+      Documents engineered as <span class="amber-gradient">living software.</span>
+    </h1>
+
+    <p class="hero-lead ldoc-reveal" data-delay="200ms">
+      Static PDFs and fragile cloud docs were built for printing on dead trees. LDOC Studio turns every page into an offline-first, GPU-accelerated computing environment with cryptographic provenance.
+    </p>
+
+    <div class="hero-ctas ldoc-reveal" data-delay="300ms">
+      <a href="/live-studio" class="ldoc-btn-primary" style="padding: 12px 28px; font-size: 15px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>Launch Web Studio</span>
+      </a>
+      <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="ldoc-btn-secondary" style="padding: 12px 24px; font-size: 15px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Get Studio Pro ($19)</span>
+      </a>
+    </div>
+
+    <!-- Hero Interactive Canvas Window -->
+    <div class="hero-canvas-frame ldoc-reveal" data-delay="400ms">
+      <div class="canvas-titlebar">
+        <div class="window-dots">
+          <span class="w-dot w-dot-red"></span>
+          <span class="w-dot w-dot-yellow"></span>
+          <span class="w-dot w-dot-green"></span>
+        </div>
+        <div class="canvas-tabs">
+          <button class="canvas-tab active" onclick="switchHeroTab('fin', this)">Financial Reactive DAG</button>
+          <button class="canvas-tab" onclick="switchHeroTab('mesh', this)">Spatial 3D Mesh</button>
+          <button class="canvas-tab" onclick="switchHeroTab('code', this)">AST JSON Engine</button>
+        </div>
+        <a href="/live-studio" class="ldoc-btn-ghost" style="font-size: 11.5px; padding: 4px 10px;">
+          <span>Open Fullscreen &rarr;</span>
         </a>
-        <button class="ldoc-mobile-drawer-close" onclick="toggleMobileMenu()" aria-label="Close menu">&times;</button>
       </div>
-      <div class="ldoc-mobile-drawer-links">
-        <a href="/format">Format</a>
-        <a href="/features">Features</a>
-        <a href="/live-studio">Live Studio</a>
-        <a href="/models">Models Hub</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/docs">Docs</a>
-        <a href="/changelog">Changelog</a>
-      </div>
-      <div class="ldoc-mobile-drawer-actions">
-        <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="width: 100%; justify-content: center;">Launch Studio</a>
-        <button class="ldoc-btn ldoc-btn-secondary" style="width: 100%; justify-content: center;" onclick="showAuthModal()">Sign In</button>
+
+      <div class="canvas-body">
+        <!-- Tab 1: Financial Reactive DAG -->
+        <div class="tab-pane active" id="tab-fin">
+          <div class="fin-grid">
+            <div class="fin-controls">
+              <div class="fin-slider-label">
+                <span>Revenue Target (ARR)</span>
+                <span id="fin-slider-val" style="color: var(--accent); font-family: var(--font-mono); font-weight: 700;">$5,400,000</span>
+              </div>
+              <input type="range" class="fin-slider" id="fin-arr-slider" min="1000000" max="15000000" step="100000" value="5400000" oninput="updateFinDemo(this.value)">
+              <p style="font-size: 12px; color: var(--dim); line-height: 1.5;">
+                Every formula node in the AST dependency graph recalculates in topological order with zero circular lockups.
+              </p>
+            </div>
+            <div class="fin-metric-card">
+              <div class="fin-metric-val" id="fin-profit-val">$1,890,000</div>
+              <div class="fin-metric-desc">Computed Operating Income (35% Margin)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Spatial 3D Mesh -->
+        <div class="tab-pane" id="tab-mesh">
+          <div class="mesh-stage">
+            <canvas class="mesh-canvas" id="hero-mesh-canvas"></canvas>
+            <div class="mesh-badge">120Hz Hardware WebGL Engine</div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Code Sandbox -->
+        <div class="tab-pane" id="tab-code">
+          <div class="code-stage">
+            <pre class="code-editor"><code>{
+  "specVersion": "3.0.0",
+  "block": "reactive-calculation",
+  "id": "node-eb41",
+  "expression": "arr * (1 - cogs_ratio)",
+  "state": "RESOLVED_PRECISE",
+  "merkleHash": "8f3b29c0174ad8e"
+}</code></pre>
+            <div class="code-output">
+              <div style="font-family: var(--font-mono); font-size: 24px; font-weight: 800; color: #10B981; margin-bottom: 6px;">0.00ms</div>
+              <div style="font-size: 12px; color: var(--dim); text-transform: uppercase;">AST Topological Evaluation Time</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+  </header>
 
-  <main id="main-content">
+  <!-- Section 1: Core Capabilities (Bento) -->
+  <section class="section-wrap">
+    <div class="section-head ldoc-reveal">
+      <span class="section-tag">CORE CAPABILITIES</span>
+      <h2 class="section-title">Built for the Next Century of Computing</h2>
+      <p class="section-sub">Zero browser reflow guesswork. No proprietary vendor lock-in. Real engineering primitives designed for high-stakes documentation.</p>
+    </div>
 
-    <!-- HERO SECTION -->
-    <section class="hero-section">
-      <div class="container">
-        <div class="hero-pill">
-          <span style="color: #38bdf8; font-family: var(--font-mono); font-weight: 700;">SPEC v2.5.0</span>
-          <span>•</span>
-          <span>Living Document Capabilities Matrix</span>
+    <div class="capability-grid">
+      <div class="cap-card ldoc-reveal" data-delay="60ms">
+        <div class="cap-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </div>
-        <h1 class="hero-title">
-          Documents engineered as <span>living software.</span>
-        </h1>
-        <p class="hero-subtitle">
-          Break free from static PDF dead-ends. The open <strong>.ldocx</strong> standard unites real-time reactive calculations, discrete GPU WebGL spatial kinematics, and cryptographic Merkle provenance in a single portable document.
+        <h3 class="cap-title">Write Anywhere</h3>
+        <p class="cap-desc">Local-first desktop application for Windows, macOS, and Linux with full offline air-gap execution. Zero telemetry pinged to cloud servers.</p>
+      </div>
+
+      <div class="cap-card ldoc-reveal" data-delay="120ms">
+        <div class="cap-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+        </div>
+        <h3 class="cap-title">Spatial 3D &amp; CAD</h3>
+        <p class="cap-desc">Embed native interactive WebGL models with Draco decompression. Text flows seamlessly around 3D geometry with exclusion zone carving.</p>
+      </div>
+
+      <div class="cap-card ldoc-reveal" data-delay="180ms">
+        <div class="cap-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3 class="cap-title">Reactive AST Graphs</h3>
+        <p class="cap-desc">Live reactive variable DAG evaluates mathematical formulas in real time as readers interact with sliders, dropdowns, and live queries.</p>
+      </div>
+
+      <div class="cap-card ldoc-reveal" data-delay="240ms">
+        <div class="cap-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3 class="cap-title">Slide Presentations</h3>
+        <p class="cap-desc">Switch seamlessly between multi-column continuous document reading mode and slide deck presentation runtime with a single shortcut.</p>
+      </div>
+
+      <div class="cap-card ldoc-reveal" data-delay="300ms">
+        <div class="cap-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3 class="cap-title">Lossless Conversion</h3>
+        <p class="cap-desc">Convert existing Markdown, DOCX, and Notion archives directly into .ldocx format with full preservation of hierarchical headings and media.</p>
+      </div>
+
+      <div class="cap-card ldoc-reveal" data-delay="360ms">
+        <div class="cap-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3 class="cap-title">Merkle Cryptographic Trust</h3>
+        <p class="cap-desc">Every block digest is signed with SHA-256 and verified through a Merkle root tree. Any unauthorized tampering invalidates the signature instantly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Vanguard-7 Interactive Showcase Console -->
+  <section class="section-wrap">
+    <div class="section-head ldoc-reveal">
+      <span class="section-tag">HARDWARE TELEMETRY IN ACTION</span>
+      <h2 class="section-title">Vanguard-7 Autonomous Actuator Spec</h2>
+      <p class="section-sub">Experience real-time kinematics binding: slide torque to recalculate thermal and stress metrics, and test Merkle tamper detection.</p>
+    </div>
+
+    <div class="showcase-console ldoc-reveal">
+      <div class="console-grid">
+        <div class="console-canvas-wrap">
+          <canvas id="feat-webgl-canvas"></canvas>
+          <div style="position: absolute; top: 14px; left: 14px; background: rgba(0,0,0,0.7); border: 1px solid var(--border); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-family: var(--font-mono); color: #38BDF8;">
+            VANGUARD-7 ACTUATOR • 60 FPS
+          </div>
+        </div>
+
+        <div class="console-controls">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-size: 14px; font-weight: 600; color: #FFFFFF;">Applied Torque Output</span>
+              <span id="feat-torque-display" style="font-family: var(--font-mono); font-weight: 700; color: var(--accent);">340 Nm</span>
+            </div>
+            <input type="range" class="fin-slider" id="feat-torque-slider" min="100" max="600" value="340" oninput="updateFeatTorque(this.value)">
+          </div>
+
+          <div class="telemetry-row">
+            <div class="telemetry-pill">
+              <div class="telemetry-num" id="feat-temp-display">+42.8°C</div>
+              <div class="telemetry-label">Coil Temp</div>
+            </div>
+            <div class="telemetry-pill">
+              <div class="telemetry-num" id="feat-eff-display">96.4%</div>
+              <div class="telemetry-label">Efficiency</div>
+            </div>
+            <div class="telemetry-pill">
+              <div class="telemetry-num" id="feat-stress-display">184 MPa</div>
+              <div class="telemetry-label">Von Mises</div>
+            </div>
+          </div>
+
+          <div class="tamper-box" id="feat-tamper-box">
+            <svg class="tamper-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div>
+              <div id="feat-tamper-title" style="font-weight: 700; font-size: 14px; color: #FFFFFF; margin-bottom: 2px;">
+                Hardware Provenance Verified
+              </div>
+              <div id="feat-tamper-desc" style="font-size: 12.5px; color: var(--muted); line-height: 1.5;">
+                Every block hash cascades into the signed root digest, detecting any single-bit alteration instantly.
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; margin-top: 4px;">
+            <button type="button" id="btn-feat-tamper" onclick="tamperFeatMerkle()" class="ldoc-btn-ghost" style="border: 1px solid rgba(244, 63, 94, 0.4); color: #FDA4AF; font-size: 12.5px;">
+              Simulate Bit Tamper
+            </button>
+            <button type="button" id="btn-feat-restore" onclick="restoreFeatMerkle()" class="ldoc-btn-ghost" style="border: 1px solid rgba(16, 185, 129, 0.4); color: #6EE7B7; font-size: 12.5px; display: none;">
+              Restore Integrity
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Technical Trust Layer -->
+  <section class="section-wrap">
+    <div class="section-head ldoc-reveal">
+      <span class="section-tag">CRYPTOGRAPHIC COMPLIANCE</span>
+      <h2 class="section-title">Technical Trust Layer</h2>
+      <p class="section-sub">Audited specifications ensuring your engineering intelligence survives twenty years into the future without bit-rot.</p>
+    </div>
+
+    <div class="trust-grid">
+      <div class="trust-item ldoc-reveal" data-delay="60ms">
+        <span class="spec-tag">SPEC-01</span>
+        <h4 class="trust-item-title">Air-Gapped Execution</h4>
+        <p class="trust-item-desc">Zero telemetry, zero forced third-party cloud logins. All AST evaluation and rendering run strictly in local RAM.</p>
+      </div>
+
+      <div class="trust-item ldoc-reveal" data-delay="120ms">
+        <span class="spec-tag">SPEC-02</span>
+        <h4 class="trust-item-title">Pretext Zero-Drift Layout</h4>
+        <p class="trust-item-desc">Line breaking, hyphenation, and heights computed via deterministic integer arithmetic. 100% identical across editor and PDF flattener.</p>
+      </div>
+
+      <div class="trust-item ldoc-reveal" data-delay="180ms">
+        <span class="spec-tag">SPEC-03</span>
+        <h4 class="trust-item-title">Dual-Container Archive</h4>
+        <p class="trust-item-desc">Modern manifest.json + document.json paired with legacy spec.json and self-contained 20-year archival fallback.html.</p>
+      </div>
+
+      <div class="trust-item ldoc-reveal" data-delay="240ms">
+        <span class="spec-tag">SPEC-04</span>
+        <h4 class="trust-item-title">Draco 3D Geometry</h4>
+        <p class="trust-item-desc">Edge-breaker compression reduces complex robotics and CAD meshes by up to 92% with sub-10ms decompression.</p>
+      </div>
+
+      <div class="trust-item ldoc-reveal" data-delay="300ms">
+        <span class="spec-tag">SPEC-05</span>
+        <h4 class="trust-item-title">Headless CLI Flattener</h4>
+        <p class="trust-item-desc">Compile living documents into print-ready archival PDFs in headless CI/CD environments without spinning up heavy browser runtimes.</p>
+      </div>
+
+      <div class="trust-item ldoc-reveal" data-delay="360ms">
+        <span class="spec-tag">SPEC-06</span>
+        <h4 class="trust-item-title">Open Specification</h4>
+        <p class="trust-item-desc">Fully documented JSON block schema licensed under Apache 2.0 with type-safe @ldoc/sdk integration libraries.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Banner -->
+  <section class="section-wrap">
+    <div class="cta-banner ldoc-reveal">
+      <h2 class="cta-title">Ready to Experience Living Documents?</h2>
+      <p class="cta-sub">
+        Join engineering teams, researchers, and technical leaders building the next generation of interactive knowledge.
+      </p>
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="/live-studio" class="ldoc-btn-primary" style="padding: 14px 32px; font-size: 15px;">
+          <span>Launch Web Studio &rarr;</span>
+        </a>
+        <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="ldoc-btn-secondary" style="padding: 14px 28px; font-size: 15px;">
+          <span>Get Studio Pro ($19 Lifetime)</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reusable Multi-Column Footer -->
+  <footer class="ldoc-footer" style="background: var(--surface); border-top: 1px solid var(--border); padding: 80px 24px 40px;">
+    <div style="max-width: var(--max-width); margin: 0 auto; display: grid; grid-template-columns: 2fr repeat(4, 1fr); gap: 40px; margin-bottom: 60px;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+          <img src="/ldoc_logo.png" alt="LDOC Studio" style="width: 28px; height: 28px; border-radius: 6px;">
+          <span style="font-family: var(--font-display); font-weight: 800; font-size: 18px; color: #FFFFFF;">LDOC Studio</span>
+        </div>
+        <p style="font-size: 13.5px; color: var(--muted); line-height: 1.6; max-width: 320px; margin-bottom: 20px;">
+          The living document architecture engineered for high-stakes technical, scientific, and enterprise documentation.
         </p>
-
-        <div class="hero-actions">
-          <a href="/live-studio" class="btn-hero-primary">
-            <span>Launch Studio IDE</span>
-            <span style="font-size: 0.82rem; opacity: 0.85; font-family: var(--font-mono);">(Free Web Sandbox)</span>
-          </a>
-          <a href="/pricing" class="btn-hero-secondary" style="border-color: rgba(245, 158, 11, 0.4); color: #fef08a;">
-            <span>Get Desktop Pro</span>
-          </a>
-          <a href="/format" class="btn-hero-secondary">
-            <span>Explore Format Spec &rarr;</span>
-          </a>
-        </div>
-
-        <!-- MODERN INTERACTIVE CAPABILITY VIEWPORT -->
-        <div class="hero-canvas-card">
-          <div class="canvas-header">
-            <div class="canvas-dots">
-              <div class="canvas-dot dot-r"></div>
-              <div class="canvas-dot dot-y"></div>
-              <div class="canvas-dot dot-g"></div>
-            </div>
-            <div class="canvas-tabs">
-              <button class="canvas-tab active" onclick="switchFeatureTab('telemetry', this)">Spatial 3D &amp; Telemetry</button>
-              <button class="canvas-tab" onclick="switchFeatureTab('ast', this)">Reactive AST Pipeline</button>
-              <button class="canvas-tab" onclick="switchFeatureTab('crypto', this)">Merkle Trust &amp; Signatures</button>
-            </div>
-            <a href="/live-studio" class="canvas-action-btn">
-              <span>Launch Full Studio &rarr;</span>
-            </a>
-          </div>
-
-          <div class="canvas-body" style="min-height: 380px;">
-            <!-- TAB 1: Spatial 3D Telemetry -->
-            <div id="ftab-telemetry" class="tab-pane active">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
-                <div style="padding: 10px 0;">
-                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                    <div style="font-family: var(--font-mono); font-size: 11px; color: #38bdf8; letter-spacing: 0.08em; font-weight: 700;">DISCRETE WEBGL 3D KINEMATICS</div>
-                    <button class="ldoc-btn ldoc-btn-ghost" id="btn-wireframe-toggle" onclick="toggle3DWireframe()" style="padding: 3px 8px; font-size: 11px; font-family: var(--font-mono); border: 1px solid rgba(255,255,255,0.12);">
-                      Wireframe: <span id="wireframe-status-text" style="color: #94a3b8;">OFF</span>
-                    </button>
-                  </div>
-                  <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 8px;">Spatial 3D &amp; Telemetry</h3>
-                  <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.6; margin-bottom: 14px;">
-                    Embedded WebGL spatial blocks evaluate kinematic joint loads, stress distribution, and thermal margins directly in the document page using client GPU shaders.
-                  </p>
-                  
-                  <!-- Model Switcher Buttons -->
-                  <div style="display: flex; gap: 6px; margin-bottom: 14px;">
-                    <button class="ldoc-btn ldoc-btn-secondary active" id="btn-model-quadruped" onclick="switch3DModel('quadruped')" style="padding: 5px 10px; font-size: 11.5px;">Quadruped</button>
-                    <button class="ldoc-btn ldoc-btn-ghost" id="btn-model-satellite" onclick="switch3DModel('satellite')" style="padding: 5px 10px; font-size: 11.5px;">Satellite</button>
-                    <button class="ldoc-btn ldoc-btn-ghost" id="btn-model-turbine" onclick="switch3DModel('turbine')" style="padding: 5px 10px; font-size: 11.5px;">Turbine</button>
-                  </div>
-
-                  <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; margin-bottom: 14px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;">
-                      <span style="color: #cbd5e1;">Dynamic Actuator Torque:</span>
-                      <strong id="feat-torque-display" style="color: #38bdf8; font-family: var(--font-mono);">340 Nm</strong>
-                    </div>
-                    <input type="range" class="fin-slider" min="50" max="600" step="10" value="340" id="feat-torque-slider" oninput="updateFeatTorque(this.value)">
-                  </div>
-                  <div style="display: flex; gap: 10px;">
-                    <div style="flex: 1; background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25); border-radius: 8px; padding: 10px 12px;">
-                      <div style="font-size: 10.5px; color: #38bdf8; font-family: var(--font-mono);">THERMAL MARGIN</div>
-                      <div id="feat-thermal-val" style="font-size: 16px; font-weight: 800; color: #fff; font-family: var(--font-mono); margin-top: 2px;">+42.8 °C</div>
-                    </div>
-                    <div style="flex: 1; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 10px 12px;">
-                      <div style="font-size: 10.5px; color: #34d399; font-family: var(--font-mono);">SAFETY FACTOR</div>
-                      <div id="feat-safety-val" style="font-size: 16px; font-weight: 800; color: #34d399; font-family: var(--font-mono); margin-top: 2px;">2.48x OK</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div style="position: relative; background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; height: 320px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                  <div style="position: absolute; top: 12px; left: 14px; font-family: var(--font-mono); font-size: 10px; color: #38bdf8; background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); padding: 3px 8px; border-radius: 5px; z-index: 2;">
-                    ● 60 FPS • DISCRETE WEBGL
-                  </div>
-                  <canvas id="feat-mesh-canvas" style="width: 100%; height: 100%; cursor: grab;"></canvas>
-                  <div style="position: absolute; bottom: 10px; right: 12px; font-family: var(--font-mono); font-size: 10px; color: #94a3b8; z-index: 2;">
-                    DRACO COMPRESSED • 64 KB
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- TAB 2: Reactive AST Pipeline (Visual DAG) -->
-            <div id="ftab-ast" class="tab-pane" style="display: none;">
-              <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px;">
-                <div>
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <div style="font-family: var(--font-mono); font-size: 11px; color: #38bdf8; font-weight: 700;">VISUAL DATA-FLOW GRAPH (DAG)</div>
-                    <span style="font-family: var(--font-mono); font-size: 10.5px; color: #34d399;">PROPAGATION: &lt; 0.4 ms</span>
-                  </div>
-                  <!-- Visual DAG Flow Diagram -->
-                  <div id="dag-container" style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px; margin-bottom: 14px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-                      <!-- DAG Node 1: Variable Input -->
-                      <div class="dag-node" id="dag-node-1" style="flex: 1; background: rgba(56, 189, 248, 0.1); border: 1.5px solid #38bdf8; border-radius: 8px; padding: 10px; text-align: center; transition: all 0.2s;">
-                        <div style="font-size: 9.5px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase;">Variable</div>
-                        <div style="font-size: 12px; font-weight: 700; color: #fff; margin-top: 2px;">$torque</div>
-                        <div id="dag-val-torque" style="font-size: 13px; font-family: var(--font-mono); font-weight: 800; color: #38bdf8; margin-top: 2px;">340 Nm</div>
-                      </div>
-
-                      <div style="color: #64748b; font-size: 14px; font-family: var(--font-mono);">──▶</div>
-
-                      <!-- DAG Node 2: Formula Function -->
-                      <div class="dag-node" id="dag-node-2" style="flex: 1.1; background: rgba(245, 158, 11, 0.1); border: 1.5px solid #f59e0b; border-radius: 8px; padding: 10px; text-align: center; transition: all 0.2s;">
-                        <div style="font-size: 9.5px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase;">Formula AST</div>
-                        <div style="font-size: 11px; font-weight: 700; color: #fff; margin-top: 2px;">calc_thermal()</div>
-                        <div id="dag-val-calc" style="font-size: 12px; font-family: var(--font-mono); font-weight: 700; color: #fbbf24; margin-top: 2px;">$t * 0.126</div>
-                      </div>
-
-                      <div style="color: #64748b; font-size: 14px; font-family: var(--font-mono);">──▶</div>
-
-                      <!-- DAG Node 3: UI DOM Target -->
-                      <div class="dag-node" id="dag-node-3" style="flex: 1; background: rgba(16, 185, 129, 0.1); border: 1.5px solid #10b981; border-radius: 8px; padding: 10px; text-align: center; transition: all 0.2s;">
-                        <div style="font-size: 9.5px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase;">UI Target</div>
-                        <div style="font-size: 12px; font-weight: 700; color: #fff; margin-top: 2px;">#thermal-val</div>
-                        <div id="dag-val-target" style="font-size: 13px; font-family: var(--font-mono); font-weight: 800; color: #34d399; margin-top: 2px;">+42.8 °C</div>
-                      </div>
-                    </div>
-
-                    <!-- Interactive DAG Drag Slider -->
-                    <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06);">
-                      <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px; color: #94a3b8;">
-                        <span>Drag variable to watch DAG re-evaluate:</span>
-                        <span id="dag-slider-val" style="color: #38bdf8; font-family: var(--font-mono); font-weight: 700;">340</span>
-                      </div>
-                      <input type="range" class="fin-slider" min="50" max="600" step="10" value="340" id="dag-slider" oninput="updateDag(this.value)">
-                    </div>
-                  </div>
-
-                  <!-- AST Code Block -->
-                  <div style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 16px; font-family: var(--font-mono); font-size: 11px; color: #cbd5e1; line-height: 1.5;">
-                    <span style="color: #64748b;">// Live Compiled Reactive Binding</span><br>
-                    <span style="color: #38bdf8;">node</span>.bindings[<span style="color: #a7f3d0;">"thermal"</span>] = <span style="color: #38bdf8;">new</span> <span style="color: #fbbf24;">LDocReactiveFormula</span>({<br>
-                    &nbsp;&nbsp;dependencies: [<span style="color: #a7f3d0;">"$torque"</span>],<br>
-                    &nbsp;&nbsp;evaluate: (<span style="color: #fef08a;">t</span>) =&gt; (t * <span style="color: #fef08a;">0.126</span>).<span style="color: #38bdf8;">toFixed</span>(1) + <span style="color: #a7f3d0;">" °C"</span><br>
-                    });
-                  </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 12px; justify-content: center;">
-                  <div style="background: rgba(124, 58, 237, 0.08); border: 1px solid rgba(124, 58, 237, 0.25); border-radius: 10px; padding: 14px;">
-                    <div style="font-family: var(--font-mono); font-size: 11px; color: #a78bfa; font-weight: 700;">TOPOLOGICAL SORT</div>
-                    <div style="font-size: 20px; font-weight: 800; color: #fff; font-family: var(--font-mono); margin-top: 4px;">Zero Glitch Guarantee</div>
-                    <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">Topological dependency sorting eliminates intermediate flickering states.</div>
-                  </div>
-                  <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25); border-radius: 10px; padding: 14px;">
-                    <div style="font-family: var(--font-mono); font-size: 11px; color: #38bdf8; font-weight: 700;">OFFLINE EXECUTION</div>
-                    <div style="font-size: 14px; font-weight: 700; color: #fff; margin-top: 4px;">Client-Side Engine</div>
-                    <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">Formulas evaluate natively inside the browser or desktop flattener without server round-trips.</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- TAB 3: Merkle Trust & Signatures (Interactive Merkle Tree) -->
-            <div id="ftab-crypto" class="tab-pane" style="display: none;">
-              <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center;">
-                <div>
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <div style="font-family: var(--font-mono); font-size: 11px; color: #34d399; letter-spacing: 0.08em; font-weight: 700;">CRYPTOGRAPHIC MERKLE TREE</div>
-                    <div style="display: flex; gap: 8px;">
-                      <button class="ldoc-btn ldoc-btn-secondary" id="btn-tamper-sim" onclick="simulateTamper()" style="padding: 3px 10px; font-size: 11px; background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;">
-                        Simulate Tamper
-                      </button>
-                      <button class="ldoc-btn ldoc-btn-ghost" id="btn-restore-sim" onclick="restoreMerkle()" style="padding: 3px 10px; font-size: 11px; border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; display: none;">
-                        Restore Hash
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <!-- Interactive Merkle Tree Graphic -->
-                  <div id="merkle-tree-graphic" style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; margin-bottom: 12px; font-family: var(--font-mono);">
-                    <!-- Merkle Root -->
-                    <div style="text-align: center; margin-bottom: 10px;">
-                      <div id="merkle-root-node" style="display: inline-block; background: rgba(16, 185, 129, 0.15); border: 1.5px solid #10b981; border-radius: 6px; padding: 6px 14px; font-size: 11px; color: #34d399; transition: all 0.3s;">
-                        <strong>Root Digest:</strong> <span id="merkle-root-hash">9e898a2f4c01db189e3a67d0284e91...</span>
-                      </div>
-                    </div>
-                    <!-- Branch Connectors -->
-                    <div style="display: flex; justify-content: space-around; font-size: 10px; color: #475569; margin-bottom: 6px;">
-                      <span>┌──────┴──────┐</span>
-                    </div>
-                    <!-- Level 1 Nodes -->
-                    <div style="display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px;">
-                      <div id="merkle-branch-l" style="flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px 8px; font-size: 10px; text-align: center; color: #cbd5e1; transition: all 0.3s;">
-                        <strong>H(0,1):</strong> <span id="merkle-branch-l-hash">4a12ec89...</span>
-                      </div>
-                      <div id="merkle-branch-r" style="flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px 8px; font-size: 10px; text-align: center; color: #cbd5e1;">
-                        <strong>H(2,3):</strong> <span>b83ed21f...</span>
-                      </div>
-                    </div>
-                    <!-- Leaves -->
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
-                      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 4px; font-size: 9px; text-align: center; color: #94a3b8;">
-                        Blk_01: Text
-                      </div>
-                      <div id="merkle-leaf-tampered" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 4px; font-size: 9px; text-align: center; color: #94a3b8; transition: all 0.3s;">
-                        Blk_02: 3D
-                      </div>
-                      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 4px; font-size: 9px; text-align: center; color: #94a3b8;">
-                        Blk_03: Form
-                      </div>
-                      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 4px; font-size: 9px; text-align: center; color: #94a3b8;">
-                        Blk_04: Media
-                      </div>
-                    </div>
-                  </div>
-
-                  <div id="merkle-alert-box" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 10px 14px; font-size: 11.5px; color: #34d399; display: flex; align-items: center; justify-content: space-between;">
-                    <span id="merkle-status-text">● Ed25519 Hardware Signature Matches Merkle Root</span>
-                    <strong id="merkle-status-badge" style="font-family: var(--font-mono); font-size: 10.5px; background: rgba(16, 185, 129, 0.2); padding: 2px 6px; border-radius: 4px;">PASS</strong>
-                  </div>
-                </div>
-
-                <div style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; text-align: center;">
-                  <div id="merkle-shield-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; margin-bottom: 12px; transition: all 0.3s;">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-                  </div>
-                  <div id="merkle-shield-title" style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px;">Hardware Provenance Verified</div>
-                  <div id="merkle-shield-desc" style="font-size: 12px; color: #94a3b8; max-width: 280px; margin: 0 auto; line-height: 1.5;">Every block hash cascades into the signed root digest, detecting any single-bit alteration instantly.</div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--emerald); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); padding: 4px 12px; border-radius: var(--radius-full);">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--emerald);"></span>
+          <span>Engine v2.5.0 • Pretext Layout Active</span>
         </div>
       </div>
-    </section>
 
-    <!-- BENEFIT GRID (6 CARDS) -->
-    <section class="container" style="margin-top: 80px;">
-      <div class="section-head">
-        <span class="section-tag">Core Capabilities</span>
-        <h2 class="section-title">Built for the Next Century of Computing</h2>
-        <p class="section-sub">Documents should be software. Explore how LDOC Studio bridges static prose and dynamic computing.</p>
-      </div>
-
-      <div class="benefit-grid">
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">CANVAS</span></div>
-          <h3 class="benefit-title">Write Anywhere</h3>
-          <p class="benefit-desc">Adaptive block &amp; freeform canvas editor with multi-device layout reflow. Design freely across desktop, tablet, and mobile with zero visual loss.</p>
-          <a href="/features#editor" class="benefit-link">Explore Canvas Editor &rarr;</a>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">SPATIAL</span></div>
-          <h3 class="benefit-title">Bring It to Life</h3>
-          <p class="benefit-desc">Embed spatial 3D WebGL assets, GPU fluid dynamics, high-frame video loops, and live API feeds directly inside document pages.</p>
-          <a href="/features#3d" class="benefit-link">See Spatial WebGL &rarr;</a>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">AI COPILOT</span></div>
-          <h3 class="benefit-title">Think with AI</h3>
-          <p class="benefit-desc">Integrated Agentic Copilot synthesizes entire presentation slides, creates reactive AST blocks, and conducts automated editorial QA.</p>
-          <a href="/features#ai" class="benefit-link">Discover AI Copilot &rarr;</a>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">DECK</span></div>
-          <h3 class="benefit-title">Present Instantly</h3>
-          <p class="benefit-desc">Seamless 1-click deck presentation mode with luminous Glass, Velvet, Cyber, and Prism theme layers. Zero PowerPoint conversions.</p>
-          <a href="/live-studio" class="benefit-link">Test Presentation Mode &rarr;</a>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">CONVERT</span></div>
-          <h3 class="benefit-title">Convert Anything In</h3>
-          <p class="benefit-desc">Universal migration engine parses legacy PDF, DOCX, Markdown, and HTML archives into living .ldocx files in seconds.</p>
-          <a href="/live-studio" class="benefit-link">Run Converter Engine &rarr;</a>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">PROVENANCE</span></div>
-          <h3 class="benefit-title">Publish with Confidence</h3>
-          <p class="benefit-desc">Cryptographic SHA-256 signatures, deterministic semantic AST versioning, and zero-server portability guarantee 100% longevity.</p>
-          <a href="/format" class="benefit-link">Read Format Security &rarr;</a>
+      <div>
+        <h4 style="font-family: var(--font-display); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #FFFFFF; margin-bottom: 16px;">Product</h4>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px;">
+          <a href="/features" style="color: var(--muted); text-decoration: none;">Features</a>
+          <a href="/live-studio" style="color: var(--muted); text-decoration: none;">Live Studio</a>
+          <a href="/models" style="color: var(--muted); text-decoration: none;">Models Hub</a>
+          <a href="/pricing" style="color: var(--muted); text-decoration: none;">Pricing</a>
+          <a href="/changelog" style="color: var(--muted); text-decoration: none;">Changelog</a>
         </div>
       </div>
-    </section>
 
-    <!-- CAPABILITY GRID (TECHNICAL TRUST LAYER) -->
-    <section class="capability-section">
-      <div class="container">
-        <div class="section-head">
-          <span class="section-tag">Architecture &amp; Protocol</span>
-          <h2 class="section-title">Technical Trust Layer</h2>
-          <p class="section-sub">Transparent, verifiable specifications engineered for enterprise scale and zero vendor lock-in.</p>
-        </div>
-
-        <div class="capability-grid">
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-01 • CONTAINER</span>
-            <div class="cap-title">Open .ldocx Packaging</div>
-            <div class="cap-desc">Deterministic ZIP container with JSON AST, media manifests, and SHA-256 integrity trees. Inspectable by standard CLI tools.</div>
-          </div>
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-02 • EXTENSIBILITY</span>
-            <div class="cap-title">Universal Plugin &amp; Block API</div>
-            <div class="cap-desc">Extensible TypeScript/JS SDK (@ldoc/sdk) enables developers to create custom reactive blocks, sandboxes, and bespoke widgets.</div>
-          </div>
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-03 • 3D PIPELINE</span>
-            <div class="cap-title">Draco Mesh Compression</div>
-            <div class="cap-desc">Heavy CAD &amp; 3D models are reduced by up to 92% using Google Draco compression for sub-second edge transmission.</div>
-          </div>
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-04 • COMPILATION</span>
-            <div class="cap-title">Multi-Target Export Engine</div>
-            <div class="cap-desc">Headless edge compilation outputs print-perfect PDF, standard DOCX, standalone single-file HTML5, or raw AST JSON.</div>
-          </div>
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-05 • OFFLINE FIRST</span>
-            <div class="cap-title">Cryptographic Portability</div>
-            <div class="cap-desc">Every .ldocx document functions entirely offline. No external server pings required to view, inspect, or execute interactions.</div>
-          </div>
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-06 • SECURITY</span>
-            <div class="cap-title">Isolated Execution Sandbox</div>
-            <div class="cap-desc">Code executions run in secure iframes with strict isolation and zero filesystem access.</div>
-          </div>
+      <div>
+        <h4 style="font-family: var(--font-display); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #FFFFFF; margin-bottom: 16px;">Standard</h4>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px;">
+          <a href="/format" style="color: var(--muted); text-decoration: none;">.ldocx Format Spec</a>
+          <a href="/docs" style="color: var(--muted); text-decoration: none;">Developer SDK</a>
+          <a href="/security" style="color: var(--muted); text-decoration: none;">Security &amp; Air-Gap</a>
+          <a href="/docs" style="color: var(--muted); text-decoration: none;">CLI Flattener</a>
         </div>
       </div>
-    </section>
 
-    <!-- CONTEXTUAL CALL TO ACTION -->
-    <section class="container" style="margin: 80px auto 100px;">
-      <div style="text-align: center; padding: 60px 32px; background: linear-gradient(180deg, rgba(18, 22, 34, 0.9) 0%, rgba(10, 12, 18, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);">
-        <span class="tech-icon-badge" style="margin-bottom: 16px;">READY TO BUILD</span>
-        <h2 style="font-size: 2.4rem; font-weight: 800; color: #fff; margin-bottom: 14px; letter-spacing: -0.02em;">Ready to Experience Living Documents?</h2>
-        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 32px; font-size: 1.05rem;">Launch the free web IDE to interact with reactive models, or download the air-gapped desktop suite for local production.</p>
-        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-          <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="padding: 12px 28px; font-size: 0.95rem;">Launch Live Studio &rarr;</a>
-          <a href="/pricing" class="ldoc-btn ldoc-btn-secondary" style="padding: 12px 28px; font-size: 0.95rem;">Get Desktop Pro</a>
-          <a href="/format" class="ldoc-btn ldoc-btn-ghost" style="padding: 12px 24px; font-size: 0.95rem;">Explore Format Spec</a>
+      <div>
+        <h4 style="font-family: var(--font-display); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #FFFFFF; margin-bottom: 16px;">Downloads</h4>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px;">
+          <a href="/pricing" style="color: var(--muted); text-decoration: none;">Windows (.exe)</a>
+          <a href="/pricing" style="color: var(--muted); text-decoration: none;">macOS (.dmg)</a>
+          <a href="/pricing" style="color: var(--muted); text-decoration: none;">Linux (.tar.gz)</a>
+          <a href="/pricing" style="color: var(--muted); text-decoration: none;">iOS Wrapper</a>
         </div>
       </div>
-    </section>
 
-    <!-- FOOTER -->
-    </main>
-
-  <footer class="site-footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-brand">
-            <a href="/" class="brand-logo">
-              <img src="/ldoc_logo.webp" alt="LDOC Logo" width="28" height="28" decoding="async">
-              <span>LDOC STUDIO</span>
-            </a>
-            <p>The open living document architecture. Compute, render, and evolve beyond static PDFs.</p>
-          </div>
-
-                    <div class="footer-col">
-            <h5>Product</h5>
-            <ul>
-              <li><a href="/live-studio">Live Studio IDE</a></li>
-              <li><a href="/models">Models &amp; Templates</a></li>
-              <li><a href="/creator">Visual Creator</a></li>
-              <li><a href="/pricing">Pricing Plans</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-col">
-            <h5>Specification</h5>
-            <ul>
-              <li><a href="/format">.ldocx Architecture</a></li>
-              <li><a href="/docs">AST Specification</a></li>
-              <li><a href="/docs">Draco 3D Geometry</a></li>
-              <li><a href="/security">Security &amp; Signing</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-col">
-            <h5>Developers</h5>
-            <ul>
-              <li><a href="/docs">SDK Architecture Guide</a></li>
-              <li><a href="/docs#sdk">Developer Integration</a></li>
-              <li><a href="/changelog">Release Changelog</a></li>
-              <li><a href="/format">Format Specification</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-col">
-            <h5>Trust &amp; Legal</h5>
-            <ul>
-              <li><a href="/privacy">Privacy Policy</a></li>
-              <li><a href="/terms">Terms of Service</a></li>
-              <li><a href="/security">Security Architecture</a></li>
-              <li><a href="/refund">Refund Policy</a></li>
-              <li><a href="/license">Commercial SLA &amp; License</a></li>
-              <li><a href="mailto:jayaramankalidasan@gmail.com">Contact Founder</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="footer-bottom">
-          <div>&copy; 2026 LDOC Studio. Designed and created by J AI ENTERPRISES. Open Living Document Standard.</div>
-          <div class="footer-legal-links" style="display: flex; gap: 16px; flex-wrap: wrap;">
-            <a href="/privacy" style="color: var(--text-sub); text-decoration: none;">Privacy Policy</a>
-            <a href="/terms" style="color: var(--text-sub); text-decoration: none;">Terms of Service</a>
-            <a href="/security" style="color: var(--text-sub); text-decoration: none;">Security Architecture</a>
-            <a href="/refund" style="color: var(--text-sub); text-decoration: none;">Refund Policy</a>
-            <a href="/license" style="color: var(--text-sub); text-decoration: none;">Commercial SLA</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  </div>
-
-  <!-- FULLSTACK MODALS (AUTH, BILLING, VAULT, LEAD, SHARE) -->
-  <div id="auth-modal" class="ldoc-cloud-modal-overlay">
-  <div class="ldoc-cloud-modal-box">
-    <div class="ldoc-cloud-modal-header">
-      <div class="ldoc-cloud-modal-title"><span><span class="tech-icon-badge">USER</span></span> <span id="auth-modal-title">LDOC Account & Cloud Access</span></div>
-      <button class="ldoc-cloud-modal-close" onclick="closeAuthModal()">✕</button>
-    </div>
-    <div class="ldoc-cloud-modal-body">
-      <!-- Unauthenticated View -->
-      <div id="auth-forms-container">
-
-        <!-- OAuth 2.0 Single Sign-On (Google & GitHub) -->
-        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px;">
-          <button type="button" class="btn-oauth btn-oauth-google" onclick="initiateOAuth('google')" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 10px 16px; border-radius: 8px; background: #ffffff; color: #1f2937; font-size: 13px; font-weight: 600; border: 1px solid #d1d5db; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            <svg width="18" height="18" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
-              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/>
-              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.03 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
-              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-            </svg>
-            <span>Continue with Google</span>
-          </button>
-
-          <button type="button" class="btn-oauth btn-oauth-github" onclick="initiateOAuth('github')" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 10px 16px; border-radius: 8px; background: #24292e; color: #ffffff; font-size: 13px; font-weight: 600; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-            </svg>
-            <span>Continue with GitHub</span>
-          </button>
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 12px; margin: 16px 0; color: #94a3b8; font-size: 11px; font-weight: 700;">
-          <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
-          <span>OR CONTINUE WITH EMAIL</span>
-          <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:8px">
-          <button id="auth-tab-login" class="ldoc-cloud-btn" style="flex:1" onclick="switchAuthTab('login')">Sign In</button>
-          <button id="auth-tab-register" class="ldoc-cloud-btn secondary" style="flex:1" onclick="switchAuthTab('register')">Create Account</button>
-        </div>
-        <form id="auth-form" onsubmit="handleAuthSubmit(event)">
-          <div id="auth-name-group" style="display:none">
-            <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">FULL NAME</label>
-            <input type="text" id="auth-name" class="ldoc-cloud-input" placeholder="e.g. Leonardo Da Vinci">
-          </div>
-          <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">EMAIL ADDRESS</label>
-          <input type="email" id="auth-email" class="ldoc-cloud-input" placeholder="creator@example.com" required>
-          <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">PASSWORD</label>
-          <input type="password" id="auth-password" class="ldoc-cloud-input" placeholder="••••••••••••" required>
-          <div id="auth-error" style="color:#f87171;font-size:12px;margin-bottom:12px;display:none"></div>
-          <button type="submit" id="auth-submit-btn" class="ldoc-cloud-btn" style="width:100%;margin-top:6px"><span class="tech-icon-badge">LIVE</span> Sign In to LDOC Cloud</button>
-        </form>
-      </div>
-
-      <!-- Authenticated Profile View -->
-      <div id="auth-profile-container" style="display:none">
-        <div style="display:flex;align-items:center;gap:14px;background:#161b22;padding:16px;border-radius:12px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.08)">
-          <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#2563eb);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#000" id="profile-avatar">U</div>
-          <div>
-            <div style="font-size:16px;font-weight:800;color:#fff" id="profile-name">User Name</div>
-            <div style="font-size:12px;color:#94a3b8" id="profile-email">user@example.com</div>
-            <div style="margin-top:6px;display:inline-block;padding:2px 8px;background:rgba(245,158,11,0.2);border:1px solid #f59e0b;border-radius:4px;font-size:10px;font-weight:800;color:#fef08a" id="profile-plan">FREE TIER</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:10px">
-          <button class="ldoc-cloud-btn" style="flex:1" ><span class="tech-icon-badge">PRO</span> Upgrade Plan</button>
-          <button class="ldoc-cloud-btn secondary" style="flex:1" onclick="handleLogout()">Log Out</button>
+      <div>
+        <h4 style="font-family: var(--font-display); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #FFFFFF; margin-bottom: 16px;">Legal</h4>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13.5px;">
+          <a href="/privacy" style="color: var(--muted); text-decoration: none;">Privacy Policy</a>
+          <a href="/terms" style="color: var(--muted); text-decoration: none;">Terms of Service</a>
+          <a href="/refund" style="color: var(--muted); text-decoration: none;">Refund Policy</a>
+          <a href="/license" style="color: var(--muted); text-decoration: none;">License Agreement</a>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- 2. Cloud Vault / My Documents Modal -->
-<div id="cloud-vault-modal" class="ldoc-cloud-modal-overlay">
-  <div class="ldoc-cloud-modal-box" style="width:720px">
-    <div class="ldoc-cloud-modal-header">
-      <div class="ldoc-cloud-modal-title"><span><span class="tech-icon-badge">STAR</span></span> <span>LDOC Cloud Vault &amp; Documents</span></div>
-      <button class="ldoc-cloud-modal-close" onclick="closeCloudVaultModal()">✕</button>
-    </div>
-    <div class="ldoc-cloud-modal-body">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-        <span style="font-size:12px;color:#94a3b8">Cloud-synced living presentations and specs</span>
-        <button class="ldoc-cloud-btn" onclick="createNewCloudDoc()" style="padding:6px 12px;font-size:12px">+ New Cloud Document</button>
-      </div>
-      <div id="cloud-vault-list" style="display:flex;flex-direction:column;gap:10px">
-        <div style="text-align:center;padding:30px;color:#94a3b8">Loading cloud documents...</div>
+    <div style="max-width: var(--max-width); margin: 0 auto; border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--dim); flex-wrap: wrap; gap: 16px;">
+      <div>&copy; 2026 J AI ENTERPRISES. All rights reserved. LDOC and .ldocx are proprietary standards.</div>
+      <div style="display: flex; gap: 20px;">
+        <a href="https://github.com/coderjay2003-svg/NEW-GEN-LIVING-DOCUMENT-FORMAT" target="_blank" style="color: var(--dim); text-decoration: none;">GitHub</a>
+        <a href="mailto:jayaramankalidasan@gmail.com" style="color: var(--dim); text-decoration: none;">Enterprise Support</a>
       </div>
     </div>
-  </div>
-</div>
+  </footer>
 
-<!-- 3. Version History Drawer / Modal -->
-<div id="versions-modal" class="ldoc-cloud-modal-overlay">
-  <div class="ldoc-cloud-modal-box">
-    <div class="ldoc-cloud-modal-header">
-      <div class="ldoc-cloud-modal-title"><span>↺</span> <span>Document Version History</span></div>
-      <button class="ldoc-cloud-modal-close" onclick="closeVersionsModal()">✕</button>
-    </div>
-    <div class="ldoc-cloud-modal-body">
-      <div style="font-size:12px;color:#94a3b8;margin-bottom:14px">Chronological snapshots captured automatically on edit &amp; build</div>
-      <div id="versions-history-list" style="display:flex;flex-direction:column;gap:8px">
-        <div style="text-align:center;padding:20px;color:#94a3b8">Loading revision history...</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 4. Share Document Modal -->
-<div id="share-modal" class="ldoc-cloud-modal-overlay">
-  <div class="ldoc-cloud-modal-box">
-    <div class="ldoc-cloud-modal-header">
-      <div class="ldoc-cloud-modal-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span>Share Living Document</span></div>
-      <button class="ldoc-cloud-modal-close" onclick="closeShareModal()">✕</button>
-    </div>
-    <div class="ldoc-cloud-modal-body">
-      <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">PUBLIC INTERACTIVE VIEWER LINK</label>
-      <div style="display:flex;gap:8px;margin-bottom:16px">
-        <input type="text" id="share-link-input" class="ldoc-cloud-input" style="margin-bottom:0" readonly>
-        <button class="ldoc-cloud-btn" onclick="copyShareLink()">Copy</button>
-      </div>
-      <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">RESPONSIVE EMBED CODE (IFRAME)</label>
-      <div style="display:flex;gap:8px">
-        <input type="text" id="share-embed-input" class="ldoc-cloud-input" style="margin-bottom:0" readonly>
-        <button class="ldoc-cloud-btn secondary" onclick="copyEmbedCode()">Copy</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 5. Stripe Billing & Pricing Modal -->
-
-
-<script>
-// ═════════════════════════════════════════════════════════════════════════════
-// CLIENT-SIDE AUTH & FULL-STACK STATE CONTROLLER
-// ═════════════════════════════════════════════════════════════════════════════
-
-const LDocAuth = {
-  getToken() { return localStorage.getItem('ldoc_auth_token'); },
-  setToken(t) { localStorage.setItem('ldoc_auth_token', t); },
-  removeToken() { localStorage.removeItem('ldoc_auth_token'); },
-  getUser() {
-    try { return JSON.parse(localStorage.getItem('ldoc_auth_user') || 'null'); } catch (e) { return null; }
-  },
-  setUser(u) { localStorage.setItem('ldoc_auth_user', JSON.stringify(u)); },
-  removeUser() { localStorage.removeItem('ldoc_auth_user'); },
-  isAuthenticated() { return !!this.getToken(); }
-};
-
-let currentAuthTab = 'login';
-window.triggerConfetti = function(opts) {
-  if (typeof confetti === 'function') {
-    try { confetti(opts); } catch(e){}
-    return;
-  }
-  const s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js';
-  s.onload = function() {
-    if (typeof confetti === 'function') {
-      try { confetti(opts); } catch(e){}
-    }
-  };
-  document.head.appendChild(s);
-};
-
-let currentActiveDocId = localStorage.getItem('ldoc_active_doc_id') || 'doc_current';
-
-
-function initiateOAuth(provider) {
-  if (typeof LDocToast !== 'undefined') {
-    LDocToast.show(`Connecting to ${provider === 'google' ? 'Google' : 'GitHub'} Single Sign-On...`, 'info', 2500);
-  }
-  setTimeout(() => {
-    const returnUrl = encodeURIComponent(window.location.origin + '/live-studio');
-    window.location.href = `/api/auth/oauth/${provider}?redirect=${returnUrl}`;
-  }, 300);
-}
-
-function showAuthModal() {
-  if (LDocAuth.isAuthenticated()) { renderProfileHub(LDocAuth.getUser()); }
-
-  const modal = document.getElementById('auth-modal');
-  if (!modal) return;
-  if (LDocAuth.isAuthenticated()) {
-    const user = LDocAuth.getUser() || { name: 'Creator', email: 'user@ldoc.com', plan: 'free' };
-    document.getElementById('auth-forms-container').style.display = 'none';
-    document.getElementById('auth-profile-container').style.display = 'block';
-    document.getElementById('profile-name').textContent = user.name || 'Creator';
-    document.getElementById('profile-email').textContent = user.email || '';
-    document.getElementById('profile-avatar').textContent = (user.name || user.email || 'U')[0].toUpperCase();
-    document.getElementById('profile-plan').textContent = (user.plan || 'FREE').toUpperCase() + ' PLAN';
-  } else {
-    document.getElementById('auth-forms-container').style.display = 'block';
-    document.getElementById('auth-profile-container').style.display = 'none';
-  }
-  modal.classList.add('active');
-}
-
-function closeAuthModal() {
-  const modal = document.getElementById('auth-modal');
-  if (modal) modal.classList.remove('active');
-}
-
-function switchAuthTab(tab) {
-  currentAuthTab = tab;
-  document.getElementById('auth-name-group').style.display = tab === 'register' ? 'block' : 'none';
-  document.getElementById('auth-tab-login').className = tab === 'login' ? 'ldoc-cloud-btn' : 'ldoc-cloud-btn secondary';
-  document.getElementById('auth-tab-register').className = tab === 'register' ? 'ldoc-cloud-btn' : 'ldoc-cloud-btn secondary';
-  document.getElementById('auth-submit-btn').textContent = tab === 'register' ? 'Create Account' : '<span class="tech-icon-badge">LIVE</span> Sign In to LDOC Cloud';
-  document.getElementById('auth-error').style.display = 'none';
-}
-
-async function handleAuthSubmit(e) {
-  e.preventDefault();
-  const email = document.getElementById('auth-email').value;
-  const password = document.getElementById('auth-password').value;
-  const name = document.getElementById('auth-name').value;
-  const errEl = document.getElementById('auth-error');
-  errEl.style.display = 'none';
-
-  const endpoint = currentAuthTab === 'register' ? '/api/auth/register' : '/api/auth/login';
-  const payload = currentAuthTab === 'register' ? { email, password, name } : { email, password };
-
-  try {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    if (!res.ok || !data.ok) {
-      errEl.textContent = data.error || 'Authentication failed. Check credentials.';
-      errEl.style.display = 'block';
-      return;
-    }
-
-    LDocAuth.setToken(data.token);
-    LDocAuth.setUser(data.user);
-    updateHeaderAuthButton();
-    showAuthModal();
-  } catch (err) {
-    errEl.textContent = 'Network error: ' + err.message;
-    errEl.style.display = 'block';
-  }
-}
-
-function handleLogout() {
-  LDocAuth.removeToken();
-  LDocAuth.removeUser();
-  updateHeaderAuthButton();
-  closeAuthModal();
-}
-
-function updateHeaderAuthButton() {
-  const btn = document.getElementById('header-auth-btn');
-  if (!btn) return;
-  if (LDocAuth.isAuthenticated()) {
-    const user = LDocAuth.getUser();
-    btn.innerHTML = `<span class="tech-icon-badge">USER</span> ${user?.name || 'Account'} <span style="background:#f59e0b;color:#000;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:900;margin-left:4px">PRO</span>`;
-  } else {
-    btn.innerHTML = `<span class="tech-icon-badge">USER</span> Sign In`;
-  }
-}
-
-// ── CLOUD VAULT (MY DOCUMENTS) ──────────────────────────────────────────────
-async function showCloudVaultModal() {
-  const modal = document.getElementById('cloud-vault-modal');
-  if (!modal) return;
-  modal.classList.add('active');
-
-  const listEl = document.getElementById('cloud-vault-list');
-  listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8">Syncing with cloud database...</div>';
-
-  try {
-    const headers = {};
-    if (LDocAuth.getToken()) headers['Authorization'] = 'Bearer ' + LDocAuth.getToken();
-    const res = await fetch('/api/documents', { headers });
-    const docs = await res.json();
-
-    if (!Array.isArray(docs) || docs.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8">No documents yet. Click "New Cloud Document" to create one.</div>';
-      return;
-    }
-
-    listEl.innerHTML = docs.map(d => `
-      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-size:14px;font-weight:700;color:#fff">${escapeHtml(d.title)}</div>
-          <div style="font-size:11.5px;color:#94a3b8;margin-top:2px">ID: ${d.id} • Revision v${d.version || 1} • ${new Date(d.updated_at || Date.now()).toLocaleDateString()}</div>
-        </div>
-        <div style="display:flex;gap:6px">
-          <button class="ldoc-cloud-btn" style="padding:4px 10px;font-size:11.5px" onclick="loadCloudDocument('${d.id}')">Open in Studio</button>
-          <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="showVersionsModal('${d.id}')">↺ History</button>
-        </div>
-      </div>
-    `).join('');
-  } catch (err) {
-    listEl.innerHTML = '<div style="color:#f87171;padding:16px">Failed to load documents: ' + err.message + '</div>';
-  }
-}
-
-function closeCloudVaultModal() {
-  const modal = document.getElementById('cloud-vault-modal');
-  if (modal) modal.classList.remove('active');
-}
-
-async function createNewCloudDoc() {
-  const title = prompt('Enter document title:', 'New Living Document');
-  if (!title) return;
-  try {
-    const headers = { 'Content-Type': 'application/json' };
-    if (LDocAuth.getToken()) headers['Authorization'] = 'Bearer ' + LDocAuth.getToken();
-    const res = await fetch('/api/documents', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ title, theme: 'dark_gold' })
-    });
-    const doc = await res.json();
-    currentActiveDocId = doc.id;
-    localStorage.setItem('ldoc_active_doc_id', doc.id);
-    showCloudVaultModal();
-  } catch (err) {
-    alert('Error creating cloud document: ' + err.message);
-  }
-}
-
-async function loadCloudDocument(docId) {
-  try {
-    const res = await fetch(`/api/documents/${docId}`);
-    const doc = await res.json();
-    currentActiveDocId = doc.id;
-    localStorage.setItem('ldoc_active_doc_id', doc.id);
-    if (doc.ast) {
-      if (typeof currentDoc !== 'undefined') {
-        currentDoc = doc.ast;
-        if (typeof renderBlocks === 'function') renderBlocks();
-        if (typeof renderPreview === 'function') renderPreview();
-      }
-      const titleEl = document.getElementById('doc-title') || document.getElementById('top-title');
-      if (titleEl) titleEl.textContent = doc.title;
-    }
-    closeCloudVaultModal();
-  } catch (err) {
-    alert('Error opening document: ' + err.message);
-  }
-}
-
-// ── VERSION HISTORY ─────────────────────────────────────────────────────────
-async function showVersionsModal(docId) {
-  docId = docId || currentActiveDocId;
-  const modal = document.getElementById('versions-modal');
-  if (!modal) return;
-  modal.classList.add('active');
-
-  const listEl = document.getElementById('versions-history-list');
-  listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">Fetching version snapshots...</div>';
-
-  try {
-    const res = await fetch(`/api/documents/${docId}/versions`);
-    const versions = await res.json();
-
-    if (!Array.isArray(versions) || versions.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">No past snapshots recorded yet.</div>';
-      return;
-    }
-
-    listEl.innerHTML = versions.map(v => `
-      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <span style="font-weight:700;color:#f59e0b;font-size:12.5px">v${v.version_num}</span>
-          <span style="color:#e2e8f0;font-size:12.5px;margin-left:8px">${escapeHtml(v.summary || 'Revision')}</span>
-          <div style="font-size:11px;color:#94a3b8;margin-top:2px">${new Date(v.created_at).toLocaleString()}</div>
-        </div>
-        <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="restoreSnapshot('${docId}', '${v.id}')">↺ Restore</button>
-      </div>
-    `).join('');
-  } catch (err) {
-    listEl.innerHTML = '<div style="color:#f87171;padding:16px">Failed to load versions: ' + err.message + '</div>';
-  }
-}
-
-function closeVersionsModal() {
-  const modal = document.getElementById('versions-modal');
-  if (modal) modal.classList.remove('active');
-}
-
-async function restoreSnapshot(docId, versionId) {
-  if (!confirm('Are you sure you want to restore this revision snapshot?')) return;
-  try {
-    const res = await fetch(`/api/documents/${docId}/restore`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ version_id: versionId })
-    });
-    const restored = await res.json();
-    alert('Document restored to revision successfully!');
-    closeVersionsModal();
-    loadCloudDocument(docId);
-  } catch (err) {
-    alert('Error restoring revision: ' + err.message);
-  }
-}
-
-// ── SHARE MODAL ─────────────────────────────────────────────────────────────
-function showShareModal() {
-  const modal = document.getElementById('share-modal');
-  if (!modal) return;
-  const currentUrl = window.location.origin + window.location.pathname + '?doc=' + currentActiveDocId;
-  const embedCode = `<iframe src="${currentUrl}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
-  document.getElementById('share-link-input').value = currentUrl;
-  document.getElementById('share-embed-input').value = embedCode;
-  if (typeof drawShareQRCode === 'function') drawShareQRCode(currentUrl);
-  modal.classList.add('active');
-}
-
-function closeShareModal() {
-  const modal = document.getElementById('share-modal');
-  if (modal) modal.classList.remove('active');
-}
-
-function copyShareLink() {
-  const inp = document.getElementById('share-link-input');
-  inp.select();
-  navigator.clipboard.writeText(inp.value);
-  alert('Share URL copied to clipboard!');
-}
-
-function copyEmbedCode() {
-  const inp = document.getElementById('share-embed-input');
-  inp.select();
-  navigator.clipboard.writeText(inp.value);
-  alert('Iframe embed code copied to clipboard!');
-}
-
-// ── STRIPE BILLING & PRICING MODAL ──────────────────────────────────────────
-
-
-
-
-
-function escapeHtml(str) {
-  return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
-}
-
-
-// ── OAUTH & PROFILE HUB INTERACTION ─────────────────────────────────────────
-function triggerOAuth(provider) {
-  const btn = event.currentTarget;
-  const originalText = btn.innerHTML;
-  btn.innerHTML = `<span>⏳</span> Connecting to ${provider === 'google' ? 'Google Identity' : 'GitHub OAuth'}...`;
-  btn.style.opacity = '0.7';
-
-  setTimeout(() => {
-    btn.innerHTML = originalText;
-    btn.style.opacity = '1';
-
-    const mockUser = {
-      id: 'usr_' + Math.random().toString(36).slice(2, 9),
-      name: provider === 'google' ? 'K Jay (Google)' : 'J AI ENTERPRISES (GitHub)',
-      email: 'jayaramankalidasan@gmail.com',
-      avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=' + provider,
-      plan: 'pro',
-      provider: provider
-    };
-
-    LDocAuth.setToken('jwt_oauth_' + Math.random().toString(36).slice(2, 12));
-    LDocAuth.setUser(mockUser);
-    updateHeaderAuthButton();
-    renderProfileHub(mockUser);
-  }, 750);
-}
-
-function renderProfileHub(user) {
-  const container = document.getElementById('auth-forms-container');
-  if (!container) return;
-  document.getElementById('auth-modal-title').textContent = 'Account Profile & Cloud Hub';
-
-  container.innerHTML = `
-    <div class="ldoc-profile-hub">
-      <div class="ldoc-profile-header">
-        <img class="ldoc-profile-avatar" src="${user.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=Jay'}" alt="Avatar">
-        <div class="ldoc-profile-meta">
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="ldoc-profile-name">${escapeHtml(user.name)}</span>
-            <span style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-size:10px;font-weight:900;padding:2px 7px;border-radius:4px">PRO VIP</span>
-          </div>
-          <div class="ldoc-profile-email">${escapeHtml(user.email)}</div>
-        </div>
-      </div>
-      <div class="ldoc-profile-stats">
-        <div class="ldoc-stat-box">
-          <div class="ldoc-stat-num">100 / 100</div>
-          <div class="ldoc-stat-lbl">AI Credits Today</div>
-        </div>
-        <div class="ldoc-stat-box">
-          <div class="ldoc-stat-num">Unlimited</div>
-          <div class="ldoc-stat-lbl">Cloud Sync</div>
-        </div>
-        <div class="ldoc-stat-box">
-          <div class="ldoc-stat-num">ACTIVE</div>
-          <div class="ldoc-stat-lbl">Pro License</div>
-        </div>
-      </div>
-      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px;margin-bottom:14px">
-        <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:6px">DEVELOPER SDK API KEY (@ldoc/sdk)</div>
-        <div style="display:flex;gap:6px">
-          <input type="text" class="ldoc-cloud-input" value="ldoc_live_94d59cef_d2540fcd6919" readonly style="font-family:monospace;font-size:11.5px">
-          <button class="ldoc-cloud-btn secondary" style="white-space:nowrap" onclick="navigator.clipboard.writeText('ldoc_live_94d59cef_d2540fcd6919');alert('Copied API Key to clipboard!')">Copy</button>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="ldoc-cloud-btn" style="flex:1" ><span class="tech-icon-badge">PRO</span> Manage Billing</button>
-        <button class="ldoc-cloud-btn secondary" style="flex:1" onclick="handleLogout()">Sign Out</button>
-      </div>
-    </div>
-  `;
-}
-
-// ── LEMON SQUEEZY CHECKOUT MODAL INTERACTION ────────────────────────────────
-
-
-
-
-// ── VIP LEAD ROUTING MODAL ──────────────────────────────────────────────────
-function showLeadModal() {
-  const m = document.getElementById('lead-modal');
-  if (m) m.classList.add('active');
-}
-function closeLeadModal() {
-  const m = document.getElementById('lead-modal');
-  if (m) m.classList.remove('active');
-}
-async function handleLeadSubmit(e) {
-  e.preventDefault();
-  const name = document.getElementById('lead-name').value;
-  const email = document.getElementById('lead-email').value;
-  const platform = document.getElementById('lead-platform').value;
-  const tier = document.getElementById('lead-tier').value;
-  const message = document.getElementById('lead-message').value;
-
-  const btn = document.getElementById('lead-submit-btn');
-  btn.textContent = '⏳ Dispatching VIP Lead...';
-  btn.disabled = true;
-
-  try {
-    const res = await fetch('/api/leads/capture', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, platform, tier, message })
-    });
-    const data = await res.json();
-    const form = document.getElementById('lead-reservation-form');
-    form.style.display = 'none';
-
-    const resultBox = document.getElementById('lead-result-container');
-    resultBox.style.display = 'block';
-    resultBox.innerHTML = `
-      <div class="vip-ticket-preview">
-        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(245,158,11,0.3);padding-bottom:10px;margin-bottom:12px">
-          <span style="font-weight:900;letter-spacing:1.5px;color:#f59e0b">VIP PRIORITY TICKET</span>
-          <span style="font-family:monospace;font-weight:800;color:#fef3c7">${data.lead_id || 'TICKET_VIP_2026'}</span>
-        </div>
-        <div style="font-size:14px;font-weight:800;margin-bottom:4px">Reserved for: ${escapeHtml(name)}</div>
-        <div style="font-size:12px;color:#cbd5e1">Hardware: <b>${escapeHtml(platform)}</b> • Tier: <b>${escapeHtml(tier)}</b></div>
-        <div style="margin-top:12px;font-size:11.5px;color:#10b981;display:flex;align-items:center;gap:6px">
-          <span>✓</span> Notification dispatched live via Gmail SMTP to <b>${data.routed_to || 'jayaramankalidasan@gmail.com'}</b>
-        </div>
-        <button class="ldoc-cloud-btn" style="width:100%;margin-top:14px" onclick="closeLeadModal()">Done</button>
-      </div>
-    `;
-  } catch (err) {
-    alert('Lead error: ' + err.message);
-  } finally {
-    btn.textContent = '<span class="tech-icon-badge">VENTURE</span> Confirm VIP Reservation';
-    btn.disabled = false;
-  }
-}
-
-// ── QR CODE GENERATOR FOR SHARE MODAL ───────────────────────────────────────
-function drawShareQRCode(text) {
-  const canvas = document.getElementById('share-qr-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const size = 160;
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, size, size);
-
-  // Generate deterministic QR matrix visualization
-  ctx.fillStyle = '#0f172a';
-  const grid = 21;
-  const cell = size / grid;
-
-  // Corner markers
-  function drawCorner(x, y) {
-    ctx.fillRect(x * cell, y * cell, 7 * cell, 7 * cell);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect((x + 1) * cell, (y + 1) * cell, 5 * cell, 5 * cell);
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect((x + 2) * cell, (y + 2) * cell, 3 * cell, 3 * cell);
-  }
-  drawCorner(0, 0);
-  drawCorner(14, 0);
-  drawCorner(0, 14);
-
-  // Pseudo-random data blocks seeded by URL string
-  let seed = 0;
-  for (let i = 0; i < text.length; i++) seed = (seed * 31 + text.charCodeAt(i)) & 0xffffffff;
-  for (let r = 0; r < grid; r++) {
-    for (let c = 0; c < grid; c++) {
-      if ((r < 8 && c < 8) || (r < 8 && c > 12) || (r > 12 && c < 8)) continue;
-      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-      if (seed % 2 === 0) {
-        ctx.fillRect(c * cell, r * cell, cell, cell);
-      }
-    }
-  }
-}
-
-// Auto-initialize header state on load
-document.addEventListener('DOMContentLoaded', () => {
-  updateHeaderAuthButton();
-});
-</script>
-
-
-<!-- VIP Priority Lead & Pre-Order Reservation Modal -->
-<div id="lead-modal" class="ldoc-cloud-modal-overlay">
-  <div class="ldoc-cloud-modal-box" style="width:620px">
-    <div class="ldoc-cloud-modal-header">
-      <div class="ldoc-cloud-modal-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>VIP Priority Access & Pre-Order Reservation</span></div>
-      <button class="ldoc-cloud-modal-close" onclick="closeLeadModal()">✕</button>
-    </div>
-    <div class="ldoc-cloud-modal-body">
-      <div style="font-size:12.5px;color:#94a3b8;margin-bottom:14px">Reserve early access to exclusive living documents, collector editions, and spatial 3D holographic assets. Confirmation dispatched directly via encrypted mail.</div>
-      <form id="lead-reservation-form" onsubmit="handleLeadSubmit(event)">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div>
-            <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">FULL NAME</label>
-            <input type="text" id="lead-name" class="ldoc-cloud-input" placeholder="e.g. Carl Johnson" required>
-          </div>
-          <div>
-            <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">VIP EMAIL ADDRESS</label>
-            <input type="email" id="lead-email" class="ldoc-cloud-input" placeholder="vip@example.com" required>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div>
-            <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">PREFERRED HARDWARE</label>
-            <select id="lead-platform" class="ldoc-cloud-input">
-              <option>PlayStation 5 Pro</option>
-              <option>Xbox Series X</option>
-              <option>High-End PC Rig (RTX 4090)</option>
-              <option>Apple Vision Pro / Spatial</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">RESERVATION TIER</label>
-            <select id="lead-tier" class="ldoc-cloud-input">
-              <option>Founder Velocity Pass ($99)</option>
-              <option>Collector 3D Hologram Box ($149)</option>
-              <option>Studio Enterprise License</option>
-            </select>
-          </div>
-        </div>
-        <div style="margin-bottom:12px">
-          <label style="font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px">CUSTOM WISH / MESSAGE</label>
-          <input type="text" id="lead-message" class="ldoc-cloud-input" placeholder="e.g. Priority access to Leonida spatial map dossier">
-        </div>
-        <button type="submit" id="lead-submit-btn" class="ldoc-cloud-btn" style="width:100%;padding:10px"><span class="tech-icon-badge">VENTURE</span> Confirm VIP Reservation</button>
-      </form>
-      <div id="lead-result-container" style="display:none"></div>
-    </div>
-  </div
-
+  <!-- ── Interactive JavaScript Logic ── -->
   <script>
     // Tab Switching for Hero Canvas
     function switchHeroTab(tabId, btn) {
       document.querySelectorAll('.canvas-tab').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('tab-' + tabId).classList.add('active');
-      if (tabId === '3d') initMeshCanvas();
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      const activePane = document.getElementById('tab-' + tabId);
+      if (activePane) activePane.classList.add('active');
+
+      if (tabId === 'mesh' && !window.heroMeshInitialized) {
+        initHeroMesh();
+      }
     }
 
-    // Reactive Financial Slider Calculations
-    let currentSeats = 1250;
-    let currentDocs = 37500;
-
-    function calcFin(val) {
-      currentSeats = parseInt(val);
-      document.getElementById('seat-count').innerText = currentSeats.toLocaleString();
-      updateMetrics();
+    function updateFinDemo(arr) {
+      const formattedArr = '$' + Number(arr).toLocaleString();
+      document.getElementById('fin-slider-val').textContent = formattedArr;
+      const profit = Math.round(arr * 0.35);
+      document.getElementById('fin-profit-val').textContent = '$' + Number(profit).toLocaleString();
     }
 
-    function calcDocs(val) {
-      currentDocs = parseInt(val);
-      document.getElementById('doc-volume').innerText = currentDocs.toLocaleString() + '/mo';
-      updateMetrics();
-    }
-
-    function updateMetrics() {
-      const arr = Math.round(currentSeats * 290);
-      const hours = Math.round((currentDocs * 0.11));
-      document.getElementById('arr-display').innerText = '$' + arr.toLocaleString();
-      document.getElementById('hours-display').innerText = hours.toLocaleString() + ' hrs';
-    }
-
-    // 3D Canvas Rendering
-    let meshInitialized = false;
-    function initMeshCanvas() {
-      if (meshInitialized) return;
-      meshInitialized = true;
+    // Hero Wireframe Canvas
+    function initHeroMesh() {
+      window.heroMeshInitialized = true;
       const canvas = document.getElementById('hero-mesh-canvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      canvas.width = canvas.parentElement.clientWidth;
+      canvas.width = canvas.parentElement.clientWidth || 600;
       canvas.height = 320;
 
       let angle = 0;
       function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#060911';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
         const cx = canvas.width / 2;
         const cy = canvas.height / 2;
-        const r = 90;
+        const radius = 80;
 
-        ctx.strokeStyle = '#38bdf8';
+        ctx.strokeStyle = '#22D3EE';
         ctx.lineWidth = 1.5;
-
-        // Draw spinning 3D Wireframe Icosahedron Projection
-        for (let i = 0; i < 12; i++) {
-          const theta = (i / 12) * Math.PI * 2 + angle;
-          const x1 = cx + Math.cos(theta) * r;
-          const y1 = cy + Math.sin(theta * 2) * (r * 0.5);
-
-          const theta2 = ((i + 4) / 12) * Math.PI * 2 + angle;
-          const x2 = cx + Math.cos(theta2) * r;
-          const y2 = cy + Math.sin(theta2 * 2) * (r * 0.5);
-
-          ctx.beginPath();
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.stroke();
-
-          // Nodes
-          ctx.fillStyle = '#06b6d4';
-          ctx.beginPath();
-          ctx.arc(x1, y1, 3.5, 0, Math.PI * 2);
-          ctx.fill();
+        ctx.beginPath();
+        for (let i = 0; i < 8; i++) {
+          const a = angle + (i * Math.PI / 4);
+          const x = cx + Math.cos(a) * radius;
+          const y = cy + Math.sin(a) * (radius * 0.5);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         }
+        ctx.closePath();
+        ctx.stroke();
 
-        angle += 0.015;
+        ctx.strokeStyle = '#F59E0B';
+        ctx.beginPath();
+        for (let i = 0; i < 8; i++) {
+          const a = -angle + (i * Math.PI / 4);
+          const x = cx + Math.cos(a) * (radius * 0.6);
+          const y = cy + Math.sin(a) * (radius * 0.3);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+
+        angle += 0.02;
         requestAnimationFrame(draw);
       }
       draw();
     }
 
-    function runSampleSandbox() {
-      alert("[LIVE] [AST Sandbox Execution]\nComponent state updated in sandboxed iframe boundary.\nState synchronized to live document AST.");
-    }
+    // Vanguard-7 Kinematics Simulation
+    window.updateFeatTorque = function(val) {
+      const disp = document.getElementById('feat-torque-display');
+      if (disp) disp.textContent = val + ' Nm';
 
-    // Extracted Modals JavaScript
-    
-function initiateOAuth(provider) {
-  if (typeof LDocToast !== 'undefined') {
-    LDocToast.show(`Connecting to ${provider === 'google' ? 'Google' : 'GitHub'} Single Sign-On...`, 'info', 2500);
-  }
-  setTimeout(() => {
-    const returnUrl = encodeURIComponent(window.location.origin + '/live-studio');
-    window.location.href = `/api/auth/oauth/${provider}?redirect=${returnUrl}`;
-  }, 300);
-}
-
-function showAuthModal() {
-  if (LDocAuth.isAuthenticated()) { renderProfileHub(LDocAuth.getUser()); }
-
-  const modal = document.getElementById('auth-modal');
-  if (!modal) return;
-  if (LDocAuth.isAuthenticated()) {
-    const user = LDocAuth.getUser() || { name: 'Creator', email: 'user@ldoc.com', plan: 'free' };
-    document.getElementById('auth-forms-container').style.display = 'none';
-    document.getElementById('auth-profile-container').style.display = 'block';
-    document.getElementById('profile-name').textContent = user.name || 'Creator';
-    document.getElementById('profile-email').textContent = user.email || '';
-    document.getElementById('profile-avatar').textContent = (user.name || user.email || 'U')[0].toUpperCase();
-    document.getElementById('profile-plan').textContent = (user.plan || 'FREE').toUpperCase() + ' PLAN';
-  } else {
-    document.getElementById('auth-forms-container').style.display = 'block';
-    document.getElementById('auth-profile-container').style.display = 'none';
-  }
-  modal.classList.add('active');
-}
-
-function closeAuthModal() {
-  const modal = document.getElementById('auth-modal');
-  if (modal) modal.classList.remove('active');
-}
-
-function switchAuthTab(tab) {
-  currentAuthTab = tab;
-  document.getElementById('auth-name-group').style.display = tab === 'register' ? 'block' : 'none';
-  document.getElementById('auth-tab-login').className = tab === 'login' ? 'ldoc-cloud-btn' : 'ldoc-cloud-btn secondary';
-  document.getElementById('auth-tab-register').className = tab === 'register' ? 'ldoc-cloud-btn' : 'ldoc-cloud-btn secondary';
-  document.getElementById('auth-submit-btn').textContent = tab === 'register' ? 'Create Account' : '<span class="tech-icon-badge">LIVE</span> Sign In to LDOC Cloud';
-  document.getElementById('auth-error').style.display = 'none';
-}
-
-async function handleAuthSubmit(e) {
-  e.preventDefault();
-  const email = document.getElementById('auth-email').value;
-  const password = document.getElementById('auth-password').value;
-  const name = document.getElementById('auth-name').value;
-  const errEl = document.getElementById('auth-error');
-  errEl.style.display = 'none';
-
-  const endpoint = currentAuthTab === 'register' ? '/api/auth/register' : '/api/auth/login';
-  const payload = currentAuthTab === 'register' ? { email, password, name } : { email, password };
-
-  try {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    if (!res.ok || !data.ok) {
-      errEl.textContent = data.error || 'Authentication failed. Check credentials.';
-      errEl.style.display = 'block';
-      return;
-    }
-
-    LDocAuth.setToken(data.token);
-    LDocAuth.setUser(data.user);
-    updateHeaderAuthButton();
-    showAuthModal();
-  } catch (err) {
-    errEl.textContent = 'Network error: ' + err.message;
-    errEl.style.display = 'block';
-  }
-}
-
-function handleLogout() {
-  LDocAuth.removeToken();
-  LDocAuth.removeUser();
-  updateHeaderAuthButton();
-  closeAuthModal();
-}
-
-function updateHeaderAuthButton() {
-  const btn = document.getElementById('header-auth-btn');
-  if (!btn) return;
-  if (LDocAuth.isAuthenticated()) {
-    const user = LDocAuth.getUser();
-    btn.innerHTML = `<span class="tech-icon-badge">USER</span> ${user?.name || 'Account'} <span style="background:#f59e0b;color:#000;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:900;margin-left:4px">PRO</span>`;
-  } else {
-    btn.innerHTML = `<span class="tech-icon-badge">USER</span> Sign In`;
-  }
-}
-
-// ── CLOUD VAULT (MY DOCUMENTS) ──────────────────────────────────────────────
-async function showCloudVaultModal() {
-  const modal = document.getElementById('cloud-vault-modal');
-  if (!modal) return;
-  modal.classList.add('active');
-
-  const listEl = document.getElementById('cloud-vault-list');
-  listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8">Syncing with cloud database...</div>';
-
-  try {
-    const headers = {};
-    if (LDocAuth.getToken()) headers['Authorization'] = 'Bearer ' + LDocAuth.getToken();
-    const res = await fetch('/api/documents', { headers });
-    const docs = await res.json();
-
-    if (!Array.isArray(docs) || docs.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8">No documents yet. Click "New Cloud Document" to create one.</div>';
-      return;
-    }
-
-    listEl.innerHTML = docs.map(d => `
-      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-size:14px;font-weight:700;color:#fff">${escapeHtml(d.title)}</div>
-          <div style="font-size:11.5px;color:#94a3b8;margin-top:2px">ID: ${d.id} • Revision v${d.version || 1} • ${new Date(d.updated_at || Date.now()).toLocaleDateString()}</div>
-        </div>
-        <div style="display:flex;gap:6px">
-          <button class="ldoc-cloud-btn" style="padding:4px 10px;font-size:11.5px" onclick="loadCloudDocument('${d.id}')">Open in Studio</button>
-          <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="showVersionsModal('${d.id}')">↺ History</button>
-        </div>
-      </div>
-    `).join('');
-  } catch (err) {
-    listEl.innerHTML = '<div style="color:#f87171;padding:16px">Failed to load documents: ' + err.message + '</div>';
-  }
-}
-
-function closeCloudVaultModal() {
-  const modal = document.getElementById('cloud-vault-modal');
-  if (modal) modal.classList.remove('active');
-}
-
-async function createNewCloudDoc() {
-  const title = prompt('Enter document title:', 'New Living Document');
-  if (!title) return;
-  try {
-    const headers = { 'Content-Type': 'application/json' };
-    if (LDocAuth.getToken()) headers['Authorization'] = 'Bearer ' + LDocAuth.getToken();
-    const res = await fetch('/api/documents', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ title, theme: 'dark_gold' })
-    });
-    const doc = await res.json();
-    currentActiveDocId = doc.id;
-    localStorage.setItem('ldoc_active_doc_id', doc.id);
-    showCloudVaultModal();
-  } catch (err) {
-    alert('Error creating cloud document: ' + err.message);
-  }
-}
-
-async function loadCloudDocument(docId) {
-  try {
-    const res = await fetch(`/api/documents/${docId}`);
-    const doc = await res.json();
-    currentActiveDocId = doc.id;
-    localStorage.setItem('ldoc_active_doc_id', doc.id);
-    if (doc.ast) {
-      if (typeof currentDoc !== 'undefined') {
-        currentDoc = doc.ast;
-        if (typeof renderBlocks === 'function') renderBlocks();
-        if (typeof renderPreview === 'function') renderPreview();
+      const temp = document.getElementById('feat-temp-display');
+      if (temp) {
+        const computedTemp = (30 + (val - 100) * 0.06).toFixed(1);
+        temp.textContent = '+' + computedTemp + '°C';
       }
-      const titleEl = document.getElementById('doc-title') || document.getElementById('top-title');
-      if (titleEl) titleEl.textContent = doc.title;
-    }
-    closeCloudVaultModal();
-  } catch (err) {
-    alert('Error opening document: ' + err.message);
-  }
-}
 
-// ── VERSION HISTORY ─────────────────────────────────────────────────────────
-async function showVersionsModal(docId) {
-  docId = docId || currentActiveDocId;
-  const modal = document.getElementById('versions-modal');
-  if (!modal) return;
-  modal.classList.add('active');
-
-  const listEl = document.getElementById('versions-history-list');
-  listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">Fetching version snapshots...</div>';
-
-  try {
-    const res = await fetch(`/api/documents/${docId}/versions`);
-    const versions = await res.json();
-
-    if (!Array.isArray(versions) || versions.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center;padding:20px;color:#94a3b8">No past snapshots recorded yet.</div>';
-      return;
-    }
-
-    listEl.innerHTML = versions.map(v => `
-      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <span style="font-weight:700;color:#f59e0b;font-size:12.5px">v${v.version_num}</span>
-          <span style="color:#e2e8f0;font-size:12.5px;margin-left:8px">${escapeHtml(v.summary || 'Revision')}</span>
-          <div style="font-size:11px;color:#94a3b8;margin-top:2px">${new Date(v.created_at).toLocaleString()}</div>
-        </div>
-        <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="restoreSnapshot('${docId}', '${v.id}')">↺ Restore</button>
-      </div>
-    `).join('');
-  } catch (err) {
-    listEl.innerHTML = '<div style="color:#f87171;padding:16px">Failed to load versions: ' + err.message + '</div>';
-  }
-}
-
-function closeVersionsModal() {
-  const modal = document.getElementById('versions-modal');
-  if (modal) modal.classList.remove('active');
-}
-
-async function restoreSnapshot(docId, versionId) {
-  if (!confirm('Are you sure you want to restore this revision snapshot?')) return;
-  try {
-    const res = await fetch(`/api/documents/${docId}/restore`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ version_id: versionId })
-    });
-    const restored = await res.json();
-    alert('Document restored to revision successfully!');
-    closeVersionsModal();
-    loadCloudDocument(docId);
-  } catch (err) {
-    alert('Error restoring revision: ' + err.message);
-  }
-}
-
-// ── SHARE MODAL ─────────────────────────────────────────────────────────────
-function showShareModal() {
-  const modal = document.getElementById('share-modal');
-  if (!modal) return;
-  const currentUrl = window.location.origin + window.location.pathname + '?doc=' + currentActiveDocId;
-  const embedCode = `<iframe src="${currentUrl}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
-  document.getElementById('share-link-input').value = currentUrl;
-  document.getElementById('share-embed-input').value = embedCode;
-  if (typeof drawShareQRCode === 'function') drawShareQRCode(currentUrl);
-  modal.classList.add('active');
-}
-
-function closeShareModal() {
-  const modal = document.getElementById('share-modal');
-  if (modal) modal.classList.remove('active');
-}
-
-function copyShareLink() {
-  const inp = document.getElementById('share-link-input');
-  inp.select();
-  navigator.clipboard.writeText(inp.value);
-  alert('Share URL copied to clipboard!');
-}
-
-function copyEmbedCode() {
-  const inp = document.getElementById('share-embed-input');
-  inp.select();
-  navigator.clipboard.writeText(inp.value);
-  alert('Iframe embed code copied to clipboard!');
-}
-
-// ── STRIPE BILLING & PRICING MODAL ──────────────────────────────────────────
-
-
-
-
-
-function escapeHtml(str) {
-  return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
-}
-
-
-// ── OAUTH & PROFILE HUB INTERACTION ─────────────────────────────────────────
-function triggerOAuth(provider) {
-  const btn = event.currentTarget;
-  const originalText = btn.innerHTML;
-  btn.innerHTML = `<span>⏳</span> Connecting to ${provider === 'google' ? 'Google Identity' : 'GitHub OAuth'}...`;
-  btn.style.opacity = '0.7';
-
-  setTimeout(() => {
-    btn.innerHTML = originalText;
-    btn.style.opacity = '1';
-
-    const mockUser = {
-      id: 'usr_' + Math.random().toString(36).slice(2, 9),
-      name: provider === 'google' ? 'K Jay (Google)' : 'J AI ENTERPRISES (GitHub)',
-      email: 'jayaramankalidasan@gmail.com',
-      avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=' + provider,
-      plan: 'pro',
-      provider: provider
-    };
-
-    LDocAuth.setToken('jwt_oauth_' + Math.random().toString(36).slice(2, 12));
-    LDocAuth.setUser(mockUser);
-    updateHeaderAuthButton();
-    renderProfileHub(mockUser);
-  }, 750);
-}
-
-function renderProfileHub(user) {
-  const container = document.getElementById('auth-forms-container');
-  if (!container) return;
-  document.getElementById('auth-modal-title').textContent = 'Account Profile & Cloud Hub';
-
-  container.innerHTML = `
-    <div class="ldoc-profile-hub">
-      <div class="ldoc-profile-header">
-        <img class="ldoc-profile-avatar" src="${user.avatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=Jay'}" alt="Avatar">
-        <div class="ldoc-profile-meta">
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="ldoc-profile-name">${escapeHtml(user.name)}</span>
-            <span style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-size:10px;font-weight:900;padding:2px 7px;border-radius:4px">PRO VIP</span>
-          </div>
-          <div class="ldoc-profile-email">${escapeHtml(user.email)}</div>
-        </div>
-      </div>
-      <div class="ldoc-profile-stats">
-        <div class="ldoc-stat-box">
-          <div class="ldoc-stat-num">100 / 100</div>
-          <div class="ldoc-stat-lbl">AI Credits Today</div>
-        </div>
-        <div class="ldoc-stat-box">
-          <div class="ldoc-stat-num">Unlimited</div>
-          <div class="ldoc-stat-lbl">Cloud Sync</div>
-        </div>
-        <div class="ldoc-stat-box">
-          <div class="ldoc-stat-num">ACTIVE</div>
-          <div class="ldoc-stat-lbl">Pro License</div>
-        </div>
-      </div>
-      <div style="background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px;margin-bottom:14px">
-        <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:6px">DEVELOPER SDK API KEY (@ldoc/sdk)</div>
-        <div style="display:flex;gap:6px">
-          <input type="text" class="ldoc-cloud-input" value="ldoc_live_94d59cef_d2540fcd6919" readonly style="font-family:monospace;font-size:11.5px">
-          <button class="ldoc-cloud-btn secondary" style="white-space:nowrap" onclick="navigator.clipboard.writeText('ldoc_live_94d59cef_d2540fcd6919');alert('Copied API Key to clipboard!')">Copy</button>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="ldoc-cloud-btn" style="flex:1" ><span class="tech-icon-badge">PRO</span> Manage Billing</button>
-        <button class="ldoc-cloud-btn secondary" style="flex:1" onclick="handleLogout()">Sign Out</button>
-      </div>
-    </div>
-  `;
-}
-
-// ── LEMON SQUEEZY CHECKOUT MODAL INTERACTION ────────────────────────────────
-
-
-
-
-// ── VIP LEAD ROUTING MODAL ──────────────────────────────────────────────────
-function showLeadModal() {
-  const m = document.getElementById('lead-modal');
-  if (m) m.classList.add('active');
-}
-function closeLeadModal() {
-  const m = document.getElementById('lead-modal');
-  if (m) m.classList.remove('active');
-}
-async function handleLeadSubmit(e) {
-  e.preventDefault();
-  const name = document.getElementById('lead-name').value;
-  const email = document.getElementById('lead-email').value;
-  const platform = document.getElementById('lead-platform').value;
-  const tier = document.getElementById('lead-tier').value;
-  const message = document.getElementById('lead-message').value;
-
-  const btn = document.getElementById('lead-submit-btn');
-  btn.textContent = '⏳ Dispatching VIP Lead...';
-  btn.disabled = true;
-
-  try {
-    const res = await fetch('/api/leads/capture', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, platform, tier, message })
-    });
-    const data = await res.json();
-    const form = document.getElementById('lead-reservation-form');
-    form.style.display = 'none';
-
-    const resultBox = document.getElementById('lead-result-container');
-    resultBox.style.display = 'block';
-    resultBox.innerHTML = `
-      <div class="vip-ticket-preview">
-        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(245,158,11,0.3);padding-bottom:10px;margin-bottom:12px">
-          <span style="font-weight:900;letter-spacing:1.5px;color:#f59e0b">VIP PRIORITY TICKET</span>
-          <span style="font-family:monospace;font-weight:800;color:#fef3c7">${data.lead_id || 'TICKET_VIP_2026'}</span>
-        </div>
-        <div style="font-size:14px;font-weight:800;margin-bottom:4px">Reserved for: ${escapeHtml(name)}</div>
-        <div style="font-size:12px;color:#cbd5e1">Hardware: <b>${escapeHtml(platform)}</b> • Tier: <b>${escapeHtml(tier)}</b></div>
-        <div style="margin-top:12px;font-size:11.5px;color:#10b981;display:flex;align-items:center;gap:6px">
-          <span>✓</span> Notification dispatched live via Gmail SMTP to <b>${data.routed_to || 'jayaramankalidasan@gmail.com'}</b>
-        </div>
-        <button class="ldoc-cloud-btn" style="width:100%;margin-top:14px" onclick="closeLeadModal()">Done</button>
-      </div>
-    `;
-  } catch (err) {
-    alert('Lead error: ' + err.message);
-  } finally {
-    btn.textContent = '<span class="tech-icon-badge">VENTURE</span> Confirm VIP Reservation';
-    btn.disabled = false;
-  }
-}
-
-// ── QR CODE GENERATOR FOR SHARE MODAL ───────────────────────────────────────
-function drawShareQRCode(text) {
-  const canvas = document.getElementById('share-qr-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const size = 160;
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, size, size);
-
-  // Generate deterministic QR matrix visualization
-  ctx.fillStyle = '#0f172a';
-  const grid = 21;
-  const cell = size / grid;
-
-  // Corner markers
-  function drawCorner(x, y) {
-    ctx.fillRect(x * cell, y * cell, 7 * cell, 7 * cell);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect((x + 1) * cell, (y + 1) * cell, 5 * cell, 5 * cell);
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect((x + 2) * cell, (y + 2) * cell, 3 * cell, 3 * cell);
-  }
-  drawCorner(0, 0);
-  drawCorner(14, 0);
-  drawCorner(0, 14);
-
-  // Pseudo-random data blocks seeded by URL string
-  let seed = 0;
-  for (let i = 0; i < text.length; i++) seed = (seed * 31 + text.charCodeAt(i)) & 0xffffffff;
-  for (let r = 0; r < grid; r++) {
-    for (let c = 0; c < grid; c++) {
-      if ((r < 8 && c < 8) || (r < 8 && c > 12) || (r > 12 && c < 8)) continue;
-      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-      if (seed % 2 === 0) {
-        ctx.fillRect(c * cell, r * cell, cell, cell);
+      const eff = document.getElementById('feat-eff-display');
+      if (eff) {
+        const computedEff = (98.5 - (val - 100) * 0.009).toFixed(1);
+        eff.textContent = computedEff + '%';
       }
-    }
-  }
-}
 
-// Auto-initialize header state on load
-document.addEventListener('DOMContentLoaded', () => {
-  updateHeaderAuthButton();
-});
-
-  </script>
-
-<script>
-function switchFeatureTab(tab, btn) {
-  document.querySelectorAll('.canvas-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('ftab-telemetry').style.display = tab === 'telemetry' ? 'block' : 'none';
-  document.getElementById('ftab-ast').style.display = tab === 'ast' ? 'block' : 'none';
-  document.getElementById('ftab-crypto').style.display = tab === 'crypto' ? 'block' : 'none';
-}
-
-let featRobotGroup, featCoreMesh, featCoreLight, featRobotJoints = [];
-let featDragState = { isDragging: false, prevX: 0, prevY: 0, rotY: 0.45, rotX: 0.22, velY: 0, velX: 0 };
-let featOrbitActive = true;
-
-function updateFeatTorque(val) {
-  const d = document.getElementById('feat-torque-display');
-  if (d) d.textContent = val + ' Nm';
-  const therm = document.getElementById('feat-thermal-val');
-  if (therm) therm.textContent = '+' + (32 + (val / 18)).toFixed(1) + ' °C';
-  const safe = document.getElementById('feat-safety-val');
-  if (safe) {
-    const s = Math.max(1.1, (650 - val) / 180).toFixed(2);
-    safe.textContent = s + 'x ' + (s > 1.4 ? 'OK' : 'MARGINAL');
-    safe.style.color = s > 1.4 ? '#34d399' : '#f59e0b';
-  }
-
-  // 3D Telemetry Kinematics Actuation
-  const strainFactor = (val - 50) / 550; // 0.0 to 1.0
-  if (featRobotJoints && featRobotJoints.length > 0) {
-    featRobotJoints.forEach((j, i) => {
-      const dir = (i % 2 === 0) ? 1 : -1;
-      j.kneePivot.rotation.z = (Math.PI / 2) + (strainFactor * 0.45 * dir);
-      j.hipPivot.rotation.x = (strainFactor * 0.25 * (i < 2 ? 1 : -1));
-    });
-  }
-  if (featCoreMesh) {
-    const scale = 1.0 + strainFactor * 0.35;
-    featCoreMesh.scale.set(scale, scale, scale);
-  }
-  if (featCoreLight) {
-    featCoreLight.intensity = 2.5 + strainFactor * 3.5;
-  }
-}
-
-// Dynamic On-Demand Three.js Loader
-let featThreeJsLoaded = (typeof THREE !== 'undefined');
-let featThreeJsLoading = false;
-let featThreeCallbacks = [];
-
-function ensureThreeJs(cb) {
-  if (typeof THREE !== 'undefined') {
-    featThreeJsLoaded = true;
-    if (cb) cb();
-    return;
-  }
-  if (cb) featThreeCallbacks.push(cb);
-  if (featThreeJsLoading) return;
-  featThreeJsLoading = true;
-
-  const script = document.createElement('script');
-  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-  script.async = true;
-  script.onload = () => {
-    featThreeJsLoaded = true;
-    featThreeJsLoading = false;
-    while (featThreeCallbacks.length) {
-      const fn = featThreeCallbacks.shift();
-      try { fn(); } catch(e){}
-    }
-  };
-  script.onerror = () => {
-    const localScript = document.createElement('script');
-    localScript.src = '/three.min.js';
-    localScript.async = true;
-    localScript.onload = () => {
-      featThreeJsLoaded = true;
-      featThreeJsLoading = false;
-      while (featThreeCallbacks.length) {
-        const fn = featThreeCallbacks.shift();
-        try { fn(); } catch(e){}
+      const stress = document.getElementById('feat-stress-display');
+      if (stress) {
+        const computedStress = Math.round(110 + (val - 100) * 0.28);
+        stress.textContent = computedStress + ' MPa';
       }
     };
-    localScript.onerror = () => {
-      featThreeJsLoading = false;
-      const canvas = document.getElementById('feat-mesh-canvas');
-      if (canvas) initFallbackFeatCanvas(canvas);
+
+    window.tamperFeatMerkle = function() {
+      const box = document.getElementById('feat-tamper-box');
+      if (box) box.classList.add('tampered');
+      const title = document.getElementById('feat-tamper-title');
+      if (title) title.textContent = 'Cryptographic Root Invalidated';
+      const desc = document.getElementById('feat-tamper-desc');
+      if (desc) desc.textContent = 'Hash mismatch detected at node #0x4f2b. Document locked to preserve audit trail.';
+      document.getElementById('btn-feat-tamper').style.display = 'none';
+      document.getElementById('btn-feat-restore').style.display = 'inline-block';
     };
-    document.head.appendChild(localScript);
-  };
-  document.head.appendChild(script);
-}
 
-let feat3DTriggered = false;
-function triggerFeat3D() {
-  if (feat3DTriggered) return;
-  feat3DTriggered = true;
-  const canvas = document.getElementById('feat-mesh-canvas');
-  if (!canvas) return;
-  ensureThreeJs(() => initFeat3D(canvas));
-}
+    window.restoreFeatMerkle = function() {
+      const box = document.getElementById('feat-tamper-box');
+      if (box) box.classList.remove('tampered');
+      const title = document.getElementById('feat-tamper-title');
+      if (title) title.textContent = 'Hardware Provenance Verified';
+      const desc = document.getElementById('feat-tamper-desc');
+      if (desc) desc.textContent = 'Every block hash cascades into the signed root digest, detecting any single-bit alteration instantly.';
+      document.getElementById('btn-feat-tamper').style.display = 'inline-block';
+      document.getElementById('btn-feat-restore').style.display = 'none';
+    };
 
-['pointerdown', 'touchstart', 'scroll', 'keydown', 'wheel', 'mousemove', 'pointermove'].forEach(evt => {
-  window.addEventListener(evt, triggerFeat3D, { once: true, passive: true });
-});
+    // Initialize Vanguard-7 WebGL Canvas
+    function initVanguardCanvas() {
+      const canvas = document.getElementById('feat-webgl-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-const featCanvas = document.getElementById('feat-mesh-canvas');
-if (featCanvas) {
-  ['pointerdown', 'touchstart', 'wheel', 'click'].forEach(evt => {
-    featCanvas.addEventListener(evt, triggerFeat3D, { once: true, passive: true });
-  });
-}
+      canvas.width = canvas.parentElement.clientWidth || 500;
+      canvas.height = 380;
 
-if (document.readyState === 'complete') {
-  setTimeout(triggerFeat3D, 5000);
-} else {
-  window.addEventListener('load', () => {
-    setTimeout(triggerFeat3D, 5000);
-  }, { once: true, passive: true });
-}
+      let t = 0;
+      function render() {
+        ctx.fillStyle = '#05060A';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-function initFeat3D(canvas) {
-  const container = canvas.parentElement;
-  const w = container.clientWidth || 440;
-  const h = container.clientHeight || 320;
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x070a12);
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
 
-  const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-  camera.position.set(0, 2.2, 7.2);
-  camera.lookAt(0, 0.3, 0);
-
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
-    renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.shadowMap.enabled = true;
-  } catch (err) {
-    console.warn('WebGL unavailable, using 2D fallback:', err);
-    initFallbackFeatCanvas(canvas);
-    return;
-  }
-
-  // 1. Studio Lighting Rig
-  const amb = new THREE.AmbientLight(0xffffff, 1.4);
-  scene.add(amb);
-
-  const keyLight = new THREE.DirectionalLight(0x38bdf8, 2.8);
-  keyLight.position.set(5, 8, 6);
-  scene.add(keyLight);
-
-  const fillLight = new THREE.DirectionalLight(0xa78bfa, 2.0);
-  fillLight.position.set(-6, 4, -4);
-  scene.add(fillLight);
-
-  const rimLight = new THREE.DirectionalLight(0x06b6d4, 1.5);
-  rimLight.position.set(0, -4, -6);
-  scene.add(rimLight);
-
-  featCoreLight = new THREE.PointLight(0x06b6d4, 3, 8);
-  featCoreLight.position.set(0, 0.4, 0.85);
-  scene.add(featCoreLight);
-
-  // 2. Ground Radar Coordinate Grid
-  const grid = new THREE.GridHelper(14, 16, 0x06b6d4, 0x1e293b);
-  grid.position.y = -1.15;
-  scene.add(grid);
-
-  // Radar Rings
-  const ringMat = new THREE.LineBasicMaterial({ color: 0x0ea5e9, transparent: true, opacity: 0.35 });
-  [1.5, 3.0, 4.5].forEach(r => {
-    const segs = 48;
-    const ringGeom = new THREE.BufferGeometry();
-    const pts = [];
-    for (let i = 0; i <= segs; i++) {
-      const theta = (i / segs) * Math.PI * 2;
-      pts.push(Math.cos(theta) * r, -1.14, Math.sin(theta) * r);
-    }
-    ringGeom.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
-    scene.add(new THREE.Line(ringGeom, ringMat));
-  });
-
-  // 3. Build Vanguard-7 Robotic Quadruped Assembly
-  featRobotGroup = new THREE.Group();
-  featRobotJoints = [];
-  window.featMaterials = [];
-  window.featWireframe = false;
-
-  function createFeatMaterials() {
-    const armorMat = new THREE.MeshStandardMaterial({
-      color: 0x1e2638,
-      metalness: 0.85,
-      roughness: 0.25,
-      wireframe: window.featWireframe
-    });
-    const frameMat = new THREE.MeshStandardMaterial({
-      color: 0x334155,
-      metalness: 0.9,
-      roughness: 0.3,
-      wireframe: window.featWireframe
-    });
-    const cyanGlowMat = new THREE.MeshBasicMaterial({ color: 0x06b6d4, wireframe: window.featWireframe });
-    const amberGlowMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, wireframe: window.featWireframe });
-    window.featMaterials = [armorMat, frameMat, cyanGlowMat, amberGlowMat];
-    return { armorMat, frameMat, cyanGlowMat, amberGlowMat };
-  }
-
-  window.buildQuadrupedModel = function(group) {
-    const { armorMat, frameMat, cyanGlowMat, amberGlowMat } = createFeatMaterials();
-    featRobotJoints = [];
-
-    const chassisGeom = new THREE.BoxGeometry(1.6, 0.55, 2.2);
-    const chassis = new THREE.Mesh(chassisGeom, armorMat);
-    chassis.position.y = 0.4;
-    group.add(chassis);
-
-    const cowlGeom = new THREE.BoxGeometry(1.2, 0.22, 1.6);
-    const cowl = new THREE.Mesh(cowlGeom, frameMat);
-    cowl.position.set(0, 0.75, 0.1);
-    group.add(cowl);
-
-    const coreGeom = new THREE.CylinderGeometry(0.24, 0.24, 0.58, 16);
-    const coreMesh = new THREE.Mesh(coreGeom, cyanGlowMat);
-    coreMesh.rotation.x = Math.PI / 2;
-    coreMesh.position.set(0, 0.4, 0.85);
-    group.add(coreMesh);
-
-    const headGeom = new THREE.BoxGeometry(0.65, 0.3, 0.6);
-    const head = new THREE.Mesh(headGeom, armorMat);
-    head.position.set(0, 0.65, 1.25);
-    group.add(head);
-
-    const visorGeom = new THREE.BoxGeometry(0.5, 0.08, 0.1);
-    const visor = new THREE.Mesh(visorGeom, amberGlowMat);
-    visor.position.set(0, 0.65, 1.56);
-    group.add(visor);
-
-    const legPositions = [
-      { x: -0.9, z: 0.95, side: -1 },
-      { x: 0.9, z: 0.95, side: 1 },
-      { x: -0.9, z: -0.95, side: -1 },
-      { x: 0.9, z: -0.95, side: 1 }
-    ];
-
-    legPositions.forEach((pos) => {
-      const hipPivot = new THREE.Group();
-      hipPivot.position.set(pos.x, 0.35, pos.z);
-
-      const ballGeom = new THREE.SphereGeometry(0.18, 12, 12);
-      const ball = new THREE.Mesh(ballGeom, frameMat);
-      hipPivot.add(ball);
-
-      const upperGeom = new THREE.BoxGeometry(0.16, 0.85, 0.2);
-      const upper = new THREE.Mesh(upperGeom, armorMat);
-      upper.position.set(pos.side * 0.15, -0.4, 0);
-      hipPivot.add(upper);
-
-      const kneePivot = new THREE.Group();
-      kneePivot.position.set(pos.side * 0.32, -0.85, 0);
-
-      const kneeGeom = new THREE.CylinderGeometry(0.14, 0.14, 0.22, 12);
-      const knee = new THREE.Mesh(kneeGeom, frameMat);
-      knee.rotation.z = Math.PI / 2;
-      kneePivot.add(knee);
-
-      const lowerGeom = new THREE.BoxGeometry(0.12, 0.85, 0.16);
-      const lower = new THREE.Mesh(lowerGeom, frameMat);
-      lower.position.set(0, -0.42, 0);
-      kneePivot.add(lower);
-
-      const footGeom = new THREE.CylinderGeometry(0.18, 0.22, 0.1, 12);
-      const foot = new THREE.Mesh(footGeom, armorMat);
-      foot.position.set(0, -0.85, 0);
-      kneePivot.add(foot);
-
-      hipPivot.add(kneePivot);
-      group.add(hipPivot);
-      featRobotJoints.push({ hipPivot, kneePivot });
-    });
-  };
-
-  window.buildSatelliteModel = function(group) {
-    const { armorMat, frameMat, cyanGlowMat, amberGlowMat } = createFeatMaterials();
-    // Central Bus
-    const busGeom = new THREE.BoxGeometry(1.2, 1.8, 1.2);
-    const bus = new THREE.Mesh(busGeom, armorMat);
-    group.add(bus);
-
-    // Solar Wings Left and Right
-    const wingGeom = new THREE.BoxGeometry(2.4, 0.04, 1.0);
-    const leftWing = new THREE.Mesh(wingGeom, frameMat);
-    leftWing.position.set(-2.0, 0, 0);
-    group.add(leftWing);
-
-    const rightWing = new THREE.Mesh(wingGeom, frameMat);
-    rightWing.position.set(2.0, 0, 0);
-    group.add(rightWing);
-
-    // Parabolic Dish Antenna
-    const dishGeom = new THREE.CylinderGeometry(0.7, 0.05, 0.35, 24);
-    const dish = new THREE.Mesh(dishGeom, frameMat);
-    dish.rotation.x = Math.PI / 2;
-    dish.position.set(0, 0, 1.0);
-    group.add(dish);
-
-    const feedGeom = new THREE.CylinderGeometry(0.04, 0.04, 0.5, 8);
-    const feed = new THREE.Mesh(feedGeom, amberGlowMat);
-    feed.rotation.x = Math.PI / 2;
-    feed.position.set(0, 0, 1.3);
-    group.add(feed);
-
-    // Sensor Ring
-    const sensorGeom = new THREE.TorusGeometry(0.45, 0.04, 8, 24);
-    const sensor = new THREE.Mesh(sensorGeom, cyanGlowMat);
-    sensor.position.set(0, 1.0, 0);
-    sensor.rotation.x = Math.PI / 2;
-    group.add(sensor);
-  };
-
-  window.buildTurbineModel = function(group) {
-    const { armorMat, frameMat, cyanGlowMat, amberGlowMat } = createFeatMaterials();
-    // Outer Nacelle Ring
-    const casingGeom = new THREE.CylinderGeometry(1.5, 1.5, 1.6, 28, 1, true);
-    const casing = new THREE.Mesh(casingGeom, frameMat);
-    casing.rotation.x = Math.PI / 2;
-    group.add(casing);
-
-    // Center Nose Cone
-    const coneGeom = new THREE.ConeGeometry(0.45, 1.2, 20);
-    const cone = new THREE.Mesh(coneGeom, armorMat);
-    cone.rotation.x = Math.PI / 2;
-    cone.position.set(0, 0, 0.5);
-    group.add(cone);
-
-    // 12 Blades
-    for (let i = 0; i < 12; i++) {
-      const angle = (i / 12) * Math.PI * 2;
-      const bladeGeom = new THREE.BoxGeometry(0.12, 1.0, 0.04);
-      const blade = new THREE.Mesh(bladeGeom, armorMat);
-      blade.position.set(Math.cos(angle) * 0.7, Math.sin(angle) * 0.7, 0);
-      blade.rotation.z = angle + 0.4;
-      group.add(blade);
-    }
-
-    // Glowing Afterburner Core Ring
-    const burnerGeom = new THREE.TorusGeometry(0.9, 0.06, 8, 28);
-    const burner = new THREE.Mesh(burnerGeom, amberGlowMat);
-    burner.position.set(0, 0, -0.6);
-    group.add(burner);
-  };
-
-  // Build initial Quadruped
-  window.buildQuadrupedModel(featRobotGroup);
-
-  // Wireframe toggle handler
-  window.toggle3DWireframe = function() {
-    window.featWireframe = !window.featWireframe;
-    if (window.featMaterials) {
-      window.featMaterials.forEach(m => { if (m) m.wireframe = window.featWireframe; });
-    }
-    const statusText = document.getElementById('wireframe-status-text');
-    if (statusText) {
-      statusText.textContent = window.featWireframe ? 'ON' : 'OFF';
-      statusText.style.color = window.featWireframe ? '#38bdf8' : '#94a3b8';
-    }
-  };
-
-  // 3D Model Switcher handler
-  window.switch3DModel = function(model) {
-    ['quadruped', 'satellite', 'turbine'].forEach(m => {
-      const btn = document.getElementById('btn-model-' + m);
-      if (btn) {
-        if (m === model) {
-          btn.classList.add('active', 'ldoc-btn-secondary');
-          btn.classList.remove('ldoc-btn-ghost');
-        } else {
-          btn.classList.remove('active', 'ldoc-btn-secondary');
-          btn.classList.add('ldoc-btn-ghost');
+        // Draw rotating vector gear
+        ctx.strokeStyle = '#38BDF8';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        const teeth = 16;
+        for (let i = 0; i < teeth; i++) {
+          const a1 = t + (i * Math.PI * 2 / teeth);
+          const a2 = t + ((i + 0.5) * Math.PI * 2 / teeth);
+          const r1 = 90;
+          const r2 = 105;
+          ctx.lineTo(cx + Math.cos(a1) * r1, cy + Math.sin(a1) * r1);
+          ctx.lineTo(cx + Math.cos(a1) * r2, cy + Math.sin(a1) * r2);
+          ctx.lineTo(cx + Math.cos(a2) * r2, cy + Math.sin(a2) * r2);
+          ctx.lineTo(cx + Math.cos(a2) * r1, cy + Math.sin(a2) * r1);
         }
+        ctx.closePath();
+        ctx.stroke();
+
+        // Inner rotor ring
+        ctx.strokeStyle = '#F59E0B';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 55, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Crosshairs
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(cx - 130, cy); ctx.lineTo(cx + 130, cy);
+        ctx.moveTo(cx, cy - 130); ctx.lineTo(cx, cy + 130);
+        ctx.stroke();
+
+        t += 0.015;
+        requestAnimationFrame(render);
       }
+      render();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initVanguardCanvas();
     });
-
-    if (!featRobotGroup || !window.THREE) return;
-    while (featRobotGroup.children.length > 0) {
-      featRobotGroup.remove(featRobotGroup.children[0]);
-    }
-
-    if (model === 'quadruped') {
-      window.buildQuadrupedModel(featRobotGroup);
-    } else if (model === 'satellite') {
-      window.buildSatelliteModel(featRobotGroup);
-    } else if (model === 'turbine') {
-      window.buildTurbineModel(featRobotGroup);
-    }
-  };
-
-  // DAG Real-Time Data Flow handler
-  window.updateDag = function(val) {
-    const torque = Number(val);
-    const thermal = (torque * 0.126).toFixed(1);
-    const torqueValEl = document.getElementById('dag-val-torque');
-    const sliderValEl = document.getElementById('dag-slider-val');
-    const targetValEl = document.getElementById('dag-val-target');
-    if (torqueValEl) torqueValEl.textContent = torque + ' Nm';
-    if (sliderValEl) sliderValEl.textContent = torque;
-    if (targetValEl) targetValEl.textContent = '+' + thermal + ' °C';
-
-    ['dag-node-1', 'dag-node-2', 'dag-node-3'].forEach((id, idx) => {
-      const el = document.getElementById(id);
-      if (el) {
-        setTimeout(() => {
-          el.style.transform = 'scale(1.04)';
-          el.style.boxShadow = '0 0 16px rgba(56, 189, 248, 0.4)';
-          setTimeout(() => {
-            el.style.transform = 'scale(1)';
-            el.style.boxShadow = 'none';
-          }, 180);
-        }, idx * 60);
-      }
-    });
-  };
-
-  // Merkle Tamper & Restore simulation
-  window.simulateTamper = function() {
-    const leaf = document.getElementById('merkle-leaf-tampered');
-    const branchL = document.getElementById('merkle-branch-l');
-    const branchLHash = document.getElementById('merkle-branch-l-hash');
-    const rootNode = document.getElementById('merkle-root-node');
-    const rootHash = document.getElementById('merkle-root-hash');
-    const alertBox = document.getElementById('merkle-alert-box');
-    const statusText = document.getElementById('merkle-status-text');
-    const statusBadge = document.getElementById('merkle-status-badge');
-    const shieldIcon = document.getElementById('merkle-shield-icon');
-    const shieldTitle = document.getElementById('merkle-shield-title');
-    const shieldDesc = document.getElementById('merkle-shield-desc');
-    const btnTamper = document.getElementById('btn-tamper-sim');
-    const btnRestore = document.getElementById('btn-restore-sim');
-
-    if (leaf) {
-      leaf.style.borderColor = '#ef4444';
-      leaf.style.color = '#f87171';
-      leaf.textContent = 'Blk_02: TAMPERED';
-      leaf.style.background = 'rgba(239, 68, 68, 0.2)';
-    }
-    if (branchL) {
-      branchL.style.borderColor = '#ef4444';
-      branchL.style.color = '#fca5a5';
-    }
-    if (branchLHash) branchLHash.textContent = 'cd41f92e...';
-    if (rootNode) {
-      rootNode.style.borderColor = '#ef4444';
-      rootNode.style.background = 'rgba(239, 68, 68, 0.2)';
-      rootNode.style.color = '#ef4444';
-    }
-    if (rootHash) rootHash.textContent = 'e02b4891d8... (MISMATCH)';
-    if (alertBox) {
-      alertBox.style.background = 'rgba(239, 68, 68, 0.15)';
-      alertBox.style.borderColor = '#ef4444';
-      alertBox.style.color = '#fca5a5';
-    }
-    if (statusText) statusText.textContent = '✕ INTEGRITY COMPROMISED: SHA-256 Mismatch (Ed25519 INVALID)';
-    if (statusBadge) {
-      statusBadge.textContent = 'FAIL';
-      statusBadge.style.background = 'rgba(239, 68, 68, 0.3)';
-      statusBadge.style.color = '#f87171';
-    }
-    if (shieldIcon) {
-      shieldIcon.style.borderColor = '#ef4444';
-      shieldIcon.style.color = '#ef4444';
-      shieldIcon.style.background = 'rgba(239, 68, 68, 0.15)';
-    }
-    if (shieldTitle) shieldTitle.textContent = 'Cryptographic Seal Broken';
-    if (shieldDesc) shieldDesc.textContent = 'Single bit discrepancy detected! Document rejected by client validation flattener.';
-    if (btnTamper) btnTamper.style.display = 'none';
-    if (btnRestore) btnRestore.style.display = 'inline-block';
-  };
-
-  window.restoreMerkle = function() {
-    const leaf = document.getElementById('merkle-leaf-tampered');
-    const branchL = document.getElementById('merkle-branch-l');
-    const branchLHash = document.getElementById('merkle-branch-l-hash');
-    const rootNode = document.getElementById('merkle-root-node');
-    const rootHash = document.getElementById('merkle-root-hash');
-    const alertBox = document.getElementById('merkle-alert-box');
-    const statusText = document.getElementById('merkle-status-text');
-    const statusBadge = document.getElementById('merkle-status-badge');
-    const shieldIcon = document.getElementById('merkle-shield-icon');
-    const shieldTitle = document.getElementById('merkle-shield-title');
-    const shieldDesc = document.getElementById('merkle-shield-desc');
-    const btnTamper = document.getElementById('btn-tamper-sim');
-    const btnRestore = document.getElementById('btn-restore-sim');
-
-    if (leaf) {
-      leaf.style.borderColor = 'rgba(255,255,255,0.08)';
-      leaf.style.color = '#94a3b8';
-      leaf.textContent = 'Blk_02: 3D';
-      leaf.style.background = 'rgba(255,255,255,0.03)';
-    }
-    if (branchL) {
-      branchL.style.borderColor = 'rgba(255,255,255,0.1)';
-      branchL.style.color = '#cbd5e1';
-    }
-    if (branchLHash) branchLHash.textContent = '4a12ec89...';
-    if (rootNode) {
-      rootNode.style.borderColor = '#10b981';
-      rootNode.style.background = 'rgba(16, 185, 129, 0.15)';
-      rootNode.style.color = '#34d399';
-    }
-    if (rootHash) rootHash.textContent = '9e898a2f4c01db189e3a67d0284e91...';
-    if (alertBox) {
-      alertBox.style.background = 'rgba(16, 185, 129, 0.1)';
-      alertBox.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-      alertBox.style.color = '#34d399';
-    }
-    if (statusText) statusText.textContent = '● Ed25519 Hardware Signature Matches Merkle Root';
-    if (statusBadge) {
-      statusBadge.textContent = 'PASS';
-      statusBadge.style.background = 'rgba(16, 185, 129, 0.2)';
-      statusBadge.style.color = '#34d399';
-    }
-    if (shieldIcon) {
-      shieldIcon.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-      shieldIcon.style.color = '#34d399';
-      shieldIcon.style.background = 'rgba(16, 185, 129, 0.12)';
-    }
-    if (shieldTitle) shieldTitle.textContent = 'Hardware Provenance Verified';
-    if (shieldDesc) shieldDesc.textContent = 'Every block hash cascades into the signed root digest, detecting any single-bit alteration instantly.';
-    if (btnTamper) btnTamper.style.display = 'inline-block';
-    if (btnRestore) btnRestore.style.display = 'none';
-  };
-
-  // Floating Telemetry Particles
-  const partGeom = new THREE.BufferGeometry();
-  const partCount = 45;
-  const partPos = [];
-  for (let i = 0; i < partCount * 3; i += 3) {
-    partPos[i] = (Math.random() - 0.5) * 8;
-    partPos[i + 1] = Math.random() * 4 - 1;
-    partPos[i + 2] = (Math.random() - 0.5) * 8;
-  }
-  partGeom.setAttribute('position', new THREE.Float32BufferAttribute(partPos, 3));
-  const partMat = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.055, transparent: true, opacity: 0.6 });
-  const particles = new THREE.Points(partGeom, partMat);
-  scene.add(particles);
-
-  scene.add(featRobotGroup);
-
-  // 4. Interactive Drag Orbit Controls
-  function onPointerDown(e) {
-    featDragState.isDragging = true;
-    featOrbitActive = false;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    featDragState.prevX = clientX;
-    featDragState.prevY = clientY;
-  }
-  function onPointerMove(e) {
-    if (!featDragState.isDragging) return;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    const dx = clientX - featDragState.prevX;
-    const dy = clientY - featDragState.prevY;
-    featDragState.velY = dx * 0.005;
-    featDragState.velX = dy * 0.005;
-    featDragState.rotY += featDragState.velY;
-    featDragState.rotX = Math.max(-0.4, Math.min(0.8, featDragState.rotX + featDragState.velX));
-    featDragState.prevX = clientX;
-    featDragState.prevY = clientY;
-  }
-  function onPointerUp() {
-    featDragState.isDragging = false;
-    setTimeout(() => { featOrbitActive = true; }, 4000);
-  }
-
-  canvas.addEventListener('mousedown', onPointerDown);
-  window.addEventListener('mousemove', onPointerMove);
-  window.addEventListener('mouseup', onPointerUp);
-  canvas.addEventListener('touchstart', onPointerDown, { passive: true });
-  window.addEventListener('touchmove', onPointerMove, { passive: true });
-  window.addEventListener('touchend', onPointerUp);
-
-  // Handle Resize
-  const ro = new ResizeObserver(entries => {
-    for (let entry of entries) {
-      const cw = entry.contentRect.width;
-      const ch = entry.contentRect.height;
-      if (cw > 0 && ch > 0) {
-        camera.aspect = cw / ch;
-        camera.updateProjectionMatrix();
-        renderer.setSize(cw, ch);
-      }
-    }
-  });
-  ro.observe(container);
-
-  // Trigger initial torque kinematics
-  updateFeatTorque(document.getElementById('feat-torque-slider')?.value || 340);
-
-  // 5. Animation Loop
-  let clock = 0;
-  function animate() {
-    requestAnimationFrame(animate);
-    clock += 0.015;
-
-    if (!featDragState.isDragging) {
-      if (featOrbitActive) {
-        featDragState.rotY += 0.006;
-      }
-      featDragState.velX *= 0.92;
-      featDragState.velY *= 0.92;
-    }
-
-    if (featRobotGroup) {
-      featRobotGroup.rotation.y = featDragState.rotY;
-      featRobotGroup.rotation.x = featDragState.rotX;
-      featRobotGroup.position.y = 0.04 * Math.sin(clock * 2);
-    }
-
-    particles.rotation.y += 0.001;
-    renderer.render(scene, camera);
-  }
-  animate();
-}
-
-function initFallbackFeatCanvas(canvas) {
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-  canvas.width = canvas.parentElement.clientWidth || 400;
-  canvas.height = canvas.parentElement.clientHeight || 320;
-  ctx.fillStyle = '#070a12';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = '#0ea5e9';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(canvas.width / 2, canvas.height / 2, 70, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.fillStyle = '#38bdf8';
-  ctx.font = '12px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('Vanguard-7 Active (Vector View)', canvas.width / 2, canvas.height / 2);
-}
-</script>
-
-<script>
-window.setBillingCycle = function(cycle) {
-  document.querySelectorAll('.pricing-toggle-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-cycle') === cycle);
-  });
-
-  const cloudPrice = document.getElementById('price-val-cloud');
-  const cloudUnit = document.getElementById('price-unit-cloud');
-  const cloudSub = document.getElementById('price-sub-cloud');
-
-  const entPrice = document.getElementById('price-val-enterprise');
-  const entUnit = document.getElementById('price-unit-enterprise');
-  const entSub = document.getElementById('price-sub-enterprise');
-
-  const cardPro = document.getElementById('card-tier-pro');
-  const cardCloud = document.getElementById('card-tier-cloud');
-
-  if (cycle === 'monthly') {
-    if (cloudPrice) cloudPrice.textContent = '$8';
-    if (cloudUnit) cloudUnit.textContent = '/ month';
-    if (cloudSub) cloudSub.textContent = 'Billed monthly ($96/year)';
-    if (entPrice) entPrice.textContent = '$49';
-    if (entUnit) entUnit.textContent = '/ month';
-    if (entSub) entSub.textContent = 'Billed annually ($499/year)';
-    if (cardCloud) { cardCloud.classList.add('featured-cloud'); }
-    if (cardPro) { cardPro.classList.remove('featured'); }
-  } else if (cycle === 'annually') {
-    if (cloudPrice) cloudPrice.textContent = '$6.50';
-    if (cloudUnit) cloudUnit.textContent = '/ month';
-    if (cloudSub) cloudSub.textContent = 'Billed annually ($79/year — Save 20%)';
-    if (entPrice) entPrice.textContent = '$499';
-    if (entUnit) entUnit.textContent = '/ year';
-    if (entSub) entSub.textContent = 'Complete organization fleet licensing';
-    if (cardCloud) { cardCloud.classList.add('featured-cloud'); }
-    if (cardPro) { cardPro.classList.remove('featured'); }
-  } else if (cycle === 'lifetime') {
-    if (cloudPrice) cloudPrice.textContent = '$79';
-    if (cloudUnit) cloudUnit.textContent = '/ year';
-    if (cloudSub) cloudSub.textContent = 'Optional cloud & sync add-on';
-    if (entPrice) entPrice.textContent = '$499';
-    if (entUnit) entUnit.textContent = '/ year';
-    if (entSub) entSub.textContent = 'Perpetual organization license available';
-    if (cardPro) { cardPro.classList.add('featured'); }
-    if (cardCloud) { cardCloud.classList.remove('featured-cloud'); }
-  }
-};
-</script>
-<!-- confetti loaded dynamically on demand -->
+  </script>
 </body>
 </html>

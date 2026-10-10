@@ -169,6 +169,16 @@
       margin-bottom: 64px;
       align-items: stretch;
     }
+    @media (max-width: 1024px) {
+      .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 640px) {
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+    }
     .pricing-card {
       background: rgba(13, 17, 26, 0.8);
       border: 1px solid var(--card-border);
@@ -187,9 +197,28 @@
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
     }
     .pricing-card.featured {
-      background: linear-gradient(180deg, rgba(28, 24, 18, 0.9) 0%, rgba(13, 17, 26, 0.95) 100%);
-      border: 1.5px solid #f59e0b;
-      box-shadow: 0 0 35px rgba(245, 158, 11, 0.2), 0 16px 40px rgba(0, 0, 0, 0.6);
+      background: linear-gradient(180deg, rgba(28, 24, 18, 0.95) 0%, rgba(13, 17, 26, 0.98) 100%);
+      border: 1.5px solid transparent;
+      background-clip: padding-box;
+      position: relative;
+      box-shadow: 0 0 45px rgba(245, 158, 11, 0.25), 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+    .pricing-card.featured::before {
+      content: '';
+      position: absolute;
+      inset: -1.5px;
+      border-radius: 19.5px;
+      padding: 1.5px;
+      background: conic-gradient(from var(--conic-angle, 0deg), #f59e0b, #38bdf8, #8b5cf6, #f59e0b);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      animation: ldocRotateConic 8s linear infinite;
+    }
+    @keyframes ldocRotateConic {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
     }
     .pricing-card.featured-cloud {
       background: linear-gradient(180deg, rgba(16, 28, 45, 0.9) 0%, rgba(13, 17, 26, 0.95) 100%);
@@ -386,6 +415,16 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 16px;
       margin-bottom: 72px;
+    }
+    @media (max-width: 1024px) {
+      .trust-band {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 640px) {
+      .trust-band {
+        grid-template-columns: 1fr;
+      }
     }
     .trust-card {
       background: rgba(14, 18, 27, 0.6);
@@ -1957,7 +1996,7 @@
 
   <!-- 2. Cloud Vault Modal -->
   <div id="cloud-vault-modal" class="ldoc-cloud-modal-overlay">
-    <div class="ldoc-cloud-modal-box" style="width:720px">
+    <div class="ldoc-cloud-modal-box" style="width:720px;max-width:96vw;">
       <div class="ldoc-cloud-modal-header">
         <div class="ldoc-cloud-modal-title">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-3px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -2027,7 +2066,7 @@
 
   <!-- 5. Enterprise / VIP Lead Modal -->
   <div id="lead-modal" class="ldoc-cloud-modal-overlay">
-    <div class="ldoc-cloud-modal-box" style="width:620px">
+    <div class="ldoc-cloud-modal-box" style="width:620px;max-width:96vw;">
       <div class="ldoc-cloud-modal-header">
         <div class="ldoc-cloud-modal-title"><span></span><span>Enterprise Fleet &amp; VIP Consultation</span></div>
         <button class="ldoc-cloud-modal-close" onclick="closeLeadModal()">✕</button>
