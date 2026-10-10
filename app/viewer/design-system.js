@@ -237,8 +237,35 @@
     });
   }
 
-  // ── 8. INITIALIZATION ──
+  // ── 8. GLOBAL UTILITY HANDLERS (MOBILE DRAWER, BANNER, PALETTE) ──
+  window.toggleMobileMenu = function() {
+    const drawer = document.getElementById('ldoc-mobile-drawer');
+    if (drawer) {
+      drawer.classList.toggle('open');
+      drawer.classList.toggle('active');
+    }
+  };
+
+  window.dismissPillBanner = function() {
+    const banner = document.getElementById('ldoc-pill-banner');
+    if (banner) {
+      banner.classList.add('dismissed');
+      localStorage.setItem('ldoc_banner_dismissed', 'true');
+    }
+  };
+
+  window.openCmdPalette = function() {
+    if (typeof window.openCommandPalette === 'function') {
+      window.openCommandPalette();
+    }
+  };
+
+  // ── 9. INITIALIZATION ──
   document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('ldoc_banner_dismissed') === 'true') {
+      const banner = document.getElementById('ldoc-pill-banner');
+      if (banner) banner.classList.add('dismissed');
+    }
     injectAmbientBackground();
     initScrollProgressAndNavbar();
     initScrollRevealEngine();

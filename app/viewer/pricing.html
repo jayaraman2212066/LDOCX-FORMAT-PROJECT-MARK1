@@ -954,6 +954,25 @@
       .pricing-cta-card { flex-direction: column; text-align: center; }
       .faq-q-left { flex-direction: column; align-items: flex-start; gap: 6px; }
     }
+
+    /* Modal System Overrides */
+    .ldoc-cloud-modal-overlay {
+      display: none !important;
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 5, 8, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 999999 !important;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .ldoc-cloud-modal-overlay.active,
+    .ldoc-cloud-modal-overlay.open {
+      display: flex !important;
+    }
   </style>
 </head>
 <body>
@@ -1924,7 +1943,7 @@
 
   <!-- FULLSTACK MODALS (AUTH, VAULT, VERSIONS, SHARE, LEAD, LICENSE HUB) -->
   <!-- 1. Auth Modal -->
-  <div id="auth-modal" class="ldoc-cloud-modal-overlay">
+  <div id="auth-modal" class="ldoc-cloud-modal-overlay" style="display:none;">
     <div class="ldoc-cloud-modal-box">
       <div class="ldoc-cloud-modal-header">
         <div class="ldoc-cloud-modal-title">
@@ -1995,7 +2014,7 @@
   </div>
 
   <!-- 2. Cloud Vault Modal -->
-  <div id="cloud-vault-modal" class="ldoc-cloud-modal-overlay">
+  <div id="cloud-vault-modal" class="ldoc-cloud-modal-overlay" style="display:none;">
     <div class="ldoc-cloud-modal-box" style="width:720px;max-width:96vw;">
       <div class="ldoc-cloud-modal-header">
         <div class="ldoc-cloud-modal-title">
@@ -2017,7 +2036,7 @@
   </div>
 
   <!-- 3. Version History Modal -->
-  <div id="versions-modal" class="ldoc-cloud-modal-overlay">
+  <div id="versions-modal" class="ldoc-cloud-modal-overlay" style="display:none;">
     <div class="ldoc-cloud-modal-box">
       <div class="ldoc-cloud-modal-header">
         <div class="ldoc-cloud-modal-title"><span>↺</span><span>Document Version History</span></div>
@@ -2033,7 +2052,7 @@
   </div>
 
   <!-- 4. Share Modal -->
-  <div id="share-modal" class="ldoc-cloud-modal-overlay">
+  <div id="share-modal" class="ldoc-cloud-modal-overlay" style="display:none;">
     <div class="ldoc-cloud-modal-box">
       <div class="ldoc-cloud-modal-header">
         <div class="ldoc-cloud-modal-title">
@@ -2065,7 +2084,7 @@
   </div>
 
   <!-- 5. Enterprise / VIP Lead Modal -->
-  <div id="lead-modal" class="ldoc-cloud-modal-overlay">
+  <div id="lead-modal" class="ldoc-cloud-modal-overlay" style="display:none;">
     <div class="ldoc-cloud-modal-box" style="width:620px;max-width:96vw;">
       <div class="ldoc-cloud-modal-header">
         <div class="ldoc-cloud-modal-title"><span></span><span>Enterprise Fleet &amp; VIP Consultation</span></div>

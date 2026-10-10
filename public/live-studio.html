@@ -3949,6 +3949,7 @@ body.mode-prism .pres-page, body.mode-prism #creator-preview-body .pres-page, bo
  <div class="dmenu-entry" onclick="window.open('/docs', '_blank')"><span>📘 Architecture &amp; Developer Docs</span></div>
  <div class="dmenu-entry" onclick="openLicenseHubModal('retrieve')"><span>🔑 Redeem / Get License Key</span></div>
   <div class="dmenu-entry" onclick="window.open('https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1', '_blank')"><span>💳 Buy License</span></div>
+ <div class="dmenu-entry" onclick="openNoteupModal()"><span>📊 Demo vs. Pro Capabilities Matrix</span></div>
  <div class="dmenu-entry" onclick="showLegalSecurityModal()"><span>Legal &amp; Security Overview (Apache-2.0)</span></div>
  <div class="dmenu-entry" onclick="showToast('LDOCX Living Document Studio\nVersion 2.5.0 (Enterprise Reactive 3D Edition)\nCopyright © 2026 J AI ENTERPRISES. Apache-2.0 License', 'info')"><span>About LDOC Studio</span></div>
  </div>
@@ -19805,12 +19806,9 @@ if (urlParams.get('auth') === 'success') {
   if (typeof LDocToast !== 'undefined') {
     LDocToast.show('OAuth Authentication Error: ' + urlParams.get('auth_error'), 'err', 5000);
   }
-}
-
-// Unconditionally pop up Demo vs. Pro Capabilities comparison whenever live-studio is opened
-setTimeout(() => {
-  openNoteupModal();
-}, 400);
+// Demo vs. Pro Capabilities comparison can be opened from Help menu or capabilities badge
+window.openNoteupModal = openNoteupModal;
+window.closeNoteupModal = closeNoteupModal;
 
 });
 </script>
