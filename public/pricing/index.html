@@ -12,23 +12,27 @@
  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
  <style>
  :root {
- --bg: #090d16;
- --bg-alt: #0d1322;
- --card-bg: rgba(18, 26, 44, 0.7);
- --card-border: rgba(255, 255, 255, 0.08);
- --card-hover: rgba(255, 255, 255, 0.14);
- --primary: #8b5cf6;
- --primary-light: #a78bfa;
- --primary-glow: rgba(139, 92, 246, 0.25);
- --cyan: #06b6d4;
- --amber: #f59e0b;
- --emerald: #10b981;
- --text: #f1f5f9;
- --text-muted: #94a3b8;
- --text-sub: #64748b;
- --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
- --font-mono: 'JetBrains Mono', monospace;
- }
+      --bg: #08090d;
+      --bg-alt: #0c0e14;
+      --bg-subtle: #121620;
+      --card-bg: rgba(14, 17, 25, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(255, 255, 255, 0.16);
+      --primary: #f59e0b;
+      --primary-light: #fbbf24;
+      --primary-glow: rgba(245, 158, 11, 0.2);
+      --cobalt: #3b82f6;
+      --azure: #38bdf8;
+      --cyan: #0ea5e9;
+      --amber: #f59e0b;
+      --emerald: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #94a3b8;
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
  * { box-sizing: border-box; margin: 0; padding: 0; }
  body {
@@ -47,7 +51,7 @@
  pointer-events: none;
  z-index: 0;
  background: 
- radial-gradient(circle at 15% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+ radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.12) 0%, transparent 40%),
  radial-gradient(circle at 85% 60%, rgba(6, 182, 212, 0.10) 0%, transparent 45%),
  radial-gradient(circle at 50% 90%, rgba(245, 158, 11, 0.06) 0%, transparent 50%);
  }
@@ -60,7 +64,7 @@
 
  /* Top Promo Strip */
  .promo-strip {
- background: linear-gradient(90deg, #4c1d95, #6d28d9, #2563eb);
+ background: linear-gradient(90deg, #1e293b, #1d4ed8, #2563eb);
  color: #fff;
  font-size: 0.85rem;
  font-weight: 500;
@@ -128,8 +132,8 @@
  font-size: 0.65rem;
  font-weight: 700;
  color: var(--primary-light);
- background: rgba(139, 92, 246, 0.15);
- border: 1px solid rgba(139, 92, 246, 0.3);
+ background: rgba(56, 189, 248, 0.15);
+ border: 1px solid rgba(56, 189, 248, 0.3);
  padding: 2px 6px;
  border-radius: 4px;
  margin-left: 2px;
@@ -215,7 +219,7 @@
  background: rgba(255, 255, 255, 0.08);
  }
  .mode-pill-btn.active {
- background: linear-gradient(135deg, #f59e0b, #c084fc);
+ background: linear-gradient(135deg, #f59e0b, #38bdf8);
  color: #0f0f1b;
  font-weight: 800;
  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
@@ -261,7 +265,7 @@
  box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
  }
  .btn-launch {
- background: linear-gradient(135deg, #8b5cf6, #6366f1);
+ background: linear-gradient(135deg, #38bdf8, #6366f1);
  color: #fff;
  font-weight: 600;
  font-size: 0.92rem;
@@ -277,7 +281,7 @@
  }
  .btn-launch:hover {
  transform: translateY(-1px);
- box-shadow: 0 6px 22px rgba(139, 92, 246, 0.4);
+ box-shadow: 0 6px 22px rgba(56, 189, 248, 0.4);
  filter: brightness(1.08);
  }
 
@@ -297,8 +301,8 @@
  display: inline-flex;
  align-items: center;
  gap: 8px;
- background: rgba(139, 92, 246, 0.1);
- border: 1px solid rgba(139, 92, 246, 0.25);
+ background: rgba(56, 189, 248, 0.1);
+ border: 1px solid rgba(56, 189, 248, 0.25);
  color: var(--primary-light);
  padding: 6px 16px;
  border-radius: 99px;
@@ -317,7 +321,7 @@
  -webkit-text-fill-color: transparent;
  }
  .hero-title span {
- background: linear-gradient(135deg, #c084fc, #818cf8, #38bdf8);
+ background: linear-gradient(135deg, #38bdf8, #818cf8, #38bdf8);
  -webkit-background-clip: text;
  -webkit-text-fill-color: transparent;
  }
@@ -338,7 +342,7 @@
  margin-bottom: 50px;
  }
  .btn-hero-primary {
- background: linear-gradient(135deg, #8b5cf6, #4f46e5);
+ background: linear-gradient(135deg, #38bdf8, #4f46e5);
  color: #fff;
  font-weight: 600;
  font-size: 1.05rem;
@@ -384,7 +388,7 @@
  border: 1px solid var(--card-border);
  border-radius: 18px;
  overflow: hidden;
- box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(139, 92, 246, 0.15);
+ box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(56, 189, 248, 0.15);
  text-align: left;
  }
  .canvas-header {
@@ -424,9 +428,9 @@
  transition: all 0.2s;
  }
  .canvas-tab.active {
- background: rgba(139, 92, 246, 0.25);
+ background: rgba(56, 189, 248, 0.25);
  color: #fff;
- border: 1px solid rgba(139, 92, 246, 0.4);
+ border: 1px solid rgba(56, 189, 248, 0.4);
  }
  .canvas-action-btn {
  background: rgba(255,255,255,0.06);
@@ -489,8 +493,8 @@
  cursor: pointer;
  }
  .fin-metric-card {
- background: rgba(139, 92, 246, 0.1);
- border: 1px solid rgba(139, 92, 246, 0.3);
+ background: rgba(56, 189, 248, 0.1);
+ border: 1px solid rgba(56, 189, 248, 0.3);
  padding: 16px;
  border-radius: 10px;
  text-align: center;
@@ -498,7 +502,7 @@
  .fin-metric-val {
  font-size: 2.2rem;
  font-weight: 800;
- color: #c084fc;
+ color: #38bdf8;
  font-family: var(--font-mono);
  }
  .fin-metric-desc {
@@ -537,7 +541,7 @@
  .download-card:hover {
  border-color: var(--primary-light);
  transform: translateY(-4px);
- box-shadow: 0 20px 45px rgba(139, 92, 246, 0.2);
+ box-shadow: 0 20px 45px rgba(56, 189, 248, 0.2);
  }
  .download-card.featured {
  border-color: #f59e0b;
@@ -566,7 +570,7 @@
  }
  .badge-win { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
  .badge-linux { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
- .badge-ios { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+ .badge-ios { background: rgba(168, 85, 247, 0.2); color: #38bdf8; border: 1px solid rgba(168, 85, 247, 0.4); }
  .download-filesize {
  font-size: 0.78rem;
  color: #94a3b8;
@@ -682,8 +686,8 @@
  justify-content: center;
  font-size: 1.5rem;
  margin-bottom: 20px;
- background: rgba(139, 92, 246, 0.12);
- border: 1px solid rgba(139, 92, 246, 0.25);
+ background: rgba(56, 189, 248, 0.12);
+ border: 1px solid rgba(56, 189, 248, 0.25);
  }
  .benefit-title {
  font-size: 1.28rem;
@@ -818,9 +822,9 @@
  font-family: var(--font-mono);
  }
  .build-btn {
- background: rgba(139, 92, 246, 0.15);
+ background: rgba(56, 189, 248, 0.15);
  color: var(--primary-light);
- border: 1px solid rgba(139, 92, 246, 0.3);
+ border: 1px solid rgba(56, 189, 248, 0.3);
  padding: 6px 14px;
  border-radius: 6px;
  font-size: 0.82rem;
@@ -838,7 +842,7 @@
  max-width: 860px;
  margin: 0 auto 100px;
  background: linear-gradient(135deg, rgba(30, 41, 67, 0.6), rgba(18, 26, 44, 0.8));
- border: 1px solid rgba(139, 92, 246, 0.25);
+ border: 1px solid rgba(56, 189, 248, 0.25);
  border-radius: 16px;
  padding: 40px;
  text-align: center;
@@ -902,9 +906,9 @@
     background: rgba(255, 255, 255, 0.06);
   }
   .pricing-toggle-btn.active {
-    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    background: linear-gradient(135deg, #38bdf8, #6366f1);
     color: #ffffff;
-    box-shadow: 0 2px 12px rgba(139, 92, 246, 0.45);
+    box-shadow: 0 2px 12px rgba(56, 189, 248, 0.45);
   }
   .pricing-toggle-btn .save-badge {
     background: #10b981;
@@ -969,9 +973,9 @@
     box-shadow: 0 0 32px rgba(245, 158, 11, 0.2), 0 12px 36px rgba(0, 0, 0, 0.5);
   }
   .pricing-grid .pricing-card.featured-cloud {
-    border: 1.5px solid #8b5cf6;
+    border: 1.5px solid #38bdf8;
     background: linear-gradient(180deg, rgba(28, 22, 54, 0.75) 0%, rgba(18, 26, 44, 0.9) 100%);
-    box-shadow: 0 0 32px rgba(139, 92, 246, 0.2), 0 12px 36px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 32px rgba(56, 189, 248, 0.2), 0 12px 36px rgba(0, 0, 0, 0.5);
   }
   .featured-badge {
     position: absolute;
@@ -991,9 +995,9 @@
     box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
   }
   .featured-badge.badge-cloud {
-    background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+    background: linear-gradient(90deg, #38bdf8, #06b6d4);
     color: #fff;
-    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.45);
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.45);
   }
   .featured-badge.badge-enterprise {
     background: linear-gradient(90deg, #3b82f6, #6366f1);
@@ -1131,16 +1135,16 @@
     box-shadow: 0 8px 24px rgba(245, 158, 11, 0.45);
   }
   .btn-plan-cloud {
-    background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+    background: linear-gradient(135deg, #38bdf8, #06b6d4);
     color: #ffffff;
     border: none;
     font-weight: 800;
-    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35);
   }
   .btn-plan-cloud:hover {
     filter: brightness(1.08);
     transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.45);
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.45);
   }
   .btn-plan-enterprise {
     background: linear-gradient(135deg, #2563eb, #4f46e5);
@@ -1632,7 +1636,7 @@
 .badge-showcase { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
 .badge-zerodrift { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
 .badge-security { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-.badge-ai { background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); }
+.badge-ai { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
 .badge-ownership { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
 .faq-chevron {
   font-size: 1.2rem;
@@ -1708,6 +1712,9 @@
   }
 }
 
+
+.btn-hero-primary,.btn-hero-secondary,.nav-action-btn,.build-btn,.ldoc-preset-btn{transition:transform 0.16s var(--ease-spring),box-shadow 0.16s var(--ease-spring),background-color 0.16s ease,border-color 0.16s ease;}
+.btn-hero-primary:active,.btn-hero-secondary:active,.nav-action-btn:active,.build-btn:active,.ldoc-preset-btn:active{transform:scale(0.982);}
 </style>
 </head>
 <body>
@@ -1744,8 +1751,8 @@
  <div class="nav-right">
  <!-- Auth & Utility Actions: Sign In, Share Studio, Get Pro -->
  <div class="nav-actions-group">
- <button class="nav-action-btn" id="header-auth-btn" onclick="showAuthModal()">👤 Sign In</button>
- <button class="nav-action-btn" onclick="showShareModal()" title="Share LDOC Studio">🔗 Share Studio</button>
+ <button class="nav-action-btn" id="header-auth-btn" onclick="showAuthModal()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:-1px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Sign In</button>
+ <button class="nav-action-btn" onclick="showShareModal()" title="Share LDOC Studio"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:-1px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share</button>
  
  </div>
  <a href="/live-studio" class="btn-launch">
@@ -1816,7 +1823,7 @@
             <div class="card-cta-zone">
               <a href="/live-studio" class="btn-plan btn-plan-secondary">Launch Free Viewer</a>
               <a href="/format" class="btn-plan btn-plan-sublink">
-                <span>📖</span><span>Explore Open Spec &amp; AST</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>Explore Open Spec &amp; AST</span>
               </a>
             </div>
           </div>
@@ -1849,7 +1856,7 @@
             </div>
             <div class="card-cta-zone">
               <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button btn-plan btn-plan-primary">
-                <span>💳</span><span>Buy License &rarr;</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Buy License &rarr;</span>
               </a>
               <a href="#download" class="btn-plan btn-plan-sublink">
                 <span>⬇️</span><span>Download Workstation Suite</span>
@@ -1884,10 +1891,10 @@
             </div>
             <div class="card-cta-zone">
               <a href="https://jay-app.lemonsqueezy.com/checkout" target="_blank" class="lemonsqueezy-button btn-plan btn-plan-cloud">
-                <span>⚡</span><span>Start Cloud Pro &rarr;</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Start Cloud Pro &rarr;</span>
               </a>
               <a href="/live-studio" class="btn-plan btn-plan-sublink">
-                <span>☁️</span><span>Launch Web Cloud Sandbox</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg><span>Launch Web Cloud Sandbox</span>
               </a>
             </div>
           </div>
@@ -1919,10 +1926,10 @@
             </div>
             <div class="card-cta-zone">
               <button type="button" onclick="openLeadModal('Enterprise')" class="btn-plan btn-plan-enterprise">
-                <span>🏢</span><span>Contact Enterprise Fleet &rarr;</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg><span>Contact Enterprise Fleet &rarr;</span>
               </button>
               <a href="mailto:jayaramankalidasan@gmail.com?subject=LDOC%20Enterprise%20Fleet%20Inquiry" class="btn-plan btn-plan-sublink">
-                <span>📋</span><span>Invoice Billing &amp; Custom SLA</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>Invoice Billing &amp; Custom SLA</span>
               </a>
             </div>
           </div>
@@ -1930,7 +1937,7 @@
 
         <section class="comparison-section-upgraded container">
     <div class="section-head">
-      <span class="section-tag" style="color: #c084fc;">Format Benchmark</span>
+      <span class="section-tag" style="color: #38bdf8;">Format Benchmark</span>
       <h2 class="section-title">Why .ldocx Replaces Static Documents Forever</h2>
       <p class="section-sub">A side-by-side technical evaluation of Living Documents (.ldocx) against legacy static formats.</p>
     </div>
@@ -1949,7 +1956,7 @@
         <thead>
           <tr>
             <th style="width: 28%; color: #fff;">Capability / Architecture</th>
-            <th class="col-ldocx" style="width: 26%;">★ LDOCX (.ldocx)</th>
+            <th class="col-ldocx" style="width: 26%;">LDOCX (.ldocx)</th>
             <th style="width: 15%; color: #94a3b8;">Adobe PDF (.pdf)</th>
             <th style="width: 15%; color: #94a3b8;">Word (.docx)</th>
             <th style="width: 16%; color: #94a3b8;">PowerPoint (.pptx)</th>
@@ -2025,16 +2032,16 @@
             <p class="section-sub">100% Offline Standalone • Discrete High-Performance GPU Acceleration • Windows, Linux, Android &amp; iOS</p>
           </div>
 
-          <div style="background:linear-gradient(90deg, rgba(245,158,11,0.12), rgba(139,92,246,0.12)); border:1.5px solid rgba(245,158,11,0.35); border-radius:12px; padding:16px 20px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
+          <div style="background:linear-gradient(90deg, rgba(245,158,11,0.12), rgba(56, 189, 248,0.12)); border:1.5px solid rgba(245,158,11,0.35); border-radius:12px; padding:16px 20px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
             <div style="display:flex; align-items:center; gap:12px">
-              <span style="font-size:24px">🔑</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><path d="M21 2l-2 2m-2-2l2 2m-2 2l2-2m-7 7l7-7m-9 9a5 5 0 1 1-7-7 5 5 0 0 1 7 7z"/></svg>
               <div>
                 <div style="font-size:14px; font-weight:800; color:#fff">How to Unlock LDOC Studio Pro Workstation</div>
                 <div style="font-size:12px; color:#94a3b8; margin-top:2px">Downloads are free to install. When launching on Windows, Linux, Android, or macOS, enter your Pro License Key or receipt Order ID to activate.</div>
               </div>
             </div>
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
-              <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button ldoc-cloud-btn" style="background:#f59e0b;color:#000;font-weight:800;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:12px;display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer"><span>💳</span><span>Buy License</span></a>
+              <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button ldoc-cloud-btn" style="background:#f59e0b;color:#000;font-weight:800;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:12px;display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Buy License</span></a>
             </div>
           </div>
 
@@ -2659,7 +2666,7 @@ document.addEventListener('DOMContentLoaded', function() {
  <div id="auth-modal" class="ldoc-cloud-modal-overlay">
  <div class="ldoc-cloud-modal-box">
  <div class="ldoc-cloud-modal-header">
- <div class="ldoc-cloud-modal-title"><span>👤</span><span id="auth-modal-title">LDOC Account & Cloud Access</span></div>
+ <div class="ldoc-cloud-modal-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-3px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="auth-modal-title">LDOC Account & Cloud Access</span></div>
  <button class="ldoc-cloud-modal-close" onclick="closeAuthModal()">✕</button>
  </div>
  <div class="ldoc-cloud-modal-body">
@@ -2713,7 +2720,7 @@ document.addEventListener('DOMContentLoaded', function() {
  <!-- Authenticated Profile View -->
  <div id="auth-profile-container" style="display:none">
  <div style="display:flex;align-items:center;gap:14px;background:#161b22;padding:16px;border-radius:12px;margin-bottom:16px;border:1px solid rgba(255,255,255,0.08)">
- <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#000" id="profile-avatar">U</div>
+ <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#2563eb);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#000" id="profile-avatar">U</div>
  <div>
  <div style="font-size:16px;font-weight:800;color:#fff" id="profile-name">User Name</div>
  <div style="font-size:12px;color:#94a3b8" id="profile-email">user@example.com</div>
@@ -2733,13 +2740,13 @@ document.addEventListener('DOMContentLoaded', function() {
 <div id="cloud-vault-modal" class="ldoc-cloud-modal-overlay">
  <div class="ldoc-cloud-modal-box" style="width:720px">
  <div class="ldoc-cloud-modal-header">
- <div class="ldoc-cloud-modal-title"><span>🌟</span><span>LDOC Cloud Vault &amp; Documents</span></div>
+ <div class="ldoc-cloud-modal-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-3px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>LDOC Cloud Vault &amp; Documents</span></div>
  <button class="ldoc-cloud-modal-close" onclick="closeCloudVaultModal()">✕</button>
  </div>
  <div class="ldoc-cloud-modal-body">
  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
  <span style="font-size:12px;color:#94a3b8">Cloud-synced living presentations and specs</span>
- <button class="ldoc-cloud-btn" onclick="createNewCloudDoc()" style="padding:6px 12px;font-size:12px">➕ New Cloud Document</button>
+ <button class="ldoc-cloud-btn" onclick="createNewCloudDoc()" style="padding:6px 12px;font-size:12px">+ New Cloud Document</button>
  </div>
  <div id="cloud-vault-list" style="display:flex;flex-direction:column;gap:10px">
  <div style="text-align:center;padding:30px;color:#94a3b8">Loading cloud documents...</div>
@@ -2768,7 +2775,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <div id="share-modal" class="ldoc-cloud-modal-overlay">
  <div class="ldoc-cloud-modal-box">
  <div class="ldoc-cloud-modal-header">
- <div class="ldoc-cloud-modal-title"><span>🔗</span><span>Share LDOC Studio</span></div>
+ <div class="ldoc-cloud-modal-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-3px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span>Share LDOC Studio</span></div>
  <button class="ldoc-cloud-modal-close" onclick="closeShareModal()">✕</button>
  </div>
  <div class="ldoc-cloud-modal-body">
@@ -2776,9 +2783,9 @@ document.addEventListener('DOMContentLoaded', function() {
  
  <!-- Social 1-Click Share Row -->
  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
- <button class="ldoc-cloud-btn secondary" style="flex:1;min-width:120px;font-size:12px" onclick="shareToSocial('twitter')">🐦 X / Twitter</button>
- <button class="ldoc-cloud-btn secondary" style="flex:1;min-width:120px;font-size:12px" onclick="shareToSocial('linkedin')">💼 LinkedIn</button>
- <button class="ldoc-cloud-btn secondary" style="flex:1;min-width:120px;font-size:12px" onclick="shareToSocial('reddit')">💬 Reddit</button>
+ <button class="ldoc-cloud-btn secondary" style="flex:1;min-width:120px;font-size:12px" onclick="shareToSocial('twitter')"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-right:4px;vertical-align:-1px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X / Twitter</button>
+ <button class="ldoc-cloud-btn secondary" style="flex:1;min-width:120px;font-size:12px" onclick="shareToSocial('linkedin')">LinkedIn</button>
+ <button class="ldoc-cloud-btn secondary" style="flex:1;min-width:120px;font-size:12px" onclick="shareToSocial('reddit')">Reddit</button>
  <button class="ldoc-cloud-btn secondary" style="flex:1;min-width:120px;font-size:12px" onclick="shareToSocial('whatsapp')"> WhatsApp</button>
  </div>
 
@@ -2960,9 +2967,9 @@ function updateHeaderAuthButton() {
  if (!btn) return;
  if (LDocAuth.isAuthenticated()) {
  const user = LDocAuth.getUser();
- btn.innerHTML = `👤 ${user?.name || 'Account'} <span style="background:#f59e0b;color:#000;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:900;margin-left:4px">PRO</span>`;
+ btn.innerHTML = `<span style="margin-right:4px;">●</span>${user?.name || 'Account'} <span style="background:#f59e0b;color:#000;font-size:9px;padding:1px 5px;border-radius:4px;font-weight:900;margin-left:4px">PRO</span>`;
  } else {
- btn.innerHTML = `👤 Sign In`;
+ btn.innerHTML = `Sign In`;
  }
 }
 
@@ -2993,7 +3000,7 @@ async function showCloudVaultModal() {
  <div style="font-size:11.5px;color:#94a3b8;margin-top:2px">ID: ${d.id} • Revision v${d.version || 1} • ${new Date(d.updated_at || Date.now()).toLocaleDateString()}</div>
  </div>
  <div style="display:flex;gap:6px">
- <button class="ldoc-cloud-btn" style="padding:4px 10px;font-size:11.5px" onclick="loadCloudDocument('${d.id}')">✏️ Open</button>
+ <button class="ldoc-cloud-btn" style="padding:4px 10px;font-size:11.5px" onclick="loadCloudDocument('${d.id}')">Open in Studio</button>
  <button class="ldoc-cloud-btn secondary" style="padding:4px 10px;font-size:11.5px" onclick="showVersionsModal('${d.id}')">↺ History</button>
  </div>
  </div>
@@ -3258,15 +3265,15 @@ async function processLicenseActivation(key) {
  if (statusEl) {
  statusEl.style.display = 'block';
  statusEl.style.color = '#f87171';
- statusEl.textContent = '❌ ' + msg;
+ statusEl.textContent = 'Error: ' + msg;
  }
- alert('❌ ' + msg);
+ alert('Error: ' + msg);
  }
  } catch (err) {
  if (statusEl) {
  statusEl.style.display = 'block';
  statusEl.style.color = '#f87171';
- statusEl.textContent = '❌ Network error during verification.';
+ statusEl.textContent = 'Error: Network error during verification.';
  }
  alert('Unable to reach license server. Please verify your internet connection and try again.');
  }
@@ -3408,10 +3415,10 @@ document.addEventListener('DOMContentLoaded', () => {
     <!-- Tabs: Buy vs Retrieve -->
     <div style="display:flex;background:#161b22;border-bottom:1px solid rgba(255,255,255,0.08);">
       <button id="tab-btn-buy" onclick="switchLicenseHubTab('buy')" style="flex:1;padding:12px;background:#0d1117;border:none;border-bottom:2px solid #f59e0b;color:#fef08a;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
-        <span>💳</span><span>1. Buy License</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg><span>1. Buy License</span>
       </button>
       <button id="tab-btn-retrieve" onclick="switchLicenseHubTab('retrieve')" style="flex:1;padding:12px;background:transparent;border:none;border-bottom:2px solid transparent;color:#94a3b8;font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
-        <span>🔑</span><span>2. Retrieve / Generate Key</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M21 2l-2 2m-2-2l2 2m-2 2l2-2m-7 7l7-7m-9 9a5 5 0 1 1-7-7 5 5 0 0 1 7 7z"/></svg><span>2. Retrieve / Generate Key</span>
       </button>
     </div>
 
@@ -3439,7 +3446,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
 
       <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;padding:14px;background:linear-gradient(135deg,#f59e0b,#ea580c);color:#000;font-weight:800;font-size:15px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;box-shadow:0 10px 25px rgba(245,158,11,0.35);transition:transform 0.15s ease;">
-        <span>💳</span><span>Buy Pro Lifetime &rarr;</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Buy Pro Lifetime &rarr;</span>
       </a>
       <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:10px 14px;margin-top:14px;font-size:11.5px;color:#94a3b8;line-height:1.5;">
         <strong style="color:#f59e0b">Instant Receipt Fulfillment:</strong> Complete checkout through our verified secure payment gateway. Your official Pro License Key and receipt Order ID will appear on your confirmation page and arrive immediately in your inbox.
@@ -3462,7 +3469,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
 
       <button type="button" id="btn-generate-hub-key" onclick="generateOrRetrieveHubKey()" style="width:100%;box-sizing:border-box;padding:12px;background:#0284c7;border:none;border-radius:6px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-        <span>🔑</span><span>Retrieve Purchased Pro License Key</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M21 2l-2 2m-2-2l2 2m-2 2l2-2m-7 7l7-7m-9 9a5 5 0 1 1-7-7 5 5 0 0 1 7 7z"/></svg><span>Retrieve Purchased Pro License Key</span>
       </button>
 
       <!-- Key Result Display Box -->
@@ -3475,7 +3482,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
           <input type="text" id="hub-generated-key" readonly style="flex:1;background:#161b22;border:1px solid rgba(34,197,94,0.5);border-radius:6px;padding:10px 12px;color:#4ade80;font-family:monospace;font-size:14px;font-weight:700;outline:none;">
           <button type="button" onclick="copyHubGeneratedKey()" style="padding:10px 16px;background:#22c55e;border:none;border-radius:6px;color:#000;font-weight:800;cursor:pointer;white-space:nowrap;">
-            📋 Copy Key
+            Copy Key
           </button>
         </div>
 
@@ -3483,7 +3490,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <strong>How to redeem in local LDOC Studio:</strong><br>
           1. Launch <code style="color:#f59e0b">LDOC-Studio.exe</code> (or install from <code style="color:#f59e0b">Setup-LDOC-Studio-Pro-Windows.exe</code>).<br>
           2. When the activation popup appears, paste this key.<br>
-          3. Click <strong style="color:#38bdf8">⚡ Redeem License Key</strong> and click <strong style="color:#fff">[OK]</strong>.<br>
+          3. Click <strong style="color:#38bdf8">Redeem License Key</strong> and click <strong style="color:#fff">[OK]</strong>.<br>
           4. LDOC Studio unlocks for full offline living document creation!
         </div>
       </div>

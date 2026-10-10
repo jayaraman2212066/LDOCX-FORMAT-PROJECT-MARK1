@@ -67,3 +67,27 @@ Whenever you modify any core modules:
    npm test                                   # Full conformance suite
    ```
 4. Confirm exit code 0 before concluding your task.
+
+---
+
+## 4. Frontend Taste & Anti-AI-Slop Directives
+
+1. **Aesthetic Commitment**:
+   - Establish an **Industrial Precision / Cryptographic Engineering** design language (Linear, Stripe, Vercel level).
+   - Surfaces: Obsidian Carbon (`#08090b`), Sub-surface (`#0d1017`), Hairline Titanium borders (`rgba(255, 255, 255, 0.08)`).
+   - Accents: Functional Amber/Gold (`#f59e0b` / `#fbbf24` for cryptographic Merkle validation), Electric Cobalt (`#38bdf8` / `#2563eb` for live AST & WebGL), Parity Emerald (`#10b981`).
+   - Banned: Generic saturated purple neon gradients (`#8b5cf6`), blurry colored neon radial blobs.
+
+2. **No Emojis in Professional Navigation or Headers**:
+   - Never use cartoon emojis (`👤`, `💳`, `🚀`, `🔗`, `⚡`, `🎭`, `🧬`, `🛰️`) in utility bars, buttons, or feature card headers.
+   - Use crisp, hairline 14-18px monochrome SVG icons or technical monospace tags.
+
+3. **Anti-Slop Layouts**:
+   - Avoid monotonous 3-card or 6-card grids with identical border radiuses.
+   - Use structured technical spec sheets, asymmetric split views, and tactile instrument consoles.
+
+4. **Emil Kowalski Motion & Tactility**:
+   - Easing curve: `cubic-bezier(0.16, 1, 0.3, 1)`.
+   - Micro-press: `:active { transform: scale(0.985); }`.
+   - Hardware-accelerated transforms and opacity only.
+

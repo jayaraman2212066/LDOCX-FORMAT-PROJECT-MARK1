@@ -17,7 +17,7 @@
       --surface-card: #131a2b;
       --border: rgba(255, 255, 255, 0.08);
       --border-highlight: rgba(124, 58, 237, 0.4);
-      --accent: #7c3aed;
+      --accent: #2563eb;
       --accent-glow: rgba(124, 58, 237, 0.25);
       --gold: #f59e0b;
       --emerald: #10b981;
@@ -71,7 +71,7 @@
       letter-spacing: 0.5px;
     }
     .hub-brand-badge {
-      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      background: linear-gradient(135deg, #2563eb, #a855f7);
       color: #fff;
       font-size: 10px;
       font-weight: 900;
@@ -94,7 +94,7 @@
     }
     .hub-nav-link:hover, .hub-nav-link.active { color: #fff; }
     .hub-nav-btn {
-      background: linear-gradient(135deg, #7c3aed, #6366f1);
+      background: linear-gradient(135deg, #2563eb, #6366f1);
       color: #fff;
       text-decoration: none;
       padding: 8px 18px;
@@ -125,7 +125,7 @@
       gap: 8px;
       background: rgba(124, 58, 237, 0.15);
       border: 1px solid rgba(124, 58, 237, 0.4);
-      color: #c084fc;
+      color: #38bdf8;
       font-size: 11.5px;
       font-weight: 800;
       padding: 4px 14px;
@@ -209,7 +209,7 @@
     .hub-filter-btn.active {
       background: rgba(124, 58, 237, 0.2);
       border-color: #a855f7;
-      color: #c084fc;
+      color: #38bdf8;
     }
 
     /* Models / Templates Grid */
@@ -259,7 +259,7 @@
     .hub-card-tag.finance { color: var(--emerald); background: rgba(16, 185, 129, 0.12); }
     .hub-card-tag.science { color: var(--cyan); background: rgba(56, 189, 248, 0.12); }
     .hub-card-tag.pitch { color: var(--gold); background: rgba(245, 158, 11, 0.12); }
-    .hub-card-tag.robotics { color: #c084fc; background: rgba(192, 132, 252, 0.12); }
+    .hub-card-tag.robotics { color: #38bdf8; background: rgba(192, 132, 252, 0.12); }
 
     .hub-card-stats {
       display: flex;
@@ -318,7 +318,7 @@
     }
     .hub-btn-edit {
       flex: 1;
-      background: linear-gradient(135deg, #7c3aed, #9333ea);
+      background: linear-gradient(135deg, #2563eb, #9333ea);
       color: #fff;
       text-decoration: none;
       font-size: 12.5px;
@@ -333,7 +333,7 @@
       transition: all 0.15s;
     }
     .hub-btn-edit:hover {
-      background: linear-gradient(135deg, #6d28d9, #7e22ce);
+      background: linear-gradient(135deg, #1d4ed8, #7e22ce);
       transform: translateY(-1px);
     }
     .hub-btn-sub {
@@ -450,7 +450,7 @@
       color: #fff;
     }
     .hub-btn-generate {
-      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
       border: none;
       color: #fff;
       font-size: 13px;
@@ -466,7 +466,7 @@
       box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
     }
     .hub-btn-generate:hover {
-      background: linear-gradient(135deg, #6d28d9, #4338ca);
+      background: linear-gradient(135deg, #1d4ed8, #4338ca);
       transform: translateY(-1px);
     }
     .hub-palette-swatches {
@@ -493,7 +493,10 @@
       align-items: center;
       gap: 10px;
     }
-  </style>
+  
+.btn-hero-primary,.btn-hero-secondary,.nav-action-btn,.build-btn,.ldoc-preset-btn,.template-btn{transition:transform 0.16s var(--ease-spring),box-shadow 0.16s var(--ease-spring),background-color 0.16s ease,border-color 0.16s ease;}
+.btn-hero-primary:active,.btn-hero-secondary:active,.nav-action-btn:active,.build-btn:active,.ldoc-preset-btn:active,.template-btn:active{transform:scale(0.982);}
+</style>
 </head>
 <body>
 
@@ -516,7 +519,7 @@
 
       <div style="display:flex;align-items:center;gap:10px">
         <a href="/creator" class="hub-nav-btn">
-          <span>✏️</span>
+          <span></span>
           <span>Open LDOC Studio</span>
         </a>
       </div>
@@ -525,32 +528,32 @@
 
   <!-- Hero Header & Search -->
   <section class="hub-hero">
-    <div class="hub-hero-badge">✦ LM STUDIO DISCOVERY SPECIFICATION</div>
+    <div class="hub-hero-badge"><span style="color:#fbbf24;font-size:11px;">●</span> LM STUDIO DISCOVERY SPECIFICATION</div>
     <h1>Discover Living Documents &amp; Templates</h1>
     <p>Explore, run, and live-edit community and enterprise .ldocx document blueprints locally with reactive charts, 3D WebGL models, and executable code sandboxes.</p>
 
     <!-- Search Input -->
     <div class="hub-search-container">
-      <span class="hub-search-icon">🔍</span>
+      <span class="hub-search-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:-1px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
       <input type="text" id="hubSearchInput" class="hub-search-input" placeholder="Search Living Documents, 3D models, and blueprints by title, tag, or author..." oninput="filterTemplates(this.value)">
     </div>
 
     <!-- Category Filter Buttons -->
     <div class="hub-filters">
       <button class="hub-filter-btn active" onclick="setFilter('all')">All Blueprints</button>
-      <button class="hub-filter-btn" onclick="setFilter('finance')">📊 Executive &amp; Finance</button>
-      <button class="hub-filter-btn" onclick="setFilter('science')">⚛️ Science &amp; Quantum</button>
-      <button class="hub-filter-btn" onclick="setFilter('pitch')">🚀 Venture &amp; Pitch</button>
-      <button class="hub-filter-btn" onclick="setFilter('robotics')">🤖 Hardware &amp; 3D CAD</button>
-      <button class="hub-filter-btn" onclick="setFilter('education')">🎓 Interactive Quizzes</button>
-      <button class="hub-filter-btn" onclick="setFilter('interactive')">⚡ STEM Simulations</button>
+      <button class="hub-filter-btn" onclick="setFilter('finance')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Executive &amp; Finance</button>
+      <button class="hub-filter-btn" onclick="setFilter('science')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="3.5" ry="9"/></svg> Science &amp; Quantum</button>
+      <button class="hub-filter-btn" onclick="setFilter('pitch')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><polygon points="5 3 19 12 5 21 5 3"/></svg> Venture &amp; Pitch</button>
+      <button class="hub-filter-btn" onclick="setFilter('robotics')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><circle cx="15" cy="9" r="2"/></svg> Hardware &amp; 3D CAD</button>
+      <button class="hub-filter-btn" onclick="setFilter('education')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> Interactive Quizzes</button>
+      <button class="hub-filter-btn" onclick="setFilter('interactive')">● STEM Simulations</button>
     </div>
 
     <!-- Procedural Generator Console -->
     <section class="hub-gen-panel">
       <div class="hub-gen-title">
-        <h3><span>⚡</span> Procedural Blueprint Generator</h3>
-        <span class="capacity">✦ 36,000,000+ Deterministic Combinations</span>
+        <h3><span>●</span> Procedural Blueprint Generator</h3>
+        <span class="capacity"><span style="color:#fbbf24;font-size:11px;">●</span> 36,000,000+ Deterministic Combinations</span>
       </div>
       <div class="hub-gen-controls">
         <div class="hub-control-group">
@@ -579,12 +582,12 @@
           <label for="procSeedInput">Deterministic Seed</label>
           <div class="hub-seed-wrap">
             <input type="text" id="procSeedInput" placeholder="e.g. 1048576 or custom">
-            <button type="button" onclick="randomizeSeed()" title="Generate Random Seed">🎲 Random</button>
+            <button type="button" onclick="randomizeSeed()" title="Generate Random Seed"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> Random</button>
           </div>
         </div>
         <div>
           <button type="button" class="hub-btn-generate" onclick="generateProceduralGrid()">
-            <span>✨</span>
+            <span><span style="color:#38bdf8;font-size:11px;">●</span></span>
             <span>Generate Blueprints</span>
           </button>
         </div>
@@ -596,7 +599,7 @@
   <main class="hub-container">
     <!-- Procedural Section Heading -->
     <div class="hub-section-heading">
-      <span>✨</span>
+      <span><span style="color:#38bdf8;font-size:11px;">●</span></span>
       <span>Procedural Generated Blueprints</span>
       <span id="procCountBadge" style="font-size:11.5px;font-weight:700;color:#94a3b8;background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:12px">12 Dynamic Combinations</span>
     </div>
@@ -638,11 +641,11 @@
         </div>
         <div class="hub-actions-row">
           <a href="/creator?template=financial" class="hub-btn-edit">
-            <span>✏️</span>
+            <span></span>
             <span>Live Edit in LDOC Studio</span>
           </a>
-          <a href="/live-studio?template=finance" class="hub-btn-sub">👁️ View</a>
-          <a href="/ldoc-showcase.ldocx" download="financial-annual-report.ldocx" class="hub-btn-sub" title="Download .ldocx sample">📥</a>
+          <a href="/live-studio?template=finance" class="hub-btn-sub">View</a>
+          <a href="/ldoc-showcase.ldocx" download="financial-annual-report.ldocx" class="hub-btn-sub" title="Download .ldocx sample"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:-1px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a>
         </div>
       </article>
 
@@ -671,11 +674,11 @@
         </div>
         <div class="hub-actions-row">
           <a href="/creator?template=quantum" class="hub-btn-edit">
-            <span>✏️</span>
+            <span></span>
             <span>Live Edit in LDOC Studio</span>
           </a>
-          <a href="/live-studio?template=quantum" class="hub-btn-sub">👁️ View</a>
-          <a href="/ldoc-showcase.ldocx" download="quantum-coherence-paper.ldocx" class="hub-btn-sub" title="Download .ldocx sample">📥</a>
+          <a href="/live-studio?template=quantum" class="hub-btn-sub">View</a>
+          <a href="/ldoc-showcase.ldocx" download="quantum-coherence-paper.ldocx" class="hub-btn-sub" title="Download .ldocx sample"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:-1px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a>
         </div>
       </article>
 
@@ -704,11 +707,11 @@
         </div>
         <div class="hub-actions-row">
           <a href="/creator?template=pitch" class="hub-btn-edit">
-            <span>✏️</span>
+            <span></span>
             <span>Live Edit in LDOC Studio</span>
           </a>
-          <a href="/live-studio?template=pitch" class="hub-btn-sub">👁️ View</a>
-          <a href="/gt6-velocity-unleashed.ldocx" download="hyperion-series-a-deck.ldocx" class="hub-btn-sub" title="Download .ldocx sample">📥</a>
+          <a href="/live-studio?template=pitch" class="hub-btn-sub">View</a>
+          <a href="/gt6-velocity-unleashed.ldocx" download="hyperion-series-a-deck.ldocx" class="hub-btn-sub" title="Download .ldocx sample"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:-1px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a>
         </div>
       </article>
 
@@ -737,11 +740,11 @@
         </div>
         <div class="hub-actions-row">
           <a href="/creator?template=robotics" class="hub-btn-edit">
-            <span>✏️</span>
+            <span></span>
             <span>Live Edit in LDOC Studio</span>
           </a>
-          <a href="/live-studio?template=robotics" class="hub-btn-sub">👁️ View</a>
-          <a href="/daily-prophet.ldocx" download="vanguard-robotics-datasheet.ldocx" class="hub-btn-sub" title="Download .ldocx sample">📥</a>
+          <a href="/live-studio?template=robotics" class="hub-btn-sub">View</a>
+          <a href="/daily-prophet.ldocx" download="vanguard-robotics-datasheet.ldocx" class="hub-btn-sub" title="Download .ldocx sample"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:-1px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a>
         </div>
       </article>
 
@@ -933,16 +936,16 @@
         article.setAttribute('data-category', recipe.category);
         article.setAttribute('data-keywords', `${recipe.category} ${recipe.subtype} ${recipe.title} ${recipe.layoutId} ${recipe.paletteId}`);
 
-        const p = recipe.palette || { bg: '#0b0f19', surface: '#111726', text: '#f8fafc', primary: '#7c3aed', secondary: '#38bdf8' };
+        const p = recipe.palette || { bg: '#0b0f19', surface: '#111726', text: '#f8fafc', primary: '#2563eb', secondary: '#38bdf8' };
         const t = recipe.typography || { heading: 'Plus Jakarta Sans', body: 'Plus Jakarta Sans' };
 
         const featBadges = [];
-        featBadges.push(`<span class="hub-cap-badge">📄 ${recipe.pageCount} ${recipe.pageCount === 1 ? 'Page' : 'Pages'}</span>`);
-        featBadges.push(`<span class="hub-cap-badge">🔤 ${t.heading.split(' ')[0]}</span>`);
-        if (recipe.features.hasSimulation) featBadges.push(`<span class="hub-cap-badge" style="color:#38bdf8">⚡ Simulation</span>`);
-        if (recipe.features.hasChart) featBadges.push(`<span class="hub-cap-badge" style="color:#10b981">📊 Reactive Chart</span>`);
-        if (recipe.features.hasQuiz) featBadges.push(`<span class="hub-cap-badge" style="color:#f59e0b">🎓 Quiz Engine</span>`);
-        if (recipe.features.has3D) featBadges.push(`<span class="hub-cap-badge" style="color:#c084fc">🎲 3D WebGL</span>`);
+        featBadges.push(`<span class="hub-cap-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:-1px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> ${recipe.pageCount} ${recipe.pageCount === 1 ? 'Page' : 'Pages'}</span>`);
+        featBadges.push(`<span class="hub-cap-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg> ${t.heading.split(' ')[0]}</span>`);
+        if (recipe.features.hasSimulation) featBadges.push(`<span class="hub-cap-badge" style="color:#38bdf8">● Simulation</span>`);
+        if (recipe.features.hasChart) featBadges.push(`<span class="hub-cap-badge" style="color:#10b981"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Reactive Chart</span>`);
+        if (recipe.features.hasQuiz) featBadges.push(`<span class="hub-cap-badge" style="color:#f59e0b"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> Quiz Engine</span>`);
+        if (recipe.features.has3D) featBadges.push(`<span class="hub-cap-badge" style="color:#38bdf8"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><rect x="3" y="3" width="18" height="18" rx="2"/></svg> 3D WebGL</span>`);
 
         article.innerHTML = `
           <div class="hub-card-header">
@@ -974,11 +977,11 @@
 
           <div class="hub-actions-row">
             <a href="/studio?templateSeed=${recipe.seed}&category=${recipe.category}&subtype=${recipe.subtype}" class="hub-btn-edit">
-              <span>✏️</span>
+              <span></span>
               <span>Live Edit in LDOC Studio</span>
             </a>
-            <a href="/creator?templateSeed=${recipe.seed}&category=${recipe.category}&subtype=${recipe.subtype}" class="hub-btn-sub" title="Open in Creator">🎨 Creator</a>
-            <button type="button" class="hub-btn-sub" onclick="copyRecipe('${recipe.seed}', '${recipe.category}', '${recipe.subtype}')" title="Copy Deterministic JSON Recipe">📋</button>
+            <a href="/creator?templateSeed=${recipe.seed}&category=${recipe.category}&subtype=${recipe.subtype}" class="hub-btn-sub" title="Open in Creator"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><circle cx="12" cy="12" r="10"/></svg> Creator</a>
+            <button type="button" class="hub-btn-sub" onclick="copyRecipe('${recipe.seed}', '${recipe.category}', '${recipe.subtype}')" title="Copy Deterministic JSON Recipe">Copy</button>
           </div>
         `;
         grid.appendChild(article);
