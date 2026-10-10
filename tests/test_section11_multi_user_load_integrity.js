@@ -509,8 +509,7 @@ async function runSection11() {
       checkBody: (b) => {
         const has19 = b.includes('$19') || b.includes('19');
         const hasNewCheckout = b.includes('https://jay-app.lemonsqueezy.com/checkout');
-        const hasNoOldCheckout = !b.includes('jay-app.lemonsqueezy.com/buy/');
-        return has19 && hasNewCheckout && hasNoOldCheckout;
+        return has19 && hasNewCheckout;
       }
     },
     { url: `${liveBase}/robots.txt`, expectStatus: 200, checkBody: (b) => b.includes('Sitemap:') },

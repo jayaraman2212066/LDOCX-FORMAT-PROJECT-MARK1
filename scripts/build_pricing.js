@@ -1179,7 +1179,7 @@ const content = `<!DOCTYPE html>
               </ul>
             </div>
             <div class="card-cta-zone">
-              <a href="https://jay-app.lemonsqueezy.com/checkout" target="_blank" class="lemonsqueezy-button btn-plan btn-plan-cloud">
+              <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button btn-plan btn-plan-cloud">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 <span>Start Cloud Pro &rarr;</span>
               </a>
