@@ -3,34 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Refund & Cancellation Policy — LDOC Studio &amp; Living Document Standard</title>
-  <meta name="description" content="Official Refund and Cancellation Policy for LDOC Studio Pro, Enterprise licenses, and digital asset templates.">
+  <title>Refund & Cancellation Policy — LDOC Studio</title>
+  <meta name="description" content="Official 14-day refund and cancellation policy for LDOC Studio Pro licenses and enterprise clusters.">
   <link rel="icon" type="image/png" href="/ldoc_logo.png">
   <link rel="shortcut icon" href="/app.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/design-system.css">
   <style>
     :root {
       --bg: #08090d;
       --bg-alt: #0c0e14;
-      --bg-subtle: #121620;
-      --card-bg: rgba(14, 17, 25, 0.75);
+      --card-bg: rgba(14, 18, 28, 0.75);
       --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover: rgba(255, 255, 255, 0.16);
       --primary: #f59e0b;
       --primary-light: #fbbf24;
-      --primary-glow: rgba(245, 158, 11, 0.2);
       --cobalt: #3b82f6;
       --azure: #38bdf8;
-      --cyan: #0ea5e9;
-      --amber: #f59e0b;
       --emerald: #10b981;
       --text: #f8fafc;
       --text-muted: #94a3b8;
-      --text-sub: #94a3b8;
+      --text-sub: #64748b;
       --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
       --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -43,6 +39,9 @@
       line-height: 1.65;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     .ambient-bg {
@@ -51,279 +50,529 @@
       pointer-events: none;
       z-index: 0;
       background: 
-        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 85% 75%, rgba(6, 182, 212, 0.10) 0%, transparent 45%),
-        radial-gradient(circle at 50% 90%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(245, 158, 11, 0.05) 0%, transparent 45%);
     }
 
-    .page-wrap { position: relative; z-index: 1; }
-
-    /* Nav */
-    .nav-bar {
-      position: sticky; top: 0;
-      background: rgba(7, 10, 19, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--card-border);
-      height: 70px;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 40px;
-      z-index: 100;
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
-    .brand-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; font-family: var(--font-title); font-weight: 800; font-size: 1.15rem; letter-spacing: 1px; }
-    .brand-logo img { width: 32px; height: 32px; border-radius: 6px; }
-    .nav-links { display: flex; align-items: center; gap: 24px; list-style: none; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: #fff; }
-    .btn-launch { background: linear-gradient(135deg, #2563eb, #a855f7); color: #fff; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(124,58,237,0.35); transition: transform 0.2s; }
-    .btn-launch:hover { transform: translateY(-1px); }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
 
     /* Hero */
     .policy-hero {
-      padding: 80px 24px 40px;
+      padding: 64px 0 32px;
       text-align: center;
-      max-width: 900px;
-      margin: 0 auto;
     }
     .policy-tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 14px; border-radius: 99px;
-      background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35);
-      color: #34d399; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: 99px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: #fbbf24;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
     }
     .policy-hero h1 {
-      font-family: var(--font-title);
-      font-size: 2.7rem; font-weight: 800;
-      color: #fff; margin-bottom: 16px;
-      line-height: 1.2;
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
     }
     .policy-hero p {
-      color: var(--text-muted); font-size: 1.1rem;
-      max-width: 720px; margin: 0 auto;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 680px;
+      margin: 0 auto 20px;
     }
     .meta-bar {
-      margin-top: 24px; color: var(--text-sub); font-size: 0.85rem;
-      display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      color: var(--text-sub);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      flex-wrap: wrap;
     }
 
-    /* Container */
-    .content-container {
-      max-width: 920px;
-      margin: 0 auto;
-      padding: 20px 24px 100px;
+    /* Layout: 70ch Centered Article + Sticky TOC */
+    .legal-layout {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 48px;
+      padding: 24px 0 80px;
+      align-items: start;
+    }
+    .legal-article {
+      max-width: 72ch;
+      width: 100%;
     }
 
+    /* Plain English Summary Box */
+    .plain-summary-card {
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 36px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .summary-tag {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #38bdf8;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .summary-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .summary-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .summary-list li span.chk {
+      color: #34d399;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* Sections */
     .policy-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 16px;
-      padding: 36px 40px;
-      margin-bottom: 28px;
+      padding: 32px 36px;
+      margin-bottom: 24px;
       backdrop-filter: blur(12px);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      scroll-margin-top: 100px;
     }
-
-    .policy-card h2 {
-      font-family: var(--font-title);
-      font-size: 1.35rem; font-weight: 700;
-      color: var(--gold-light);
-      margin-bottom: 16px;
-      display: flex; align-items: center; gap: 12px;
+    .policy-h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .policy-card h2 .sec-num {
+    .sec-num {
       color: var(--primary-light);
-      font-size: 1.1rem; font-weight: 800;
       font-family: var(--font-mono);
+      font-size: 1.1rem;
     }
     .policy-card p {
-      color: #cbd5e1; font-size: 0.96rem;
-      margin-bottom: 14px;
+      color: #cbd5e1;
+      font-size: 0.95rem;
       line-height: 1.7;
+      margin-bottom: 14px;
     }
     .policy-card ul {
-      margin: 12px 0 16px 24px;
-      color: #cbd5e1; font-size: 0.94rem;
-    }
-    .policy-card li { margin-bottom: 8px; }
-
-    .highlight-box {
-      background: rgba(56, 189, 248, 0.08);
-      border-left: 3px solid var(--primary);
-      padding: 16px 20px;
-      border-radius: 0 10px 10px 0;
-      margin: 18px 0;
-      color: #e2e8f0;
+      margin: 12px 0 16px 20px;
+      color: #cbd5e1;
       font-size: 0.92rem;
+      line-height: 1.7;
+    }
+    .policy-card li { margin-bottom: 6px; }
+    .highlight-box {
+      background: rgba(245, 158, 11, 0.08);
+      border-left: 3px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      color: #fef3c7;
+      font-size: 0.92rem;
+      line-height: 1.6;
     }
 
-    /* Footer */
-    .site-footer {
-      background: #04060b;
-      border-top: 1px solid var(--card-border);
-      padding: 60px 40px 40px;
-      font-size: 0.88rem;
+    /* Security Architecture Diagram */
+    .security-diagram-card {
+      background: linear-gradient(180deg, rgba(14, 20, 32, 0.9) 0%, rgba(8, 12, 20, 0.95) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 36px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
     }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr 1.2fr;
-      gap: 36px;
-      max-width: 1200px;
-      margin: 0 auto 48px;
+    .diagram-header { margin-bottom: 20px; }
+    .diagram-tag {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 4px;
     }
-    .footer-brand p { color: var(--text-muted); margin-top: 12px; font-size: 0.85rem; max-width: 320px; }
-    .footer-col h5 { color: #fff; font-size: 0.9rem; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .footer-col ul { list-style: none; }
-    .footer-col li { margin-bottom: 10px; }
-    .footer-col a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-    .footer-col a:hover { color: #fff; }
-    .footer-bottom {
-      max-width: 1200px; margin: 0 auto;
-      padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06);
-      display: flex; justify-content: space-between; align-items: center;
-      color: var(--text-sub); font-size: 0.8rem; flex-wrap: wrap; gap: 16px;
+    .diagram-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .diagram-layers {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .diagram-layer {
+      border-radius: 10px;
+      padding: 16px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .layer-airgap { background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.25); }
+    .layer-sandbox { background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.25); }
+    .layer-merkle { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.25); }
+    .layer-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.05em;
+    }
+    .layer-title {
+      font-family: var(--font-display);
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .layer-desc {
+      font-size: 12.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* Sticky TOC */
+    .legal-toc {
+      position: sticky;
+      top: 90px;
+      background: rgba(14, 18, 28, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .toc-title {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toc-item a {
+      color: #94a3b8;
+      font-size: 12.5px;
+      text-decoration: none;
+      transition: color 0.15s ease;
+      display: block;
+      line-height: 1.4;
+    }
+    .toc-item a:hover { color: #ffffff; }
+    .toc-item a.active {
+      color: #f59e0b;
+      font-weight: 700;
+    }
+
+    /* Print Styles */
+    @media print {
+      .ambient-bg, .ldoc-pill-banner, .ldoc-navbar, .legal-toc, .site-footer, .ldoc-btn {
+        display: none !important;
+      }
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .legal-layout { display: block !important; }
+      .legal-article { max-width: 100% !important; }
+      .policy-card {
+        border: 1px solid #cccccc !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+      .policy-h2, .policy-card p, .policy-card li {
+        color: #000000 !important;
+      }
     }
 
     @media (max-width: 900px) {
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .nav-links { display: none; }
+      .legal-layout { grid-template-columns: 1fr; }
+      .legal-toc { display: none; }
       .policy-card { padding: 24px 20px; }
-      .policy-hero h1 { font-size: 2rem; }
     }
-  
-.btn-hero-primary,.btn-hero-secondary,.nav-action-btn,.build-btn,.ldoc-preset-btn,.template-btn{transition:transform 0.16s var(--ease-spring),box-shadow 0.16s var(--ease-spring),background-color 0.16s ease,border-color 0.16s ease;}
-.btn-hero-primary:active,.btn-hero-secondary:active,.nav-action-btn:active,.build-btn:active,.ldoc-preset-btn:active,.template-btn:active{transform:scale(0.982);}
-</style>
+  </style>
 </head>
 <body>
   <div class="ambient-bg"></div>
 
   <div class="page-wrap">
-    <!-- Navbar -->
-    <nav class="nav-bar">
-      <a href="/" class="brand-logo">
-        <img src="/ldoc_logo.png" alt="LDOC Studio">
-        <span>LDOC STUDIO</span>
-      </a>
-      <ul class="nav-links">
-        <li><a href="/format">Format</a></li>
-        <li><a href="/features">Features</a></li>
-        <li><a href="/docs">Docs</a></li>
-        <li><a href="/pricing">Pricing</a></li>
-        <li><a href="/changelog">Changelog</a></li>
-      </ul>
-      <a href="/live-studio" class="btn-launch">Launch Studio</a>
+    <!-- Top Dismissible Pill Banner -->
+    <div class="ldoc-pill-banner" id="ldoc-pill-banner">
+      <span class="ldoc-pill-tag">SPEC v2.5.0</span>
+      <span>Living Document Format (.ldocx) open architecture released.</span>
+      <a href="/format">Explore Open Spec &rarr;</a>
+      <button class="ldoc-pill-close" onclick="dismissPillBanner()" aria-label="Dismiss banner">&times;</button>
+    </div>
+
+    <!-- Sticky Glass Navbar -->
+    <nav class="ldoc-navbar" id="ldoc-navbar">
+      <div class="ldoc-navbar-inner">
+        <div class="ldoc-nav-left">
+          <a href="/" class="ldoc-nav-logo">
+            <img src="/ldoc_logo.png" alt="LDOC Studio Logo" width="28" height="28" />
+            <span>LDOC STUDIO</span>
+            <span class="ldoc-nav-badge">.ldocx</span>
+          </a>
+          <div class="ldoc-nav-links">
+            <a href="/format" class="ldoc-nav-link">Format</a>
+            <a href="/features" class="ldoc-nav-link">Features</a>
+            <a href="/live-studio" class="ldoc-nav-link">Live Studio</a>
+            <a href="/models" class="ldoc-nav-link">Models Hub</a>
+            <a href="/pricing" class="ldoc-nav-link">Pricing</a>
+            <a href="/docs" class="ldoc-nav-link">Docs</a>
+            <a href="/changelog" class="ldoc-nav-link">Changelog</a>
+          </div>
+        </div>
+        <div class="ldoc-nav-right">
+          <button class="ldoc-nav-search-btn" onclick="openCmdPalette()" title="Command Palette (Ctrl+K)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Search...</span>
+            <kbd class="ldoc-kbd">Ctrl K</kbd>
+          </button>
+          <button class="ldoc-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
+            <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="12" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="ldoc-btn ldoc-btn-ghost" style="padding: 6px 12px; font-size: 0.8rem;" onclick="showAuthModal()">Sign In</button>
+          <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="padding: 7px 14px; font-size: 0.82rem;">Launch Studio &rarr;</a>
+          <button class="ldoc-hamburger" id="ldoc-hamburger" onclick="toggleMobileMenu()" aria-label="Open mobile navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
     </nav>
 
-    <!-- Hero -->
-    <header class="policy-hero">
-      <div class="policy-tag"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 14-Day Money-Back Guarantee</div>
-      <h1>Refund Policy</h1>
-      <p>We want you to be completely satisfied with LDOC Studio. Here is our straightforward, transparent refund and cancellation policy.</p>
-      <div class="meta-bar">
-        <span>Effective: September 12, 2026</span>
-        <span>•</span>
-        <span>Standard Version 2.6.0</span>
-        <span>•</span>
-        <span>J AI ENTERPRISES</span>
+    <!-- Mobile Drawer -->
+    <div class="ldoc-mobile-drawer" id="ldoc-mobile-drawer">
+      <div class="ldoc-drawer-links">
+        <a href="/format" class="ldoc-drawer-link">Format Spec</a>
+        <a href="/features" class="ldoc-drawer-link">Features</a>
+        <a href="/live-studio" class="ldoc-drawer-link">Live Studio IDE</a>
+        <a href="/models" class="ldoc-drawer-link">Models Hub</a>
+        <a href="/pricing" class="ldoc-drawer-link">Pricing</a>
+        <a href="/docs" class="ldoc-drawer-link">Documentation</a>
+        <a href="/changelog" class="ldoc-drawer-link">Changelog</a>
       </div>
-    </header>
+      <div class="ldoc-drawer-actions">
+        <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="width:100%; justify-content:center;">Launch Studio</a>
+        <button class="ldoc-btn ldoc-btn-secondary" style="width:100%; justify-content:center;" onclick="showAuthModal()">Sign In</button>
+      </div>
+    </div>
 
-    <!-- Main Content -->
-    <main class="content-container">
+    <!-- MAIN ARTICLE -->
+    <main class="container">
+      <header class="policy-hero">
+        <div class="policy-tag">REFUND & SATISFACTION POLICY</div>
+        <h1>Refund &amp; Cancellation Policy</h1>
+        <p>Transparent, developer-first refund guidelines. Evaluate the full Studio Pro workstation risk-free with a 14-day satisfaction guarantee.</p>
+        <div class="meta-bar">
+          <span>Last Updated: October 10, 2026</span>
+          <span>•</span>
+          <span>Standard Version v2.5.0</span>
+          <span>•</span>
+          <span>J AI ENTERPRISES</span>
+        </div>
+      </header>
 
-      <section class="policy-card">
-        <h2><span class="sec-num">01.</span> 14-Day Money-Back Guarantee</h2>
-        <p>We stand behind the quality and capability of LDOC Studio. If you purchase an <strong>LDOC Pro Monthly, Annual, or Lifetime License</strong> and find that it does not meet your technical expectations or project requirements, you are eligible for a <strong>100% full refund within 14 calendar days</strong> of your initial purchase date.</p>
-                <div class="highlight-box">No complicated questionnaires or retention calls. Simply email us with your order confirmation number, and we will reverse the transaction.</div>
-      </section>
-      <section class="policy-card">
-        <h2><span class="sec-num">02.</span> Subscription Cancellation Process</h2>
-        <p>You can cancel your recurring LDOC Pro subscription at any time with a single click:</p>
-                <ul>
-                  <li>Go to your Account Settings &gt; Billing Portal (powered by Stripe).</li>
-                  <li>Click <strong>Cancel Subscription</strong>.</li>
-                  <li>Your access to LDOC Pro features will remain fully active until the end of your current prepaid billing period.</li>
-                  <li>You will not be billed again after cancellation.</li>
-                </ul>
-      </section>
-      <section class="policy-card">
-        <h2><span class="sec-num">03.</span> Enterprise & Custom Contracts</h2>
-        <p>Custom Enterprise licenses, on-premises air-gapped deployment packages, and custom architectural development contracts are governed by their respective Master Service Agreements (MSAs). Multi-seat enterprise licenses are non-refundable once deployed to production networks, except as specifically provided in your SLA contract.</p>
-      </section>
-      <section class="policy-card">
-        <h2><span class="sec-num">04.</span> Refund Processing Timeline</h2>
-        <p>Once approved, refunds are processed immediately through our payment partner, Stripe. Funds typically reflect on your credit card or bank account statement within <strong>5 to 7 business days</strong>, depending on your financial institution.</p>
-      </section>
-      <section class="policy-card">
-        <h2><span class="sec-num">05.</span> Contact Billing Support</h2>
-        <p>For refund requests, invoice inquiries, or VAT/GST tax exemption receipts, contact our billing desk directly:</p>
-                <ul>
-                  <li><strong>Billing Inquiries:</strong> <a href="mailto:jayaramankalidasan@gmail.com" style="color:var(--primary-light)">jayaramankalidasan@gmail.com</a></li>
-                  <li><strong>Subject Line:</strong> <code>Refund Request - [Order / Email]</code></li>
-                  <li><strong>Response SLA:</strong> Within 1 business day</li>
-                </ul>
-      </section>
+      <div class="legal-layout">
+        <article class="legal-article">
+          <!-- Plain English Summary Box -->
+          <div class="plain-summary-card">
+            <span class="summary-tag">SUMMARY IN PLAIN ENGLISH</span>
+            <ul class="summary-list">
+              <li><span class="chk">✓</span> <span>14-Day Money-Back Guarantee for all LDOC Studio Pro one-time lifetime licenses.</span></li><li><span class="chk">✓</span> <span>No complex justifications required; email us your receipt Order ID for prompt processing.</span></li><li><span class="chk">✓</span> <span>Refunds are credited back to your original payment method within 3–5 business days.</span></li>
+            </ul>
+          </div>
+
+          
+
+          <!-- Policy Sections -->
+          
+    <section class="policy-card" id="sec-1">
+      <h2 class="policy-h2"><span class="sec-num">01.</span> 14-Day Satisfaction Guarantee</h2>
+      
+        <p>We stand behind the engineering of LDOC Studio Pro. If the offline desktop suite does not fulfill your workflow requirements or perform as expected on your hardware, you are entitled to a full 100% refund within 14 days of your initial purchase.</p>
+      
+    </section>
+  
+    <section class="policy-card" id="sec-2">
+      <h2 class="policy-h2"><span class="sec-num">02.</span> How to Request a Refund</h2>
+      
+        <p>To initiate a refund, simply email our founder directly with your purchase details:</p>
+        <div class="highlight-box">
+          <strong>Refund Inquiries:</strong> <a href="mailto:jayaramankalidasan@gmail.com" style="color:var(--primary-light)">jayaramankalidasan@gmail.com</a><br>
+          Include your receipt Order ID or checkout email address. We process refund requests within 24–48 hours.
+        </div>
+      
+    </section>
+  
+    <section class="policy-card" id="sec-3">
+      <h2 class="policy-h2"><span class="sec-num">03.</span> Processing Timeline</h2>
+      
+        <p>Once approved, the refund is automatically dispatched via our merchant of record (Lemon Squeezy / Stripe). Funds will appear on your bank or credit card statement within 3–5 business days depending on your financial institution.</p>
+      
+    </section>
+  
+        </article>
+
+        <!-- Sticky TOC -->
+        <aside class="legal-toc">
+          <span class="toc-title">Sections</span>
+          <ul class="toc-list" id="legalTocList">
+            
+    <li class="toc-item"><a href="#sec-1" class="active">14-Day Satisfaction Guarantee</a></li>
+  
+    <li class="toc-item"><a href="#sec-2" >How to Request a Refund</a></li>
+  
+    <li class="toc-item"><a href="#sec-3" >Processing Timeline</a></li>
+  
+          </ul>
+        </aside>
+      </div>
     </main>
 
-    <!-- Footer -->
+    <!-- STANDARDIZED FOOTER -->
     <footer class="site-footer">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <a href="/" class="brand-logo">
-            <img src="/ldoc_logo.png" alt="LDOC Logo">
-            <span>LDOC STUDIO</span>
-          </a>
-          <p>The open living document architecture. Compute, render, and evolve beyond static PDFs.</p>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="brand-logo">
+              <img src="/ldoc_logo.png" alt="LDOC Logo" width="28" height="28">
+              <span>LDOC STUDIO</span>
+            </a>
+            <p>The open living document architecture. Compute, render, and evolve beyond static PDFs.</p>
+          </div>
+
+          <div class="footer-col">
+            <h5>Product</h5>
+            <ul>
+              <li><a href="/live-studio">Live Studio IDE</a></li>
+              <li><a href="/models">Models &amp; Templates</a></li>
+              <li><a href="/creator">Visual Creator</a></li>
+              <li><a href="/pricing">Pricing Plans</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Specification</h5>
+            <ul>
+              <li><a href="/format">.ldocx Architecture</a></li>
+              <li><a href="/docs">AST Specification</a></li>
+              <li><a href="/docs">Draco 3D Geometry</a></li>
+              <li><a href="/security">Security &amp; Signing</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Developers</h5>
+            <ul>
+              <li><a href="/docs">SDK Architecture Guide</a></li>
+              <li><a href="/docs#sdk">Developer Integration</a></li>
+              <li><a href="/changelog">Release Changelog</a></li>
+              <li><a href="/format">Format Specification</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Trust &amp; Legal</h5>
+            <ul>
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Service</a></li>
+              <li><a href="/security">Security Architecture</a></li>
+              <li><a href="/refund">Refund Policy</a></li>
+              <li><a href="/license">Commercial SLA &amp; License</a></li>
+              <li><a href="mailto:jayaramankalidasan@gmail.com">Contact Founder</a></li>
+            </ul>
+          </div>
         </div>
 
-        <div class="footer-col">
-          <h5>Product</h5>
-          <ul>
-            <li><a href="/live-studio">Live Studio IDE</a></li>
-            <li><a href="/models">Models &amp; Templates</a></li>
-            <li><a href="/creator">Visual Creator</a></li>
-            <li><a href="/pricing">Pricing Plans</a></li>
-          </ul>
+        <div class="footer-bottom">
+          <div>&copy; 2026 LDOC Studio. Designed and created by J AI ENTERPRISES. Open Living Document Standard.</div>
+          <div class="footer-legal-links" style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <a href="/privacy" style="color: var(--text-sub); text-decoration: none;">Privacy Policy</a>
+            <a href="/terms" style="color: var(--text-sub); text-decoration: none;">Terms of Service</a>
+            <a href="/security" style="color: var(--text-sub); text-decoration: none;">Security Architecture</a>
+            <a href="/refund" style="color: var(--text-sub); text-decoration: none;">Refund Policy</a>
+            <a href="/license" style="color: var(--text-sub); text-decoration: none;">Commercial SLA</a>
+          </div>
         </div>
-
-        <div class="footer-col">
-          <h5>Specification</h5>
-          <ul>
-            <li><a href="/format">.ldocx Architecture</a></li>
-            <li><a href="/docs">AST Specification</a></li>
-            <li><a href="/docs">Draco 3D Geometry</a></li>
-            <li><a href="/docs">Security &amp; Signing</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h5>Developers</h5>
-          <ul>
-            <li><a href="/docs">SDK Architecture Guide</a></li>
-            <li><a href="/docs#sdk">Developer Integration</a></li>
-            <li><a href="/changelog">Release Changelog</a></li>
-            <li><a href="/format">Format Specification</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h5>Legal &amp; Trust</h5>
-          <ul>
-            <li><a href="/privacy">Privacy Policy</a></li>
-            <li><a href="/terms">Terms of Service</a></li>
-            <li><a href="/security">Security Architecture</a></li>
-            <li><a href="/refund">Refund Policy</a></li>
-            <li><a href="/license">Commercial License</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <div>&copy; 2026 LDOC Studio. Designed and created by J AI ENTERPRISES. Open Living Document Standard.</div>
-        <div><a href="mailto:jayaramankalidasan@gmail.com" style="color:inherit;text-decoration:none">Contact Founder</a> &bull; Jayaraman K</div>
       </div>
     </footer>
   </div>
+
+  <script>
+    // ScrollSpy for TOC
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.policy-card');
+      const navLinks = document.querySelectorAll('.toc-item a');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            navLinks.forEach(link => {
+              link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+            });
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+
+      sections.forEach(sec => observer.observe(sec));
+    });
+  </script>
+
+  <script src="/design-system.js"></script>
 </body>
 </html>

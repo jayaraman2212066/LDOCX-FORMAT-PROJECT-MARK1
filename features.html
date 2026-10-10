@@ -9,7 +9,9 @@
   <link rel="shortcut icon" href="/app.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/design-system.css">
+  <script defer src="/design-system.js"></script>
   <!-- Three.js loaded asynchronously on demand -->
   <style>
     :root {
@@ -1354,45 +1356,75 @@
   <div class="ambient-bg"></div>
 
   <div class="page-wrap">
-    <!-- Promo Strip -->
-    <div class="promo-strip">
-      <span class="promo-badge">Spec v2.5.0</span>
+    <!-- Top Dismissible Pill Banner -->
+    <div class="ldoc-pill-banner" id="ldoc-pill-banner">
+      <span class="ldoc-pill-tag">SPEC v2.5.0</span>
       <span>Living Document Format (.ldocx) open architecture released.</span>
-      <a href="/format">Explore Open Spec &amp; AST &rarr;</a>
+      <a href="/format">Explore Open Spec &rarr;</a>
+      <button class="ldoc-pill-close" onclick="dismissPillBanner()" aria-label="Dismiss banner">&times;</button>
     </div>
 
-    <!-- Navigation -->
-    <nav class="nav-bar">
-      <div class="nav-left">
-        <a href="/" class="brand-logo">
-          <img src="/ldoc_logo.webp" alt="LDOC Logo" width="28" height="28" decoding="async">
-          <span>LDOC STUDIO</span>
-          <span class="brand-badge">.ldocx</span>
-        </a>
-        <ul class="nav-links">
-          <li><a href="/format">Format</a></li>
-          <li><a href="/features">Features</a></li>
-          <li><a href="/live-studio">Live Studio</a></li>
-          <li><a href="/models">Models Hub</a></li>
-          <li><a href="/pricing">Pricing</a></li>
-          <li><a href="/docs">Docs</a></li>
-          <li><a href="/changelog">Changelog</a></li>
-        </ul>
-      </div>
-      <div class="nav-right">
-        <!-- Auth & Utility Actions: Sign In, Share, Pro -->
-        <div class="nav-actions-group">
-          <button class="nav-action-btn" id="header-auth-btn" onclick="showAuthModal()"><span class="tech-icon-badge">USER</span> Sign In</button>
-          <button class="nav-action-btn" onclick="showShareModal()" title="Share LDOC Studio"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:-1px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share</button>
-          
+    <!-- Sticky Glass Navbar -->
+    <nav class="ldoc-navbar" id="ldoc-navbar">
+      <div class="ldoc-navbar-inner">
+        <div class="ldoc-nav-left">
+          <a href="/" class="ldoc-nav-logo">
+            <img src="/ldoc_logo.webp" alt="LDOC Studio Logo" width="28" height="28" />
+            <span>LDOC STUDIO</span>
+            <span class="ldoc-nav-badge">.ldocx</span>
+          </a>
+          <div class="ldoc-nav-links">
+            <a href="/format" class="ldoc-nav-link">Format</a>
+            <a href="/features" class="ldoc-nav-link active">Features</a>
+            <a href="/live-studio" class="ldoc-nav-link">Live Studio</a>
+            <a href="/models" class="ldoc-nav-link">Models Hub</a>
+            <a href="/pricing" class="ldoc-nav-link">Pricing</a>
+            <a href="/docs" class="ldoc-nav-link">Docs</a>
+            <a href="/changelog" class="ldoc-nav-link">Changelog</a>
+          </div>
         </div>
-        <a href="/live-studio" class="btn-launch">
-          <span>Launch Studio</span>
-          <span>&rarr;</span>
-        </a>
+        <div class="ldoc-nav-right">
+          <button class="ldoc-nav-search-btn" onclick="openCmdPalette()" title="Command Palette (Ctrl+K)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Search...</span>
+            <kbd class="ldoc-kbd">Ctrl K</kbd>
+          </button>
+          <button class="ldoc-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
+            <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="ldoc-btn ldoc-btn-ghost" style="padding: 6px 12px; font-size: 0.8rem;" onclick="showAuthModal()">Sign In</button>
+          <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="padding: 7px 14px; font-size: 0.82rem;">Launch Studio &rarr;</a>
+          <button class="ldoc-hamburger" id="ldoc-hamburger" onclick="toggleMobileMenu()" aria-label="Open mobile navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
       </div>
     </nav>
-  </header>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="ldoc-mobile-drawer" id="ldoc-mobile-drawer">
+      <div class="ldoc-mobile-drawer-header">
+        <a href="/" class="ldoc-nav-logo">
+          <img src="/ldoc_logo.webp" alt="LDOC Studio Logo" width="26" height="26" />
+          <span>LDOC STUDIO</span>
+        </a>
+        <button class="ldoc-mobile-drawer-close" onclick="toggleMobileMenu()" aria-label="Close menu">&times;</button>
+      </div>
+      <div class="ldoc-mobile-drawer-links">
+        <a href="/format">Format</a>
+        <a href="/features">Features</a>
+        <a href="/live-studio">Live Studio</a>
+        <a href="/models">Models Hub</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Docs</a>
+        <a href="/changelog">Changelog</a>
+      </div>
+      <div class="ldoc-mobile-drawer-actions">
+        <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="width: 100%; justify-content: center;">Launch Studio</a>
+        <button class="ldoc-btn ldoc-btn-secondary" style="width: 100%; justify-content: center;" onclick="showAuthModal()">Sign In</button>
+      </div>
+    </div>
 
   <main id="main-content">
 
@@ -1447,14 +1479,27 @@
             <div id="ftab-telemetry" class="tab-pane active">
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
                 <div style="padding: 10px 0;">
-                  <div style="font-family: var(--font-mono); font-size: 11px; color: #38bdf8; letter-spacing: 0.08em; margin-bottom: 6px; font-weight: 700;">ACTUATOR KINEMATIC SIMULATION</div>
-                  <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 10px;">Vanguard-7 Quadruped Telemetry</h3>
-                  <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.6; margin-bottom: 18px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <div style="font-family: var(--font-mono); font-size: 11px; color: #38bdf8; letter-spacing: 0.08em; font-weight: 700;">DISCRETE WEBGL 3D KINEMATICS</div>
+                    <button class="ldoc-btn ldoc-btn-ghost" id="btn-wireframe-toggle" onclick="toggle3DWireframe()" style="padding: 3px 8px; font-size: 11px; font-family: var(--font-mono); border: 1px solid rgba(255,255,255,0.12);">
+                      Wireframe: <span id="wireframe-status-text" style="color: #94a3b8;">OFF</span>
+                    </button>
+                  </div>
+                  <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 8px;">Spatial 3D &amp; Telemetry</h3>
+                  <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.6; margin-bottom: 14px;">
                     Embedded WebGL spatial blocks evaluate kinematic joint loads, stress distribution, and thermal margins directly in the document page using client GPU shaders.
                   </p>
-                  <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+                  
+                  <!-- Model Switcher Buttons -->
+                  <div style="display: flex; gap: 6px; margin-bottom: 14px;">
+                    <button class="ldoc-btn ldoc-btn-secondary active" id="btn-model-quadruped" onclick="switch3DModel('quadruped')" style="padding: 5px 10px; font-size: 11.5px;">Quadruped</button>
+                    <button class="ldoc-btn ldoc-btn-ghost" id="btn-model-satellite" onclick="switch3DModel('satellite')" style="padding: 5px 10px; font-size: 11.5px;">Satellite</button>
+                    <button class="ldoc-btn ldoc-btn-ghost" id="btn-model-turbine" onclick="switch3DModel('turbine')" style="padding: 5px 10px; font-size: 11.5px;">Turbine</button>
+                  </div>
+
+                  <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; margin-bottom: 14px;">
                     <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;">
-                      <span style="color: #cbd5e1;">Simulated Joint Torque:</span>
+                      <span style="color: #cbd5e1;">Dynamic Actuator Torque:</span>
                       <strong id="feat-torque-display" style="color: #38bdf8; font-family: var(--font-mono);">340 Nm</strong>
                     </div>
                     <input type="range" class="fin-slider" min="50" max="600" step="10" value="340" id="feat-torque-slider" oninput="updateFeatTorque(this.value)">
@@ -1472,73 +1517,155 @@
                 </div>
 
                 <div style="position: relative; background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; height: 320px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                  <div style="position: absolute; top: 12px; left: 14px; font-family: var(--font-mono); font-size: 10px; color: #38bdf8; background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); padding: 3px 8px; border-radius: 5px;">
-                    ● HARDWARE ACCELERATED MESH
+                  <div style="position: absolute; top: 12px; left: 14px; font-family: var(--font-mono); font-size: 10px; color: #38bdf8; background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); padding: 3px 8px; border-radius: 5px; z-index: 2;">
+                    ● 60 FPS • DISCRETE WEBGL
                   </div>
                   <canvas id="feat-mesh-canvas" style="width: 100%; height: 100%; cursor: grab;"></canvas>
-                  <div style="position: absolute; bottom: 10px; right: 12px; font-family: var(--font-mono); font-size: 10px; color: #94a3b8;">
+                  <div style="position: absolute; bottom: 10px; right: 12px; font-family: var(--font-mono); font-size: 10px; color: #94a3b8; z-index: 2;">
                     DRACO COMPRESSED • 64 KB
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- TAB 2: Reactive AST Pipeline -->
+            <!-- TAB 2: Reactive AST Pipeline (Visual DAG) -->
             <div id="ftab-ast" class="tab-pane" style="display: none;">
               <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px;">
-                <div style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; font-family: var(--font-mono); font-size: 12px; color: #cbd5e1; line-height: 1.6; overflow-x: auto;">
-                  <div style="color: #94a3b8; margin-bottom: 8px;">// Living Document Reactive Block AST</div>
-                  <span style="color: #38bdf8;">const</span> node = {<br>
-                  &nbsp;&nbsp;id: <span style="color: #a7f3d0;">"blk_telemetry_joint_01"</span>,<br>
-                  &nbsp;&nbsp;type: <span style="color: #a7f3d0;">"spatial_3d"</span>,<br>
-                  &nbsp;&nbsp;geometry: <span style="color: #a7f3d0;">"meshes/vanguard_knee.draco"</span>,<br>
-                  &nbsp;&nbsp;reactive_bindings: {<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;torque: <span style="color: #fef08a;">"calc_dynamic_load(slider.val)"</span>,<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;thermal_strain: <span style="color: #fef08a;">"material.youngs_modulus * strain"</span><br>
-                  &nbsp;&nbsp;},<br>
-                  &nbsp;&nbsp;execution_target: <span style="color: #38bdf8;">"discrete_gpu_webgl"</span><br>
-                  };<br>
-                  <span style="color: #38bdf8;">await</span> doc.<span style="color: #38bdf8;">compileNode</span>(node);
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="font-family: var(--font-mono); font-size: 11px; color: #38bdf8; font-weight: 700;">VISUAL DATA-FLOW GRAPH (DAG)</div>
+                    <span style="font-family: var(--font-mono); font-size: 10.5px; color: #34d399;">PROPAGATION: &lt; 0.4 ms</span>
+                  </div>
+                  <!-- Visual DAG Flow Diagram -->
+                  <div id="dag-container" style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px; margin-bottom: 14px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                      <!-- DAG Node 1: Variable Input -->
+                      <div class="dag-node" id="dag-node-1" style="flex: 1; background: rgba(56, 189, 248, 0.1); border: 1.5px solid #38bdf8; border-radius: 8px; padding: 10px; text-align: center; transition: all 0.2s;">
+                        <div style="font-size: 9.5px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase;">Variable</div>
+                        <div style="font-size: 12px; font-weight: 700; color: #fff; margin-top: 2px;">$torque</div>
+                        <div id="dag-val-torque" style="font-size: 13px; font-family: var(--font-mono); font-weight: 800; color: #38bdf8; margin-top: 2px;">340 Nm</div>
+                      </div>
+
+                      <div style="color: #64748b; font-size: 14px; font-family: var(--font-mono);">──▶</div>
+
+                      <!-- DAG Node 2: Formula Function -->
+                      <div class="dag-node" id="dag-node-2" style="flex: 1.1; background: rgba(245, 158, 11, 0.1); border: 1.5px solid #f59e0b; border-radius: 8px; padding: 10px; text-align: center; transition: all 0.2s;">
+                        <div style="font-size: 9.5px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase;">Formula AST</div>
+                        <div style="font-size: 11px; font-weight: 700; color: #fff; margin-top: 2px;">calc_thermal()</div>
+                        <div id="dag-val-calc" style="font-size: 12px; font-family: var(--font-mono); font-weight: 700; color: #fbbf24; margin-top: 2px;">$t * 0.126</div>
+                      </div>
+
+                      <div style="color: #64748b; font-size: 14px; font-family: var(--font-mono);">──▶</div>
+
+                      <!-- DAG Node 3: UI DOM Target -->
+                      <div class="dag-node" id="dag-node-3" style="flex: 1; background: rgba(16, 185, 129, 0.1); border: 1.5px solid #10b981; border-radius: 8px; padding: 10px; text-align: center; transition: all 0.2s;">
+                        <div style="font-size: 9.5px; font-family: var(--font-mono); color: #94a3b8; text-transform: uppercase;">UI Target</div>
+                        <div style="font-size: 12px; font-weight: 700; color: #fff; margin-top: 2px;">#thermal-val</div>
+                        <div id="dag-val-target" style="font-size: 13px; font-family: var(--font-mono); font-weight: 800; color: #34d399; margin-top: 2px;">+42.8 °C</div>
+                      </div>
+                    </div>
+
+                    <!-- Interactive DAG Drag Slider -->
+                    <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06);">
+                      <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px; color: #94a3b8;">
+                        <span>Drag variable to watch DAG re-evaluate:</span>
+                        <span id="dag-slider-val" style="color: #38bdf8; font-family: var(--font-mono); font-weight: 700;">340</span>
+                      </div>
+                      <input type="range" class="fin-slider" min="50" max="600" step="10" value="340" id="dag-slider" oninput="updateDag(this.value)">
+                    </div>
+                  </div>
+
+                  <!-- AST Code Block -->
+                  <div style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 16px; font-family: var(--font-mono); font-size: 11px; color: #cbd5e1; line-height: 1.5;">
+                    <span style="color: #64748b;">// Live Compiled Reactive Binding</span><br>
+                    <span style="color: #38bdf8;">node</span>.bindings[<span style="color: #a7f3d0;">"thermal"</span>] = <span style="color: #38bdf8;">new</span> <span style="color: #fbbf24;">LDocReactiveFormula</span>({<br>
+                    &nbsp;&nbsp;dependencies: [<span style="color: #a7f3d0;">"$torque"</span>],<br>
+                    &nbsp;&nbsp;evaluate: (<span style="color: #fef08a;">t</span>) =&gt; (t * <span style="color: #fef08a;">0.126</span>).<span style="color: #38bdf8;">toFixed</span>(1) + <span style="color: #a7f3d0;">" °C"</span><br>
+                    });
+                  </div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
+
+                <div style="display: flex; flex-direction: column; gap: 12px; justify-content: center;">
                   <div style="background: rgba(124, 58, 237, 0.08); border: 1px solid rgba(124, 58, 237, 0.25); border-radius: 10px; padding: 14px;">
-                    <div style="font-family: var(--font-mono); font-size: 11px; color: #38bdf8; font-weight: 700;">IN-MEMORY EVALUATION</div>
-                    <div style="font-size: 20px; font-weight: 800; color: #fff; font-family: var(--font-mono); margin-top: 4px;">&lt; 1.2 ms</div>
-                    <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">Zero round-trips to remote cloud servers.</div>
+                    <div style="font-family: var(--font-mono); font-size: 11px; color: #a78bfa; font-weight: 700;">TOPOLOGICAL SORT</div>
+                    <div style="font-size: 20px; font-weight: 800; color: #fff; font-family: var(--font-mono); margin-top: 4px;">Zero Glitch Guarantee</div>
+                    <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">Topological dependency sorting eliminates intermediate flickering states.</div>
                   </div>
                   <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25); border-radius: 10px; padding: 14px;">
-                    <div style="font-family: var(--font-mono); font-size: 11px; color: #38bdf8; font-weight: 700;">ZERO FLATTENING</div>
-                    <div style="font-size: 13.5px; font-weight: 700; color: #fff; margin-top: 4px;">Full Spatial Interactivity</div>
-                    <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">Calculations preserve full 64-bit float precision.</div>
+                    <div style="font-family: var(--font-mono); font-size: 11px; color: #38bdf8; font-weight: 700;">OFFLINE EXECUTION</div>
+                    <div style="font-size: 14px; font-weight: 700; color: #fff; margin-top: 4px;">Client-Side Engine</div>
+                    <div style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">Formulas evaluate natively inside the browser or desktop flattener without server round-trips.</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- TAB 3: Merkle Trust & Signatures -->
+            <!-- TAB 3: Merkle Trust & Signatures (Interactive Merkle Tree) -->
             <div id="ftab-crypto" class="tab-pane" style="display: none;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
+              <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center;">
                 <div>
-                  <div style="font-family: var(--font-mono); font-size: 11px; color: #34d399; letter-spacing: 0.08em; margin-bottom: 6px; font-weight: 700;">CRYPTOGRAPHIC PROVENANCE</div>
-                  <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 10px;">Tamper-Proof Merkle DAG Verification</h3>
-                  <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.6; margin-bottom: 16px;">
-                    Every living block in an .ldocx document is hashed into an Ed25519-signed Merkle tree. Readers verify author authenticity without third-party notary certificates.
-                  </p>
-                  <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; font-family: var(--font-mono); font-size: 11.5px;">
-                    <div style="color: #94a3b8; margin-bottom: 4px;">Merkle Root Digest:</div>
-                    <div style="color: #34d399; word-break: break-all;">9e898a2f4c01db189e3a67d0284e9124bb18...</div>
-                    <div style="display: flex; gap: 12px; margin-top: 10px; font-size: 11px;">
-                      <span style="color: #cbd5e1;">Algorithm: <strong>Ed25519</strong></span>
-                      <span style="color: #cbd5e1;">Status: <strong style="color: #34d399;">VERIFIED AUTHENTIC</strong></span>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div style="font-family: var(--font-mono); font-size: 11px; color: #34d399; letter-spacing: 0.08em; font-weight: 700;">CRYPTOGRAPHIC MERKLE TREE</div>
+                    <div style="display: flex; gap: 8px;">
+                      <button class="ldoc-btn ldoc-btn-secondary" id="btn-tamper-sim" onclick="simulateTamper()" style="padding: 3px 10px; font-size: 11px; background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;">
+                        Simulate Tamper
+                      </button>
+                      <button class="ldoc-btn ldoc-btn-ghost" id="btn-restore-sim" onclick="restoreMerkle()" style="padding: 3px 10px; font-size: 11px; border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; display: none;">
+                        Restore Hash
+                      </button>
                     </div>
                   </div>
+                  
+                  <!-- Interactive Merkle Tree Graphic -->
+                  <div id="merkle-tree-graphic" style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; margin-bottom: 12px; font-family: var(--font-mono);">
+                    <!-- Merkle Root -->
+                    <div style="text-align: center; margin-bottom: 10px;">
+                      <div id="merkle-root-node" style="display: inline-block; background: rgba(16, 185, 129, 0.15); border: 1.5px solid #10b981; border-radius: 6px; padding: 6px 14px; font-size: 11px; color: #34d399; transition: all 0.3s;">
+                        <strong>Root Digest:</strong> <span id="merkle-root-hash">9e898a2f4c01db189e3a67d0284e91...</span>
+                      </div>
+                    </div>
+                    <!-- Branch Connectors -->
+                    <div style="display: flex; justify-content: space-around; font-size: 10px; color: #475569; margin-bottom: 6px;">
+                      <span>┌──────┴──────┐</span>
+                    </div>
+                    <!-- Level 1 Nodes -->
+                    <div style="display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px;">
+                      <div id="merkle-branch-l" style="flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px 8px; font-size: 10px; text-align: center; color: #cbd5e1; transition: all 0.3s;">
+                        <strong>H(0,1):</strong> <span id="merkle-branch-l-hash">4a12ec89...</span>
+                      </div>
+                      <div id="merkle-branch-r" style="flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 5px 8px; font-size: 10px; text-align: center; color: #cbd5e1;">
+                        <strong>H(2,3):</strong> <span>b83ed21f...</span>
+                      </div>
+                    </div>
+                    <!-- Leaves -->
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 4px; font-size: 9px; text-align: center; color: #94a3b8;">
+                        Blk_01: Text
+                      </div>
+                      <div id="merkle-leaf-tampered" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 4px; font-size: 9px; text-align: center; color: #94a3b8; transition: all 0.3s;">
+                        Blk_02: 3D
+                      </div>
+                      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 4px; font-size: 9px; text-align: center; color: #94a3b8;">
+                        Blk_03: Form
+                      </div>
+                      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 4px; font-size: 9px; text-align: center; color: #94a3b8;">
+                        Blk_04: Media
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="merkle-alert-box" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 10px 14px; font-size: 11.5px; color: #34d399; display: flex; align-items: center; justify-content: space-between;">
+                    <span id="merkle-status-text">● Ed25519 Hardware Signature Matches Merkle Root</span>
+                    <strong id="merkle-status-badge" style="font-family: var(--font-mono); font-size: 10.5px; background: rgba(16, 185, 129, 0.2); padding: 2px 6px; border-radius: 4px;">PASS</strong>
+                  </div>
                 </div>
-                <div style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; text-align: center;">
-                  <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; margin-bottom: 12px;">
+
+                <div style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; text-align: center;">
+                  <div id="merkle-shield-icon" style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; margin-bottom: 12px; transition: all 0.3s;">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
                   </div>
-                  <div style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px;">Hardware Signature Verified</div>
-                  <div style="font-size: 12px; color: #94a3b8; max-width: 280px; margin: 0 auto;">No alterations detected since compilation by Vanguard Systems.</div>
+                  <div id="merkle-shield-title" style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px;">Hardware Provenance Verified</div>
+                  <div id="merkle-shield-desc" style="font-size: 12px; color: #94a3b8; max-width: 280px; margin: 0 auto; line-height: 1.5;">Every block hash cascades into the signed root digest, detecting any single-bit alteration instantly.</div>
                 </div>
               </div>
             </div>
@@ -1644,247 +1771,16 @@
       </div>
     </section>
 
-    <!-- WHAT YOU CAN BUILD (PROOF SECTION) -->
-    <section class="container" style="margin-bottom: 100px;">
-      <div class="section-head">
-        <span class="section-tag">Showcase &amp; Blueprints</span>
-        <h2 class="section-title">What You Can Build</h2>
-        <p class="section-sub">Explore real living documents crafted with LDOC Studio. Click any blueprint to inspect its reactive AST.</p>
-      </div>
-
-      <div class="build-grid">
-        <!-- Card 1 -->
-        <div class="build-card">
-          <div class="build-thumb" style="background: radial-gradient(circle at 50% 50%, #1e1b4b, #090d16);">
-            <span class="build-thumb-badge">FINANCIAL REPORT</span>
-            <div style="font-size: 3.5rem;"><span class="tech-icon-badge">TELEMETRY</span></div>
-          </div>
-          <div class="build-content">
-            <h4 class="build-title">Annual ESG &amp; Financial Living Report</h4>
-            <p class="build-desc">Includes reactive revenue models, carbon offset calculators, and live audited variance tables with slider adjustments.</p>
-            <div class="build-footer">
-              <span class="build-tag">BLUEPRINT • 12 SLIDES</span>
-              <a href="/live-studio?template=finance" class="build-btn">Live Edit in Studio &rarr;</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="build-card">
-          <div class="build-thumb" style="background: radial-gradient(circle at 50% 50%, #042f2e, #090d16);">
-            <span class="build-thumb-badge">QUANTUM RESEARCH</span>
-            <div style="font-size: 3.5rem;"><span class="tech-icon-badge">PHYSICS</span></div>
-          </div>
-          <div class="build-content">
-            <h4 class="build-title">Quantum Qubit Coherence Living Paper</h4>
-            <p class="build-desc">Interactive Bloch sphere 3D simulation with live Hamiltonian equation solvers and dynamic quantum state vectors.</p>
-            <div class="build-footer">
-              <span class="build-tag">BLUEPRINT • 8 SLIDES</span>
-              <a href="/live-studio?template=quantum" class="build-btn">Live Edit in Studio &rarr;</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="build-card">
-          <div class="build-thumb" style="background: radial-gradient(circle at 50% 50%, #311042, #090d16);">
-            <span class="build-thumb-badge">INVESTOR PITCH</span>
-            <div style="font-size: 3.5rem;"><span class="tech-icon-badge">VENTURE</span></div>
-          </div>
-          <div class="build-content">
-            <h4 class="build-title">Hyperion Series A Dynamic Investor Deck</h4>
-            <p class="build-desc">Luminous glassmorphism presentation with live cap table simulations, runway sensitivity toggles, and video demo loops.</p>
-            <div class="build-footer">
-              <span class="build-tag">BLUEPRINT • 14 SLIDES</span>
-              <a href="/live-studio?template=pitch" class="build-btn">Live Edit in Studio &rarr;</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="build-card">
-          <div class="build-thumb" style="background: radial-gradient(circle at 50% 50%, #1c1917, #090d16);">
-            <span class="build-thumb-badge">HARDWARE CAD</span>
-            <div style="font-size: 3.5rem;"><span class="tech-icon-badge">ROBOTICS</span></div>
-          </div>
-          <div class="build-content">
-            <h4 class="build-title">Vanguard-7 Robotics Hardware Datasheet</h4>
-            <p class="build-desc">Embedded 3D robotic arm model with exploded view controls, joint torque telemetry, and real-time stress testing graphs.</p>
-            <div class="build-footer">
-              <span class="build-tag">BLUEPRINT • 6 SLIDES</span>
-              <a href="/live-studio?template=robotics" class="build-btn">Live Edit in Studio &rarr;</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FOUNDER STATEMENT -->
-      <div class="founder-box">
-        <p class="founder-quote">
-          &ldquo;For over thirty years, humanity has been trapped reading digital paper trapped inside static, dead rectangles. We created .ldocx so documents can think, calculate, render spatial 3D, and evolve — turning passive reading into active understanding.&rdquo;
-        </p>
-        <div class="founder-author">J AI ENTERPRISES</div>
-        <div class="founder-role">Creator of Living Document Format (.ldocx) &amp; LDOC Studio</div>
-      </div>
-    </section>
-
-    <!-- PRICING & EDITIONS -->
-    <section id="pricing" class="pricing-section">
-      <div class="container">
-        <div class="section-head">
-          <span class="section-tag">Editions &amp; Licensing</span>
-          <h2 class="section-title">Transparent, Predictable Pricing</h2>
-          <p class="section-sub">Start free with our open SDK and local Studio. Upgrade for cloud synchronization, AI Copilot, and enterprise SLA.</p>
-        </div>
-
-                        <div class="pricing-billing-toggle-wrap">
-          <div class="pricing-billing-toggle" role="group" aria-label="Billing frequency">
-            <button type="button" class="pricing-toggle-btn" data-cycle="monthly" onclick="setBillingCycle('monthly')">
-              <span>Monthly</span>
-            </button>
-            <button type="button" class="pricing-toggle-btn active" data-cycle="annually" onclick="setBillingCycle('annually')">
-              <span>Annually</span>
-              <span class="save-badge">Save 20%</span>
-            </button>
-            <button type="button" class="pricing-toggle-btn" data-cycle="lifetime" onclick="setBillingCycle('lifetime')">
-              <span>Lifetime Access</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="pricing-grid">
-          <!-- 1. Community (Free $0) -->
-          <div class="pricing-card" id="card-tier-community">
-            <div class="card-header-zone">
-              <h3 class="plan-name">Community</h3>
-              <p class="plan-sub">Free living document viewer &amp; basic editor for researchers, students &amp; readers.</p>
-              <div class="plan-price-wrap">
-                <div class="plan-price">
-                  <span class="price-num">$0</span>
-                  <span class="price-unit">/ forever</span>
-                </div>
-                <div class="price-billing-sub">Free open-source specification</div>
-              </div>
-            </div>
-            <div class="card-features-zone">
-              <ul class="plan-features">
-                <li><span class="chk">✓</span> <span>Full Open .ldocx Core SDK &amp; CLI</span></li>
-                <li><span class="chk">✓</span> <span>Web &amp; Desktop Offline Viewer</span></li>
-                <li><span class="chk">✓</span> <span>Live Studio Browser Sandbox</span></li>
-                <li><span class="chk">✓</span> <span>Interactive Widgets &amp; Code Execution</span></li>
-                <li><span class="chk">✓</span> <span>Markdown, Text &amp; Standard PDF Export</span></li>
-              </ul>
-            </div>
-            <div class="card-cta-zone">
-              <a href="/live-studio" class="btn-plan btn-plan-secondary">Launch Free Viewer</a>
-            </div>
-          </div>
-
-          <!-- 2. Studio Pro Workstation ($19 Lifetime) -->
-          <div class="pricing-card featured" id="card-tier-pro">
-            <div class="featured-badge">MOST POPULAR • LIFETIME ACCESS</div>
-            <div class="card-header-zone">
-              <h3 class="plan-name">Studio Pro Suite</h3>
-              <p class="plan-sub">Air-gapped desktop &amp; mobile workstation for Windows, Linux, Android &amp; macOS.</p>
-              <div class="plan-price-wrap">
-                <div class="plan-price">
-                  <span class="price-num">$19</span>
-                  <span class="price-unit">/ lifetime license</span>
-                </div>
-                <div class="price-billing-sub">One-time payment • Zero subscriptions</div>
-              </div>
-            </div>
-            <div class="card-features-zone">
-              <ul class="plan-features">
-                <li><span class="chk">✓</span> <span><strong>Everything in Community</strong></span></li>
-                <li><span class="chk">✓</span> <span><strong>100% Air-Gapped Workstation</strong> <small style="color:#94a3b8">(Win, Linux, Android, macOS)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Discrete GPU Hardware Engine</strong> <small style="color:#94a3b8">(Unbounded VRAM, 120Hz)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Direct OS File I/O</strong> <small style="color:#94a3b8">(Unlimited document size)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Lossless Universal Converters</strong> <small style="color:#94a3b8">(DOCX, PDF, 3D CAD)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Vector-Crisp PDF Flattener</strong> &amp; Print Engine</span></li>
-                <li><span class="chk">✓</span> <span><strong>Merkle SHA-256 &amp; Ed25519</strong> Cryptographic Signing</span></li>
-                <li><span class="chk">✓</span> <span><strong>Commercial Rights</strong> &amp; Lifetime App Updates</span></li>
-              </ul>
-            </div>
-            <div class="card-cta-zone">
-              <a href="https://jay-app.lemonsqueezy.com/checkout" target="_blank" class="lemonsqueezy-button btn-plan btn-plan-primary">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Buy License &rarr;</span>
-              </a>
-              <a href="/pricing#download" class="btn-plan btn-plan-sublink">
-                <span>⬇️</span><span>Download Workstation Suite</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- 3. LDOC Cloud Workspace ($8/mo or $79/yr) -->
-          <div class="pricing-card featured-cloud" id="card-tier-cloud">
-            <div class="featured-badge badge-cloud">CLOUD COLLABORATION • AI COPILOT</div>
-            <div class="card-header-zone">
-              <h3 class="plan-name">LDOC Cloud Workspace</h3>
-              <p class="plan-sub">Multi-device cloud sync, real-time team collaboration &amp; AI Document Copilot.</p>
-              <div class="plan-price-wrap">
-                <div class="plan-price">
-                  <span class="price-num" id="price-val-cloud">$6.50</span>
-                  <span class="price-unit" id="price-unit-cloud">/ month</span>
-                </div>
-                <div class="price-billing-sub" id="price-sub-cloud">Billed annually ($79/year — Save 20%)</div>
-              </div>
-            </div>
-            <div class="card-features-zone">
-              <ul class="plan-features">
-                <li><span class="chk">✓</span> <span><strong>Multi-Device Cloud Sync</strong> <small style="color:#94a3b8">(Studio Desktop, Android &amp; Web)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Real-Time Multiplayer Co-Authoring</strong> <small style="color:#94a3b8">(Live cursors &amp; comments)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>AI Living Document Copilot</strong> <small style="color:#94a3b8">(Smart text, 3D &amp; data charts)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>100 GB Encrypted Cloud Vault</strong> <small style="color:#94a3b8">(Zero-knowledge storage)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Automated Cloud Backups</strong> <small style="color:#94a3b8">&amp; Infinite Revision Rollback</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Instant Interactive Web Sharing</strong> &amp; Password Links</span></li>
-                <li><span class="chk">✓</span> <span><strong>Priority Cloud Rendering</strong> &amp; Real-Time Sync Relay</span></li>
-              </ul>
-            </div>
-            <div class="card-cta-zone">
-              <button type="button" onclick="openLicenseHubModal('retrieve')" class="btn-plan btn-plan-cloud">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Start Cloud Pro &rarr;</span>
-              </button>
-              <a href="/live-studio" class="btn-plan btn-plan-sublink">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg><span>Launch Web Cloud Sandbox</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- 4. Enterprise Fleet ($499/year) -->
-          <div class="pricing-card" id="card-tier-enterprise">
-            <div class="featured-badge badge-enterprise">ORGANIZATION FLEET • CUSTOM SLA</div>
-            <div class="card-header-zone">
-              <h3 class="plan-name">Enterprise Fleet</h3>
-              <p class="plan-sub">For engineering, defense, healthcare &amp; institutions with strict compliance needs.</p>
-              <div class="plan-price-wrap">
-                <div class="plan-price">
-                  <span class="price-num" id="price-val-enterprise">$499</span>
-                  <span class="price-unit" id="price-unit-enterprise">/ year</span>
-                </div>
-                <div class="price-billing-sub" id="price-sub-enterprise">Complete organization fleet licensing</div>
-              </div>
-            </div>
-            <div class="card-features-zone">
-              <ul class="plan-features">
-                <li><span class="chk">✓</span> <span><strong>Everything in Studio Pro &amp; Cloud</strong> <small style="color:#94a3b8">(Unlimited Seats)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Silent Fleet Deployment</strong> <small style="color:#94a3b8">(Custom .msi, Intune &amp; RPM/Debian)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Custom Enterprise AST Schemas</strong> <small style="color:#94a3b8">&amp; CAD/3D Extensions</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>HSM &amp; Corporate Root Signing</strong> <small style="color:#94a3b8">(Hardware cryptographic seal)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Self-Hosted Sync Relay Option</strong> <small style="color:#94a3b8">&amp; Zero-Egress Auditing</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Headless CI/CD Batch CLI</strong> <small style="color:#94a3b8">(Automated pipeline rendering)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Dedicated Solutions Architect</strong> &amp; 99.9% Uptime SLA</span></li>
-              </ul>
-            </div>
-            <div class="card-cta-zone">
-              <button type="button" onclick="openLeadModal('Enterprise')" class="btn-plan btn-plan-enterprise">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg><span>Contact Enterprise Fleet &rarr;</span>
-              </button>
-              <a href="mailto:jayaramankalidasan@gmail.com?subject=LDOC%20Enterprise%20Fleet%20Inquiry" class="btn-plan btn-plan-sublink">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>Invoice Billing &amp; Custom SLA</span>
-              </a>
-            </div>
-          </div>
+    <!-- CONTEXTUAL CALL TO ACTION -->
+    <section class="container" style="margin: 80px auto 100px;">
+      <div style="text-align: center; padding: 60px 32px; background: linear-gradient(180deg, rgba(18, 22, 34, 0.9) 0%, rgba(10, 12, 18, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);">
+        <span class="tech-icon-badge" style="margin-bottom: 16px;">READY TO BUILD</span>
+        <h2 style="font-size: 2.4rem; font-weight: 800; color: #fff; margin-bottom: 14px; letter-spacing: -0.02em;">Ready to Experience Living Documents?</h2>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 32px; font-size: 1.05rem;">Launch the free web IDE to interact with reactive models, or download the air-gapped desktop suite for local production.</p>
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="padding: 12px 28px; font-size: 0.95rem;">Launch Live Studio &rarr;</a>
+          <a href="/pricing" class="ldoc-btn ldoc-btn-secondary" style="padding: 12px 28px; font-size: 0.95rem;">Get Desktop Pro</a>
+          <a href="/format" class="ldoc-btn ldoc-btn-ghost" style="padding: 12px 24px; font-size: 0.95rem;">Explore Format Spec</a>
         </div>
       </div>
     </section>
@@ -3365,94 +3261,351 @@ function initFeat3D(canvas) {
   // 3. Build Vanguard-7 Robotic Quadruped Assembly
   featRobotGroup = new THREE.Group();
   featRobotJoints = [];
+  window.featMaterials = [];
+  window.featWireframe = false;
 
-  const armorMat = new THREE.MeshStandardMaterial({
-    color: 0x1e2638,
-    metalness: 0.85,
-    roughness: 0.25
-  });
-  const frameMat = new THREE.MeshStandardMaterial({
-    color: 0x334155,
-    metalness: 0.9,
-    roughness: 0.3
-  });
-  const cyanGlowMat = new THREE.MeshBasicMaterial({ color: 0x06b6d4 });
-  const amberGlowMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+  function createFeatMaterials() {
+    const armorMat = new THREE.MeshStandardMaterial({
+      color: 0x1e2638,
+      metalness: 0.85,
+      roughness: 0.25,
+      wireframe: window.featWireframe
+    });
+    const frameMat = new THREE.MeshStandardMaterial({
+      color: 0x334155,
+      metalness: 0.9,
+      roughness: 0.3,
+      wireframe: window.featWireframe
+    });
+    const cyanGlowMat = new THREE.MeshBasicMaterial({ color: 0x06b6d4, wireframe: window.featWireframe });
+    const amberGlowMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, wireframe: window.featWireframe });
+    window.featMaterials = [armorMat, frameMat, cyanGlowMat, amberGlowMat];
+    return { armorMat, frameMat, cyanGlowMat, amberGlowMat };
+  }
 
-  // Torso / Chassis
-  const chassisGeom = new THREE.BoxGeometry(1.6, 0.55, 2.2);
-  const chassis = new THREE.Mesh(chassisGeom, armorMat);
-  chassis.position.y = 0.4;
-  featRobotGroup.add(chassis);
+  window.buildQuadrupedModel = function(group) {
+    const { armorMat, frameMat, cyanGlowMat, amberGlowMat } = createFeatMaterials();
+    featRobotJoints = [];
 
-  // Cowling
-  const cowlGeom = new THREE.BoxGeometry(1.2, 0.22, 1.6);
-  const cowl = new THREE.Mesh(cowlGeom, frameMat);
-  cowl.position.set(0, 0.75, 0.1);
-  featRobotGroup.add(cowl);
+    const chassisGeom = new THREE.BoxGeometry(1.6, 0.55, 2.2);
+    const chassis = new THREE.Mesh(chassisGeom, armorMat);
+    chassis.position.y = 0.4;
+    group.add(chassis);
 
-  // Glowing Chest Core
-  const coreGeom = new THREE.CylinderGeometry(0.24, 0.24, 0.58, 16);
-  featCoreMesh = new THREE.Mesh(coreGeom, cyanGlowMat);
-  featCoreMesh.rotation.x = Math.PI / 2;
-  featCoreMesh.position.set(0, 0.4, 0.85);
-  featRobotGroup.add(featCoreMesh);
+    const cowlGeom = new THREE.BoxGeometry(1.2, 0.22, 1.6);
+    const cowl = new THREE.Mesh(cowlGeom, frameMat);
+    cowl.position.set(0, 0.75, 0.1);
+    group.add(cowl);
 
-  // Head / Sensor Visor
-  const headGeom = new THREE.BoxGeometry(0.65, 0.3, 0.6);
-  const head = new THREE.Mesh(headGeom, armorMat);
-  head.position.set(0, 0.65, 1.25);
-  featRobotGroup.add(head);
+    const coreGeom = new THREE.CylinderGeometry(0.24, 0.24, 0.58, 16);
+    const coreMesh = new THREE.Mesh(coreGeom, cyanGlowMat);
+    coreMesh.rotation.x = Math.PI / 2;
+    coreMesh.position.set(0, 0.4, 0.85);
+    group.add(coreMesh);
 
-  const visorGeom = new THREE.BoxGeometry(0.5, 0.08, 0.1);
-  const visor = new THREE.Mesh(visorGeom, amberGlowMat);
-  visor.position.set(0, 0.65, 1.56);
-  featRobotGroup.add(visor);
+    const headGeom = new THREE.BoxGeometry(0.65, 0.3, 0.6);
+    const head = new THREE.Mesh(headGeom, armorMat);
+    head.position.set(0, 0.65, 1.25);
+    group.add(head);
 
-  // Articulated Legs
-  const legPositions = [
-    { x: -0.9, z: 0.95, side: -1 },
-    { x: 0.9, z: 0.95, side: 1 },
-    { x: -0.9, z: -0.95, side: -1 },
-    { x: 0.9, z: -0.95, side: 1 }
-  ];
+    const visorGeom = new THREE.BoxGeometry(0.5, 0.08, 0.1);
+    const visor = new THREE.Mesh(visorGeom, amberGlowMat);
+    visor.position.set(0, 0.65, 1.56);
+    group.add(visor);
 
-  legPositions.forEach((pos, idx) => {
-    const hipPivot = new THREE.Group();
-    hipPivot.position.set(pos.x, 0.35, pos.z);
+    const legPositions = [
+      { x: -0.9, z: 0.95, side: -1 },
+      { x: 0.9, z: 0.95, side: 1 },
+      { x: -0.9, z: -0.95, side: -1 },
+      { x: 0.9, z: -0.95, side: 1 }
+    ];
 
-    const ballGeom = new THREE.SphereGeometry(0.18, 12, 12);
-    const ball = new THREE.Mesh(ballGeom, frameMat);
-    hipPivot.add(ball);
+    legPositions.forEach((pos) => {
+      const hipPivot = new THREE.Group();
+      hipPivot.position.set(pos.x, 0.35, pos.z);
 
-    const upperGeom = new THREE.BoxGeometry(0.16, 0.85, 0.2);
-    const upper = new THREE.Mesh(upperGeom, armorMat);
-    upper.position.set(pos.side * 0.15, -0.4, 0);
-    hipPivot.add(upper);
+      const ballGeom = new THREE.SphereGeometry(0.18, 12, 12);
+      const ball = new THREE.Mesh(ballGeom, frameMat);
+      hipPivot.add(ball);
 
-    const kneePivot = new THREE.Group();
-    kneePivot.position.set(pos.side * 0.32, -0.85, 0);
+      const upperGeom = new THREE.BoxGeometry(0.16, 0.85, 0.2);
+      const upper = new THREE.Mesh(upperGeom, armorMat);
+      upper.position.set(pos.side * 0.15, -0.4, 0);
+      hipPivot.add(upper);
 
-    const kneeGeom = new THREE.CylinderGeometry(0.14, 0.14, 0.22, 12);
-    const knee = new THREE.Mesh(kneeGeom, frameMat);
-    knee.rotation.z = Math.PI / 2;
-    kneePivot.add(knee);
+      const kneePivot = new THREE.Group();
+      kneePivot.position.set(pos.side * 0.32, -0.85, 0);
 
-    const lowerGeom = new THREE.BoxGeometry(0.12, 0.85, 0.16);
-    const lower = new THREE.Mesh(lowerGeom, frameMat);
-    lower.position.set(0, -0.42, 0);
-    kneePivot.add(lower);
+      const kneeGeom = new THREE.CylinderGeometry(0.14, 0.14, 0.22, 12);
+      const knee = new THREE.Mesh(kneeGeom, frameMat);
+      knee.rotation.z = Math.PI / 2;
+      kneePivot.add(knee);
 
-    const footGeom = new THREE.CylinderGeometry(0.18, 0.22, 0.1, 12);
-    const foot = new THREE.Mesh(footGeom, armorMat);
-    foot.position.set(0, -0.85, 0);
-    kneePivot.add(foot);
+      const lowerGeom = new THREE.BoxGeometry(0.12, 0.85, 0.16);
+      const lower = new THREE.Mesh(lowerGeom, frameMat);
+      lower.position.set(0, -0.42, 0);
+      kneePivot.add(lower);
 
-    hipPivot.add(kneePivot);
-    featRobotGroup.add(hipPivot);
+      const footGeom = new THREE.CylinderGeometry(0.18, 0.22, 0.1, 12);
+      const foot = new THREE.Mesh(footGeom, armorMat);
+      foot.position.set(0, -0.85, 0);
+      kneePivot.add(foot);
 
-    featRobotJoints.push({ hipPivot, kneePivot });
-  });
+      hipPivot.add(kneePivot);
+      group.add(hipPivot);
+      featRobotJoints.push({ hipPivot, kneePivot });
+    });
+  };
+
+  window.buildSatelliteModel = function(group) {
+    const { armorMat, frameMat, cyanGlowMat, amberGlowMat } = createFeatMaterials();
+    // Central Bus
+    const busGeom = new THREE.BoxGeometry(1.2, 1.8, 1.2);
+    const bus = new THREE.Mesh(busGeom, armorMat);
+    group.add(bus);
+
+    // Solar Wings Left and Right
+    const wingGeom = new THREE.BoxGeometry(2.4, 0.04, 1.0);
+    const leftWing = new THREE.Mesh(wingGeom, frameMat);
+    leftWing.position.set(-2.0, 0, 0);
+    group.add(leftWing);
+
+    const rightWing = new THREE.Mesh(wingGeom, frameMat);
+    rightWing.position.set(2.0, 0, 0);
+    group.add(rightWing);
+
+    // Parabolic Dish Antenna
+    const dishGeom = new THREE.CylinderGeometry(0.7, 0.05, 0.35, 24);
+    const dish = new THREE.Mesh(dishGeom, frameMat);
+    dish.rotation.x = Math.PI / 2;
+    dish.position.set(0, 0, 1.0);
+    group.add(dish);
+
+    const feedGeom = new THREE.CylinderGeometry(0.04, 0.04, 0.5, 8);
+    const feed = new THREE.Mesh(feedGeom, amberGlowMat);
+    feed.rotation.x = Math.PI / 2;
+    feed.position.set(0, 0, 1.3);
+    group.add(feed);
+
+    // Sensor Ring
+    const sensorGeom = new THREE.TorusGeometry(0.45, 0.04, 8, 24);
+    const sensor = new THREE.Mesh(sensorGeom, cyanGlowMat);
+    sensor.position.set(0, 1.0, 0);
+    sensor.rotation.x = Math.PI / 2;
+    group.add(sensor);
+  };
+
+  window.buildTurbineModel = function(group) {
+    const { armorMat, frameMat, cyanGlowMat, amberGlowMat } = createFeatMaterials();
+    // Outer Nacelle Ring
+    const casingGeom = new THREE.CylinderGeometry(1.5, 1.5, 1.6, 28, 1, true);
+    const casing = new THREE.Mesh(casingGeom, frameMat);
+    casing.rotation.x = Math.PI / 2;
+    group.add(casing);
+
+    // Center Nose Cone
+    const coneGeom = new THREE.ConeGeometry(0.45, 1.2, 20);
+    const cone = new THREE.Mesh(coneGeom, armorMat);
+    cone.rotation.x = Math.PI / 2;
+    cone.position.set(0, 0, 0.5);
+    group.add(cone);
+
+    // 12 Blades
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2;
+      const bladeGeom = new THREE.BoxGeometry(0.12, 1.0, 0.04);
+      const blade = new THREE.Mesh(bladeGeom, armorMat);
+      blade.position.set(Math.cos(angle) * 0.7, Math.sin(angle) * 0.7, 0);
+      blade.rotation.z = angle + 0.4;
+      group.add(blade);
+    }
+
+    // Glowing Afterburner Core Ring
+    const burnerGeom = new THREE.TorusGeometry(0.9, 0.06, 8, 28);
+    const burner = new THREE.Mesh(burnerGeom, amberGlowMat);
+    burner.position.set(0, 0, -0.6);
+    group.add(burner);
+  };
+
+  // Build initial Quadruped
+  window.buildQuadrupedModel(featRobotGroup);
+
+  // Wireframe toggle handler
+  window.toggle3DWireframe = function() {
+    window.featWireframe = !window.featWireframe;
+    if (window.featMaterials) {
+      window.featMaterials.forEach(m => { if (m) m.wireframe = window.featWireframe; });
+    }
+    const statusText = document.getElementById('wireframe-status-text');
+    if (statusText) {
+      statusText.textContent = window.featWireframe ? 'ON' : 'OFF';
+      statusText.style.color = window.featWireframe ? '#38bdf8' : '#94a3b8';
+    }
+  };
+
+  // 3D Model Switcher handler
+  window.switch3DModel = function(model) {
+    ['quadruped', 'satellite', 'turbine'].forEach(m => {
+      const btn = document.getElementById('btn-model-' + m);
+      if (btn) {
+        if (m === model) {
+          btn.classList.add('active', 'ldoc-btn-secondary');
+          btn.classList.remove('ldoc-btn-ghost');
+        } else {
+          btn.classList.remove('active', 'ldoc-btn-secondary');
+          btn.classList.add('ldoc-btn-ghost');
+        }
+      }
+    });
+
+    if (!featRobotGroup || !window.THREE) return;
+    while (featRobotGroup.children.length > 0) {
+      featRobotGroup.remove(featRobotGroup.children[0]);
+    }
+
+    if (model === 'quadruped') {
+      window.buildQuadrupedModel(featRobotGroup);
+    } else if (model === 'satellite') {
+      window.buildSatelliteModel(featRobotGroup);
+    } else if (model === 'turbine') {
+      window.buildTurbineModel(featRobotGroup);
+    }
+  };
+
+  // DAG Real-Time Data Flow handler
+  window.updateDag = function(val) {
+    const torque = Number(val);
+    const thermal = (torque * 0.126).toFixed(1);
+    const torqueValEl = document.getElementById('dag-val-torque');
+    const sliderValEl = document.getElementById('dag-slider-val');
+    const targetValEl = document.getElementById('dag-val-target');
+    if (torqueValEl) torqueValEl.textContent = torque + ' Nm';
+    if (sliderValEl) sliderValEl.textContent = torque;
+    if (targetValEl) targetValEl.textContent = '+' + thermal + ' °C';
+
+    ['dag-node-1', 'dag-node-2', 'dag-node-3'].forEach((id, idx) => {
+      const el = document.getElementById(id);
+      if (el) {
+        setTimeout(() => {
+          el.style.transform = 'scale(1.04)';
+          el.style.boxShadow = '0 0 16px rgba(56, 189, 248, 0.4)';
+          setTimeout(() => {
+            el.style.transform = 'scale(1)';
+            el.style.boxShadow = 'none';
+          }, 180);
+        }, idx * 60);
+      }
+    });
+  };
+
+  // Merkle Tamper & Restore simulation
+  window.simulateTamper = function() {
+    const leaf = document.getElementById('merkle-leaf-tampered');
+    const branchL = document.getElementById('merkle-branch-l');
+    const branchLHash = document.getElementById('merkle-branch-l-hash');
+    const rootNode = document.getElementById('merkle-root-node');
+    const rootHash = document.getElementById('merkle-root-hash');
+    const alertBox = document.getElementById('merkle-alert-box');
+    const statusText = document.getElementById('merkle-status-text');
+    const statusBadge = document.getElementById('merkle-status-badge');
+    const shieldIcon = document.getElementById('merkle-shield-icon');
+    const shieldTitle = document.getElementById('merkle-shield-title');
+    const shieldDesc = document.getElementById('merkle-shield-desc');
+    const btnTamper = document.getElementById('btn-tamper-sim');
+    const btnRestore = document.getElementById('btn-restore-sim');
+
+    if (leaf) {
+      leaf.style.borderColor = '#ef4444';
+      leaf.style.color = '#f87171';
+      leaf.textContent = 'Blk_02: TAMPERED';
+      leaf.style.background = 'rgba(239, 68, 68, 0.2)';
+    }
+    if (branchL) {
+      branchL.style.borderColor = '#ef4444';
+      branchL.style.color = '#fca5a5';
+    }
+    if (branchLHash) branchLHash.textContent = 'cd41f92e...';
+    if (rootNode) {
+      rootNode.style.borderColor = '#ef4444';
+      rootNode.style.background = 'rgba(239, 68, 68, 0.2)';
+      rootNode.style.color = '#ef4444';
+    }
+    if (rootHash) rootHash.textContent = 'e02b4891d8... (MISMATCH)';
+    if (alertBox) {
+      alertBox.style.background = 'rgba(239, 68, 68, 0.15)';
+      alertBox.style.borderColor = '#ef4444';
+      alertBox.style.color = '#fca5a5';
+    }
+    if (statusText) statusText.textContent = '✕ INTEGRITY COMPROMISED: SHA-256 Mismatch (Ed25519 INVALID)';
+    if (statusBadge) {
+      statusBadge.textContent = 'FAIL';
+      statusBadge.style.background = 'rgba(239, 68, 68, 0.3)';
+      statusBadge.style.color = '#f87171';
+    }
+    if (shieldIcon) {
+      shieldIcon.style.borderColor = '#ef4444';
+      shieldIcon.style.color = '#ef4444';
+      shieldIcon.style.background = 'rgba(239, 68, 68, 0.15)';
+    }
+    if (shieldTitle) shieldTitle.textContent = 'Cryptographic Seal Broken';
+    if (shieldDesc) shieldDesc.textContent = 'Single bit discrepancy detected! Document rejected by client validation flattener.';
+    if (btnTamper) btnTamper.style.display = 'none';
+    if (btnRestore) btnRestore.style.display = 'inline-block';
+  };
+
+  window.restoreMerkle = function() {
+    const leaf = document.getElementById('merkle-leaf-tampered');
+    const branchL = document.getElementById('merkle-branch-l');
+    const branchLHash = document.getElementById('merkle-branch-l-hash');
+    const rootNode = document.getElementById('merkle-root-node');
+    const rootHash = document.getElementById('merkle-root-hash');
+    const alertBox = document.getElementById('merkle-alert-box');
+    const statusText = document.getElementById('merkle-status-text');
+    const statusBadge = document.getElementById('merkle-status-badge');
+    const shieldIcon = document.getElementById('merkle-shield-icon');
+    const shieldTitle = document.getElementById('merkle-shield-title');
+    const shieldDesc = document.getElementById('merkle-shield-desc');
+    const btnTamper = document.getElementById('btn-tamper-sim');
+    const btnRestore = document.getElementById('btn-restore-sim');
+
+    if (leaf) {
+      leaf.style.borderColor = 'rgba(255,255,255,0.08)';
+      leaf.style.color = '#94a3b8';
+      leaf.textContent = 'Blk_02: 3D';
+      leaf.style.background = 'rgba(255,255,255,0.03)';
+    }
+    if (branchL) {
+      branchL.style.borderColor = 'rgba(255,255,255,0.1)';
+      branchL.style.color = '#cbd5e1';
+    }
+    if (branchLHash) branchLHash.textContent = '4a12ec89...';
+    if (rootNode) {
+      rootNode.style.borderColor = '#10b981';
+      rootNode.style.background = 'rgba(16, 185, 129, 0.15)';
+      rootNode.style.color = '#34d399';
+    }
+    if (rootHash) rootHash.textContent = '9e898a2f4c01db189e3a67d0284e91...';
+    if (alertBox) {
+      alertBox.style.background = 'rgba(16, 185, 129, 0.1)';
+      alertBox.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+      alertBox.style.color = '#34d399';
+    }
+    if (statusText) statusText.textContent = '● Ed25519 Hardware Signature Matches Merkle Root';
+    if (statusBadge) {
+      statusBadge.textContent = 'PASS';
+      statusBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+      statusBadge.style.color = '#34d399';
+    }
+    if (shieldIcon) {
+      shieldIcon.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+      shieldIcon.style.color = '#34d399';
+      shieldIcon.style.background = 'rgba(16, 185, 129, 0.12)';
+    }
+    if (shieldTitle) shieldTitle.textContent = 'Hardware Provenance Verified';
+    if (shieldDesc) shieldDesc.textContent = 'Every block hash cascades into the signed root digest, detecting any single-bit alteration instantly.';
+    if (btnTamper) btnTamper.style.display = 'inline-block';
+    if (btnRestore) btnRestore.style.display = 'none';
+  };
 
   // Floating Telemetry Particles
   const partGeom = new THREE.BufferGeometry();

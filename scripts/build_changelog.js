@@ -1,0 +1,627 @@
+const fs = require('fs');
+const path = require('path');
+
+const content = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Releases &amp; Changelog — LDOC Studio</title>
+  <meta name="description" content="Release history and version changelog for LDOC Studio and the Living Document Format (.ldocx).">
+  <link rel="icon" type="image/png" href="/ldoc_logo.png">
+  <link rel="shortcut icon" href="/app.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/design-system.css">
+  <style>
+    :root {
+      --bg: #08090d;
+      --bg-alt: #0c0e14;
+      --bg-subtle: #121622;
+      --card-bg: rgba(14, 18, 28, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #f59e0b;
+      --primary-light: #fbbf24;
+      --cobalt: #3b82f6;
+      --azure: #38bdf8;
+      --emerald: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .ambient-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(245, 158, 11, 0.05) 0%, transparent 45%);
+    }
+
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* Hero */
+    .changelog-hero {
+      padding: 64px 0 40px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 99px;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #34d399;
+      margin-bottom: 18px;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin-bottom: 14px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #34d399 0%, #38bdf8 50%, #fbbf24 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 1.6vw, 1.12rem);
+      color: var(--text-muted);
+      max-width: 640px;
+      margin: 0 auto 32px;
+    }
+
+    /* Subscribe Field & RSS */
+    .subscribe-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+    .subscribe-input {
+      background: rgba(18, 24, 38, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 10px 16px;
+      color: #ffffff;
+      font-size: 13.5px;
+      font-family: inherit;
+      width: 280px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .subscribe-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+    .rss-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #fbbf24;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      transition: all 0.15s ease;
+    }
+    .rss-link:hover {
+      background: rgba(245, 158, 11, 0.18);
+    }
+
+    /* Vertical Timeline */
+    .timeline {
+      position: relative;
+      margin-bottom: 80px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 140px;
+      top: 10px;
+      bottom: 20px;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .timeline-release {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 40px;
+      margin-bottom: 64px;
+      position: relative;
+    }
+    .month-marker {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: sticky;
+      top: 100px;
+      text-align: right;
+      padding-top: 6px;
+    }
+
+    .release-card {
+      background: rgba(14, 18, 28, 0.85);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+      position: relative;
+    }
+    .release-card::before {
+      content: '';
+      position: absolute;
+      left: -48px;
+      top: 24px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #08090d;
+      border: 3px solid #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+    }
+
+    .release-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .release-version {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+    .release-date {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .release-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .rel-badge {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-stable { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
+    .badge-spec { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+
+    /* Change Item Categories */
+    .change-group {
+      margin-bottom: 20px;
+    }
+    .change-tag {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    .tag-added { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .tag-improved { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .tag-security { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .tag-fixed { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    .change-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-left: 4px;
+    }
+    .change-item {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .change-item span.bullet {
+      color: var(--text-sub);
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .timeline::before { left: 0; }
+      .timeline-release { grid-template-columns: 1fr; gap: 16px; padding-left: 24px; }
+      .month-marker { text-align: left; position: static; }
+      .release-card::before { left: -31px; }
+      .release-card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-bg"></div>
+
+  <div class="page-wrap">
+    <!-- Top Dismissible Pill Banner -->
+    <div class="ldoc-pill-banner" id="ldoc-pill-banner">
+      <span class="ldoc-pill-tag">SPEC v2.5.0</span>
+      <span>Living Document Format (.ldocx) open architecture released.</span>
+      <a href="/format">Explore Open Spec &rarr;</a>
+      <button class="ldoc-pill-close" onclick="dismissPillBanner()" aria-label="Dismiss banner">&times;</button>
+    </div>
+
+    <!-- Sticky Glass Navbar -->
+    <nav class="ldoc-navbar" id="ldoc-navbar">
+      <div class="ldoc-navbar-inner">
+        <div class="ldoc-nav-left">
+          <a href="/" class="ldoc-nav-logo">
+            <img src="/ldoc_logo.png" alt="LDOC Studio Logo" width="28" height="28" />
+            <span>LDOC STUDIO</span>
+            <span class="ldoc-nav-badge">.ldocx</span>
+          </a>
+          <div class="ldoc-nav-links">
+            <a href="/format" class="ldoc-nav-link">Format</a>
+            <a href="/features" class="ldoc-nav-link">Features</a>
+            <a href="/live-studio" class="ldoc-nav-link">Live Studio</a>
+            <a href="/models" class="ldoc-nav-link">Models Hub</a>
+            <a href="/pricing" class="ldoc-nav-link">Pricing</a>
+            <a href="/docs" class="ldoc-nav-link">Docs</a>
+            <a href="/changelog" class="ldoc-nav-link active">Changelog</a>
+          </div>
+        </div>
+        <div class="ldoc-nav-right">
+          <button class="ldoc-nav-search-btn" onclick="openCmdPalette()" title="Command Palette (Ctrl+K)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Search...</span>
+            <kbd class="ldoc-kbd">Ctrl K</kbd>
+          </button>
+          <button class="ldoc-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
+            <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="ldoc-btn ldoc-btn-ghost" style="padding: 6px 12px; font-size: 0.8rem;" onclick="showAuthModal()">Sign In</button>
+          <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="padding: 7px 14px; font-size: 0.82rem;">Launch Studio &rarr;</a>
+          <button class="ldoc-hamburger" id="ldoc-hamburger" onclick="toggleMobileMenu()" aria-label="Open mobile navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div class="ldoc-mobile-drawer" id="ldoc-mobile-drawer">
+      <div class="ldoc-drawer-links">
+        <a href="/format" class="ldoc-drawer-link">Format Spec</a>
+        <a href="/features" class="ldoc-drawer-link">Features</a>
+        <a href="/live-studio" class="ldoc-drawer-link">Live Studio IDE</a>
+        <a href="/models" class="ldoc-drawer-link">Models Hub</a>
+        <a href="/pricing" class="ldoc-drawer-link">Pricing</a>
+        <a href="/docs" class="ldoc-drawer-link">Documentation</a>
+        <a href="/changelog" class="ldoc-drawer-link active">Changelog</a>
+      </div>
+      <div class="ldoc-drawer-actions">
+        <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="width:100%; justify-content:center;">Launch Studio</a>
+        <button class="ldoc-btn ldoc-btn-secondary" style="width:100%; justify-content:center;" onclick="showAuthModal()">Sign In</button>
+      </div>
+    </div>
+
+    <!-- MAIN CHANGELOG CONTENT -->
+    <main class="container">
+      <section class="changelog-hero">
+        <div class="hero-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>RELEASE TIMELINE &amp; SHIP LOG</span>
+        </div>
+        <h1 class="hero-title">
+          Evolving the <span>Living Document Standard</span>
+        </h1>
+        <p class="hero-sub">
+          Track architecture releases, AST engine enhancements, and zero-drift text layout optimizations.
+        </p>
+
+        <!-- Subscribe Field -->
+        <div class="subscribe-row">
+          <input type="email" placeholder="Enter email for release alerts..." class="subscribe-input" id="changelogEmail">
+          <button class="ldoc-btn ldoc-btn-primary" style="padding: 10px 18px; font-size: 13px;" onclick="subscribeReleaseAlerts()">Subscribe</button>
+          <a href="/feed.xml" class="rss-link" title="RSS Release Feed">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+            <span>RSS Feed</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- TIMELINE LIST -->
+      <section class="timeline">
+        <!-- Release: v2.5.0 -->
+        <div class="timeline-release">
+          <div class="month-marker">OCTOBER 2026</div>
+          <article class="release-card">
+            <div class="release-header">
+              <div>
+                <h2 class="release-version">v2.5.0 • Living Standard v3.0</h2>
+                <div class="release-date">Released October 10, 2026 • Build #1284</div>
+              </div>
+              <div class="release-badges">
+                <span class="rel-badge badge-stable">STABLE</span>
+                <span class="rel-badge badge-spec">OPEN SPEC STANDARD</span>
+              </div>
+            </div>
+
+            <div class="change-group">
+              <span class="change-tag tag-added">ADDED</span>
+              <ul class="change-list">
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>Dual-Container Standard:</strong> Modern canonical ZIP container bundling <code>manifest.json</code> + <code>document.json</code> with backward-compatible <code>spec.json</code> for legacy v2.0 viewers.</span>
+                </li>
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>Spatial 3D Three.js Viewports:</strong> Integrated 60 FPS WebGL orbit canvas supporting Draco-compressed geometry and material shaders.</span>
+                </li>
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>20-Year Fallback Longevity:</strong> Bundled zero-dependency <code>fallback.html</code> runtime assuring long-term archival accessibility.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="change-group">
+              <span class="change-tag tag-improved">IMPROVED</span>
+              <ul class="change-list">
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>Zero Text Drift Engine:</strong> Upgraded <code>LdocTextLayout</code> off-DOM arithmetic layout, achieving 25/25 verified bit-for-bit parity across Editor, Viewer, and headless PDF flattener.</span>
+                </li>
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>Magazine-Style Obstacle Exclusion:</strong> Text paragraphs dynamically wrap around 3D canvases using geometric boundary carving.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="change-group">
+              <span class="change-tag tag-security">SECURITY</span>
+              <ul class="change-list">
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>Ed25519 Cryptographic Root Signing:</strong> Built-in SHA-256 Merkle tree manifest detects tampering in &lt;15ms with block-level error isolation.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="change-group">
+              <span class="change-tag tag-fixed">FIXED</span>
+              <ul class="change-list">
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>WebKit Soft-Hyphen Loop Guard:</strong> Hardened line-breaking cursor advance against zero-width syllabic loops in Safari / WebKit.</span>
+                </li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <!-- Release: v2.4.2 -->
+        <div class="timeline-release">
+          <div class="month-marker">SEPTEMBER 2026</div>
+          <article class="release-card">
+            <div class="release-header">
+              <div>
+                <h2 class="release-version">v2.4.2 • Reactive DAG Polish</h2>
+                <div class="release-date">Released September 18, 2026 • Build #1190</div>
+              </div>
+              <div class="release-badges">
+                <span class="rel-badge badge-stable">STABLE</span>
+              </div>
+            </div>
+
+            <div class="change-group">
+              <span class="change-tag tag-improved">IMPROVED</span>
+              <ul class="change-list">
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>Topological DAG Performance:</strong> Formula recomputation latency dropped to &lt;2ms across 500+ dependent formula variables.</span>
+                </li>
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>Air-Gapped Telemetry Guard:</strong> Strict zero-egress enforcement for workstation desktop apps running on Windows and Linux.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="change-group">
+              <span class="change-tag tag-fixed">FIXED</span>
+              <ul class="change-list">
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span>Fixed margin collapse issues when switching presentation deck themes from Paper to Obsidian Glass.</span>
+                </li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <!-- Release: v2.3.0 -->
+        <div class="timeline-release">
+          <div class="month-marker">AUGUST 2026</div>
+          <article class="release-card">
+            <div class="release-header">
+              <div>
+                <h2 class="release-version">v2.3.0 • Headless PDF Flattener</h2>
+                <div class="release-date">Released August 12, 2026 • Build #1042</div>
+              </div>
+              <div class="release-badges">
+                <span class="rel-badge badge-stable">MILESTONE</span>
+              </div>
+            </div>
+
+            <div class="change-group">
+              <span class="change-tag tag-added">ADDED</span>
+              <ul class="change-list">
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>Headless Node.js PDF Flattener:</strong> Pure arithmetic PDF generation pipeline with zero C++ compilation dependencies (no node-canvas required).</span>
+                </li>
+                <li class="change-item">
+                  <span class="bullet">•</span>
+                  <span><strong>KaTeX Math Integration:</strong> Sandboxed mathematical formula typesetting for academic living papers.</span>
+                </li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- STANDARDIZED FOOTER -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="brand-logo">
+              <img src="/ldoc_logo.png" alt="LDOC Logo" width="28" height="28">
+              <span>LDOC STUDIO</span>
+            </a>
+            <p>The open living document architecture. Compute, render, and evolve beyond static PDFs.</p>
+          </div>
+
+          <div class="footer-col">
+            <h5>Product</h5>
+            <ul>
+              <li><a href="/live-studio">Live Studio IDE</a></li>
+              <li><a href="/models">Models &amp; Templates</a></li>
+              <li><a href="/creator">Visual Creator</a></li>
+              <li><a href="/pricing">Pricing Plans</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Specification</h5>
+            <ul>
+              <li><a href="/format">.ldocx Architecture</a></li>
+              <li><a href="/docs">AST Specification</a></li>
+              <li><a href="/docs">Draco 3D Geometry</a></li>
+              <li><a href="/security">Security &amp; Signing</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Developers</h5>
+            <ul>
+              <li><a href="/docs">SDK Architecture Guide</a></li>
+              <li><a href="/docs#sdk">Developer Integration</a></li>
+              <li><a href="/changelog">Release Changelog</a></li>
+              <li><a href="/format">Format Specification</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Trust &amp; Legal</h5>
+            <ul>
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Service</a></li>
+              <li><a href="/security">Security Architecture</a></li>
+              <li><a href="/refund">Refund Policy</a></li>
+              <li><a href="/license">Commercial SLA &amp; License</a></li>
+              <li><a href="mailto:jayaramankalidasan@gmail.com">Contact Founder</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>&copy; 2026 LDOC Studio. Designed and created by J AI ENTERPRISES. Open Living Document Standard.</div>
+          <div class="footer-legal-links" style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <a href="/privacy" style="color: var(--text-sub); text-decoration: none;">Privacy Policy</a>
+            <a href="/terms" style="color: var(--text-sub); text-decoration: none;">Terms of Service</a>
+            <a href="/security" style="color: var(--text-sub); text-decoration: none;">Security Architecture</a>
+            <a href="/refund" style="color: var(--text-sub); text-decoration: none;">Refund Policy</a>
+            <a href="/license" style="color: var(--text-sub); text-decoration: none;">Commercial SLA</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function subscribeReleaseAlerts() {
+      const email = (document.getElementById('changelogEmail').value || '').trim();
+      if (!email || !email.includes('@')) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      alert('Thank you! You are now subscribed to LDOC release updates and architectural alerts.');
+      document.getElementById('changelogEmail').value = '';
+    }
+  </script>
+
+  <script src="/design-system.js"></script>
+</body>
+</html>
+`;
+
+fs.writeFileSync(path.join(__dirname, '..', 'changelog.html'), content, 'utf8');
+console.log('Successfully written redesigned changelog.html!');

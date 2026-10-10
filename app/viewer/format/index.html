@@ -9,7 +9,9 @@
   <link rel="shortcut icon" href="/app.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/design-system.css">
+  <script defer src="/design-system.js"></script>
   <style>
     :root {
       --bg: #08090d;
@@ -1347,51 +1349,158 @@
 
 .btn-hero-primary,.btn-hero-secondary,.nav-action-btn,.build-btn,.ldoc-preset-btn,.template-btn{transition:transform 0.16s var(--ease-spring),box-shadow 0.16s var(--ease-spring),background-color 0.16s ease,border-color 0.16s ease;}
 .btn-hero-primary:active,.btn-hero-secondary:active,.nav-action-btn:active,.build-btn:active,.ldoc-preset-btn:active,.template-btn:active{transform:scale(0.982);}
+
+    .spec-nav-link {
+      display: block;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.18s ease;
+    }
+    .spec-nav-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .spec-nav-link.active {
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.12);
+      font-weight: 700;
+      border-left: 2px solid #f59e0b;
+    }
+    .spec-code-tab {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+    .spec-code-tab:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .spec-code-tab.active {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.15);
+      font-weight: 700;
+    }
+    .spec-card {
+      background: rgba(14, 18, 27, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 12.5px;
+    }
+    .spec-table th, .spec-table td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .spec-table th {
+      color: #f59e0b;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    @media (max-width: 1100px) {
+      .spec-split-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .spec-split-grid aside {
+        position: relative !important;
+        top: 0 !important;
+      }
+    }
 </style>
 </head>
 <body>
   <div class="ambient-bg"></div>
 
   <div class="page-wrap">
-    <!-- Promo Strip -->
-    <div class="promo-strip">
-      <span class="promo-badge">Spec v2.5.0</span>
+    <!-- Top Dismissible Pill Banner -->
+    <div class="ldoc-pill-banner" id="ldoc-pill-banner">
+      <span class="ldoc-pill-tag">SPEC v2.5.0</span>
       <span>Living Document Format (.ldocx) open architecture released.</span>
-      <a href="/format">Explore Open Spec &amp; AST &rarr;</a>
+      <a href="/format">Explore Open Spec &rarr;</a>
+      <button class="ldoc-pill-close" onclick="dismissPillBanner()" aria-label="Dismiss banner">&times;</button>
     </div>
 
-    <!-- Navigation -->
-    <nav class="nav-bar">
-      <div class="nav-left">
-        <a href="/" class="brand-logo">
-          <img src="/ldoc_logo.png" alt="LDOC Logo" width="28" height="28">
-          <span>LDOC STUDIO</span>
-          <span class="brand-badge">.ldocx</span>
-        </a>
-        <ul class="nav-links">
-          <li><a href="/format">Format</a></li>
-          <li><a href="/features">Features</a></li>
-          <li><a href="/live-studio">Live Studio</a></li>
-          <li><a href="/models">Models Hub</a></li>
-          <li><a href="/pricing">Pricing</a></li>
-          <li><a href="/docs">Docs</a></li>
-          <li><a href="/changelog">Changelog</a></li>
-        </ul>
-      </div>
-      <div class="nav-right">
-        <!-- Auth & Utility Actions: Sign In, Share, Pro -->
-        <div class="nav-actions-group">
-          <button class="nav-action-btn" id="header-auth-btn" onclick="showAuthModal()"><span class="tech-icon-badge">USER</span> Sign In</button>
-          <button class="nav-action-btn" onclick="showShareModal()" title="Share LDOC Studio"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;vertical-align:-1px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share</button>
-          
+    <!-- Sticky Glass Navbar -->
+    <nav class="ldoc-navbar" id="ldoc-navbar">
+      <div class="ldoc-navbar-inner">
+        <div class="ldoc-nav-left">
+          <a href="/" class="ldoc-nav-logo">
+            <img src="/ldoc_logo.png" alt="LDOC Studio Logo" width="28" height="28" />
+            <span>LDOC STUDIO</span>
+            <span class="ldoc-nav-badge">.ldocx</span>
+          </a>
+          <div class="ldoc-nav-links">
+            <a href="/format" class="ldoc-nav-link active">Format</a>
+            <a href="/features" class="ldoc-nav-link">Features</a>
+            <a href="/live-studio" class="ldoc-nav-link">Live Studio</a>
+            <a href="/models" class="ldoc-nav-link">Models Hub</a>
+            <a href="/pricing" class="ldoc-nav-link">Pricing</a>
+            <a href="/docs" class="ldoc-nav-link">Docs</a>
+            <a href="/changelog" class="ldoc-nav-link">Changelog</a>
+          </div>
         </div>
-        <a href="/live-studio" class="btn-launch">
-          <span>Launch Studio</span>
-          <span>&rarr;</span>
-        </a>
+        <div class="ldoc-nav-right">
+          <button class="ldoc-nav-search-btn" onclick="openCmdPalette()" title="Command Palette (Ctrl+K)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Search...</span>
+            <kbd class="ldoc-kbd">Ctrl K</kbd>
+          </button>
+          <button class="ldoc-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
+            <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="ldoc-btn ldoc-btn-ghost" style="padding: 6px 12px; font-size: 0.8rem;" onclick="showAuthModal()">Sign In</button>
+          <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="padding: 7px 14px; font-size: 0.82rem;">Launch Studio &rarr;</a>
+          <button class="ldoc-hamburger" id="ldoc-hamburger" onclick="toggleMobileMenu()" aria-label="Open mobile navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
       </div>
     </nav>
-  </header>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="ldoc-mobile-drawer" id="ldoc-mobile-drawer">
+      <div class="ldoc-mobile-drawer-header">
+        <a href="/" class="ldoc-nav-logo">
+          <img src="/ldoc_logo.png" alt="LDOC Studio Logo" width="26" height="26" />
+          <span>LDOC STUDIO</span>
+        </a>
+        <button class="ldoc-mobile-drawer-close" onclick="toggleMobileMenu()" aria-label="Close menu">&times;</button>
+      </div>
+      <div class="ldoc-mobile-drawer-links">
+        <a href="/format">Format</a>
+        <a href="/features">Features</a>
+        <a href="/live-studio">Live Studio</a>
+        <a href="/models">Models Hub</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Docs</a>
+        <a href="/changelog">Changelog</a>
+      </div>
+      <div class="ldoc-mobile-drawer-actions">
+        <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="width: 100%; justify-content: center;">Launch Studio</a>
+        <button class="ldoc-btn ldoc-btn-secondary" style="width: 100%; justify-content: center;" onclick="showAuthModal()">Sign In</button>
+      </div>
+    </div>
 
   <main id="main-content">
 
@@ -1423,460 +1532,205 @@
           </a>
         </div>
 
-        <!-- INTERACTIVE SPECIFICATION CONTAINER EXPLORER -->
-        <div class="hero-canvas-card">
-          <div class="canvas-header">
-            <div class="canvas-dots">
-              <div class="canvas-dot dot-r"></div>
-              <div class="canvas-dot dot-y"></div>
-              <div class="canvas-dot dot-g"></div>
-            </div>
-            <div class="canvas-tabs">
-              <button class="canvas-tab active" onclick="switchSpecTab('manifest', this)">manifest.json</button>
-              <button class="canvas-tab" onclick="switchSpecTab('ast', this)">document.ast.json</button>
-              <button class="canvas-tab" onclick="switchSpecTab('merkle', this)">merkle.proof</button>
-              <button class="canvas-tab" onclick="switchSpecTab('zip', this)">ZIP Structure</button>
-            </div>
-            <a href="/LDOCX_TECHNICAL_SPECIFICATION.pdf" target="_blank" class="canvas-action-btn">
-              <span>View Full Schema Spec &rarr;</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECHNICAL SPECIFICATION WORKSPACE (SPLIT LAYOUT) -->
+    <section class="container" style="margin: 20px auto 80px; max-width: 1400px; padding: 0 24px;">
+      <div class="spec-split-grid" style="display: grid; grid-template-columns: 240px 1fr 440px; gap: 32px; align-items: start;">
+        
+        <!-- COLUMN 1: STICKY IN-PAGE SECTION NAV (SCROLL-SPY) -->
+        <aside style="position: sticky; top: 90px; background: rgba(14, 18, 27, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 18px 14px; backdrop-filter: blur(12px);">
+          <div style="font-size: 11px; font-family: var(--font-mono); color: #f59e0b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; padding-left: 8px;">SPEC NAVIGATION</div>
+          <nav id="spec-toc-nav" style="display: flex; flex-direction: column; gap: 4px;">
+            <a href="#sec-container" class="spec-nav-link active">1. The .ldocx Container</a>
+            <a href="#sec-ast" class="spec-nav-link">2. AST Schema &amp; Nodes</a>
+            <a href="#sec-draco" class="spec-nav-link">3. Draco 3D Pipeline</a>
+            <a href="#sec-merkle" class="spec-nav-link">4. Merkle Tree &amp; Signatures</a>
+            <a href="#sec-flattener" class="spec-nav-link">5. Export Flattener Parity</a>
+          </nav>
+          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+            <a href="/LDOCX_TECHNICAL_SPECIFICATION.pdf" target="_blank" class="ldoc-btn ldoc-btn-ghost" style="width: 100%; justify-content: center; font-size: 11px; padding: 7px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Download PDF Spec</span>
             </a>
           </div>
+        </aside>
 
-          <div class="canvas-body" style="min-height: 380px;">
-            <!-- FILE 1: manifest.json -->
-            <div id="spec-manifest" class="tab-pane active">
-              <div style="display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 20px;">
-                <pre style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; font-family: var(--font-mono); font-size: 12px; color: #cbd5e1; line-height: 1.5; overflow-x: auto; margin: 0;">{
-  <span style="color: #38bdf8;">"$schema"</span>: <span style="color: #a7f3d0;">"https://ldoc.io/schemas/v2.5.0/document.json"</span>,
-  <span style="color: #38bdf8;">"format_version"</span>: <span style="color: #a7f3d0;">"2.5.0"</span>,
-  <span style="color: #38bdf8;">"document_id"</span>: <span style="color: #a7f3d0;">"doc_vanguard_telemetry_2026"</span>,
-  <span style="color: #38bdf8;">"title"</span>: <span style="color: #a7f3d0;">"Vanguard-7 Autonomous Robotics Specification"</span>,
-  <span style="color: #38bdf8;">"created_at"</span>: <span style="color: #fef08a;">1788690000000</span>,
-  <span style="color: #38bdf8;">"engine"</span>: {
-    <span style="color: #38bdf8;">"type"</span>: <span style="color: #a7f3d0;">"discrete_gpu_webgl"</span>,
-    <span style="color: #38bdf8;">"compression"</span>: <span style="color: #a7f3d0;">"draco_v1"</span>,
-    <span style="color: #38bdf8;">"offline_capable"</span>: <span style="color: #38bdf8;">true</span>
+        <!-- COLUMN 2: TECHNICAL SPECIFICATION BODY -->
+        <article class="spec-content" style="color: #cbd5e1; line-height: 1.7; font-size: 14.5px;">
+          
+          <!-- Section 1: The .ldocx Container -->
+          <section id="sec-container" style="margin-bottom: 48px; scroll-margin-top: 100px;">
+            <div class="spec-card">
+              <span class="tech-icon-badge" style="margin-bottom: 8px;">SPEC-01 • CONTAINER ARCHITECTURE</span>
+              <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -0.02em;">1. The .ldocx Dual-Container</h2>
+              <p style="margin-bottom: 16px;">
+                An <strong>.ldocx</strong> file is a standard deterministic ZIP archive holding machine-evaluable AST descriptors, compressed spatial CAD meshes, and cryptographic provenance trees. It implements dual-container backward compatibility for seamless migration across 20-year archival lifespans.
+              </p>
+
+              <table class="spec-table">
+                <thead>
+                  <tr>
+                    <th>Component File</th>
+                    <th>Standard Level</th>
+                    <th>Purpose &amp; Lifecycle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>manifest.json</code></td>
+                    <td>Canonical v3.0</td>
+                    <td>Document metadata, engine targets, hardware attributes, and root hashes.</td>
+                  </tr>
+                  <tr>
+                    <td><code>document.json</code></td>
+                    <td>Canonical v3.0</td>
+                    <td>The modern semantic AST node hierarchy and reactive formula graph.</td>
+                  </tr>
+                  <tr>
+                    <td><code>spec.json</code></td>
+                    <td>Legacy v2.0/v2.5</td>
+                    <td>Maintained for backward-compatible rendering in earlier studio versions.</td>
+                  </tr>
+                  <tr>
+                    <td><code>fallback.html</code></td>
+                    <td>Archival 20-Yr</td>
+                    <td>Self-contained, zero-dependency offline web presentation for universal access.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Section 2: AST Schema & Nodes -->
+          <section id="sec-ast" style="margin-bottom: 48px; scroll-margin-top: 100px;">
+            <div class="spec-card">
+              <span class="tech-icon-badge" style="margin-bottom: 8px;">SPEC-02 • SEMANTIC AST</span>
+              <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -0.02em;">2. Deterministic AST &amp; Reactive DAG</h2>
+              <p style="margin-bottom: 16px;">
+                Document nodes represent discrete semantic blocks. Reactive blocks establish explicit input dependencies, evaluated as a Directed Acyclic Graph (DAG) with topological sorting. This mathematical model guarantees zero circular dependency locks and eliminates visual glitch flickers.
+              </p>
+
+              <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; margin-bottom: 14px;">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: #38bdf8; font-weight: 700; margin-bottom: 6px;">REACTIVE FORMULA EVALUATION ENGINE</div>
+                <div style="font-size: 12.5px; color: #cbd5e1; font-family: var(--font-mono);">
+                  DAG: $slider.torque (340 Nm) ──▶ f(t) = t * 0.126 ──▶ #thermal-val (+42.8 °C)
+                </div>
+              </div>
+
+              <p style="font-size: 13.5px; color: #94a3b8;">
+                All text measurement and line-breaking algorithms are executed mathematically through <code>LdocTextLayout</code> without DOM geometry reads, preventing forced layout thrashing across slides.
+              </p>
+            </div>
+          </section>
+
+          <!-- Section 3: Draco 3D Pipeline -->
+          <section id="sec-draco" style="margin-bottom: 48px; scroll-margin-top: 100px;">
+            <div class="spec-card">
+              <span class="tech-icon-badge" style="margin-bottom: 8px;">SPEC-03 • SPATIAL 3D MESH</span>
+              <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -0.02em;">3. Draco 3D Geometry Pipeline</h2>
+              <p style="margin-bottom: 16px;">
+                Spatial 3D blocks embed Google Draco compressed geometry buffers directly within the <code>assets/meshes/</code> container partition. Heavy mechanical CAD assemblies and robotics kinematics achieve up to 92% compression ratio while retaining discrete 60 FPS client rendering.
+              </p>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 8px; padding: 12px;">
+                  <div style="font-size: 11px; font-family: var(--font-mono); color: #38bdf8; font-weight: 700;">UNCOMPRESSED CAD</div>
+                  <div style="font-size: 18px; font-weight: 800; color: #fff; font-family: var(--font-mono); margin-top: 4px;">4.8 MB</div>
+                  <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Raw STEP / STL triangles</div>
+                </div>
+                <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 12px;">
+                  <div style="font-size: 11px; font-family: var(--font-mono); color: #34d399; font-weight: 700;">DRACO COMPRESSED</div>
+                  <div style="font-size: 18px; font-weight: 800; color: #34d399; font-family: var(--font-mono); margin-top: 4px;">64 KB (-92%)</div>
+                  <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Sub-millisecond edge decode</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 4: Merkle Tree & Signatures -->
+          <section id="sec-merkle" style="margin-bottom: 48px; scroll-margin-top: 100px;">
+            <div class="spec-card">
+              <span class="tech-icon-badge" style="margin-bottom: 8px;">SPEC-04 • CRYPTOGRAPHIC PROVENANCE</span>
+              <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -0.02em;">4. Merkle Tree &amp; Signatures</h2>
+              <p style="margin-bottom: 16px;">
+                Every constituent block in the document is hashed into an Ed25519-signed Merkle Tree (<code>merkle.proof</code>). Authors sign the root hash digest using their hardware cryptographic key. Readers independently verify bit-level integrity with zero third-party notary roundtrips.
+              </p>
+
+              <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; font-family: var(--font-mono); font-size: 11.5px;">
+                <div style="color: #94a3b8; margin-bottom: 4px;">Verified Root Digest:</div>
+                <div style="color: #34d399; word-break: break-all;">9e898a2f4c01db189e3a67d0284e9124bb182f0c78a1a9e5b6d9124018274acb</div>
+                <div style="margin-top: 8px; color: #cbd5e1; font-size: 11px;">Algorithm: <strong>SHA-256 + Ed25519 Signature</strong></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 5: Export Flattener Parity -->
+          <section id="sec-flattener" style="margin-bottom: 48px; scroll-margin-top: 100px;">
+            <div class="spec-card">
+              <span class="tech-icon-badge" style="margin-bottom: 8px;">SPEC-05 • ARCHITECTURAL INVARIANT</span>
+              <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -0.02em;">5. Export Flattener Parity</h2>
+              <p style="margin-bottom: 16px;">
+                The foundational invariant of the LDOC living document architecture is <strong>Zero Text Drift Across Surfaces</strong>. The interactive Editor, the Viewer, and the headless PDF flattener evaluate line-breaks, line counts, and bounding heights using the identical mathematical model.
+              </p>
+
+              <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 14px; font-size: 12px; color: #34d399; font-family: var(--font-mono);">
+                ● CONFORMANCE TEST STATUS: 25/25 PARITY CHECKS BIT-FOR-BIT IDENTICAL (0px DRIFT)
+              </div>
+            </div>
+          </section>
+
+        </article>
+
+        <!-- COLUMN 3: STICKY CODE INSPECTOR PANEL WITH TABS & COPY BUTTON -->
+        <aside style="position: sticky; top: 90px; background: #070a12; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,0.6);">
+          <div style="background: rgba(18, 22, 34, 0.95); border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 4px; overflow-x: auto;" id="spec-code-tabs">
+              <button class="spec-code-tab active" onclick="switchSpecCodeTab('manifest', this)">manifest.json</button>
+              <button class="spec-code-tab" onclick="switchSpecCodeTab('document', this)">document.json</button>
+              <button class="spec-code-tab" onclick="switchSpecCodeTab('ast_node', this)">AST Node</button>
+              <button class="spec-code-tab" onclick="switchSpecCodeTab('zip_tree', this)">ZIP Tree</button>
+            </div>
+            <button class="ldoc-btn ldoc-btn-ghost" id="btn-copy-code-panel" onclick="copyCurrentSpecCode()" title="Copy Code" style="padding: 4px 10px; font-size: 11px; border: 1px solid rgba(255,255,255,0.12);">
+              Copy
+            </button>
+          </div>
+          <div style="padding: 16px; max-height: calc(85vh - 120px); overflow-y: auto;">
+            <pre id="spec-code-pre" style="margin: 0; font-family: var(--font-mono); font-size: 11.5px; color: #cbd5e1; line-height: 1.55; white-space: pre-wrap; word-break: break-all;"><code id="spec-code-content">{
+  "$schema": "https://ldoc.io/schemas/v2.5.0/document.json",
+  "format_version": "2.5.0",
+  "document_id": "doc_vanguard_telemetry_2026",
+  "title": "Vanguard-7 Autonomous Robotics Specification",
+  "created_at": 1788690000000,
+  "engine": {
+    "type": "discrete_gpu_webgl",
+    "compression": "draco_v1",
+    "offline_capable": true
   },
-  <span style="color: #38bdf8;">"integrity"</span>: {
-    <span style="color: #38bdf8;">"hash_algorithm"</span>: <span style="color: #a7f3d0;">"SHA-256"</span>,
-    <span style="color: #38bdf8;">"merkle_root"</span>: <span style="color: #a7f3d0;">"9e898a2f4c01db189e3a67d0284e9124bb18..."</span>,
-    <span style="color: #38bdf8;">"signature_scheme"</span>: <span style="color: #a7f3d0;">"Ed25519"</span>
+  "integrity": {
+    "hash_algorithm": "SHA-256",
+    "merkle_root": "9e898a2f4c01db189e3a67d0284e9124bb18...",
+    "signature_scheme": "Ed25519"
   }
-}</pre>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                  <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 10px; padding: 14px;">
-                    <div style="font-family: var(--font-mono); font-size: 11px; color: #fef08a; font-weight: 700;">MANIFEST PURPOSE</div>
-                    <div style="font-size: 12px; color: #cbd5e1; margin-top: 6px; line-height: 1.5;">
-                      The entry-point descriptor parsed by all .ldocx runtimes. Declares AST tree versioning, security attributes, and hardware requirements.
-                    </div>
-                  </div>
-                  <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 10px; padding: 14px;">
-                    <div style="font-family: var(--font-mono); font-size: 11px; color: #34d399; font-weight: 700;">DETERMINISTIC PACKING</div>
-                    <div style="font-size: 12px; color: #cbd5e1; margin-top: 6px; line-height: 1.5;">
-                      Byte-level reproducibility ensures two identical AST documents produce bit-for-bit identical hashes.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- FILE 2: document.ast.json -->
-            <div id="spec-ast" class="tab-pane" style="display: none;">
-              <pre style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; font-family: var(--font-mono); font-size: 12px; color: #cbd5e1; line-height: 1.5; overflow-x: auto; margin: 0;">{
-  <span style="color: #38bdf8;">"blocks"</span>: [
-    {
-      <span style="color: #38bdf8;">"id"</span>: <span style="color: #a7f3d0;">"blk_spatial_01"</span>,
-      <span style="color: #38bdf8;">"type"</span>: <span style="color: #a7f3d0;">"spatial_3d"</span>,
-      <span style="color: #38bdf8;">"geometry"</span>: <span style="color: #a7f3d0;">"assets/meshes/quadruped_chassis.draco"</span>,
-      <span style="color: #38bdf8;">"kinematics"</span>: {
-        <span style="color: #38bdf8;">"joints"</span>: 12,
-        <span style="color: #38bdf8;">"actuator_limits"</span>: [50, 600],
-        <span style="color: #38bdf8;">"telemetry_stream"</span>: <span style="color: #38bdf8;">true</span>
-      }
-    },
-    {
-      <span style="color: #38bdf8;">"id"</span>: <span style="color: #a7f3d0;">"blk_reactive_formula_02"</span>,
-      <span style="color: #38bdf8;">"type"</span>: <span style="color: #a7f3d0;">"reactive_formula"</span>,
-      <span style="color: #38bdf8;">"expression"</span>: <span style="color: #fef08a;">"actuator_load * thermal_dissipation_factor"</span>,
-      <span style="color: #38bdf8;">"units"</span>: <span style="color: #a7f3d0;">"Nm"</span>
-    }
-  ]
-}</pre>
-            </div>
-
-            <!-- FILE 3: merkle.proof -->
-            <div id="spec-merkle" class="tab-pane" style="display: none;">
-              <div style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px; font-family: var(--font-mono); font-size: 12px; color: #cbd5e1; line-height: 1.6;">
-                <div style="color: #34d399; font-weight: 700; margin-bottom: 10px;">MERKLE TREE ROOT PROOF:</div>
-                <div style="color: #94a3b8; font-size: 11px;">ROOT HASH (SHA-256):</div>
-                <div style="color: #fff; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 6px; margin: 4px 0 14px 0; word-break: break-all;">
-                  9e898a2f4c01db189e3a67d0284e9124bb182f0c78a1a9e5b6d9124018274acb
-                </div>
-                <div style="color: #94a3b8; font-size: 11px;">ED25519 AUTHOR SIGNATURE:</div>
-                <div style="color: #38bdf8; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 6px; margin: 4px 0 0 0; word-break: break-all;">
-                  7d19c049e6f8812c3f8e561937bb184f9910d52b120a442e9bc840134f59ae21...
-                </div>
-              </div>
-            </div>
-
-            <!-- FILE 4: ZIP Structure -->
-            <div id="spec-zip" class="tab-pane" style="display: none;">
-              <pre style="background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; font-family: var(--font-mono); font-size: 12.5px; color: #cbd5e1; line-height: 1.6; margin: 0;">├── META-INF/
-│   ├── manifest.json            <span style="color: #64748b;">(Metadata &amp; block manifest)</span>
-│   └── signatures.json          <span style="color: #64748b;">(Ed25519 author signing keys)</span>
-├── content/
-│   ├── document.ast.json        <span style="color: #64748b;">(Complete reactive block tree)</span>
-│   └── pages/
-│       ├── page_1.ast.json      <span style="color: #64748b;">(Slide 1 geometric layout)</span>
-│       └── page_2.ast.json      <span style="color: #64748b;">(Slide 2 telemetry layer)</span>
-├── assets/
-│   ├── meshes/                  <span style="color: #64748b;">(Draco &amp; glTF spatial 3D models)</span>
-│   └── shaders/                 <span style="color: #64748b;">(Custom WebGL volumetric vertex shaders)</span>
-└── merkle.proof                 <span style="color: #64748b;">(SHA-256 DAG hash validation tree)</span></pre>
-            </div>
+}</code></pre>
           </div>
-        </div>
+        </aside>
+
       </div>
     </section>
 
-    <!-- BENEFIT GRID (6 CARDS) -->
-    <section class="container" style="margin-top: 80px;">
-      <div class="section-head">
-        <span class="section-tag">Core Capabilities</span>
-        <h2 class="section-title">Built for the Next Century of Computing</h2>
-        <p class="section-sub">Documents should be software. Explore how LDOC Studio bridges static prose and dynamic computing.</p>
-      </div>
-
-      <div class="benefit-grid">
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">CANVAS</span></div>
-          <h3 class="benefit-title">Write Anywhere</h3>
-          <p class="benefit-desc">Adaptive block &amp; freeform canvas editor with multi-device layout reflow. Design freely across desktop, tablet, and mobile with zero visual loss.</p>
-          <a href="/features#editor" class="benefit-link">Explore Canvas Editor &rarr;</a>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">SPATIAL</span></div>
-          <h3 class="benefit-title">Bring It to Life</h3>
-          <p class="benefit-desc">Embed spatial 3D WebGL assets, GPU fluid dynamics, high-frame video loops, and live API feeds directly inside document pages.</p>
-          <a href="/features#3d" class="benefit-link">See Spatial WebGL &rarr;</a>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">AI COPILOT</span></div>
-          <h3 class="benefit-title">Think with AI</h3>
-          <p class="benefit-desc">Integrated Agentic Copilot synthesizes entire presentation slides, creates reactive AST blocks, and conducts automated editorial QA.</p>
-          <a href="/features#ai" class="benefit-link">Discover AI Copilot &rarr;</a>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">DECK</span></div>
-          <h3 class="benefit-title">Present Instantly</h3>
-          <p class="benefit-desc">Seamless 1-click deck presentation mode with luminous Glass, Velvet, Cyber, and Prism theme layers. Zero PowerPoint conversions.</p>
-          <a href="/live-studio" class="benefit-link">Test Presentation Mode &rarr;</a>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">CONVERT</span></div>
-          <h3 class="benefit-title">Convert Anything In</h3>
-          <p class="benefit-desc">Universal migration engine parses legacy PDF, DOCX, Markdown, and HTML archives into living .ldocx files in seconds.</p>
-          <a href="/live-studio" class="benefit-link">Run Converter Engine &rarr;</a>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon"><span class="tech-icon-badge">PROVENANCE</span></div>
-          <h3 class="benefit-title">Publish with Confidence</h3>
-          <p class="benefit-desc">Cryptographic SHA-256 signatures, deterministic semantic AST versioning, and zero-server portability guarantee 100% longevity.</p>
-          <a href="/format" class="benefit-link">Read Format Security &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- CAPABILITY GRID (TECHNICAL TRUST LAYER) -->
-    <section class="capability-section">
-      <div class="container">
-        <div class="section-head">
-          <span class="section-tag">Architecture &amp; Protocol</span>
-          <h2 class="section-title">Technical Trust Layer</h2>
-          <p class="section-sub">Transparent, verifiable specifications engineered for enterprise scale and zero vendor lock-in.</p>
-        </div>
-
-        <div class="capability-grid">
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-01 • CONTAINER</span>
-            <div class="cap-title">Open .ldocx Packaging</div>
-            <div class="cap-desc">Deterministic ZIP container with JSON AST, media manifests, and SHA-256 integrity trees. Inspectable by standard CLI tools.</div>
-          </div>
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-02 • EXTENSIBILITY</span>
-            <div class="cap-title">Universal Plugin &amp; Block API</div>
-            <div class="cap-desc">Extensible TypeScript/JS SDK (@ldoc/sdk) enables developers to create custom reactive blocks, sandboxes, and bespoke widgets.</div>
-          </div>
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-03 • 3D PIPELINE</span>
-            <div class="cap-title">Draco Mesh Compression</div>
-            <div class="cap-desc">Heavy CAD &amp; 3D models are reduced by up to 92% using Google Draco compression for sub-second edge transmission.</div>
-          </div>
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-04 • COMPILATION</span>
-            <div class="cap-title">Multi-Target Export Engine</div>
-            <div class="cap-desc">Headless edge compilation outputs print-perfect PDF, standard DOCX, standalone single-file HTML5, or raw AST JSON.</div>
-          </div>
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-05 • OFFLINE FIRST</span>
-            <div class="cap-title">Cryptographic Portability</div>
-            <div class="cap-desc">Every .ldocx document functions entirely offline. No external server pings required to view, inspect, or execute interactions.</div>
-          </div>
-          <div class="cap-card">
-            <span class="cap-badge">SPEC-06 • SECURITY</span>
-            <div class="cap-title">Isolated Execution Sandbox</div>
-            <div class="cap-desc">Code executions run in secure iframes with strict isolation and zero filesystem access.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- WHAT YOU CAN BUILD (PROOF SECTION) -->
-    <section class="container" style="margin-bottom: 100px;">
-      <div class="section-head">
-        <span class="section-tag">Showcase &amp; Blueprints</span>
-        <h2 class="section-title">What You Can Build</h2>
-        <p class="section-sub">Explore real living documents crafted with LDOC Studio. Click any blueprint to inspect its reactive AST.</p>
-      </div>
-
-      <div class="build-grid">
-        <!-- Card 1 -->
-        <div class="build-card">
-          <div class="build-thumb" style="background: radial-gradient(circle at 50% 50%, #1e1b4b, #090d16);">
-            <span class="build-thumb-badge">FINANCIAL REPORT</span>
-            <div style="font-size: 3.5rem;"><span class="tech-icon-badge">TELEMETRY</span></div>
-          </div>
-          <div class="build-content">
-            <h4 class="build-title">Annual ESG &amp; Financial Living Report</h4>
-            <p class="build-desc">Includes reactive revenue models, carbon offset calculators, and live audited variance tables with slider adjustments.</p>
-            <div class="build-footer">
-              <span class="build-tag">BLUEPRINT • 12 SLIDES</span>
-              <a href="/live-studio?template=finance" class="build-btn">Live Edit in Studio &rarr;</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="build-card">
-          <div class="build-thumb" style="background: radial-gradient(circle at 50% 50%, #042f2e, #090d16);">
-            <span class="build-thumb-badge">QUANTUM RESEARCH</span>
-            <div style="font-size: 3.5rem;"><span class="tech-icon-badge">PHYSICS</span></div>
-          </div>
-          <div class="build-content">
-            <h4 class="build-title">Quantum Qubit Coherence Living Paper</h4>
-            <p class="build-desc">Interactive Bloch sphere 3D simulation with live Hamiltonian equation solvers and dynamic quantum state vectors.</p>
-            <div class="build-footer">
-              <span class="build-tag">BLUEPRINT • 8 SLIDES</span>
-              <a href="/live-studio?template=quantum" class="build-btn">Live Edit in Studio &rarr;</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="build-card">
-          <div class="build-thumb" style="background: radial-gradient(circle at 50% 50%, #311042, #090d16);">
-            <span class="build-thumb-badge">INVESTOR PITCH</span>
-            <div style="font-size: 3.5rem;"><span class="tech-icon-badge">VENTURE</span></div>
-          </div>
-          <div class="build-content">
-            <h4 class="build-title">Hyperion Series A Dynamic Investor Deck</h4>
-            <p class="build-desc">Luminous glassmorphism presentation with live cap table simulations, runway sensitivity toggles, and video demo loops.</p>
-            <div class="build-footer">
-              <span class="build-tag">BLUEPRINT • 14 SLIDES</span>
-              <a href="/live-studio?template=pitch" class="build-btn">Live Edit in Studio &rarr;</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="build-card">
-          <div class="build-thumb" style="background: radial-gradient(circle at 50% 50%, #1c1917, #090d16);">
-            <span class="build-thumb-badge">HARDWARE CAD</span>
-            <div style="font-size: 3.5rem;"><span class="tech-icon-badge">ROBOTICS</span></div>
-          </div>
-          <div class="build-content">
-            <h4 class="build-title">Vanguard-7 Robotics Hardware Datasheet</h4>
-            <p class="build-desc">Embedded 3D robotic arm model with exploded view controls, joint torque telemetry, and real-time stress testing graphs.</p>
-            <div class="build-footer">
-              <span class="build-tag">BLUEPRINT • 6 SLIDES</span>
-              <a href="/live-studio?template=robotics" class="build-btn">Live Edit in Studio &rarr;</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FOUNDER STATEMENT -->
-      <div class="founder-box">
-        <p class="founder-quote">
-          &ldquo;For over thirty years, humanity has been trapped reading digital paper trapped inside static, dead rectangles. We created .ldocx so documents can think, calculate, render spatial 3D, and evolve — turning passive reading into active understanding.&rdquo;
-        </p>
-        <div class="founder-author">J AI ENTERPRISES</div>
-        <div class="founder-role">Creator of Living Document Format (.ldocx) &amp; LDOC Studio</div>
-      </div>
-    </section>
-
-    <!-- PRICING & EDITIONS -->
-    <section id="pricing" class="pricing-section">
-      <div class="container">
-        <div class="section-head">
-          <span class="section-tag">Editions &amp; Licensing</span>
-          <h2 class="section-title">Transparent, Predictable Pricing</h2>
-          <p class="section-sub">Start free with our open SDK and local Studio. Upgrade for cloud synchronization, AI Copilot, and enterprise SLA.</p>
-        </div>
-
-                        <div class="pricing-billing-toggle-wrap">
-          <div class="pricing-billing-toggle" role="group" aria-label="Billing frequency">
-            <button type="button" class="pricing-toggle-btn" data-cycle="monthly" onclick="setBillingCycle('monthly')">
-              <span>Monthly</span>
-            </button>
-            <button type="button" class="pricing-toggle-btn active" data-cycle="annually" onclick="setBillingCycle('annually')">
-              <span>Annually</span>
-              <span class="save-badge">Save 20%</span>
-            </button>
-            <button type="button" class="pricing-toggle-btn" data-cycle="lifetime" onclick="setBillingCycle('lifetime')">
-              <span>Lifetime Access</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="pricing-grid">
-          <!-- 1. Community (Free $0) -->
-          <div class="pricing-card" id="card-tier-community">
-            <div class="card-header-zone">
-              <h3 class="plan-name">Community</h3>
-              <p class="plan-sub">Free living document viewer &amp; basic editor for researchers, students &amp; readers.</p>
-              <div class="plan-price-wrap">
-                <div class="plan-price">
-                  <span class="price-num">$0</span>
-                  <span class="price-unit">/ forever</span>
-                </div>
-                <div class="price-billing-sub">Free open-source specification</div>
-              </div>
-            </div>
-            <div class="card-features-zone">
-              <ul class="plan-features">
-                <li><span class="chk">✓</span> <span>Full Open .ldocx Core SDK &amp; CLI</span></li>
-                <li><span class="chk">✓</span> <span>Web &amp; Desktop Offline Viewer</span></li>
-                <li><span class="chk">✓</span> <span>Live Studio Browser Sandbox</span></li>
-                <li><span class="chk">✓</span> <span>Interactive Widgets &amp; Code Execution</span></li>
-                <li><span class="chk">✓</span> <span>Markdown, Text &amp; Standard PDF Export</span></li>
-              </ul>
-            </div>
-            <div class="card-cta-zone">
-              <a href="/live-studio" class="btn-plan btn-plan-secondary">Launch Free Viewer</a>
-            </div>
-          </div>
-
-          <!-- 2. Studio Pro Workstation ($19 Lifetime) -->
-          <div class="pricing-card featured" id="card-tier-pro">
-            <div class="featured-badge">MOST POPULAR • LIFETIME ACCESS</div>
-            <div class="card-header-zone">
-              <h3 class="plan-name">Studio Pro Suite</h3>
-              <p class="plan-sub">Air-gapped desktop &amp; mobile workstation for Windows, Linux, Android &amp; macOS.</p>
-              <div class="plan-price-wrap">
-                <div class="plan-price">
-                  <span class="price-num">$19</span>
-                  <span class="price-unit">/ lifetime license</span>
-                </div>
-                <div class="price-billing-sub">One-time payment • Zero subscriptions</div>
-              </div>
-            </div>
-            <div class="card-features-zone">
-              <ul class="plan-features">
-                <li><span class="chk">✓</span> <span><strong>Everything in Community</strong></span></li>
-                <li><span class="chk">✓</span> <span><strong>100% Air-Gapped Workstation</strong> <small style="color:#94a3b8">(Win, Linux, Android, macOS)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Discrete GPU Hardware Engine</strong> <small style="color:#94a3b8">(Unbounded VRAM, 120Hz)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Direct OS File I/O</strong> <small style="color:#94a3b8">(Unlimited document size)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Lossless Universal Converters</strong> <small style="color:#94a3b8">(DOCX, PDF, 3D CAD)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Vector-Crisp PDF Flattener</strong> &amp; Print Engine</span></li>
-                <li><span class="chk">✓</span> <span><strong>Merkle SHA-256 &amp; Ed25519</strong> Cryptographic Signing</span></li>
-                <li><span class="chk">✓</span> <span><strong>Commercial Rights</strong> &amp; Lifetime App Updates</span></li>
-              </ul>
-            </div>
-            <div class="card-cta-zone">
-              <a href="https://jay-app.lemonsqueezy.com/checkout/buy/16851c1c-6dfb-4607-bf8b-81c3427594d1" target="_blank" class="lemonsqueezy-button btn-plan btn-plan-primary">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Buy License &rarr;</span>
-              </a>
-              <a href="/pricing#download" class="btn-plan btn-plan-sublink">
-                <span>⬇️</span><span>Download Workstation Suite</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- 3. LDOC Cloud Workspace ($8/mo or $79/yr) -->
-          <div class="pricing-card featured-cloud" id="card-tier-cloud">
-            <div class="featured-badge badge-cloud">CLOUD COLLABORATION • AI COPILOT</div>
-            <div class="card-header-zone">
-              <h3 class="plan-name">LDOC Cloud Workspace</h3>
-              <p class="plan-sub">Multi-device cloud sync, real-time team collaboration &amp; AI Document Copilot.</p>
-              <div class="plan-price-wrap">
-                <div class="plan-price">
-                  <span class="price-num" id="price-val-cloud">$6.50</span>
-                  <span class="price-unit" id="price-unit-cloud">/ month</span>
-                </div>
-                <div class="price-billing-sub" id="price-sub-cloud">Billed annually ($79/year — Save 20%)</div>
-              </div>
-            </div>
-            <div class="card-features-zone">
-              <ul class="plan-features">
-                <li><span class="chk">✓</span> <span><strong>Multi-Device Cloud Sync</strong> <small style="color:#94a3b8">(Studio Desktop, Android &amp; Web)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Real-Time Multiplayer Co-Authoring</strong> <small style="color:#94a3b8">(Live cursors &amp; comments)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>AI Living Document Copilot</strong> <small style="color:#94a3b8">(Smart text, 3D &amp; data charts)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>100 GB Encrypted Cloud Vault</strong> <small style="color:#94a3b8">(Zero-knowledge storage)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Automated Cloud Backups</strong> <small style="color:#94a3b8">&amp; Infinite Revision Rollback</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Instant Interactive Web Sharing</strong> &amp; Password Links</span></li>
-                <li><span class="chk">✓</span> <span><strong>Priority Cloud Rendering</strong> &amp; Real-Time Sync Relay</span></li>
-              </ul>
-            </div>
-            <div class="card-cta-zone">
-              <button type="button" onclick="openLicenseHubModal('retrieve')" class="btn-plan btn-plan-cloud">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Start Cloud Pro &rarr;</span>
-              </button>
-              <a href="/live-studio" class="btn-plan btn-plan-sublink">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg><span>Launch Web Cloud Sandbox</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- 4. Enterprise Fleet ($499/year) -->
-          <div class="pricing-card" id="card-tier-enterprise">
-            <div class="featured-badge badge-enterprise">ORGANIZATION FLEET • CUSTOM SLA</div>
-            <div class="card-header-zone">
-              <h3 class="plan-name">Enterprise Fleet</h3>
-              <p class="plan-sub">For engineering, defense, healthcare &amp; institutions with strict compliance needs.</p>
-              <div class="plan-price-wrap">
-                <div class="plan-price">
-                  <span class="price-num" id="price-val-enterprise">$499</span>
-                  <span class="price-unit" id="price-unit-enterprise">/ year</span>
-                </div>
-                <div class="price-billing-sub" id="price-sub-enterprise">Complete organization fleet licensing</div>
-              </div>
-            </div>
-            <div class="card-features-zone">
-              <ul class="plan-features">
-                <li><span class="chk">✓</span> <span><strong>Everything in Studio Pro &amp; Cloud</strong> <small style="color:#94a3b8">(Unlimited Seats)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Silent Fleet Deployment</strong> <small style="color:#94a3b8">(Custom .msi, Intune &amp; RPM/Debian)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Custom Enterprise AST Schemas</strong> <small style="color:#94a3b8">&amp; CAD/3D Extensions</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>HSM &amp; Corporate Root Signing</strong> <small style="color:#94a3b8">(Hardware cryptographic seal)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Self-Hosted Sync Relay Option</strong> <small style="color:#94a3b8">&amp; Zero-Egress Auditing</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Headless CI/CD Batch CLI</strong> <small style="color:#94a3b8">(Automated pipeline rendering)</small></span></li>
-                <li><span class="chk">✓</span> <span><strong>Dedicated Solutions Architect</strong> &amp; 99.9% Uptime SLA</span></li>
-              </ul>
-            </div>
-            <div class="card-cta-zone">
-              <button type="button" onclick="openLeadModal('Enterprise')" class="btn-plan btn-plan-enterprise">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg><span>Contact Enterprise Fleet &rarr;</span>
-              </button>
-              <a href="mailto:jayaramankalidasan@gmail.com?subject=LDOC%20Enterprise%20Fleet%20Inquiry" class="btn-plan btn-plan-sublink">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>Invoice Billing &amp; Custom SLA</span>
-              </a>
-            </div>
-          </div>
+    <!-- CONTEXTUAL CALL TO ACTION -->
+    <section class="container" style="margin: 40px auto 100px;">
+      <div style="text-align: center; padding: 60px 32px; background: linear-gradient(180deg, rgba(18, 22, 34, 0.9) 0%, rgba(10, 12, 18, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);">
+        <span class="tech-icon-badge" style="margin-bottom: 16px;">DEVELOPER ECOSYSTEM</span>
+        <h2 style="font-size: 2.4rem; font-weight: 800; color: #fff; margin-bottom: 14px; letter-spacing: -0.02em;">Start Building with the Living Document SDK</h2>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 32px; font-size: 1.05rem;">Integrate @ldoc/sdk into your Node.js, browser, or serverless pipeline. Generate interactive reports, 3D specs, and verifiable signatures programmatically.</p>
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a href="/docs" class="ldoc-btn ldoc-btn-primary" style="padding: 12px 28px; font-size: 0.95rem;">Explore SDK Architecture Docs &rarr;</a>
+          <a href="/live-studio" class="ldoc-btn ldoc-btn-secondary" style="padding: 12px 28px; font-size: 0.95rem;">Launch Live Studio Sandbox</a>
+          <a href="/pricing" class="ldoc-btn ldoc-btn-ghost" style="padding: 12px 24px; font-size: 0.95rem;">Get Commercial License</a>
         </div>
       </div>
     </section>
@@ -3159,14 +3013,122 @@ document.addEventListener('DOMContentLoaded', () => {
   </script>
 
 <script>
-function switchSpecTab(tab, btn) {
-  document.querySelectorAll('.canvas-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('spec-manifest').style.display = tab === 'manifest' ? 'block' : 'none';
-  document.getElementById('spec-ast').style.display = tab === 'ast' ? 'block' : 'none';
-  document.getElementById('spec-merkle').style.display = tab === 'merkle' ? 'block' : 'none';
-  document.getElementById('spec-zip').style.display = tab === 'zip' ? 'block' : 'none';
-}
+const specCodeSnippets = {
+  manifest: `{
+  "$schema": "https://ldoc.io/schemas/v2.5.0/document.json",
+  "format_version": "2.5.0",
+  "document_id": "doc_vanguard_telemetry_2026",
+  "title": "Vanguard-7 Autonomous Robotics Specification",
+  "created_at": 1788690000000,
+  "engine": {
+    "type": "discrete_gpu_webgl",
+    "compression": "draco_v1",
+    "offline_capable": true
+  },
+  "integrity": {
+    "hash_algorithm": "SHA-256",
+    "merkle_root": "9e898a2f4c01db189e3a67d0284e9124bb18...",
+    "signature_scheme": "Ed25519"
+  }
+}`,
+  document: `{
+  "version": "2.5.0",
+  "metadata": {
+    "title": "Vanguard-7 Telemetry Spec",
+    "authors": ["J AI Enterprises"],
+    "license": "LDOC-Commercial-2.5"
+  },
+  "blocks": [
+    {
+      "id": "blk_01",
+      "type": "heading",
+      "level": 1,
+      "text": "Actuator Kinematics & Thermal Load"
+    },
+    {
+      "id": "blk_02",
+      "type": "spatial_3d",
+      "source": "assets/meshes/quadruped.draco",
+      "fps_target": 60
+    }
+  ]
+}`,
+  ast_node: `{
+  "id": "blk_reactive_formula_02",
+  "type": "reactive_formula",
+  "expression": "calc_dynamic_load(slider.val)",
+  "dependencies": ["$slider.torque"],
+  "output_target": "#thermal-margin-display",
+  "execution_engine": "topological_dag",
+  "precision": "float64"
+}`,
+  zip_tree: `vanguard_report.ldocx
+├── META-INF/
+│   ├── manifest.json       (Container metadata & schema)
+│   └── signatures.json     (Ed25519 cryptographic seals)
+├── content/
+│   ├── document.json       (Canonical v3.0 document AST)
+│   ├── spec.json           (Legacy v2.0 backward-compat)
+│   └── fallback.html       (Zero-dependency 20-yr archive)
+├── assets/
+│   ├── meshes/             (Google Draco compressed CAD)
+│   └── shaders/            (Volumetric WebGL GLSL shaders)
+└── merkle.proof            (SHA-256 cascade integrity tree)`
+};
+
+let currentSpecCodeTab = 'manifest';
+
+window.switchSpecCodeTab = function(tab, btn) {
+  currentSpecCodeTab = tab;
+  document.querySelectorAll('.spec-code-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const codeEl = document.getElementById('spec-code-content');
+  if (codeEl) {
+    codeEl.textContent = specCodeSnippets[tab] || '';
+  }
+};
+
+window.copyCurrentSpecCode = function() {
+  const code = specCodeSnippets[currentSpecCodeTab] || '';
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('btn-copy-code-panel');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.style.borderColor = '#10b981';
+      btn.style.color = '#34d399';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 1800);
+    }
+  });
+};
+
+// ScrollSpy for in-page TOC links
+document.addEventListener('DOMContentLoaded', () => {
+  const sections = document.querySelectorAll('article.spec-content section');
+  const navLinks = document.querySelectorAll('#spec-toc-nav .spec-nav-link');
+  if (!sections.length || !navLinks.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === '#' + id) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(sec => observer.observe(sec));
+});
 </script>
 
 <script>

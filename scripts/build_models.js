@@ -1,0 +1,1238 @@
+const fs = require('fs');
+const path = require('path');
+
+const content = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Models &amp; Living Document Blueprints Hub — LDOC Studio</title>
+  <meta name="description" content="Discover, preview, and fork living document templates and 3D WebGL models. High-fidelity blueprints for robotics, finance, quantum science, and media.">
+  <link rel="icon" type="image/png" href="/ldoc_logo.png">
+  <link rel="shortcut icon" href="/app.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/design-system.css">
+  <style>
+    :root {
+      --bg: #08090d;
+      --bg-alt: #0c0e14;
+      --bg-subtle: #121622;
+      --surface-card: #0e131f;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(255, 255, 255, 0.16);
+      --primary: #f59e0b;
+      --primary-light: #fbbf24;
+      --primary-glow: rgba(245, 158, 11, 0.2);
+      --cobalt: #3b82f6;
+      --azure: #38bdf8;
+      --cyan: #0ea5e9;
+      --emerald: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .ambient-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.07) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(245, 158, 11, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+    }
+
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hub-hero {
+      padding: 56px 0 32px;
+      text-align: center;
+    }
+    .hub-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 99px;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #38bdf8;
+      margin-bottom: 18px;
+    }
+    .hub-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      max-width: 860px;
+      margin: 0 auto 14px;
+    }
+    .hub-hero-title span {
+      background: linear-gradient(135deg, #38bdf8 0%, #a855f7 50%, #fbbf24 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hub-hero-sub {
+      font-size: clamp(1rem, 1.6vw, 1.12rem);
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 36px;
+    }
+
+    /* Featured Carousel Ribbon */
+    .featured-ribbon {
+      margin-bottom: 44px;
+    }
+    .featured-card {
+      background: linear-gradient(135deg, rgba(20, 26, 44, 0.85) 0%, rgba(12, 16, 26, 0.95) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 18px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 24px rgba(56, 189, 248, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .featured-content {
+      flex: 1;
+      max-width: 640px;
+    }
+    .featured-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .featured-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .featured-desc {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .featured-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .featured-preview-box {
+      width: 260px;
+      height: 160px;
+      background: rgba(10, 13, 20, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-align: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    /* Marketplace Layout: Asymmetric Split */
+    .market-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 32px;
+      align-items: start;
+      margin-bottom: 80px;
+    }
+
+    /* Left Filter Sidebar */
+    .market-sidebar {
+      background: rgba(14, 18, 28, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px 20px;
+      position: sticky;
+      top: 90px;
+    }
+    .sidebar-section-title {
+      font-family: var(--font-display);
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .sidebar-filter-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+    .sidebar-filter-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .sidebar-filter-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+    }
+    .sidebar-filter-item.active {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      font-weight: 700;
+    }
+    .sidebar-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 1px 6px;
+      border-radius: 10px;
+      color: var(--text-sub);
+    }
+    .sidebar-filter-item.active .sidebar-count {
+      background: rgba(56, 189, 248, 0.3);
+      color: #fff;
+    }
+
+    /* Marketplace Content Area */
+    .market-main {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Top Search & Controls Bar */
+    .market-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(14, 18, 28, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 18px;
+      flex-wrap: wrap;
+    }
+    .market-search-box {
+      position: relative;
+      flex: 1;
+      min-width: 260px;
+    }
+    .market-search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+    .market-search-input {
+      width: 100%;
+      background: rgba(8, 11, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 10px 14px 10px 40px;
+      color: #ffffff;
+      font-size: 13.5px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .market-search-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+    .market-sort-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .market-sort-select {
+      background: rgba(8, 11, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #cbd5e1;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Blueprint Cards Grid */
+    .blueprint-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+    .blueprint-card {
+      background: rgba(14, 18, 28, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s var(--ease-spring), border-color 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+    }
+    .blueprint-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.1);
+    }
+
+    /* Card Thumbnail Visual */
+    .card-thumb {
+      height: 140px;
+      background: linear-gradient(135deg, rgba(20, 28, 48, 0.9) 0%, rgba(10, 14, 22, 0.95) 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .thumb-glow-sphere {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, transparent 70%);
+      filter: blur(14px);
+      position: absolute;
+    }
+    .thumb-type-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .thumb-rating-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Card Body */
+    .card-body {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .card-author {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .author-avatar {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38bdf8, #2563eb);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 800;
+      color: #000;
+    }
+    .verified-icon {
+      color: #10b981;
+      font-size: 12px;
+    }
+    .card-desc {
+      font-size: 12.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+    .card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .card-tag {
+      font-size: 10.5px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: #94a3b8;
+      font-family: var(--font-mono);
+    }
+
+    /* Card Action Footer */
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 14px;
+    }
+    .btn-card-edit {
+      flex: 1;
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-card-edit:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .btn-card-icon {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-card-icon:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+
+    /* Detail Drawer */
+    .market-drawer {
+      display: none;
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: 440px;
+      max-width: 90vw;
+      background: #0d111a;
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: -16px 0 50px rgba(0, 0, 0, 0.8);
+      z-index: 100010;
+      padding: 28px;
+      flex-direction: column;
+      overflow-y: auto;
+      animation: drawerSlideIn 0.25s var(--ease-spring);
+    }
+    .market-drawer.active {
+      display: flex;
+    }
+    @keyframes drawerSlideIn {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 100005;
+    }
+    .drawer-overlay.active { display: block; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .market-layout { grid-template-columns: 1fr; }
+      .market-sidebar { position: static; }
+      .featured-card { flex-direction: column; text-align: center; }
+      .featured-meta { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-bg"></div>
+
+  <div class="page-wrap">
+    <!-- Top Dismissible Pill Banner -->
+    <div class="ldoc-pill-banner" id="ldoc-pill-banner">
+      <span class="ldoc-pill-tag">SPEC v2.5.0</span>
+      <span>Living Document Format (.ldocx) open architecture released.</span>
+      <a href="/format">Explore Open Spec &rarr;</a>
+      <button class="ldoc-pill-close" onclick="dismissPillBanner()" aria-label="Dismiss banner">&times;</button>
+    </div>
+
+    <!-- Sticky Glass Navbar -->
+    <nav class="ldoc-navbar" id="ldoc-navbar">
+      <div class="ldoc-navbar-inner">
+        <div class="ldoc-nav-left">
+          <a href="/" class="ldoc-nav-logo">
+            <img src="/ldoc_logo.png" alt="LDOC Studio Logo" width="28" height="28" />
+            <span>LDOC STUDIO</span>
+            <span class="ldoc-nav-badge">.ldocx</span>
+          </a>
+          <div class="ldoc-nav-links">
+            <a href="/format" class="ldoc-nav-link">Format</a>
+            <a href="/features" class="ldoc-nav-link">Features</a>
+            <a href="/live-studio" class="ldoc-nav-link">Live Studio</a>
+            <a href="/models" class="ldoc-nav-link active">Models Hub</a>
+            <a href="/pricing" class="ldoc-nav-link">Pricing</a>
+            <a href="/docs" class="ldoc-nav-link">Docs</a>
+            <a href="/changelog" class="ldoc-nav-link">Changelog</a>
+          </div>
+        </div>
+        <div class="ldoc-nav-right">
+          <button class="ldoc-nav-search-btn" onclick="openCmdPalette()" title="Command Palette (Ctrl+K)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Search...</span>
+            <kbd class="ldoc-kbd">Ctrl K</kbd>
+          </button>
+          <button class="ldoc-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
+            <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="ldoc-btn ldoc-btn-ghost" style="padding: 6px 12px; font-size: 0.8rem;" onclick="showAuthModal()">Sign In</button>
+          <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="padding: 7px 14px; font-size: 0.82rem;">Launch Studio &rarr;</a>
+          <button class="ldoc-hamburger" id="ldoc-hamburger" onclick="toggleMobileMenu()" aria-label="Open mobile navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="ldoc-mobile-drawer" id="ldoc-mobile-drawer">
+      <div class="ldoc-drawer-links">
+        <a href="/format" class="ldoc-drawer-link">Format Spec</a>
+        <a href="/features" class="ldoc-drawer-link">Features</a>
+        <a href="/live-studio" class="ldoc-drawer-link">Live Studio IDE</a>
+        <a href="/models" class="ldoc-drawer-link active">Models Hub</a>
+        <a href="/pricing" class="ldoc-drawer-link">Pricing</a>
+        <a href="/docs" class="ldoc-drawer-link">Documentation</a>
+        <a href="/changelog" class="ldoc-drawer-link">Changelog</a>
+      </div>
+      <div class="ldoc-drawer-actions">
+        <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="width:100%; justify-content:center;">Launch Studio</a>
+        <button class="ldoc-btn ldoc-btn-secondary" style="width:100%; justify-content:center;" onclick="showAuthModal()">Sign In</button>
+      </div>
+    </div>
+
+    <!-- MAIN MARKETPLACE CONTENT -->
+    <main class="container" style="flex: 1;">
+      <!-- Hero Header -->
+      <section class="hub-hero">
+        <div class="hub-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+          <span>LM STUDIO DISCOVERY SPECIFICATION</span>
+        </div>
+        <h1 class="hub-hero-title">
+          Explore Living Document <span>Blueprints &amp; 3D Models</span>
+        </h1>
+        <p class="hub-hero-sub">
+          Discover, inspect, and fork verified .ldocx document blueprints locally. Embed reactive charts, 3D WebGL meshes, and executable AST sandboxes with zero cloud dependencies.
+        </p>
+      </section>
+
+      <!-- Featured Ribbon Showcase -->
+      <section class="featured-ribbon">
+        <div class="featured-card">
+          <div class="featured-content">
+            <span class="featured-badge">FEATURED BLUEPRINT OF THE MONTH</span>
+            <h2 class="featured-title">Autonomous Robotics Hardware Datasheet (Vanguard-7)</h2>
+            <p class="featured-desc">
+              High-precision engineering specification with interactive 3D WebGL orbit controls, real-time joint torque telemetry, and obstacle exclusion text flow.
+            </p>
+            <div class="featured-meta">
+              <span>★ 4.9 (18.4k forks)</span>
+              <span>•</span>
+              <span>By Vanguard Robotics Lab</span>
+              <span>•</span>
+              <span style="color:#10b981">✓ Ed25519 Cryptographically Signed</span>
+            </div>
+            <div style="margin-top: 18px; display: flex; gap: 10px;">
+              <a href="/live-studio?template=robotics" class="ldoc-btn ldoc-btn-primary" style="padding: 9px 18px; font-size: 13px;">Live Edit in Studio &rarr;</a>
+              <button onclick="openDetailDrawer('vanguard')" class="ldoc-btn ldoc-btn-ghost" style="padding: 9px 16px; font-size: 13px; border: 1px solid rgba(255,255,255,0.12);">Inspect Spec</button>
+            </div>
+          </div>
+          <div class="featured-preview-box">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><circle cx="15" cy="9" r="2"/></svg>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: #94a3b8;">60 FPS Three.js Orbit</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Marketplace Layout -->
+      <section class="market-layout">
+        <!-- Left Filter Sidebar -->
+        <aside class="market-sidebar">
+          <span class="sidebar-section-title">Categories</span>
+          <ul class="sidebar-filter-list">
+            <li class="sidebar-filter-item active" onclick="setCategoryFilter('all', this)">
+              <span>All Blueprints</span>
+              <span class="sidebar-count">6</span>
+            </li>
+            <li class="sidebar-filter-item" onclick="setCategoryFilter('robotics', this)">
+              <span>Hardware &amp; 3D CAD</span>
+              <span class="sidebar-count">2</span>
+            </li>
+            <li class="sidebar-filter-item" onclick="setCategoryFilter('finance', this)">
+              <span>Executive &amp; Finance</span>
+              <span class="sidebar-count">1</span>
+            </li>
+            <li class="sidebar-filter-item" onclick="setCategoryFilter('science', this)">
+              <span>Science &amp; Quantum</span>
+              <span class="sidebar-count">1</span>
+            </li>
+            <li class="sidebar-filter-item" onclick="setCategoryFilter('pitch', this)">
+              <span>Venture &amp; Pitch</span>
+              <span class="sidebar-count">1</span>
+            </li>
+            <li class="sidebar-filter-item" onclick="setCategoryFilter('media', this)">
+              <span>News &amp; Media</span>
+              <span class="sidebar-count">1</span>
+            </li>
+          </ul>
+
+          <span class="sidebar-section-title">Capabilities</span>
+          <ul class="sidebar-filter-list">
+            <li class="sidebar-filter-item" onclick="toggleCapabilityFilter('3d', this)">
+              <span>Spatial 3D Mesh</span>
+              <span class="sidebar-count">3</span>
+            </li>
+            <li class="sidebar-filter-item" onclick="toggleCapabilityFilter('dag', this)">
+              <span>Reactive Formula DAG</span>
+              <span class="sidebar-count">4</span>
+            </li>
+            <li class="sidebar-filter-item" onclick="toggleCapabilityFilter('merkle', this)">
+              <span>Merkle Tamper Guard</span>
+              <span class="sidebar-count">6</span>
+            </li>
+            <li class="sidebar-filter-item" onclick="toggleCapabilityFilter('multipage', this)">
+              <span>Multi-Page Deck</span>
+              <span class="sidebar-count">3</span>
+            </li>
+          </ul>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+            <strong style="color: #fff;">Open Living Spec:</strong> All templates run offline locally without cloud dependencies.
+          </div>
+        </aside>
+
+        <!-- Right Main Marketplace Area -->
+        <div class="market-main">
+          <!-- Controls Bar -->
+          <div class="market-controls">
+            <div class="market-search-box">
+              <span class="market-search-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </span>
+              <input type="text" id="marketSearchInput" class="market-search-input" placeholder="Search blueprints by title, author, or tags..." oninput="handleMarketSearch(this.value)">
+            </div>
+            <div class="market-sort-group">
+              <label for="marketSortSelect" style="font-size: 12px; color: var(--text-muted);">Sort by:</label>
+              <select id="marketSortSelect" class="market-sort-select" onchange="handleMarketSort(this.value)">
+                <option value="downloads">Most Downloaded</option>
+                <option value="rating">Highest Rated</option>
+                <option value="name">Alphabetical</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Cards Grid -->
+          <div class="blueprint-grid" id="blueprintGrid">
+            <!-- Card 1: Autonomous Robotics Datasheet -->
+            <article class="blueprint-card" data-category="robotics" data-downloads="18400" data-rating="4.9" data-caps="3d,dag,merkle">
+              <div class="card-thumb">
+                <div class="thumb-glow-sphere" style="background: radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, transparent 70%);"></div>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><circle cx="15" cy="9" r="2"/></svg>
+                <span class="thumb-type-badge">3D CAD • Telemetry</span>
+                <span class="thumb-rating-badge">★ 4.9</span>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">Autonomous Robotics Hardware Datasheet</h3>
+                <div class="card-author">
+                  <span class="author-avatar">V</span>
+                  <span>Vanguard Robotics Lab</span>
+                  <span class="verified-icon">✓</span>
+                </div>
+                <p class="card-desc">
+                  Interactive engineering datasheet with 3D exploded chassis CAD model, multi-axis orbit controls, and real-time joint torque sensor feeds.
+                </p>
+                <div class="card-tags">
+                  <span class="card-tag">3D WebGL</span>
+                  <span class="card-tag">Draco Mesh</span>
+                  <span class="card-tag">DAG Telemetry</span>
+                </div>
+                <div class="card-actions">
+                  <a href="/live-studio?template=robotics" class="btn-card-edit">
+                    <span>Live Edit</span>
+                  </a>
+                  <button type="button" onclick="openDetailDrawer('vanguard')" class="btn-card-icon" title="Inspect Blueprint">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  </button>
+                  <a href="/all-features-showcase.ldocx" download="vanguard-robotics-hardware.ldocx" class="btn-card-icon" title="Download .ldocx">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 2: Financial & ESG Report -->
+            <article class="blueprint-card" data-category="finance" data-downloads="24800" data-rating="4.9" data-caps="dag,merkle,multipage">
+              <div class="card-thumb">
+                <div class="thumb-glow-sphere" style="background: radial-gradient(circle, rgba(16, 185, 129, 0.35) 0%, transparent 70%);"></div>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <span class="thumb-type-badge">Executive • Finance</span>
+                <span class="thumb-rating-badge">★ 4.9</span>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">Financial &amp; ESG Annual Living Report</h3>
+                <div class="card-author">
+                  <span class="author-avatar" style="background:#10b981">G</span>
+                  <span>Global Enterprise Research</span>
+                  <span class="verified-icon">✓</span>
+                </div>
+                <p class="card-desc">
+                  Corporate financial briefing featuring reactive ARR trajectory curves, dynamic balance sheet formulas, and currency converter widgets.
+                </p>
+                <div class="card-tags">
+                  <span class="card-tag">Reactive ARR</span>
+                  <span class="card-tag">Python Runner</span>
+                  <span class="card-tag">Multi-Page</span>
+                </div>
+                <div class="card-actions">
+                  <a href="/live-studio?template=finance" class="btn-card-edit">
+                    <span>Live Edit</span>
+                  </a>
+                  <button type="button" onclick="openDetailDrawer('finance')" class="btn-card-icon" title="Inspect Blueprint">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  </button>
+                  <a href="/ldoc-showcase.ldocx" download="financial-annual-report.ldocx" class="btn-card-icon" title="Download .ldocx">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 3: Quantum Qubit Paper -->
+            <article class="blueprint-card" data-category="science" data-downloads="19200" data-rating="5.0" data-caps="3d,dag,merkle">
+              <div class="card-thumb">
+                <div class="thumb-glow-sphere" style="background: radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, transparent 70%);"></div>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="3.5" ry="9"/></svg>
+                <span class="thumb-type-badge">Quantum • Physics</span>
+                <span class="thumb-rating-badge">★ 5.0</span>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">Quantum Qubit Coherence Living Paper</h3>
+                <div class="card-author">
+                  <span class="author-avatar" style="background:#38bdf8">Q</span>
+                  <span>Quantum Coherence Lab</span>
+                  <span class="verified-icon">✓</span>
+                </div>
+                <p class="card-desc">
+                  Reproducible scientific research document featuring 3D Bloch sphere vector simulation, live Python Hamiltonian solver, and KaTeX math.
+                </p>
+                <div class="card-tags">
+                  <span class="card-tag">Bloch Sphere 3D</span>
+                  <span class="card-tag">Python Sandbox</span>
+                  <span class="card-tag">KaTeX Math</span>
+                </div>
+                <div class="card-actions">
+                  <a href="/live-studio?template=quantum" class="btn-card-edit">
+                    <span>Live Edit</span>
+                  </a>
+                  <button type="button" onclick="openDetailDrawer('quantum')" class="btn-card-icon" title="Inspect Blueprint">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  </button>
+                  <a href="/all-features-showcase.ldocx" download="quantum-coherence-paper.ldocx" class="btn-card-icon" title="Download .ldocx">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 4: GTA VI Velocity Telemetry -->
+            <article class="blueprint-card" data-category="robotics" data-downloads="38600" data-rating="4.9" data-caps="3d,dag,merkle">
+              <div class="card-thumb">
+                <div class="thumb-glow-sphere" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 0%, transparent 70%);"></div>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span class="thumb-type-badge">Spatial 3D • Vehicle</span>
+                <span class="thumb-rating-badge">★ 4.9</span>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">Velocity Unleashed Interactive Telemetry</h3>
+                <div class="card-author">
+                  <span class="author-avatar" style="background:#f59e0b">R</span>
+                  <span>Rockstar Engine Study Group</span>
+                  <span class="verified-icon">✓</span>
+                </div>
+                <p class="card-desc">
+                  Spatial vehicle dynamic telemetry showcase with 60 FPS Three.js chassis orbit, dynamic torque curves, and interactive instrument console.
+                </p>
+                <div class="card-tags">
+                  <span class="card-tag">Vehicle 3D</span>
+                  <span class="card-tag">Torque DAG</span>
+                  <span class="card-tag">60 FPS WebGL</span>
+                </div>
+                <div class="card-actions">
+                  <a href="/live-studio?template=vehicle" class="btn-card-edit">
+                    <span>Live Edit</span>
+                  </a>
+                  <button type="button" onclick="openDetailDrawer('vehicle')" class="btn-card-icon" title="Inspect Blueprint">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  </button>
+                  <a href="/gt6-velocity-unleashed.ldocx" download="gt6-velocity-unleashed.ldocx" class="btn-card-icon" title="Download .ldocx">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 5: The Daily Prophet Living Paper -->
+            <article class="blueprint-card" data-category="media" data-downloads="29100" data-rating="4.8" data-caps="merkle,multipage">
+              <div class="card-thumb">
+                <div class="thumb-glow-sphere" style="background: radial-gradient(circle, rgba(234, 179, 8, 0.3) 0%, transparent 70%);"></div>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="1.8"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+                <span class="thumb-type-badge">Media • Newspaper</span>
+                <span class="thumb-rating-badge">★ 4.8</span>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">Daily Prophet Living Newspaper</h3>
+                <div class="card-author">
+                  <span class="author-avatar" style="background:#eab308">W</span>
+                  <span>Wizarding Print Guild</span>
+                  <span class="verified-icon">✓</span>
+                </div>
+                <p class="card-desc">
+                  Interactive multi-column periodical with moving portraits, obstacle-exclusion typography carving, and 20-year archival fallback longevity.
+                </p>
+                <div class="card-tags">
+                  <span class="card-tag">Moving Media</span>
+                  <span class="card-tag">Exclusion Carving</span>
+                  <span class="card-tag">Zero Drift</span>
+                </div>
+                <div class="card-actions">
+                  <a href="/live-studio?template=newspaper" class="btn-card-edit">
+                    <span>Live Edit</span>
+                  </a>
+                  <button type="button" onclick="openDetailDrawer('prophet')" class="btn-card-icon" title="Inspect Blueprint">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  </button>
+                  <a href="/daily-prophet.ldocx" download="daily-prophet.ldocx" class="btn-card-icon" title="Download .ldocx">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 6: Hyperion Series A Deck -->
+            <article class="blueprint-card" data-category="pitch" data-downloads="31400" data-rating="4.8" data-caps="dag,merkle,multipage">
+              <div class="card-thumb">
+                <div class="thumb-glow-sphere" style="background: radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%);"></div>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="1.8"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span class="thumb-type-badge">Venture • Pitch Deck</span>
+                <span class="thumb-rating-badge">★ 4.8</span>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">Hyperion Series A Dynamic Pitch Deck</h3>
+                <div class="card-author">
+                  <span class="author-avatar" style="background:#ef4444">H</span>
+                  <span>Hyperion Capital</span>
+                  <span class="verified-icon">✓</span>
+                </div>
+                <p class="card-desc">
+                  High-conversion venture pitch deck with interactive valuation growth slider, customer retention telemetry, and investor commitment form.
+                </p>
+                <div class="card-tags">
+                  <span class="card-tag">Traction Slider</span>
+                  <span class="card-tag">Investor Form</span>
+                  <span class="card-tag">Multi-Page</span>
+                </div>
+                <div class="card-actions">
+                  <a href="/live-studio?template=pitch" class="btn-card-edit">
+                    <span>Live Edit</span>
+                  </a>
+                  <button type="button" onclick="openDetailDrawer('pitch')" class="btn-card-icon" title="Inspect Blueprint">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  </button>
+                  <a href="/ldoc-showcase.ldocx" download="hyperion-series-a-deck.ldocx" class="btn-card-icon" title="Download .ldocx">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- DETAIL DRAWER -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDetailDrawer()"></div>
+    <div class="market-drawer" id="marketDrawer">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+        <span style="font-size: 11px; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.05em;">BLUEPRINT SPECIFICATION</span>
+        <button onclick="closeDetailDrawer()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;">&times;</button>
+      </div>
+      <h2 id="drawerTitle" style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 8px;"></h2>
+      <div id="drawerAuthor" style="font-size: 12px; color: #94a3b8; margin-bottom: 16px;"></div>
+      <p id="drawerDesc" style="font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-bottom: 20px;"></p>
+      
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; margin-bottom: 20px;">
+        <div style="font-size: 11px; font-weight: 700; color: #fbbf24; text-transform: uppercase; margin-bottom: 8px;">Manifest AST Structure</div>
+        <pre id="drawerCode" style="font-family: var(--font-mono); font-size: 11px; color: #94a3b8; overflow-x: auto; margin: 0; line-height: 1.4;"></pre>
+      </div>
+
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px;">
+        <a id="drawerEditBtn" href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="justify-content:center;">Open in Live Studio</a>
+        <a id="drawerDlBtn" href="#" class="ldoc-btn ldoc-btn-secondary" style="justify-content:center;">Download .ldocx</a>
+      </div>
+    </div>
+
+    <!-- STANDARDIZED FOOTER -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="brand-logo">
+              <img src="/ldoc_logo.png" alt="LDOC Logo" width="28" height="28">
+              <span>LDOC STUDIO</span>
+            </a>
+            <p>The open living document architecture. Compute, render, and evolve beyond static PDFs.</p>
+          </div>
+
+          <div class="footer-col">
+            <h5>Product</h5>
+            <ul>
+              <li><a href="/live-studio">Live Studio IDE</a></li>
+              <li><a href="/models">Models &amp; Templates</a></li>
+              <li><a href="/creator">Visual Creator</a></li>
+              <li><a href="/pricing">Pricing Plans</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Specification</h5>
+            <ul>
+              <li><a href="/format">.ldocx Architecture</a></li>
+              <li><a href="/docs">AST Specification</a></li>
+              <li><a href="/docs">Draco 3D Geometry</a></li>
+              <li><a href="/security">Security &amp; Signing</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Developers</h5>
+            <ul>
+              <li><a href="/docs">SDK Architecture Guide</a></li>
+              <li><a href="/docs#sdk">Developer Integration</a></li>
+              <li><a href="/changelog">Release Changelog</a></li>
+              <li><a href="/format">Format Specification</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Trust &amp; Legal</h5>
+            <ul>
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Service</a></li>
+              <li><a href="/security">Security Architecture</a></li>
+              <li><a href="/refund">Refund Policy</a></li>
+              <li><a href="/license">Commercial SLA &amp; License</a></li>
+              <li><a href="mailto:jayaramankalidasan@gmail.com">Contact Founder</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>&copy; 2026 LDOC Studio. Designed and created by J AI ENTERPRISES. Open Living Document Standard.</div>
+          <div class="footer-legal-links" style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <a href="/privacy" style="color: var(--text-sub); text-decoration: none;">Privacy Policy</a>
+            <a href="/terms" style="color: var(--text-sub); text-decoration: none;">Terms of Service</a>
+            <a href="/security" style="color: var(--text-sub); text-decoration: none;">Security Architecture</a>
+            <a href="/refund" style="color: var(--text-sub); text-decoration: none;">Refund Policy</a>
+            <a href="/license" style="color: var(--text-sub); text-decoration: none;">Commercial SLA</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Client-side Logic -->
+  <script>
+    let currentCategory = 'all';
+    let currentCap = null;
+    let currentSearch = '';
+
+    const BLUEPRINT_DATA = {
+      vanguard: {
+        title: "Autonomous Robotics Hardware Datasheet",
+        author: "Vanguard Robotics Lab",
+        desc: "Engineering datasheet featuring interactive 3D exploded chassis CAD model with multi-axis orbit controls, embedded telemetry streams, and dynamic bill of materials.",
+        code: JSON.stringify({
+          schema: "https://ldoc.io/schemas/v2.5.0/document.json",
+          id: "doc_vanguard_telemetry",
+          engine: "discrete_gpu_webgl",
+          blocks: ["hero_header", "3d_cad_chassis", "torque_dag", "bom_table"]
+        }, null, 2),
+        editUrl: "/live-studio?template=robotics",
+        dlUrl: "/all-features-showcase.ldocx",
+        dlName: "vanguard-robotics-hardware.ldocx"
+      },
+      finance: {
+        title: "Financial & ESG Annual Living Report",
+        author: "Global Enterprise Research",
+        desc: "Interactive corporate financial report compiled in the open .ldocx standard. Includes reactive ARR trajectory curves, dynamic balance sheet formulas, and currency switcher.",
+        code: JSON.stringify({
+          schema: "https://ldoc.io/schemas/v2.5.0/document.json",
+          id: "doc_financial_annual_2026",
+          engine: "reactive_dag_math",
+          blocks: ["executive_summary", "arr_trajectory", "esg_metrics", "balance_sheet"]
+        }, null, 2),
+        editUrl: "/live-studio?template=finance",
+        dlUrl: "/ldoc-showcase.ldocx",
+        dlName: "financial-annual-report.ldocx"
+      },
+      quantum: {
+        title: "Quantum Qubit Coherence Living Paper",
+        author: "Quantum Coherence Lab",
+        desc: "Executable scientific publication with real-time Hamiltonian state vector simulation in Python, interactive 3D WebGL qubit Bloch sphere model, and dynamic formulas.",
+        code: JSON.stringify({
+          schema: "https://ldoc.io/schemas/v2.5.0/document.json",
+          id: "doc_quantum_coherence_paper",
+          engine: "python_bloch_sphere",
+          blocks: ["abstract", "bloch_sphere_3d", "hamiltonian_solver", "references"]
+        }, null, 2),
+        editUrl: "/live-studio?template=quantum",
+        dlUrl: "/all-features-showcase.ldocx",
+        dlName: "quantum-coherence-paper.ldocx"
+      },
+      vehicle: {
+        title: "Velocity Unleashed Interactive Telemetry",
+        author: "Rockstar Engine Study Group",
+        desc: "Spatial vehicle dynamic telemetry showcase with 60 FPS Three.js chassis orbit, dynamic torque curves, and interactive instrument console.",
+        code: JSON.stringify({
+          schema: "https://ldoc.io/schemas/v2.5.0/document.json",
+          id: "doc_gt6_velocity_telemetry",
+          engine: "three_js_orbit_hud",
+          blocks: ["vehicle_hero", "3d_chassis", "rpm_torque_dag", "lap_metrics"]
+        }, null, 2),
+        editUrl: "/live-studio?template=vehicle",
+        dlUrl: "/gt6-velocity-unleashed.ldocx",
+        dlName: "gt6-velocity-unleashed.ldocx"
+      },
+      prophet: {
+        title: "Daily Prophet Living Newspaper",
+        author: "Wizarding Print Guild",
+        desc: "Interactive multi-column periodical with moving portraits, obstacle-exclusion typography carving, and 20-year archival fallback longevity.",
+        code: JSON.stringify({
+          schema: "https://ldoc.io/schemas/v2.5.0/document.json",
+          id: "doc_daily_prophet_newspaper",
+          engine: "obstacle_exclusion_carving",
+          blocks: ["headline_masthead", "moving_portrait", "two_column_article", "merkle_seal"]
+        }, null, 2),
+        editUrl: "/live-studio?template=newspaper",
+        dlUrl: "/daily-prophet.ldocx",
+        dlName: "daily-prophet.ldocx"
+      },
+      pitch: {
+        title: "Hyperion Series A Dynamic Pitch Deck",
+        author: "Hyperion Capital",
+        desc: "High-conversion venture pitch deck with interactive valuation growth slider, customer retention telemetry, and investor commitment form.",
+        code: JSON.stringify({
+          schema: "https://ldoc.io/schemas/v2.5.0/document.json",
+          id: "doc_hyperion_series_a",
+          engine: "deck_slide_runtime",
+          blocks: ["vision_slide", "traction_slider", "unit_economics", "investor_form"]
+        }, null, 2),
+        editUrl: "/live-studio?template=pitch",
+        dlUrl: "/ldoc-showcase.ldocx",
+        dlName: "hyperion-series-a-deck.ldocx"
+      }
+    };
+
+    function setCategoryFilter(cat, el) {
+      currentCategory = cat;
+      document.querySelectorAll('.sidebar-filter-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+      filterGrid();
+    }
+
+    function toggleCapabilityFilter(cap, el) {
+      if (currentCap === cap) {
+        currentCap = null;
+        el.classList.remove('active');
+      } else {
+        currentCap = cap;
+        document.querySelectorAll('.sidebar-filter-list:nth-of-type(2) .sidebar-filter-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+      }
+      filterGrid();
+    }
+
+    function handleMarketSearch(val) {
+      currentSearch = (val || '').toLowerCase().trim();
+      filterGrid();
+    }
+
+    function handleMarketSort(sortBy) {
+      const grid = document.getElementById('blueprintGrid');
+      const cards = Array.from(grid.querySelectorAll('.blueprint-card'));
+      cards.sort((a, b) => {
+        if (sortBy === 'downloads') {
+          return parseInt(b.dataset.downloads) - parseInt(a.dataset.downloads);
+        } else if (sortBy === 'rating') {
+          return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+        } else if (sortBy === 'name') {
+          const nameA = a.querySelector('.card-title').textContent;
+          const nameB = b.querySelector('.card-title').textContent;
+          return nameA.localeCompare(nameB);
+        }
+        return 0;
+      });
+      cards.forEach(c => grid.appendChild(c));
+    }
+
+    function filterGrid() {
+      const cards = document.querySelectorAll('.blueprint-card');
+      cards.forEach(card => {
+        const cat = card.dataset.category;
+        const caps = (card.dataset.caps || '').split(',');
+        const text = card.textContent.toLowerCase();
+
+        const matchCat = (currentCategory === 'all' || cat === currentCategory);
+        const matchCap = (!currentCap || caps.includes(currentCap));
+        const matchSearch = (!currentSearch || text.includes(currentSearch));
+
+        card.style.display = (matchCat && matchCap && matchSearch) ? 'flex' : 'none';
+      });
+    }
+
+    function openDetailDrawer(key) {
+      const data = BLUEPRINT_DATA[key];
+      if (!data) return;
+      document.getElementById('drawerTitle').textContent = data.title;
+      document.getElementById('drawerAuthor').textContent = "By " + data.author + " • Verified";
+      document.getElementById('drawerDesc').textContent = data.desc;
+      document.getElementById('drawerCode').textContent = data.code;
+      document.getElementById('drawerEditBtn').setAttribute('href', data.editUrl);
+      const dlBtn = document.getElementById('drawerDlBtn');
+      dlBtn.setAttribute('href', data.dlUrl);
+      dlBtn.setAttribute('download', data.dlName);
+
+      document.getElementById('drawerOverlay').classList.add('active');
+      document.getElementById('marketDrawer').classList.add('active');
+    }
+
+    function closeDetailDrawer() {
+      document.getElementById('drawerOverlay').classList.remove('active');
+      document.getElementById('marketDrawer').classList.remove('active');
+    }
+  </script>
+
+  <script src="/design-system.js"></script>
+</body>
+</html>
+`;
+
+fs.writeFileSync(path.join(__dirname, '..', 'models.html'), content, 'utf8');
+console.log('Successfully written redesigned models.html!');

@@ -43,7 +43,8 @@ const assets = [
   'ldoc-template-engine.js', 'ldoc-vector-editor.js', 'ldoc-image-engine.js', 'ldoc-diagram-engine.js', 'ldoc-timeline-engine.js', 'ldoc-plugin-api.js', 'ldoc-presentation-runtime.js',
   'LDOCX_ARCHITECTURE_AND_SECURITY_GUIDE.pdf', 'LDOCX_TECHNICAL_SPECIFICATION.pdf',
   'LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.pdf', 'LDOCX_ENTERPRISE_ARCHITECTURE_GUIDE.md', 'LDOCX-FORMAT-SPECIFICATION.md', 'CONTENT.md',
-  'upscaled-videoad2.mp4', 'gta6-vice-city-unleashed.ldoc.html'
+  'upscaled-videoad2.mp4', 'gta6-vice-city-unleashed.ldoc.html',
+  'design-system.css', 'design-system.js', 'studio-figma-chrome.css', 'studio-theme-engine.js'
 ];
 
 assets.forEach(a => {

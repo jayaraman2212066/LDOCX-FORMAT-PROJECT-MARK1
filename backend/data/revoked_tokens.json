@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "token_hash": "dd4a02f29075fadb34332463aefc14a115d4e0d968a54a4c10e71bc6c819e429",
+    "revoked_at": 1791646146,
+    "expires_at": 1791732546
+  }
+]
