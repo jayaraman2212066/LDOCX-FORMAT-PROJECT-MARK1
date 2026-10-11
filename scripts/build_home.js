@@ -243,8 +243,11 @@ const homeHtml = `<!DOCTYPE html>
       overflow: hidden;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1200px) {
       .macos-window-title { display: none !important; }
+    }
+
+    @media (max-width: 768px) {
       .macos-titlebar { padding: 0 10px; }
       .vanguard-stage { height: 420px; }
       .ldoc-floating-stat {
