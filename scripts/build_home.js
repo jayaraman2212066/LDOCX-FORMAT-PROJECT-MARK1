@@ -16,11 +16,12 @@ const homeHtml = `<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/design-system.css">
+  <script defer src="/three.min.js"></script>
   <script defer src="/vanguard-3d-telemetry.js"></script>
   <style>
     /* Page-Specific Hero & Bento Enhancements */
     .hero-container {
-      max-width: var(--max-width);
+      max-width: 1400px;
       margin: 0 auto;
       padding: 140px 24px 60px;
       display: flex;
@@ -121,17 +122,33 @@ const homeHtml = `<!DOCTYPE html>
 
     .trust-chip span.ok { color: var(--emerald); font-weight: 700; }
 
+    /* Hero Dual Showcase Windows */
+    .hero-dual-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 1380px;
+      margin: 0 auto 56px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 1080px) {
+      .hero-dual-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+
     /* macOS Window Frame */
     .macos-app-window {
       width: 100%;
-      max-width: 1080px;
       border-radius: 16px;
       background: #0B0D14;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 32px 80px -16px rgba(0, 0, 0, 0.9), 0 0 50px -10px rgba(245, 158, 11, 0.2);
+      box-shadow: 0 32px 80px -16px rgba(0, 0, 0, 0.9), 0 0 50px -10px rgba(245, 158, 11, 0.15);
       overflow: hidden;
       position: relative;
-      margin-bottom: 60px;
     }
 
     .macos-titlebar {
@@ -429,84 +446,149 @@ const homeHtml = `<!DOCTYPE html>
         <div class="trust-chip"><span class="ok">✓</span> DISCRETE 120Hz GPU PIPELINE</div>
       </div>
 
-      <!-- Vanguard-7 Interactive Stage inside macOS App Window -->
-      <div class="macos-app-window ldoc-reveal ldoc-tilt-card" data-delay="300ms">
-        <div class="macos-titlebar">
-          <div class="macos-traffic-lights">
-            <div class="macos-dot dot-red"></div>
-            <div class="macos-dot dot-yellow"></div>
-            <div class="macos-dot dot-green"></div>
+      <!-- Hero Dual-Window Showcase (Interactive 3D WebGL Telemetry + Active 4K Engine Video Side-by-Side) -->
+      <div class="hero-dual-grid ldoc-reveal" data-delay="300ms">
+
+        <!-- Window 1: Interactive 3D WebGL Multi-Model Telemetry -->
+        <div class="macos-app-window ldoc-tilt-card">
+          <div class="macos-titlebar">
+            <div class="macos-traffic-lights">
+              <div class="macos-dot dot-red"></div>
+              <div class="macos-dot dot-yellow"></div>
+              <div class="macos-dot dot-green"></div>
+            </div>
+            <div class="macos-window-title">
+              <span id="hero-3d-title-text">vanguard-7-telemetry.ldocx — 3D CAD</span>
+            </div>
+            <div class="macos-titlebar-right">
+              <button id="hero-model-btn-vanguard" class="hud-mode-pill active" onclick="switchHero3DModel('vanguard')">
+                <span>🤖 Vanguard-7</span>
+              </button>
+              <button id="hero-model-btn-satellite" class="hud-mode-pill" onclick="switchHero3DModel('satellite')">
+                <span>🛰️ Satellite</span>
+              </button>
+              <button id="hero-model-btn-quantum" class="hud-mode-pill" onclick="switchHero3DModel('quantum')">
+                <span>💎 Quantum</span>
+              </button>
+              <button id="hero-model-btn-tourbillon" class="hud-mode-pill" onclick="switchHero3DModel('tourbillon')">
+                <span>⚙️ Tourbillon</span>
+              </button>
+              <a href="/vanguard-7-telemetry.ldocx" download="vanguard-7-telemetry.ldocx" class="hud-mode-pill" title="Download .ldocx package">
+                <span>💾 .ldocx</span>
+              </a>
+            </div>
           </div>
-          <div class="macos-window-title">
-            <span>vanguard-7-telemetry.ldocx — LDOC Viewer</span>
-          </div>
-          <div class="macos-titlebar-right">
-            <button id="hero-tab-3d" class="hud-mode-pill active" onclick="switchHeroStageMode('3d')">
-              <span>🤖 3D WebGL Model</span>
-            </button>
-            <button id="hero-tab-video" class="hud-mode-pill" onclick="switchHeroStageMode('video')">
-              <span>🎬 Video Preview</span>
-            </button>
-            <a href="/vanguard-7-telemetry.ldocx" download="vanguard-7-telemetry.ldocx" class="hud-mode-pill" title="Download .ldocx package">
-              <span>💾 .ldocx</span>
-            </a>
-            <a href="/live-studio?file=/vanguard-7-telemetry.ldocx" class="hud-mode-pill" title="Inspect in Live Studio">
-              <span>Open in Studio &rarr;</span>
-            </a>
+
+          <div class="vanguard-stage" id="hero-vanguard-stage" style="height: 520px;">
+            <!-- 3D Real WebGL Canvas -->
+            <canvas id="hero-real-3d-canvas" style="width: 100%; height: 100%; position: absolute; inset: 0; display: block; z-index: 5;"></canvas>
+
+            <!-- Top HUD Overlay -->
+            <div id="hero-hud-top" style="position: absolute; top: 14px; left: 16px; right: 16px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; z-index: 15;">
+              <span class="hud-pill"><span class="pulse-dot"></span> 120Hz Hardware WebGL Compositor</span>
+              <div style="display: flex; gap: 8px; pointer-events: auto;">
+                <button class="hud-pill" id="hero-wireframe-btn" onclick="toggleHeroWireframe()">Wireframe</button>
+                <button class="hud-pill" id="hero-orbit-btn" onclick="toggleHeroAutoOrbit()">Pause Orbit</button>
+              </div>
+            </div>
+
+            <!-- Floating Glass Telemetry Stat Badges -->
+            <div class="ldoc-floating-stat stat-bob-1" style="top: 56px; left: 16px; z-index: 12;">
+              <div style="font-size: 16px; color: var(--accent);">⚡</div>
+              <div>
+                <div style="font-size: 9.5px; color: var(--muted); text-transform: uppercase;">Aero Torque</div>
+                <div style="font-size: 15px; font-weight: 700; color: #FFF; font-family: var(--font-mono)" id="floating-torque-val">340 Nm</div>
+              </div>
+            </div>
+
+            <div class="ldoc-floating-stat stat-bob-2" style="top: 56px; right: 16px; z-index: 12;">
+              <div style="font-size: 16px; color: var(--accent-2);">🌡️</div>
+              <div>
+                <div style="font-size: 9.5px; color: var(--muted); text-transform: uppercase;">Core Temp</div>
+                <div style="font-size: 15px; font-weight: 700; color: #FFF; font-family: var(--font-mono)" id="floating-temp-val">+42.8 °C</div>
+              </div>
+            </div>
+
+            <div class="ldoc-floating-stat stat-bob-3" style="bottom: 74px; left: 50%; transform: translateX(-50%); z-index: 12;">
+              <div style="font-size: 16px; color: var(--emerald);">🔒</div>
+              <div>
+                <div style="font-size: 9.5px; color: var(--muted); text-transform: uppercase;">Cryptographic Integrity</div>
+                <div style="font-size: 14px; font-weight: 700; color: var(--emerald); font-family: var(--font-mono)" id="floating-integrity-val">98.4% Verified Root</div>
+              </div>
+            </div>
+
+            <!-- Bottom HUD Telemetry Console -->
+            <div id="hero-hud-bottom" style="position: absolute; bottom: 12px; left: 14px; right: 14px; display: flex; justify-content: space-between; align-items: center; z-index: 15; background: rgba(14, 16, 26, 0.85); backdrop-filter: blur(10px); border: 1px solid var(--border); padding: 7px 14px; border-radius: 10px; box-sizing: border-box;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 11px; font-family: var(--font-mono); color: #94A3B8; text-transform: uppercase;">Joint Load:</span>
+                <input type="range" id="hero-actuator-slider" min="50" max="600" step="10" value="340" style="width: 120px; accent-color: var(--accent); cursor: pointer;" oninput="updateHeroFormula(this.value)">
+                <span id="hero-actuator-val" style="font-size: 12px; font-family: var(--font-mono); font-weight: 700; color: var(--accent);">340 Nm</span>
+              </div>
+              <span class="hud-hint" style="font-size: 10.5px; color: #64748B; font-family: var(--font-mono);">Drag to rotate 360° • Scroll zoom</span>
+            </div>
           </div>
         </div>
 
-        <div class="vanguard-stage" id="hero-vanguard-stage">
-          <!-- 3D Real WebGL Canvas -->
-          <canvas id="hero-real-3d-canvas" style="width: 100%; height: 100%; position: absolute; inset: 0; display: block; z-index: 5;"></canvas>
-
-          <!-- Top HUD Overlay -->
-          <div id="hero-hud-top" style="position: absolute; top: 16px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; z-index: 15;">
-            <span class="hud-pill"><span class="pulse-dot"></span> 120Hz Hardware WebGL Compositor</span>
-            <div style="display: flex; gap: 8px; pointer-events: auto;">
-              <button class="hud-pill" id="hero-wireframe-btn" onclick="toggleHeroWireframe()">Wireframe</button>
-              <button class="hud-pill" id="hero-orbit-btn" onclick="toggleHeroAutoOrbit()">Pause Orbit</button>
+        <!-- Window 2: Living Document 4K Engine Video Stream (Playing Side-by-Side!) -->
+        <div class="macos-app-window ldoc-tilt-card">
+          <div class="macos-titlebar">
+            <div class="macos-traffic-lights">
+              <div class="macos-dot dot-red"></div>
+              <div class="macos-dot dot-yellow"></div>
+              <div class="macos-dot dot-green"></div>
+            </div>
+            <div class="macos-window-title">
+              <span>vanguard-7-mission-footage.mp4 — 4K Stream</span>
+            </div>
+            <div class="macos-titlebar-right">
+              <span class="hud-mode-pill" style="border-color: rgba(34, 197, 94, 0.4); color: #4ADE80; background: rgba(34, 197, 94, 0.1);">
+                <span class="pulse-dot" style="background: #22C55E; box-shadow: 0 0 8px #22C55E;"></span>
+                <span>LIVE 120 FPS</span>
+              </span>
+              <button class="hud-mode-pill" id="hero-video-audio-toggle" onclick="toggleHeroVideoAudio()">
+                <span id="hero-audio-icon">🔇</span> <span id="hero-audio-label">Unmute</span>
+              </button>
+              <a href="/live-studio" class="hud-mode-pill" title="Launch Studio">
+                <span>Studio &rarr;</span>
+              </a>
             </div>
           </div>
 
-          <!-- Floating Glass Telemetry Stat Badges -->
-          <div class="ldoc-floating-stat stat-bob-1" style="top: 60px; left: 24px; z-index: 12;">
-            <div style="font-size: 18px; color: var(--accent);">⚡</div>
-            <div>
-              <div style="font-size: 10px; color: var(--muted); text-transform: uppercase;">Aero Torque</div>
-              <div style="font-size: 16px; font-weight: 700; color: #FFF; font-family: var(--font-mono)" id="floating-torque-val">340 Nm</div>
+          <div class="vanguard-stage hero-video-stage" style="height: 520px; position: relative; background: #000; overflow: hidden;">
+            <!-- Active 4K Autoplaying Video -->
+            <video id="hero-side-video" src="/upscaled-videoad2.mp4" autoplay loop muted playsinline poster="/video-poster.webp" style="width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; z-index: 5;"></video>
+
+            <!-- Gradient Vignette -->
+            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,10,16,0.55) 0%, transparent 22%, transparent 72%, rgba(8,10,16,0.8) 100%); pointer-events: none; z-index: 8;"></div>
+
+            <!-- Top Video HUD -->
+            <div style="position: absolute; top: 14px; left: 16px; right: 16px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; z-index: 15;">
+              <span class="hud-pill"><span class="pulse-dot"></span> Dual-Surface Synchronized View</span>
+              <span class="hud-pill" style="font-size: 10px;">CAM 01 // 4K UHD</span>
+            </div>
+
+            <!-- Floating Engine Feature Badge -->
+            <div class="ldoc-floating-stat" style="bottom: 74px; left: 18px; z-index: 12; padding: 8px 14px;">
+              <div style="font-size: 16px; color: var(--accent);">⚡</div>
+              <div>
+                <div style="font-size: 9.5px; color: var(--muted); text-transform: uppercase;">Pretext Engine</div>
+                <div style="font-size: 13px; font-weight: 700; color: #FFF; font-family: var(--font-mono)">Zero Reflow Geometry</div>
+              </div>
+            </div>
+
+            <!-- Bottom Video Controls Console -->
+            <div style="position: absolute; bottom: 12px; left: 14px; right: 14px; display: flex; justify-content: space-between; align-items: center; z-index: 15; background: rgba(14, 16, 26, 0.85); backdrop-filter: blur(10px); border: 1px solid var(--border); padding: 7px 14px; border-radius: 10px; box-sizing: border-box;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <button class="hud-pill" id="hero-video-play-btn" onclick="toggleHeroVideoPlay()" style="padding: 4px 10px;">
+                  <span id="hero-play-icon">⏸</span> <span id="hero-play-label">Pause</span>
+                </button>
+                <span style="font-size: 11px; font-family: var(--font-mono); color: #94A3B8;">Workstation Living Canvas Demo</span>
+              </div>
+              <button class="hud-pill" onclick="expandHeroVideoFullscreen()" title="Fullscreen" style="padding: 4px 8px;">⛶ Fullscreen</button>
             </div>
           </div>
-
-          <div class="ldoc-floating-stat stat-bob-2" style="top: 60px; right: 24px; z-index: 12;">
-            <div style="font-size: 18px; color: var(--accent-2);">🌡️</div>
-            <div>
-              <div style="font-size: 10px; color: var(--muted); text-transform: uppercase;">Core Temp</div>
-              <div style="font-size: 16px; font-weight: 700; color: #FFF; font-family: var(--font-mono)" id="floating-temp-val">+42.8 °C</div>
-            </div>
-          </div>
-
-          <div class="ldoc-floating-stat stat-bob-3" style="bottom: 74px; left: 50%; transform: translateX(-50%); z-index: 12;">
-            <div style="font-size: 18px; color: var(--emerald);">🔒</div>
-            <div>
-              <div style="font-size: 10px; color: var(--muted); text-transform: uppercase;">Cryptographic Integrity</div>
-              <div style="font-size: 16px; font-weight: 700; color: var(--emerald); font-family: var(--font-mono)" id="floating-integrity-val">98.4% Verified Root</div>
-            </div>
-          </div>
-
-          <!-- Bottom HUD Telemetry Console -->
-          <div id="hero-hud-bottom" style="position: absolute; bottom: 14px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; z-index: 15; background: rgba(14, 16, 26, 0.78); backdrop-filter: blur(8px); border: 1px solid var(--border); padding: 8px 16px; border-radius: 10px; box-sizing: border-box;">
-            <div style="display: flex; align-items: center; gap: 14px;">
-              <span style="font-size: 11px; font-family: var(--font-mono); color: #94A3B8; text-transform: uppercase;">Joint Load:</span>
-              <input type="range" id="hero-actuator-slider" min="50" max="600" step="10" value="340" style="width: 140px; accent-color: var(--accent); cursor: pointer;" oninput="updateHeroFormula(this.value)">
-              <span id="hero-actuator-val" style="font-size: 12px; font-family: var(--font-mono); font-weight: 700; color: var(--accent);">340 Nm</span>
-            </div>
-            <span class="hud-hint" style="font-size: 11px; color: #64748B; font-family: var(--font-mono);">Drag to rotate 360° • Scroll to zoom</span>
-          </div>
-
-          <!-- Video Demo Fallback Stage (Shown on toggle) -->
-          <video id="hero-video-demo" src="/upscaled-videoad2.mp4" loop muted playsinline poster="/video-poster.webp" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; display: none; z-index: 10;"></video>
         </div>
+
       </div>
 
       <!-- Infinite Logo / Spec-Chip Marquee -->
@@ -1041,6 +1123,21 @@ const homeHtml = `<!DOCTYPE html>
       }
     }
     window.selectIdeFile = selectIdeFile;
+
+    // Side-by-Side Video Autoplay Kickoff
+    window.addEventListener('DOMContentLoaded', () => {
+      const vid = document.getElementById('hero-side-video');
+      if (vid) {
+        vid.muted = true;
+        const p = vid.play();
+        if (p !== undefined) {
+          p.catch(() => {
+            const start = () => { vid.play(); window.removeEventListener('click', start); };
+            window.addEventListener('click', start, { once: true });
+          });
+        }
+      }
+    });
   </script>
 </body>
 </html>

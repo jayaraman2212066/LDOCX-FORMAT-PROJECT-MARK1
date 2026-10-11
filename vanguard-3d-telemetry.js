@@ -1,7 +1,7 @@
 /**
- * LDOC Studio — Vanguard-7 3D Telemetry & WebGL Engine
- * 120Hz Hardware-accelerated 3D Robotic CAD model, dynamic joint articulation,
- * radar grid, telemetry HUD formulas, and multi-surface 3D preview engine.
+ * LDOC Studio — Vanguard-7 3D Telemetry, Multi-Model Showcase & Video Synchronizer
+ * 120Hz Hardware-accelerated 3D WebGL Engine with procedural robotic, aerospace & quantum models,
+ * dynamic kinematic joint articulation, radar floor, and dual-window video synchronization.
  * Fully air-gapped: zero external CDN dependencies, bundled with local Three.js.
  */
 
@@ -50,20 +50,22 @@
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // HERO VANGUARD-7 3D STAGE CONTROLLER
+  // HERO 3D MULTI-MODEL STAGE ENGINE
   // ══════════════════════════════════════════════════════════════════════════
-  let heroScene, heroCamera, heroRenderer, heroRobotGroup, coreLight;
+  let heroScene, heroCamera, heroRenderer, heroActiveModelGroup, coreLight, radarScanLine;
   let heroMaterials = [];
   let heroRobotJoints = [];
+  let heroHydraulics = [];
+  let heroRotatingParts = [];
   let heroWireframe = false;
   let heroOrbitActive = true;
   let heroOrbitRadius = 6.2;
-  let heroDragState = { isDragging: false, rotX: 0.25, rotY: 0.6, prevX: 0, prevY: 0 };
+  let heroDragState = { isDragging: false, rotX: 0.22, rotY: 0.55, prevX: 0, prevY: 0 };
   let heroAnimFrame = null;
   let heroIsVisible = true;
   let heroRenderActive = false;
   let heroLastRenderTime = 0;
-  let currentHeroMode = '3d';
+  let currentModelKey = 'vanguard';
 
   function initVanguardHero3D(canvasId = 'hero-real-3d-canvas') {
     const canvas = document.getElementById(canvasId);
@@ -78,15 +80,15 @@
 
   function setupThreeHero(canvas) {
     const container = canvas.parentElement;
-    const width = container.clientWidth || 800;
+    const width = container.clientWidth || 640;
     const height = container.clientHeight || 520;
 
     heroScene = new THREE.Scene();
-    heroScene.background = new THREE.Color(0x080A10);
+    heroScene.background = new THREE.Color(0x07090E);
 
     heroCamera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-    heroCamera.position.set(0, 2.2, heroOrbitRadius);
-    heroCamera.lookAt(0, 0.35, 0);
+    heroCamera.position.set(0, 2.1, heroOrbitRadius);
+    heroCamera.lookAt(0, 0.3, 0);
 
     try {
       heroRenderer = new THREE.WebGLRenderer({
@@ -103,34 +105,38 @@
       return;
     }
 
-    // Dynamic Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
+    // Dynamic 4-Point High-Fidelity Studio Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2.2);
     heroScene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0x38bdf8, 3.0);
-    keyLight.position.set(6, 10, 7);
+    // Amber Key Light
+    const keyLight = new THREE.DirectionalLight(0xf59e0b, 3.2);
+    keyLight.position.set(6, 9, 7);
     heroScene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xf59e0b, 2.2);
-    fillLight.position.set(-6, 4, -4);
-    heroScene.add(fillLight);
-
-    const rimLight = new THREE.DirectionalLight(0x06b6d4, 1.8);
-    rimLight.position.set(0, -4, -6);
+    // Electric Cyan Rim Light (Back-Right)
+    const rimLight = new THREE.DirectionalLight(0x38bdf8, 3.0);
+    rimLight.position.set(-6, 5, -6);
     heroScene.add(rimLight);
 
-    coreLight = new THREE.PointLight(0x38bdf8, 4.0, 10);
+    // Soft Blue Fill Light (Front-Left)
+    const fillLight = new THREE.DirectionalLight(0x06b6d4, 1.8);
+    fillLight.position.set(-5, -2, 5);
+    heroScene.add(fillLight);
+
+    // Glowing Core Point Light
+    coreLight = new THREE.PointLight(0x00e5ff, 4.5, 12);
     coreLight.position.set(0, 0.45, 0);
     heroScene.add(coreLight);
 
-    // Radar Hex/Grid Floor
-    const grid = new THREE.GridHelper(16, 18, 0x06b6d4, 0x1e2638);
+    // Holographic Cyber Radar Floor
+    const grid = new THREE.GridHelper(16, 20, 0x06b6d4, 0x172033);
     grid.position.y = -1.15;
     heroScene.add(grid);
 
-    // Concentric Range Rings
-    const ringMat = new THREE.LineBasicMaterial({ color: 0x0ea5e9, transparent: true, opacity: 0.35 });
-    [1.6, 3.2, 4.8].forEach(r => {
+    // Concentric Range Rings with Distance Markers
+    const ringMat = new THREE.LineBasicMaterial({ color: 0x0284c7, transparent: true, opacity: 0.4 });
+    [1.5, 3.0, 4.5].forEach(r => {
       const segs = 64;
       const ringGeom = new THREE.BufferGeometry();
       const pts = [];
@@ -142,132 +148,31 @@
       heroScene.add(new THREE.Line(ringGeom, ringMat));
     });
 
-    // Robotic Model Construction
-    heroRobotGroup = new THREE.Group();
-    heroMaterials = [];
-    heroRobotJoints = [];
+    // Sweeping Radar Line
+    const scanGeom = new THREE.BufferGeometry();
+    scanGeom.setAttribute('position', new THREE.Float32BufferAttribute([0, -1.13, 0, 4.5, -1.13, 0], 3));
+    const scanMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.7 });
+    radarScanLine = new THREE.Line(scanGeom, scanMat);
+    heroScene.add(radarScanLine);
 
-    const armorMat = new THREE.MeshStandardMaterial({
-      color: 0x161C2C,
-      metalness: 0.85,
-      roughness: 0.22,
-      wireframe: heroWireframe
-    });
-    heroMaterials.push(armorMat);
-
-    const frameMat = new THREE.MeshStandardMaterial({
-      color: 0x2A374E,
-      metalness: 0.9,
-      roughness: 0.28,
-      wireframe: heroWireframe
-    });
-    heroMaterials.push(frameMat);
-
-    const cyanGlowMat = new THREE.MeshBasicMaterial({
-      color: 0x06b6d4,
-      wireframe: heroWireframe
-    });
-    heroMaterials.push(cyanGlowMat);
-
-    const amberGlowMat = new THREE.MeshBasicMaterial({
-      color: 0xf59e0b,
-      wireframe: heroWireframe
-    });
-    heroMaterials.push(amberGlowMat);
-
-    // Torso / Chassis
-    const chassisGeom = new THREE.BoxGeometry(1.65, 0.58, 2.3);
-    const chassis = new THREE.Mesh(chassisGeom, armorMat);
-    chassis.position.y = 0.42;
-    heroRobotGroup.add(chassis);
-
-    // Armored Top Cowling with Chamfer
-    const cowlGeom = new THREE.BoxGeometry(1.25, 0.24, 1.7);
-    const cowl = new THREE.Mesh(cowlGeom, frameMat);
-    cowl.position.set(0, 0.78, 0.1);
-    heroRobotGroup.add(cowl);
-
-    // Glowing Chest Reactor Core
-    const coreGeom = new THREE.CylinderGeometry(0.26, 0.26, 0.6, 20);
-    const coreMesh = new THREE.Mesh(coreGeom, cyanGlowMat);
-    coreMesh.rotation.x = Math.PI / 2;
-    coreMesh.position.set(0, 0.42, 0.9);
-    heroRobotGroup.add(coreMesh);
-
-    // Sensor Visor Turret
-    const headGeom = new THREE.BoxGeometry(0.7, 0.32, 0.65);
-    const head = new THREE.Mesh(headGeom, armorMat);
-    head.position.set(0, 0.68, 1.3);
-    heroRobotGroup.add(head);
-
-    const visorGeom = new THREE.BoxGeometry(0.55, 0.09, 0.12);
-    const visor = new THREE.Mesh(visorGeom, amberGlowMat);
-    visor.position.set(0, 0.68, 1.63);
-    heroRobotGroup.add(visor);
-
-    // 4 Articulated Quadruped Legs
-    const legPositions = [
-      { x: -0.92, z: 0.92, side: -1 },
-      { x: 0.92, z: 0.92, side: 1 },
-      { x: -0.92, z: -0.92, side: -1 },
-      { x: 0.92, z: -0.92, side: 1 }
-    ];
-
-    legPositions.forEach((pos, idx) => {
-      const hipPivot = new THREE.Group();
-      hipPivot.position.set(pos.x, 0.36, pos.z);
-
-      const ballGeom = new THREE.SphereGeometry(0.2, 14, 14);
-      const ball = new THREE.Mesh(ballGeom, frameMat);
-      hipPivot.add(ball);
-
-      const upperGeom = new THREE.BoxGeometry(0.18, 0.88, 0.22);
-      const upper = new THREE.Mesh(upperGeom, armorMat);
-      upper.position.set(pos.side * 0.16, -0.42, 0);
-      upper.rotation.z = pos.side * -0.22;
-      hipPivot.add(upper);
-
-      const kneePivot = new THREE.Group();
-      kneePivot.position.set(pos.side * 0.34, -0.88, 0);
-
-      const kneeGeom = new THREE.CylinderGeometry(0.15, 0.15, 0.24, 14);
-      const knee = new THREE.Mesh(kneeGeom, frameMat);
-      knee.rotation.z = Math.PI / 2;
-      kneePivot.add(knee);
-
-      const lowerGeom = new THREE.BoxGeometry(0.13, 0.88, 0.17);
-      const lower = new THREE.Mesh(lowerGeom, frameMat);
-      lower.position.set(0, -0.44, 0);
-      kneePivot.add(lower);
-
-      const footGeom = new THREE.CylinderGeometry(0.2, 0.24, 0.12, 14);
-      const foot = new THREE.Mesh(footGeom, armorMat);
-      foot.position.set(0, -0.88, 0);
-      kneePivot.add(foot);
-
-      hipPivot.add(kneePivot);
-      heroRobotGroup.add(hipPivot);
-
-      heroRobotJoints.push({ hip: hipPivot, knee: kneePivot, baseRotX: idx < 2 ? 0.18 : -0.18 });
-    });
-
-    // Particle Swarm
+    // Ambient Floating Telemetry Particles
     const partGeom = new THREE.BufferGeometry();
-    const partCount = 70;
+    const partCount = 85;
     const partPos = [];
     for (let i = 0; i < partCount; i++) {
       partPos.push(
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.2) * 5,
-        (Math.random() - 0.5) * 10
+        (Math.random() - 0.5) * 11,
+        (Math.random() - 0.2) * 5.5,
+        (Math.random() - 0.5) * 11
       );
     }
     partGeom.setAttribute('position', new THREE.Float32BufferAttribute(partPos, 3));
-    const partMat = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.05, transparent: true, opacity: 0.65 });
+    const partMat = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.05, transparent: true, opacity: 0.75 });
     const particles = new THREE.Points(partGeom, partMat);
     heroScene.add(particles);
 
-    heroScene.add(heroRobotGroup);
+    // Build Initial Selected Model
+    loadHeroModel(currentModelKey);
 
     // Interactive Drag Controls
     canvas.addEventListener('mousedown', (e) => {
@@ -312,7 +217,7 @@
 
     // Responsive Canvas Resizing
     const resizeObserver = new ResizeObserver(() => {
-      const w = container.clientWidth || 800;
+      const w = container.clientWidth || 640;
       const h = container.clientHeight || 520;
       heroCamera.aspect = w / h;
       heroCamera.updateProjectionMatrix();
@@ -324,11 +229,12 @@
     let clock = 0;
     function renderHeroFrame() {
       clock += 0.016;
+
       if (heroOrbitActive && !heroDragState.isDragging) {
         heroDragState.rotY += 0.007;
       }
       const radius = heroOrbitRadius;
-      const camY = Math.sin(heroDragState.rotX) * radius + 0.4;
+      const camY = Math.sin(heroDragState.rotX) * radius + 0.35;
       const flatDist = Math.cos(heroDragState.rotX) * radius;
       const camX = Math.sin(heroDragState.rotY) * flatDist;
       const camZ = Math.cos(heroDragState.rotY) * flatDist;
@@ -336,17 +242,31 @@
       heroCamera.position.set(camX, camY, camZ);
       heroCamera.lookAt(0, 0.35, 0);
 
-      if (heroRobotGroup) {
-        heroRobotGroup.position.y = Math.sin(clock * 2) * 0.035;
+      // Sweeping radar scan line rotation
+      if (radarScanLine) {
+        radarScanLine.rotation.y = clock * 1.8;
+      }
+
+      // Model specific animations
+      if (heroActiveModelGroup) {
+        heroActiveModelGroup.position.y = Math.sin(clock * 2) * 0.035;
       }
       if (coreLight) {
-        coreLight.intensity = 2.5 + Math.sin(clock * 4) * 0.9;
+        coreLight.intensity = 3.5 + Math.sin(clock * 4) * 1.2;
       }
+
+      // Rotate sub-parts (satellite solar arrays, tourbillon gears, quantum rings)
+      heroRotatingParts.forEach(item => {
+        if (item.axis === 'x') item.mesh.rotation.x += item.speed;
+        else if (item.axis === 'y') item.mesh.rotation.y += item.speed;
+        else if (item.axis === 'z') item.mesh.rotation.z += item.speed;
+      });
+
       heroRenderer.render(heroScene, heroCamera);
     }
 
     function animate(now) {
-      if (!heroIsVisible || document.hidden || currentHeroMode !== '3d') {
+      if (!heroIsVisible || document.hidden) {
         heroRenderActive = false;
         return;
       }
@@ -365,7 +285,7 @@
       const obs = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           heroIsVisible = entry.isIntersecting;
-          if (heroIsVisible && !heroRenderActive && !document.hidden && currentHeroMode === '3d') {
+          if (heroIsVisible && !heroRenderActive && !document.hidden) {
             heroRenderActive = true;
             heroAnimFrame = requestAnimationFrame(animate);
           } else if (!heroIsVisible) {
@@ -381,63 +301,450 @@
     if (slider) updateHeroFormula(slider.value);
   }
 
-  // Fallback 2D Vector Wireframe Engine
-  function setupFallbackVectorHero(canvas) {
-    const ctx = canvas.getContext('2d');
-    function resize() {
-      canvas.width = (canvas.parentElement.clientWidth || 800) * (window.devicePixelRatio || 1);
-      canvas.height = (canvas.parentElement.clientHeight || 520) * (window.devicePixelRatio || 1);
+  // ══════════════════════════════════════════════════════════════════════════
+  // MODEL BUILDERS (Vanguard-7, Satellite X-1, Quantum Core, Tourbillon)
+  // ══════════════════════════════════════════════════════════════════════════
+
+  function loadHeroModel(key) {
+    currentModelKey = key;
+    if (heroActiveModelGroup) {
+      heroScene.remove(heroActiveModelGroup);
     }
-    resize();
-    window.addEventListener('resize', resize);
 
-    let rotY = 0.5, rotX = 0.3;
-    const nodes = [
-      [-1,-0.4,-1],[1,-0.4,-1],[1,0.4,-1],[-1,0.4,-1],
-      [-1,-0.4,1],[1,-0.4,1],[1,0.4,1],[-1,0.4,1],
-      [0,0.6,1.4],[0,-0.8,0]
-    ];
-    const links = [
-      [0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],
-      [0,4],[1,5],[2,6],[3,7],[2,8],[6,8],[3,8],[7,8],
-      [0,9],[1,9],[4,9],[5,9]
-    ];
+    heroMaterials = [];
+    heroRobotJoints = [];
+    heroHydraulics = [];
+    heroRotatingParts = [];
 
-    function loop() {
-      if (currentHeroMode !== '3d') return;
-      const w = canvas.width, h = canvas.height;
-      ctx.clearRect(0, 0, w, h);
-      if (heroOrbitActive) rotY += 0.012;
+    heroActiveModelGroup = new THREE.Group();
 
-      const scale = Math.min(w, h) * 0.28;
-      const cx = w / 2, cy = h / 2;
-      const cy_cos = Math.cos(rotY), cy_sin = Math.sin(rotY);
-      const cx_cos = Math.cos(rotX), cx_sin = Math.sin(rotX);
-
-      const proj = nodes.map(n => {
-        let x1 = n[0] * cy_cos + n[2] * cy_sin;
-        let z1 = -n[0] * cy_sin + n[2] * cy_cos;
-        let y2 = n[1] * cx_cos - z1 * cx_sin;
-        let z2 = n[1] * cx_sin + z1 * cx_cos;
-        const pz = 3.5 / (3.5 + z2);
-        return { x: cx + x1 * scale * pz, y: cy + y2 * scale * pz };
-      });
-
-      ctx.strokeStyle = heroWireframe ? '#06b6d4' : '#38bdf8';
-      ctx.lineWidth = 2;
-      links.forEach(l => {
-        ctx.beginPath();
-        ctx.moveTo(proj[l[0]].x, proj[l[0]].y);
-        ctx.lineTo(proj[l[1]].x, proj[l[1]].y);
-        ctx.stroke();
-      });
-      requestAnimationFrame(loop);
+    if (key === 'satellite') {
+      buildSatelliteModel(heroActiveModelGroup);
+      updateTitleAndBadges('Vanguard X-1 Deep Space Satellite Bus', '380 W', '-65.2 °C', '99.8% Constellation Lock');
+    } else if (key === 'quantum') {
+      buildQuantumModel(heroActiveModelGroup);
+      updateTitleAndBadges('Quantum Core FCC Atomic Lattice', '4.2 GHz', '0.015 K', '100% Phase Coherence');
+    } else if (key === 'tourbillon') {
+      buildTourbillonModel(heroActiveModelGroup);
+      updateTitleAndBadges('Haute Horlogerie Tourbillon Escapement', '21,600 vph', '+21.4 °C', '0.00s/day Chronometer');
+    } else {
+      // Default: Vanguard-7
+      buildVanguard7Model(heroActiveModelGroup);
+      updateTitleAndBadges('vanguard-7-telemetry.ldocx — 3D CAD', '340 Nm', '+42.8 °C', '98.4% Verified Root');
     }
-    loop();
+
+    heroScene.add(heroActiveModelGroup);
+
+    // Re-apply wireframe if currently active
+    if (heroWireframe) {
+      heroMaterials.forEach(m => { m.wireframe = true; });
+    }
+
+    // Update joint articulation if Vanguard
+    const slider = document.getElementById('hero-actuator-slider');
+    if (slider) updateHeroFormula(slider.value);
+  }
+
+  function updateTitleAndBadges(title, torqueText, tempText, integText) {
+    const titleEl = document.getElementById('hero-3d-title-text');
+    if (titleEl) titleEl.textContent = title;
+
+    const torqueEl = document.getElementById('floating-torque-val');
+    if (torqueEl) torqueEl.textContent = torqueText;
+
+    const tempEl = document.getElementById('floating-temp-val');
+    if (tempEl) tempEl.textContent = tempText;
+
+    const integEl = document.getElementById('floating-integrity-val');
+    if (integEl) integEl.textContent = integText;
+  }
+
+  // 1. High-Fidelity Vanguard-7 Quadruped Robot Model
+  function buildVanguard7Model(group) {
+    // High-contrast, metallic materials
+    const titaniumMat = new THREE.MeshStandardMaterial({
+      color: 0x475569, // Crisp metallic slate
+      metalness: 0.78,
+      roughness: 0.28,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(titaniumMat);
+
+    const darkChassisMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      metalness: 0.85,
+      roughness: 0.32,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(darkChassisMat);
+
+    const chromePistonMat = new THREE.MeshStandardMaterial({
+      color: 0x94a3b8,
+      metalness: 0.95,
+      roughness: 0.15,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(chromePistonMat);
+
+    const goldTrimMat = new THREE.MeshStandardMaterial({
+      color: 0xf59e0b,
+      metalness: 0.88,
+      roughness: 0.24,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(goldTrimMat);
+
+    const cyanGlowMat = new THREE.MeshBasicMaterial({
+      color: 0x00e5ff,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(cyanGlowMat);
+
+    const amberGlowMat = new THREE.MeshBasicMaterial({
+      color: 0xfbbf24,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(amberGlowMat);
+
+    // Main Faceted Hull / Torso
+    const chassisGeom = new THREE.BoxGeometry(1.7, 0.62, 2.35);
+    const chassis = new THREE.Mesh(chassisGeom, titaniumMat);
+    chassis.position.y = 0.42;
+    group.add(chassis);
+
+    // Spinal Armor Cowling with Chamfer
+    const cowlGeom = new THREE.BoxGeometry(1.3, 0.26, 1.75);
+    const cowl = new THREE.Mesh(cowlGeom, darkChassisMat);
+    cowl.position.set(0, 0.82, 0.08);
+    group.add(cowl);
+
+    // Golden Armor Trim Plates
+    const trimGeom = new THREE.BoxGeometry(0.18, 0.05, 1.6);
+    const trimL = new THREE.Mesh(trimGeom, goldTrimMat);
+    trimL.position.set(-0.7, 0.96, 0.08);
+    group.add(trimL);
+    const trimR = new THREE.Mesh(trimGeom, goldTrimMat);
+    trimR.position.set(0.7, 0.96, 0.08);
+    group.add(trimR);
+
+    // Glowing Chest Reactor Core (Multi-layered Plasma)
+    const coreCylinder = new THREE.CylinderGeometry(0.28, 0.28, 0.65, 24);
+    const coreMesh = new THREE.Mesh(coreCylinder, cyanGlowMat);
+    coreMesh.rotation.x = Math.PI / 2;
+    coreMesh.position.set(0, 0.42, 0.94);
+    group.add(coreMesh);
+
+    const coreRingGeom = new THREE.TorusGeometry(0.38, 0.04, 16, 32);
+    const coreRing = new THREE.Mesh(coreRingGeom, goldTrimMat);
+    coreRing.position.set(0, 0.42, 1.18);
+    group.add(coreRing);
+
+    // Sensor Visor Turret & Antenna Mast
+    const headGeom = new THREE.BoxGeometry(0.74, 0.35, 0.72);
+    const head = new THREE.Mesh(headGeom, darkChassisMat);
+    head.position.set(0, 0.7, 1.35);
+    group.add(head);
+
+    // Glowing Amber Scanner Visor
+    const visorGeom = new THREE.BoxGeometry(0.58, 0.1, 0.15);
+    const visor = new THREE.Mesh(visorGeom, amberGlowMat);
+    visor.position.set(0, 0.7, 1.72);
+    group.add(visor);
+
+    // High-Gain Sensor Antenna
+    const antGeom = new THREE.CylinderGeometry(0.03, 0.03, 0.55, 12);
+    const ant = new THREE.Mesh(antGeom, goldTrimMat);
+    ant.position.set(0.28, 1.1, 1.3);
+    ant.rotation.z = -0.15;
+    group.add(ant);
+
+    // 4 Articulated Quadruped Mechanical Limbs with Hydraulic Pistons
+    const legPositions = [
+      { x: -0.96, z: 0.92, side: -1 },
+      { x: 0.96, z: 0.92, side: 1 },
+      { x: -0.96, z: -0.92, side: -1 },
+      { x: 0.96, z: -0.92, side: 1 }
+    ];
+
+    legPositions.forEach((pos, idx) => {
+      const hipPivot = new THREE.Group();
+      hipPivot.position.set(pos.x, 0.36, pos.z);
+
+      // Heavy Hip Servo Hub
+      const ballGeom = new THREE.SphereGeometry(0.22, 16, 16);
+      const ball = new THREE.Mesh(ballGeom, darkChassisMat);
+      hipPivot.add(ball);
+
+      // Hip Accent Ring
+      const hipRingGeom = new THREE.TorusGeometry(0.25, 0.03, 12, 24);
+      const hipRing = new THREE.Mesh(hipRingGeom, goldTrimMat);
+      hipRing.rotation.y = Math.PI / 2;
+      hipPivot.add(hipRing);
+
+      // Upper Armored Femur
+      const upperGeom = new THREE.BoxGeometry(0.2, 0.92, 0.24);
+      const upper = new THREE.Mesh(upperGeom, titaniumMat);
+      upper.position.set(pos.side * 0.18, -0.44, 0);
+      upper.rotation.z = pos.side * -0.22;
+      hipPivot.add(upper);
+
+      // Knee Pivot Servo
+      const kneePivot = new THREE.Group();
+      kneePivot.position.set(pos.side * 0.38, -0.92, 0);
+
+      const kneeGeom = new THREE.CylinderGeometry(0.16, 0.16, 0.26, 16);
+      const knee = new THREE.Mesh(kneeGeom, darkChassisMat);
+      knee.rotation.z = Math.PI / 2;
+      kneePivot.add(knee);
+
+      // Lower Tibia Rod
+      const lowerGeom = new THREE.BoxGeometry(0.15, 0.92, 0.18);
+      const lower = new THREE.Mesh(lowerGeom, titaniumMat);
+      lower.position.set(0, -0.46, 0);
+      kneePivot.add(lower);
+
+      // Chrome Hydraulic Piston Cylinder
+      const pistonGeom = new THREE.CylinderGeometry(0.05, 0.05, 0.65, 12);
+      const piston = new THREE.Mesh(pistonGeom, chromePistonMat);
+      piston.position.set(-pos.side * 0.08, -0.4, 0.08);
+      kneePivot.add(piston);
+      heroHydraulics.push(piston);
+
+      // Magnetic Shock Absorber Foot Pad
+      const footGeom = new THREE.CylinderGeometry(0.22, 0.26, 0.14, 16);
+      const foot = new THREE.Mesh(footGeom, darkChassisMat);
+      foot.position.set(0, -0.94, 0);
+      kneePivot.add(foot);
+
+      // Foot Glow Contact Ring
+      const footGlowGeom = new THREE.TorusGeometry(0.24, 0.025, 8, 20);
+      const footGlow = new THREE.Mesh(footGlowGeom, cyanGlowMat);
+      footGlow.rotation.x = Math.PI / 2;
+      footGlow.position.set(0, -0.98, 0);
+      kneePivot.add(footGlow);
+
+      hipPivot.add(kneePivot);
+      group.add(hipPivot);
+
+      heroRobotJoints.push({
+        hip: hipPivot,
+        knee: kneePivot,
+        piston: piston,
+        baseRotX: idx < 2 ? 0.18 : -0.18,
+        side: pos.side
+      });
+    });
+  }
+
+  // 2. Vanguard X-1 Deep Space Satellite Bus Model
+  function buildSatelliteModel(group) {
+    const goldFoilMat = new THREE.MeshStandardMaterial({
+      color: 0xf59e0b,
+      metalness: 0.92,
+      roughness: 0.22,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(goldFoilMat);
+
+    const solarCellMat = new THREE.MeshStandardMaterial({
+      color: 0x0284c7,
+      metalness: 0.75,
+      roughness: 0.18,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(solarCellMat);
+
+    const darkFrameMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      metalness: 0.8,
+      roughness: 0.35,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(darkFrameMat);
+
+    const cyanGlowMat = new THREE.MeshBasicMaterial({
+      color: 0x38bdf8,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(cyanGlowMat);
+
+    // Central Avionics Bus (Cube)
+    const busGeom = new THREE.BoxGeometry(1.2, 1.2, 1.6);
+    const bus = new THREE.Mesh(busGeom, goldFoilMat);
+    bus.position.y = 0.45;
+    group.add(bus);
+
+    // High-Gain Parabolic Communications Dish
+    const dishGeom = new THREE.CylinderGeometry(0.9, 0.15, 0.4, 28, 1, true);
+    const dish = new THREE.Mesh(dishGeom, darkFrameMat);
+    dish.rotation.x = Math.PI / 2;
+    dish.position.set(0, 0.45, 1.15);
+    group.add(dish);
+
+    const dishFeedGeom = new THREE.CylinderGeometry(0.04, 0.04, 0.6, 12);
+    const dishFeed = new THREE.Mesh(dishFeedGeom, cyanGlowMat);
+    dishFeed.rotation.x = Math.PI / 2;
+    dishFeed.position.set(0, 0.45, 1.45);
+    group.add(dishFeed);
+
+    // Dual Photovoltaic Solar Wings (Left & Right)
+    [-1, 1].forEach(side => {
+      const wingPivot = new THREE.Group();
+      wingPivot.position.set(side * 0.7, 0.45, 0);
+
+      // Connecting Boom
+      const boomGeom = new THREE.CylinderGeometry(0.06, 0.06, 0.8, 12);
+      const boom = new THREE.Mesh(boomGeom, darkFrameMat);
+      boom.rotation.z = Math.PI / 2;
+      boom.position.x = side * 0.4;
+      wingPivot.add(boom);
+
+      // 3 Symmetrical Solar Panels per wing
+      const panelGeom = new THREE.BoxGeometry(1.8, 0.8, 0.06);
+      const panel = new THREE.Mesh(panelGeom, solarCellMat);
+      panel.position.x = side * 1.6;
+      wingPivot.add(panel);
+
+      const panelBorderGeom = new THREE.BoxGeometry(1.86, 0.86, 0.04);
+      const panelBorder = new THREE.Mesh(panelBorderGeom, darkFrameMat);
+      panelBorder.position.x = side * 1.6;
+      wingPivot.add(panelBorder);
+
+      group.add(wingPivot);
+      heroRotatingParts.push({ mesh: wingPivot, axis: 'x', speed: side * 0.005 });
+    });
+
+    // Hydrazine Thruster Nozzles at Base
+    const thrusterGeom = new THREE.ConeGeometry(0.2, 0.35, 16);
+    const thruster = new THREE.Mesh(thrusterGeom, darkFrameMat);
+    thruster.rotation.x = Math.PI;
+    thruster.position.set(0, 0.45, -0.95);
+    group.add(thruster);
+  }
+
+  // 3. Quantum Core FCC Lattice Model
+  function buildQuantumModel(group) {
+    const nucleusMat = new THREE.MeshBasicMaterial({
+      color: 0x00e5ff,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(nucleusMat);
+
+    const goldRingMat = new THREE.MeshStandardMaterial({
+      color: 0xf59e0b,
+      metalness: 0.9,
+      roughness: 0.2,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(goldRingMat);
+
+    const cyanRingMat = new THREE.MeshStandardMaterial({
+      color: 0x38bdf8,
+      metalness: 0.85,
+      roughness: 0.25,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(cyanRingMat);
+
+    const violetRingMat = new THREE.MeshStandardMaterial({
+      color: 0xa855f7,
+      metalness: 0.8,
+      roughness: 0.3,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(violetRingMat);
+
+    // Glowing Central Quantum Nucleus
+    const nucleusGeom = new THREE.SphereGeometry(0.65, 28, 28);
+    const nucleus = new THREE.Mesh(nucleusGeom, nucleusMat);
+    nucleus.position.y = 0.4;
+    group.add(nucleus);
+
+    // 3 Concentric Gimbaled Orbital Containment Rings
+    const ring1Geom = new THREE.TorusGeometry(1.35, 0.055, 16, 64);
+    const ring1 = new THREE.Mesh(ring1Geom, goldRingMat);
+    ring1.position.y = 0.4;
+    group.add(ring1);
+    heroRotatingParts.push({ mesh: ring1, axis: 'x', speed: 0.016 });
+
+    const ring2Geom = new THREE.TorusGeometry(1.85, 0.05, 16, 64);
+    const ring2 = new THREE.Mesh(ring2Geom, cyanRingMat);
+    ring2.position.y = 0.4;
+    group.add(ring2);
+    heroRotatingParts.push({ mesh: ring2, axis: 'y', speed: 0.012 });
+
+    const ring3Geom = new THREE.TorusGeometry(2.35, 0.045, 16, 64);
+    const ring3 = new THREE.Mesh(ring3Geom, violetRingMat);
+    ring3.position.y = 0.4;
+    group.add(ring3);
+    heroRotatingParts.push({ mesh: ring3, axis: 'z', speed: 0.009 });
+
+    // Orbital Qubit Nodes
+    [0.75, -0.75].forEach(offset => {
+      const qGeom = new THREE.SphereGeometry(0.14, 16, 16);
+      const qMesh = new THREE.Mesh(qGeom, nucleusMat);
+      qMesh.position.set(offset * 1.8, 0.4 + offset * 0.4, 0);
+      group.add(qMesh);
+    });
+  }
+
+  // 4. Haute Horlogerie Flying Tourbillon Escapement Model
+  function buildTourbillonModel(group) {
+    const goldGearMat = new THREE.MeshStandardMaterial({
+      color: 0xf59e0b,
+      metalness: 0.92,
+      roughness: 0.22,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(goldGearMat);
+
+    const titaniumBridgeMat = new THREE.MeshStandardMaterial({
+      color: 0x94a3b8,
+      metalness: 0.85,
+      roughness: 0.28,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(titaniumBridgeMat);
+
+    const rubyJewelMat = new THREE.MeshBasicMaterial({
+      color: 0xf43f5e,
+      wireframe: heroWireframe
+    });
+    heroMaterials.push(rubyJewelMat);
+
+    // Outer 16-Segment Gear Rim
+    const outerRimGeom = new THREE.TorusGeometry(1.8, 0.12, 16, 48);
+    const outerRim = new THREE.Mesh(outerRimGeom, goldGearMat);
+    outerRim.position.y = 0.4;
+    group.add(outerRim);
+
+    // Rotating Balance Wheel with 3-Arm Bridge
+    const cage = new THREE.Group();
+    cage.position.y = 0.4;
+
+    const balanceRingGeom = new THREE.TorusGeometry(1.3, 0.07, 14, 36);
+    const balanceRing = new THREE.Mesh(balanceRingGeom, goldGearMat);
+    cage.add(balanceRing);
+
+    // 3 Symmetrical Curved Bridge Arms
+    for (let i = 0; i < 3; i++) {
+      const armGeom = new THREE.BoxGeometry(1.3, 0.08, 0.06);
+      const arm = new THREE.Mesh(armGeom, titaniumBridgeMat);
+      arm.rotation.z = (i / 3) * Math.PI * 2;
+      cage.add(arm);
+    }
+
+    // Central Synthetic Ruby Jewel
+    const rubyGeom = new THREE.SphereGeometry(0.18, 16, 16);
+    const ruby = new THREE.Mesh(rubyGeom, rubyJewelMat);
+    cage.add(ruby);
+
+    group.add(cage);
+    heroRotatingParts.push({ mesh: cage, axis: 'z', speed: 0.024 });
   }
 
   // ══════════════════════════════════════════════════════════════════════════
-  // TELEMETRY FORMULA & JOINT ARTICULATION ENGINE
+  // TELEMETRY FORMULA & ARTICULATION (Vanguard-7 Kinematics)
   // ══════════════════════════════════════════════════════════════════════════
   function updateHeroFormula(val) {
     const load = parseInt(val, 10) || 340;
@@ -450,33 +757,48 @@
     const thermEl = document.getElementById('hero-thermal-val');
     if (thermEl) thermEl.textContent = '+' + thermal + ' °C';
 
-    const safety = Math.max(72.0, (100.0 - (load * 0.038))).toFixed(1);
-    const safetyEl = document.getElementById('hero-safety-val');
-    if (safetyEl) safetyEl.textContent = safety + '%';
-
-    const vramEl = document.getElementById('hero-vram-val');
-    if (vramEl) vramEl.textContent = (16.2 + (load / 600) * 4.2).toFixed(1) + ' MB';
-
-    // Update Floating Glass Badges
     const floatTorque = document.getElementById('floating-torque-val');
     if (floatTorque) floatTorque.textContent = load + ' Nm';
 
     const floatTemp = document.getElementById('floating-temp-val');
     if (floatTemp) floatTemp.textContent = '+' + thermal + ' °C';
 
-    const floatInteg = document.getElementById('floating-integrity-val');
-    if (floatInteg) floatInteg.textContent = safety + '% Verified Root';
+    const integ = (99.9 - (load * 0.025)).toFixed(1);
+    const integEl = document.getElementById('floating-integrity-val');
+    if (integEl) integEl.textContent = integ + '% Verified Root';
 
-    // Physically articulate the 3D quadruped robotic limbs in real-time WebGL
+    // Kinematic Articulation of 3D Robot Limbs
     if (heroRobotJoints && heroRobotJoints.length > 0) {
-      const norm = (load - 50) / 550; // 0.0 to 1.0
-      heroRobotJoints.forEach(j => {
-        if (j.hip && j.knee) {
-          j.hip.rotation.x = j.baseRotX + (norm * 0.28);
-          j.knee.rotation.x = -(norm * 0.48);
+      const flexFactor = (load - 50) / 550; // 0.0 to 1.0
+
+      heroRobotJoints.forEach((joint) => {
+        // Flex hip servo
+        joint.hip.rotation.x = joint.baseRotX + (flexFactor * 0.42);
+        // Flex knee servo
+        joint.knee.rotation.x = -joint.baseRotX - (flexFactor * 0.72);
+        // Compress hydraulic piston
+        if (joint.piston) {
+          joint.piston.scale.y = 1.0 - (flexFactor * 0.28);
         }
       });
+
+      // Lower robot chassis slightly under load
+      if (heroActiveModelGroup && currentModelKey === 'vanguard') {
+        heroActiveModelGroup.position.y = -(flexFactor * 0.22);
+      }
     }
+  }
+
+  // Model Switcher Function (Exposed to Global)
+  function switchHero3DModel(modelKey) {
+    document.querySelectorAll('.hud-mode-pill').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    const activeBtn = document.getElementById('hero-model-btn-' + modelKey);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    loadHeroModel(modelKey);
   }
 
   function toggleHeroAutoOrbit() {
@@ -487,54 +809,50 @@
 
   function toggleHeroWireframe() {
     heroWireframe = !heroWireframe;
-    if (heroMaterials && heroMaterials.length > 0) {
-      heroMaterials.forEach(m => { m.wireframe = heroWireframe; });
-    }
+    heroMaterials.forEach(m => { m.wireframe = heroWireframe; });
     const btn = document.getElementById('hero-wireframe-btn');
-    if (btn) {
-      btn.textContent = heroWireframe ? 'Solid Model' : 'Wireframe';
-      btn.style.color = heroWireframe ? '#38bdf8' : '#cbd5e1';
+    if (btn) btn.textContent = heroWireframe ? 'Solid' : 'Wireframe';
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // VIDEO STREAM SYNCHRONIZER & AUDIO CONTROLS
+  // ══════════════════════════════════════════════════════════════════════════
+  function toggleHeroVideoAudio() {
+    const vid = document.getElementById('hero-side-video');
+    const icon = document.getElementById('hero-audio-icon');
+    const label = document.getElementById('hero-audio-label');
+    if (!vid) return;
+
+    vid.muted = !vid.muted;
+    if (icon) icon.textContent = vid.muted ? '🔇' : '🔊';
+    if (label) label.textContent = vid.muted ? 'Unmute' : 'Mute';
+  }
+
+  function toggleHeroVideoPlay() {
+    const vid = document.getElementById('hero-side-video');
+    const icon = document.getElementById('hero-play-icon');
+    const label = document.getElementById('hero-play-label');
+    if (!vid) return;
+
+    if (vid.paused) {
+      vid.play();
+      if (icon) icon.textContent = '⏸';
+      if (label) label.textContent = 'Pause';
+    } else {
+      vid.pause();
+      if (icon) icon.textContent = '▶';
+      if (label) label.textContent = 'Play';
     }
   }
 
-  function switchHeroStageMode(mode) {
-    currentHeroMode = mode;
-    const canvas = document.getElementById('hero-real-3d-canvas');
-    const hudTop = document.getElementById('hero-hud-top');
-    const hudBottom = document.getElementById('hero-hud-bottom');
-    const video = document.getElementById('hero-video-demo');
-    const tab3d = document.getElementById('hero-tab-3d');
-    const tabVid = document.getElementById('hero-tab-video');
+  function expandHeroVideoFullscreen() {
+    const vid = document.getElementById('hero-side-video');
+    if (!vid) return;
 
-    if (mode === '3d') {
-      if (canvas) canvas.style.display = 'block';
-      if (hudTop) hudTop.style.display = 'flex';
-      if (hudBottom) hudBottom.style.display = 'flex';
-      if (video) {
-        video.style.display = 'none';
-        video.pause();
-      }
-      if (tab3d) tab3d.classList.add('active');
-      if (tabVid) tabVid.classList.remove('active');
-
-      if (!heroRenderActive && heroIsVisible) {
-        heroRenderActive = true;
-        requestAnimationFrame(() => {
-          if (heroRenderer && heroScene && heroCamera) {
-            heroRenderer.render(heroScene, heroCamera);
-          }
-        });
-      }
-    } else {
-      if (canvas) canvas.style.display = 'none';
-      if (hudTop) hudTop.style.display = 'none';
-      if (hudBottom) hudBottom.style.display = 'none';
-      if (video) {
-        video.style.display = 'block';
-        video.play().catch(() => {});
-      }
-      if (tab3d) tab3d.classList.remove('active');
-      if (tabVid) tabVid.classList.add('active');
+    if (vid.requestFullscreen) {
+      vid.requestFullscreen();
+    } else if (vid.webkitRequestFullscreen) {
+      vid.webkitRequestFullscreen();
     }
   }
 
@@ -567,7 +885,7 @@
         return;
       }
 
-      const amb = new THREE.AmbientLight(0xffffff, 1.2);
+      const amb = new THREE.AmbientLight(0xffffff, 1.8);
       scene.add(amb);
       const dir = new THREE.DirectionalLight(0x38bdf8, 2.5);
       dir.position.set(3, 4, 3);
@@ -622,12 +940,69 @@
     });
   }
 
+  // Fallback 2D Vector Wireframe Engine
+  function setupFallbackVectorHero(canvas) {
+    const ctx = canvas.getContext('2d');
+    function resize() {
+      canvas.width = (canvas.parentElement.clientWidth || 640) * (window.devicePixelRatio || 1);
+      canvas.height = (canvas.parentElement.clientHeight || 520) * (window.devicePixelRatio || 1);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let rotY = 0.5, rotX = 0.3;
+    const nodes = [
+      [-1,-0.4,-1],[1,-0.4,-1],[1,0.4,-1],[-1,0.4,-1],
+      [-1,-0.4,1],[1,-0.4,1],[1,0.4,1],[-1,0.4,1],
+      [0,0.6,1.4],[0,-0.8,0]
+    ];
+    const links = [
+      [0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],
+      [0,4],[1,5],[2,6],[3,7],[2,8],[6,8],[3,8],[7,8],
+      [0,9],[1,9],[4,9],[5,9]
+    ];
+
+    function loop() {
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      if (heroOrbitActive) rotY += 0.012;
+
+      const scale = Math.min(w, h) * 0.28;
+      const cx = w / 2, cy = h / 2;
+      const cy_cos = Math.cos(rotY), cy_sin = Math.sin(rotY);
+      const cx_cos = Math.cos(rotX), cx_sin = Math.sin(rotX);
+
+      const proj = nodes.map(n => {
+        let x1 = n[0] * cy_cos + n[2] * cy_sin;
+        let z1 = -n[0] * cy_sin + n[2] * cy_cos;
+        let y2 = n[1] * cx_cos - z1 * cx_sin;
+        let z2 = n[1] * cx_sin + z1 * cx_cos;
+        const pz = 3.5 / (3.5 + z2);
+        return { x: cx + x1 * scale * pz, y: cy + y2 * scale * pz };
+      });
+
+      ctx.strokeStyle = heroWireframe ? '#06b6d4' : '#38bdf8';
+      ctx.lineWidth = 2;
+      links.forEach(l => {
+        ctx.beginPath();
+        ctx.moveTo(proj[l[0]].x, proj[l[0]].y);
+        ctx.lineTo(proj[l[1]].x, proj[l[1]].y);
+        ctx.stroke();
+      });
+      requestAnimationFrame(loop);
+    }
+    loop();
+  }
+
   // Global Exports
   global.initVanguardHero3D = initVanguardHero3D;
   global.updateHeroFormula = updateHeroFormula;
   global.toggleHeroAutoOrbit = toggleHeroAutoOrbit;
   global.toggleHeroWireframe = toggleHeroWireframe;
-  global.switchHeroStageMode = switchHeroStageMode;
+  global.switchHero3DModel = switchHero3DModel;
+  global.toggleHeroVideoAudio = toggleHeroVideoAudio;
+  global.toggleHeroVideoPlay = toggleHeroVideoPlay;
+  global.expandHeroVideoFullscreen = expandHeroVideoFullscreen;
   global.initMini3DPreview = initMini3DPreview;
   global.ensureThreeJs = ensureThreeJs;
 

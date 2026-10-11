@@ -50,13 +50,16 @@ server.listen(testPort, '127.0.0.1', async () => {
         const tempVal = document.getElementById('floating-temp-val');
         const integVal = document.getElementById('floating-integrity-val');
         const bentoCanvas = document.getElementById('bento-3d-canvas');
-        const tab3d = document.getElementById('hero-tab-3d');
-        const tabVid = document.getElementById('hero-tab-video');
+        const sideVideo = document.getElementById('hero-side-video');
 
         return {
           hasHeroCanvas: !!canvas,
           canvasWidth: canvas ? canvas.offsetWidth : 0,
           canvasHeight: canvas ? canvas.offsetHeight : 0,
+          hasSideVideo: !!sideVideo,
+          videoWidth: sideVideo ? sideVideo.offsetWidth : 0,
+          videoHeight: sideVideo ? sideVideo.offsetHeight : 0,
+          videoPaused: sideVideo ? sideVideo.paused : null,
           hasSlider: !!slider,
           sliderVal: slider ? slider.value : null,
           torqueText: torqueVal ? torqueVal.textContent : null,
@@ -64,8 +67,6 @@ server.listen(testPort, '127.0.0.1', async () => {
           integText: integVal ? integVal.textContent : null,
           hasBentoCanvas: !!bentoCanvas,
           bentoWidth: bentoCanvas ? bentoCanvas.offsetWidth : 0,
-          has3dTab: !!tab3d,
-          hasVidTab: !!tabVid,
           threeLoaded: typeof THREE !== 'undefined'
         };
       })()
