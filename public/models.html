@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/design-system.css">
+  <script defer src="/vanguard-3d-telemetry.js"></script>
   <style>
     :root {
       --bg: #08090d;
@@ -651,9 +652,11 @@
               <button onclick="openDetailDrawer('vanguard')" class="ldoc-btn ldoc-btn-ghost" style="padding: 9px 16px; font-size: 13px; border: 1px solid rgba(255,255,255,0.12);">Inspect Spec</button>
             </div>
           </div>
-          <div class="featured-preview-box">
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><circle cx="15" cy="9" r="2"/></svg>
-            <span style="font-family: var(--font-mono); font-size: 11px; color: #94a3b8;">60 FPS Three.js Orbit</span>
+          <div class="featured-preview-box" style="position: relative; width: 180px; height: 180px; border-radius: 12px; background: #0A0D17; border: 1px solid rgba(245,158,11,0.3); overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <canvas id="featured-3d-canvas" style="width: 100%; height: 100%; display: block;"></canvas>
+            <div style="position: absolute; bottom: 8px; left: 8px; font-family: var(--font-mono); font-size: 10px; color: #38bdf8; background: rgba(0,0,0,0.7); padding: 3px 7px; border-radius: 4px;">
+              60 FPS WebGL
+            </div>
           </div>
         </div>
       </section>
@@ -1072,8 +1075,8 @@
           blocks: ["hero_header", "3d_cad_chassis", "torque_dag", "bom_table"]
         }, null, 2),
         editUrl: "/live-studio?template=robotics",
-        dlUrl: "/all-features-showcase.ldocx",
-        dlName: "vanguard-robotics-hardware.ldocx"
+        dlUrl: "/vanguard-7-telemetry.ldocx",
+        dlName: "vanguard-7-telemetry.ldocx"
       },
       finance: {
         title: "Financial & ESG Annual Living Report",
@@ -1224,6 +1227,12 @@
       document.getElementById('drawerOverlay').classList.remove('active');
       document.getElementById('marketDrawer').classList.remove('active');
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initMini3DPreview === 'function') {
+        initMini3DPreview('featured-3d-canvas', 'robotics');
+      }
+    });
   </script>
 
   <script src="/design-system.js"></script>

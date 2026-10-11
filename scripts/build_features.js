@@ -17,7 +17,7 @@ const featuresHtml = `<!DOCTYPE html>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/design-system.css">
   <script defer src="/design-system.js"></script>
-  <!-- Three.js loaded asynchronously on demand -->
+  <script defer src="/vanguard-3d-telemetry.js"></script>
   <style>
     /* ── Features Page Bespoke Styling ── */
     .hero-container {
@@ -927,76 +927,47 @@ const featuresHtml = `<!DOCTYPE html>
       document.getElementById('fin-profit-val').textContent = '$' + Number(profit).toLocaleString();
     }
 
-    // Hero Wireframe Canvas
+    // Hero Spatial 3D Mesh (Three.js WebGL)
     function initHeroMesh() {
       window.heroMeshInitialized = true;
-      const canvas = document.getElementById('hero-mesh-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      canvas.width = canvas.parentElement.clientWidth || 600;
-      canvas.height = 320;
-
-      let angle = 0;
-      function draw() {
-        ctx.fillStyle = '#060911';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
-        const radius = 80;
-
-        ctx.strokeStyle = '#22D3EE';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        for (let i = 0; i < 8; i++) {
-          const a = angle + (i * Math.PI / 4);
-          const x = cx + Math.cos(a) * radius;
-          const y = cy + Math.sin(a) * (radius * 0.5);
-          if (i === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.closePath();
-        ctx.stroke();
-
-        ctx.strokeStyle = '#F59E0B';
-        ctx.beginPath();
-        for (let i = 0; i < 8; i++) {
-          const a = -angle + (i * Math.PI / 4);
-          const x = cx + Math.cos(a) * (radius * 0.6);
-          const y = cy + Math.sin(a) * (radius * 0.3);
-          if (i === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.closePath();
-        ctx.stroke();
-
-        angle += 0.02;
-        requestAnimationFrame(draw);
+      if (typeof initMini3DPreview === 'function') {
+        initMini3DPreview('hero-mesh-canvas', 'avionics');
       }
-      draw();
     }
 
-    // Vanguard-7 Kinematics Simulation
+    // Vanguard-7 Kinematics Simulation & 3D Actuator WebGL Engine
+    let featRotorGroup, featCoilLight;
+
     window.updateFeatTorque = function(val) {
+      const load = parseInt(val, 10) || 340;
       const disp = document.getElementById('feat-torque-display');
-      if (disp) disp.textContent = val + ' Nm';
+      if (disp) disp.textContent = load + ' Nm';
 
       const temp = document.getElementById('feat-temp-display');
       if (temp) {
-        const computedTemp = (30 + (val - 100) * 0.06).toFixed(1);
+        const computedTemp = (30 + (load - 100) * 0.06).toFixed(1);
         temp.textContent = '+' + computedTemp + '°C';
       }
 
       const eff = document.getElementById('feat-eff-display');
       if (eff) {
-        const computedEff = (98.5 - (val - 100) * 0.009).toFixed(1);
+        const computedEff = (98.5 - (load - 100) * 0.009).toFixed(1);
         eff.textContent = computedEff + '%';
       }
 
       const stress = document.getElementById('feat-stress-display');
       if (stress) {
-        const computedStress = Math.round(110 + (val - 100) * 0.28);
+        const computedStress = Math.round(110 + (load - 100) * 0.28);
         stress.textContent = computedStress + ' MPa';
+      }
+
+      // Rotate 3D actuator armature under load in WebGL
+      if (featRotorGroup) {
+        const angle = ((load - 100) / 500) * Math.PI * 0.8 - (Math.PI * 0.4);
+        featRotorGroup.rotation.z = angle;
+      }
+      if (featCoilLight) {
+        featCoilLight.intensity = 1.8 + (load / 600) * 3.2;
       }
     };
 
@@ -1022,61 +993,90 @@ const featuresHtml = `<!DOCTYPE html>
       document.getElementById('btn-feat-restore').style.display = 'none';
     };
 
-    // Initialize Vanguard-7 WebGL Canvas
+    // Initialize Vanguard-7 Actuator WebGL 3D Scene
     function initVanguardCanvas() {
       const canvas = document.getElementById('feat-webgl-canvas');
       if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
 
-      canvas.width = canvas.parentElement.clientWidth || 500;
-      canvas.height = 380;
+      if (typeof ensureThreeJs === 'function') {
+        ensureThreeJs(() => {
+          const w = canvas.parentElement.clientWidth || 500;
+          const h = 380;
+          const scene = new THREE.Scene();
+          scene.background = new THREE.Color(0x060812);
 
-      let t = 0;
-      function render() {
-        ctx.fillStyle = '#05060A';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+          const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+          camera.position.set(0, 1.8, 4.8);
+          camera.lookAt(0, 0, 0);
 
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
+          let renderer;
+          try {
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0));
+          } catch(e) { return; }
 
-        // Draw rotating vector gear
-        ctx.strokeStyle = '#38BDF8';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        const teeth = 16;
-        for (let i = 0; i < teeth; i++) {
-          const a1 = t + (i * Math.PI * 2 / teeth);
-          const a2 = t + ((i + 0.5) * Math.PI * 2 / teeth);
-          const r1 = 90;
-          const r2 = 105;
-          ctx.lineTo(cx + Math.cos(a1) * r1, cy + Math.sin(a1) * r1);
-          ctx.lineTo(cx + Math.cos(a1) * r2, cy + Math.sin(a1) * r2);
-          ctx.lineTo(cx + Math.cos(a2) * r2, cy + Math.sin(a2) * r2);
-          ctx.lineTo(cx + Math.cos(a2) * r1, cy + Math.sin(a2) * r1);
-        }
-        ctx.closePath();
-        ctx.stroke();
+          const amb = new THREE.AmbientLight(0xffffff, 1.5);
+          scene.add(amb);
+          const dir = new THREE.DirectionalLight(0x38bdf8, 3.0);
+          dir.position.set(5, 7, 5);
+          scene.add(dir);
+          featCoilLight = new THREE.PointLight(0xf59e0b, 3.0, 8);
+          featCoilLight.position.set(0, 0, 1.2);
+          scene.add(featCoilLight);
 
-        // Inner rotor ring
-        ctx.strokeStyle = '#F59E0B';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(cx, cy, 55, 0, Math.PI * 2);
-        ctx.stroke();
+          // Stator Ring & Housing
+          const statorGeom = new THREE.CylinderGeometry(1.6, 1.6, 0.6, 32);
+          const statorMat = new THREE.MeshStandardMaterial({ color: 0x1e2638, metalness: 0.85, roughness: 0.25 });
+          const stator = new THREE.Mesh(statorGeom, statorMat);
+          stator.rotation.x = Math.PI / 2;
+          scene.add(stator);
 
-        // Crosshairs
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(cx - 130, cy); ctx.lineTo(cx + 130, cy);
-        ctx.moveTo(cx, cy - 130); ctx.lineTo(cx, cy + 130);
-        ctx.stroke();
+          // Articulated Rotor Group
+          featRotorGroup = new THREE.Group();
+          const rotorGeom = new THREE.CylinderGeometry(1.0, 1.0, 0.7, 24);
+          const rotorMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.9, roughness: 0.2 });
+          const rotor = new THREE.Mesh(rotorGeom, rotorMat);
+          rotor.rotation.x = Math.PI / 2;
+          featRotorGroup.add(rotor);
 
-        t += 0.015;
-        requestAnimationFrame(render);
+          // Armature Lever / Output Shaft
+          const armGeom = new THREE.BoxGeometry(0.35, 1.8, 0.3);
+          const armMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, metalness: 0.8, roughness: 0.3 });
+          const arm = new THREE.Mesh(armGeom, armMat);
+          arm.position.set(0, 0.9, 0.4);
+          featRotorGroup.add(arm);
+
+          // Glowing Core Magnet
+          const coreGeom = new THREE.CylinderGeometry(0.35, 0.35, 0.8, 16);
+          const coreMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+          const core = new THREE.Mesh(coreGeom, coreMat);
+          core.rotation.x = Math.PI / 2;
+          core.position.z = 0.45;
+          featRotorGroup.add(core);
+
+          scene.add(featRotorGroup);
+
+          // Radar Floor Grid
+          const grid = new THREE.GridHelper(8, 10, 0x06b6d4, 0x1e293b);
+          grid.position.y = -1.2;
+          scene.add(grid);
+
+          let spin = 0;
+          function loop() {
+            requestAnimationFrame(loop);
+            spin += 0.012;
+            if (featRotorGroup) {
+              const slider = document.getElementById('feat-torque-slider');
+              if (!slider || !slider.matches(':active')) {
+                featRotorGroup.rotation.z = Math.sin(spin * 1.5) * 0.35;
+              }
+            }
+            renderer.render(scene, camera);
+          }
+          loop();
+        });
       }
-      render();
     }
 
     window.addEventListener('DOMContentLoaded', () => {

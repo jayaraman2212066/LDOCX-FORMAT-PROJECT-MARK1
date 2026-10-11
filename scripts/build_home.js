@@ -16,6 +16,7 @@ const homeHtml = `<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/design-system.css">
+  <script defer src="/vanguard-3d-telemetry.js"></script>
   <style>
     /* Page-Specific Hero & Bento Enhancements */
     .hero-container {
@@ -134,13 +135,15 @@ const homeHtml = `<!DOCTYPE html>
     }
 
     .macos-titlebar {
-      height: 40px;
+      height: 44px;
       background: #0E101A;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
+      justify-content: space-between;
       padding: 0 16px;
       position: relative;
+      box-sizing: border-box;
     }
 
     .macos-traffic-lights {
@@ -158,15 +161,59 @@ const homeHtml = `<!DOCTYPE html>
     .dot-green { background: #27C93F; }
 
     .macos-window-title {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
       font-size: 12px;
       font-family: var(--font-mono);
       color: #94A3B8;
       display: flex;
       align-items: center;
       gap: 6px;
+    }
+
+    .macos-titlebar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hud-mode-pill {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: #94A3B8;
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      padding: 4px 11px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .hud-mode-pill:hover, .hud-mode-pill.active {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #FBBF24;
+    }
+
+    .hud-pill {
+      background: rgba(14, 16, 26, 0.82);
+      border: 1px solid var(--border);
+      color: #94A3B8;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      backdrop-filter: blur(8px);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .hud-pill:hover {
+      color: #FFF;
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     .vanguard-stage {
@@ -177,6 +224,23 @@ const homeHtml = `<!DOCTYPE html>
       align-items: center;
       justify-content: center;
       overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      .macos-window-title { display: none !important; }
+      .macos-titlebar { padding: 0 10px; }
+      .vanguard-stage { height: 420px; }
+      .ldoc-floating-stat {
+        padding: 6px 10px !important;
+        transform: scale(0.85);
+        transform-origin: top left;
+      }
+      .stat-bob-2 {
+        transform-origin: top right !important;
+      }
+      .stat-bob-3 {
+        transform: translateX(-50%) scale(0.85) !important;
+      }
     }
 
     /* Section Wrappers */
@@ -229,6 +293,7 @@ const homeHtml = `<!DOCTYPE html>
       justify-content: space-between;
       height: 100%;
       min-height: 280px;
+      box-sizing: border-box;
     }
 
     .bento-icon-tile {
@@ -258,244 +323,98 @@ const homeHtml = `<!DOCTYPE html>
       line-height: 1.6;
     }
 
-    /* Comparison Table */
-    .bench-table-wrap {
-      overflow-x: auto;
-      border-radius: var(--radius-md);
+    /* IDE Mock */
+    .ldoc-ide-mock {
+      border-radius: 12px;
+      background: #0B0C12;
       border: 1px solid var(--border);
-      background: var(--surface);
-      box-shadow: var(--shadow-card);
-    }
-
-    .bench-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 13.5px;
-      min-width: 680px;
-    }
-
-    .bench-table th, .bench-table td {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .bench-table th {
-      background: #0C0D14;
-      font-family: var(--font-display);
-      font-weight: 700;
-      color: #FFFFFF;
-      font-size: 13px;
-    }
-
-    .bench-table th.col-ldoc, .bench-table td.col-ldoc {
-      background: rgba(245, 158, 11, 0.05);
-      border-left: 1px solid rgba(245, 158, 11, 0.25);
-      border-right: 1px solid rgba(245, 158, 11, 0.25);
-    }
-
-    .bench-table tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .badge-check {
-      color: var(--emerald);
-      font-weight: 700;
-    }
-
-    .badge-cross {
-      color: #64748B;
-    }
-
-    /* Pricing Section Cards */
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-      margin-bottom: 48px;
-    }
-
-    .price-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 32px 28px;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    .price-card.featured {
-      border: 1.5px solid var(--accent);
-      background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.08) 0%, var(--surface) 100%);
-      box-shadow: 0 16px 48px -12px rgba(245, 158, 11, 0.25);
-    }
-
-    .featured-tag {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--accent);
-      color: #090A0F;
-      font-size: 10.5px;
-      font-weight: 800;
-      padding: 3px 12px;
-      border-radius: var(--radius-full);
-      letter-spacing: 0.5px;
-    }
-
-    .price-num {
-      font-family: var(--font-display);
-      font-size: 42px;
-      font-weight: 800;
-      color: #FFFFFF;
-      margin: 16px 0 6px;
-    }
-
-    .price-unit {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 24px;
-    }
-
-    .plan-perks {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      font-size: 13.5px;
-      color: #CBD5E1;
-      margin-bottom: 32px;
-      flex: 1;
-    }
-
-    .plan-perks li {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Accordion FAQ */
-    .faq-list {
-      max-width: 820px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .faq-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
       overflow: hidden;
-      transition: border-color 0.15s ease;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
     }
 
-    .faq-item.active {
-      border-color: rgba(245, 158, 11, 0.35);
+    .ldoc-ide-tree {
+      border-right: 1px solid var(--border);
+      background: #08090E;
+      padding: 20px 16px;
     }
 
-    .faq-q {
-      padding: 20px 24px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #F8FAFC;
+    .ide-tree-item {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 12px;
       cursor: pointer;
+      color: #94A3B8;
+      transition: all 0.15s ease;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      user-select: none;
+      gap: 6px;
     }
-
-    .faq-a {
-      max-height: 0;
-      overflow: hidden;
-      padding: 0 24px;
-      color: var(--muted);
-      font-size: 14.5px;
-      line-height: 1.6;
-      transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
-    }
-
-    .faq-item.active .faq-a {
-      max-height: 300px;
-      padding: 0 24px 20px;
-    }
-
-    /* Footer */
-    .footer-wrap {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 80px 24px 40px;
-      border-top: 1px solid var(--border);
-      position: relative;
-      z-index: 10;
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 60px;
+    .ide-tree-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #FFF;
     }
 
     @media (max-width: 768px) {
-      .footer-grid { grid-template-columns: 1fr; }
+      .ldoc-ide-mock { grid-template-columns: 1fr; }
+      .ldoc-ide-tree { border-right: none; border-bottom: 1px solid var(--border); }
     }
   </style>
 </head>
 <body>
 
   <!-- Floating Pill Navbar -->
-  <div class="ldoc-nav-wrapper">
-    <nav class="ldoc-pill-navbar" aria-label="Main Navigation">
+  <nav class="ldoc-navbar">
+    <div class="ldoc-navbar-inner">
       <a href="/" class="ldoc-nav-logo">
-        <img src="/ldoc_logo.png" alt="LDOC Logo" />
+        <img src="/ldoc_logo.png" alt="LDOC Studio" />
         <span>LDOC STUDIO</span>
       </a>
 
       <div class="ldoc-nav-links">
-        <a href="/format" class="ldoc-nav-link">Format Spec</a>
         <a href="/features" class="ldoc-nav-link">Features</a>
-        <a href="/live-studio" class="ldoc-nav-link">Live Studio</a>
-        <a href="/models" class="ldoc-nav-link">Models Hub</a>
+        <a href="/format" class="ldoc-nav-link">Format Spec</a>
+        <a href="/models" class="ldoc-nav-link">Blueprints</a>
         <a href="/pricing" class="ldoc-nav-link">Pricing</a>
-        <a href="/docs" class="ldoc-nav-link">Docs &amp; SDK</a>
-        <a href="/changelog" class="ldoc-nav-link">Changelog</a>
+        <a href="/docs" class="ldoc-nav-link">Docs</a>
       </div>
 
-      <div class="ldoc-nav-actions">
-        <button class="ldoc-btn-ghost" onclick="window.openCommandPalette()" title="Press Ctrl+K">
-          <kbd style="font-family:monospace;font-size:11px">⌘K</kbd>
+      <div class="ldoc-nav-right">
+        <button class="ldoc-nav-search-btn" onclick="openCmdPalette()" title="Command Palette (Ctrl+K)">
+          <span>Search documentation...</span>
+          <span class="cmd-badge">⌘K</span>
         </button>
-        <a href="/live-studio" class="ldoc-btn-ghost">Launch Studio</a>
-        <a href="${directBuyUrl}" target="_blank" class="ldoc-btn-primary">Get Pro ($19)</a>
+        <a href="/live-studio" class="ldoc-btn-primary" style="padding: 7px 16px; font-size: 13px;">
+          <span>Launch Studio &rarr;</span>
+        </a>
       </div>
-    </nav>
-  </div>
+    </div>
+  </nav>
 
+  <!-- Hero Section -->
   <main>
-    <!-- HERO SECTION -->
     <section class="hero-container">
       <div class="hero-eyebrow ldoc-reveal" data-delay="0ms">
         <span class="pulse-dot"></span>
-        <span>INTRODUCING .LDOCX v2.5.0 • OPEN LIVING DOCUMENT STANDARD</span>
+        <span>OPEN LIVING DOCUMENT STANDARD v2.5.0</span>
       </div>
 
-      <h1 class="hero-h1 ldoc-reveal" data-delay="60ms">
-        Documents that <span class="amber-gradient">compute, react</span> &amp; evolve.
+      <h1 class="hero-h1 ldoc-reveal" data-delay="80ms">
+        Documents that <span class="amber-gradient">compute, react</span>, and evolve in real-time.
       </h1>
 
-      <p class="hero-lead ldoc-reveal" data-delay="120ms">
-        PDF was designed in 1993 for flat paper printouts. <strong>.ldocx</strong> runs live executable formulas, real-time telemetry charts, and spatial 3D WebGL models — sealed in an air-gapped sovereign container.
+      <p class="hero-lead ldoc-reveal" data-delay="160ms">
+        LDOC Studio replaces static 1993 PDF architecture with spatial 3D WebGL, topological formula AST graphs, and Pretext arithmetic typography. Bit-for-bit identical layout across every surface.
       </p>
 
-      <div class="hero-ctas ldoc-reveal" data-delay="180ms">
+      <div class="hero-ctas ldoc-reveal" data-delay="200ms">
         <a href="/live-studio" class="ldoc-btn-primary" style="padding: 12px 28px; font-size: 15px;">
-          <span>Launch Web Studio</span>
-          <span>&rarr;</span>
+          <span>Launch Web Studio &rarr;</span>
+        </a>
+        <a href="${directBuyUrl}" target="_blank" class="ldoc-btn-ghost" style="padding: 12px 24px; font-size: 15px;">
+          <span>Buy Pro Lifetime ($19)</span>
         </a>
         <a href="/format" class="ldoc-btn-ghost" style="padding: 12px 24px; font-size: 15px;">
           <span>Explore Format Spec</span>
@@ -521,36 +440,72 @@ const homeHtml = `<!DOCTYPE html>
           <div class="macos-window-title">
             <span>vanguard-7-telemetry.ldocx — LDOC Viewer</span>
           </div>
+          <div class="macos-titlebar-right">
+            <button id="hero-tab-3d" class="hud-mode-pill active" onclick="switchHeroStageMode('3d')">
+              <span>🤖 3D WebGL Model</span>
+            </button>
+            <button id="hero-tab-video" class="hud-mode-pill" onclick="switchHeroStageMode('video')">
+              <span>🎬 Video Preview</span>
+            </button>
+            <a href="/vanguard-7-telemetry.ldocx" download="vanguard-7-telemetry.ldocx" class="hud-mode-pill" title="Download .ldocx package">
+              <span>💾 .ldocx</span>
+            </a>
+            <a href="/live-studio?file=/vanguard-7-telemetry.ldocx" class="hud-mode-pill" title="Inspect in Live Studio">
+              <span>Open in Studio &rarr;</span>
+            </a>
+          </div>
         </div>
 
-        <div class="vanguard-stage">
+        <div class="vanguard-stage" id="hero-vanguard-stage">
+          <!-- 3D Real WebGL Canvas -->
+          <canvas id="hero-real-3d-canvas" style="width: 100%; height: 100%; position: absolute; inset: 0; display: block; z-index: 5;"></canvas>
+
+          <!-- Top HUD Overlay -->
+          <div id="hero-hud-top" style="position: absolute; top: 16px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; z-index: 15;">
+            <span class="hud-pill"><span class="pulse-dot"></span> 120Hz Hardware WebGL Compositor</span>
+            <div style="display: flex; gap: 8px; pointer-events: auto;">
+              <button class="hud-pill" id="hero-wireframe-btn" onclick="toggleHeroWireframe()">Wireframe</button>
+              <button class="hud-pill" id="hero-orbit-btn" onclick="toggleHeroAutoOrbit()">Pause Orbit</button>
+            </div>
+          </div>
+
           <!-- Floating Glass Telemetry Stat Badges -->
-          <div class="ldoc-floating-stat stat-bob-1" style="top: 36px; left: 36px;">
+          <div class="ldoc-floating-stat stat-bob-1" style="top: 60px; left: 24px; z-index: 12;">
             <div style="font-size: 18px; color: var(--accent);">⚡</div>
             <div>
               <div style="font-size: 10px; color: var(--muted); text-transform: uppercase;">Aero Torque</div>
-              <div style="font-size: 16px; font-weight: 700; color: #FFF; font-family: var(--font-mono)">340 Nm</div>
+              <div style="font-size: 16px; font-weight: 700; color: #FFF; font-family: var(--font-mono)" id="floating-torque-val">340 Nm</div>
             </div>
           </div>
 
-          <div class="ldoc-floating-stat stat-bob-2" style="top: 36px; right: 36px;">
+          <div class="ldoc-floating-stat stat-bob-2" style="top: 60px; right: 24px; z-index: 12;">
             <div style="font-size: 18px; color: var(--accent-2);">🌡️</div>
             <div>
               <div style="font-size: 10px; color: var(--muted); text-transform: uppercase;">Core Temp</div>
-              <div style="font-size: 16px; font-weight: 700; color: #FFF; font-family: var(--font-mono)">+42.8 °C</div>
+              <div style="font-size: 16px; font-weight: 700; color: #FFF; font-family: var(--font-mono)" id="floating-temp-val">+42.8 °C</div>
             </div>
           </div>
 
-          <div class="ldoc-floating-stat stat-bob-3" style="bottom: 36px; left: 50%; transform: translateX(-50%);">
+          <div class="ldoc-floating-stat stat-bob-3" style="bottom: 74px; left: 50%; transform: translateX(-50%); z-index: 12;">
             <div style="font-size: 18px; color: var(--emerald);">🔒</div>
             <div>
               <div style="font-size: 10px; color: var(--muted); text-transform: uppercase;">Cryptographic Integrity</div>
-              <div style="font-size: 16px; font-weight: 700; color: var(--emerald); font-family: var(--font-mono)">98.4% Verified Root</div>
+              <div style="font-size: 16px; font-weight: 700; color: var(--emerald); font-family: var(--font-mono)" id="floating-integrity-val">98.4% Verified Root</div>
             </div>
           </div>
 
-          <!-- Video Demo / WebGL Canvas Stage -->
-          <video src="/upscaled-videoad2.mp4" autoplay loop muted playsinline poster="/video-poster.webp" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;"></video>
+          <!-- Bottom HUD Telemetry Console -->
+          <div id="hero-hud-bottom" style="position: absolute; bottom: 14px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; z-index: 15; background: rgba(14, 16, 26, 0.78); backdrop-filter: blur(8px); border: 1px solid var(--border); padding: 8px 16px; border-radius: 10px; box-sizing: border-box;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <span style="font-size: 11px; font-family: var(--font-mono); color: #94A3B8; text-transform: uppercase;">Joint Load:</span>
+              <input type="range" id="hero-actuator-slider" min="50" max="600" step="10" value="340" style="width: 140px; accent-color: var(--accent); cursor: pointer;" oninput="updateHeroFormula(this.value)">
+              <span id="hero-actuator-val" style="font-size: 12px; font-family: var(--font-mono); font-weight: 700; color: var(--accent);">340 Nm</span>
+            </div>
+            <span class="hud-hint" style="font-size: 11px; color: #64748B; font-family: var(--font-mono);">Drag to rotate 360° • Scroll to zoom</span>
+          </div>
+
+          <!-- Video Demo Fallback Stage (Shown on toggle) -->
+          <video id="hero-video-demo" src="/upscaled-videoad2.mp4" loop muted playsinline poster="/video-poster.webp" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; display: none; z-index: 10;"></video>
         </div>
       </div>
 
@@ -589,18 +544,24 @@ const homeHtml = `<!DOCTYPE html>
       </div>
 
       <div class="ldoc-bento-grid">
-        <!-- Card 1: 3D Spatial (Col 8) -->
+        <!-- Card 1: 3D Spatial (Col 8) with Live 3D WebGL Canvas -->
         <div class="bento-col-8 ldoc-reveal" data-delay="60ms">
-          <div class="ldoc-spotlight-card bento-card">
-            <div>
+          <div class="ldoc-spotlight-card bento-card" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 260px;">
               <div class="bento-icon-tile">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
               </div>
               <h3>Discrete GPU Spatial 3D Pipeline</h3>
               <p>Embed full GLTF/GLB CAD models and Draco compressed meshes directly inside document pages. Orbit, inspect materials, and compute aerodynamic clearances in real-time at 120 FPS.</p>
+              <div style="margin-top: 18px; padding: 10px 14px; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); font-family: var(--font-mono); font-size: 11.5px; color: var(--accent-light); display: inline-block;">
+                ✓ glTF 2.0 • Draco Compression • Zero Cloud Streaming
+              </div>
             </div>
-            <div style="margin-top: 24px; padding: 16px; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); font-family: var(--font-mono); font-size: 12px; color: var(--accent-light);">
-              ✓ glTF 2.0 • Draco Compression • Zero Cloud Streaming
+            <div style="width: 180px; height: 180px; position: relative; border-radius: 12px; background: #0A0D17; border: 1px solid var(--border); overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <canvas id="bento-3d-canvas" style="width: 100%; height: 100%; display: block;"></canvas>
+              <div style="position: absolute; bottom: 6px; left: 8px; font-size: 9.5px; font-family: var(--font-mono); color: #38bdf8; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 4px;">
+                120Hz WebGL
+              </div>
             </div>
           </div>
         </div>
@@ -648,7 +609,7 @@ const homeHtml = `<!DOCTYPE html>
               <p>Every block, mesh node, and telemetry row is digested into a SHA-256 Merkle tree signed with Ed25519 root keys. Local integrity verification raises an alarm in &lt;15ms if even one character is altered.</p>
             </div>
             <div style="margin-top: 24px; padding: 16px; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); font-family: var(--font-mono); font-size: 12px; color: var(--emerald);">
-              Root Digest: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 (Verified)
+              Root Digest: cf5e973d96c1f2eebbf1f6e31a2cec3ab3293ece187e984e4273d086560e203d (Verified)
             </div>
           </div>
         </div>
@@ -662,34 +623,34 @@ const homeHtml = `<!DOCTYPE html>
       <div class="section-header ldoc-reveal">
         <span class="section-tag">OPEN CONTAINER STANDARD</span>
         <h2 class="section-h2">Inside the .ldocx Container</h2>
-        <p class="section-sub">Standard PKWare ZIP archive holding structured JSON AST schemas, binary assets, and 20-year archival fallback HTML.</p>
+        <p class="section-sub">Standard PKWare ZIP archive holding structured JSON AST schemas, binary 3D assets, and 20-year archival fallback HTML.</p>
       </div>
 
       <div class="ldoc-ide-mock ldoc-reveal">
         <!-- Tree Left -->
         <div class="ldoc-ide-tree">
           <div style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; margin-bottom: 8px;">Archive Structure</div>
-          <div style="padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.08); color: #FFF; font-family: var(--font-mono); font-size: 12px;">📁 root/</div>
-          <div style="padding: 6px 10px 6px 24px; border-radius: 6px; color: var(--accent-light); font-family: var(--font-mono); font-size: 12px;">📄 manifest.json</div>
-          <div style="padding: 6px 10px 6px 24px; border-radius: 6px; color: #CBD5E1; font-family: var(--font-mono); font-size: 12px;">📄 document.ast.json</div>
-          <div style="padding: 6px 10px 6px 24px; border-radius: 6px; color: #94A3B8; font-family: var(--font-mono); font-size: 12px;">📁 models/telemetry.glb</div>
-          <div style="padding: 6px 10px 6px 24px; border-radius: 6px; color: var(--emerald); font-family: var(--font-mono); font-size: 12px;">🔒 signatures/ed25519.sig</div>
-          <div style="padding: 6px 10px 6px 24px; border-radius: 6px; color: #64748B; font-family: var(--font-mono); font-size: 12px;">📄 fallback.html</div>
+          <div class="ide-tree-item" id="ide-item-ast" onclick="selectIdeFile('ast', this)" style="background: rgba(245,158,11,0.15); color: #FFF;">📄 document.ast.json</div>
+          <div class="ide-tree-item" id="ide-item-model" onclick="selectIdeFile('model', this)" style="color: var(--accent-light);">🧊 models/telemetry.glb</div>
+          <div class="ide-tree-item" id="ide-item-manifest" onclick="selectIdeFile('manifest', this)">📄 manifest.json</div>
+          <div class="ide-tree-item" id="ide-item-sig" onclick="selectIdeFile('sig', this)" style="color: var(--emerald);">🔒 signatures/ed25519.sig</div>
+          <div class="ide-tree-item" id="ide-item-fallback" onclick="selectIdeFile('fallback', this)" style="color: #64748B;">📄 fallback.html</div>
         </div>
 
-        <!-- Code Right -->
+        <!-- Code / 3D Right -->
         <div class="ldoc-ide-editor">
           <div style="display: flex; border-bottom: 1px solid var(--border); padding: 0 16px; background: #0B0C12;">
-            <div style="padding: 10px 16px; border-bottom: 2px solid var(--accent); color: #FFF; font-size: 12px; font-family: var(--font-mono);">document.ast.json</div>
-            <div style="padding: 10px 16px; color: #64748B; font-size: 12px; font-family: var(--font-mono);">manifest.json</div>
+            <div id="ide-tab-label" style="padding: 10px 16px; border-bottom: 2px solid var(--accent); color: #FFF; font-size: 12px; font-family: var(--font-mono);">document.ast.json</div>
+            <div id="ide-sub-label" style="padding: 10px 16px; color: #64748B; font-size: 12px; font-family: var(--font-mono);">JSON AST Hierarchy</div>
           </div>
-          <pre style="padding: 24px; font-family: var(--font-mono); font-size: 13px; color: #A5B4FC; overflow-x: auto; line-height: 1.6;"><code>{
+          <div id="ide-code-view" style="display: block;">
+            <pre style="padding: 24px; font-family: var(--font-mono); font-size: 13px; color: #A5B4FC; overflow-x: auto; line-height: 1.6; margin: 0;"><code id="ide-code-content">{
   "$schema": "https://ldoc.io/spec/v2.5.0/document.schema.json",
   "version": "2.5.0",
   "meta": {
-    "title": "Vanguard-7 Hypercar Telemetry",
+    "title": "Vanguard-7 Hypercar & Robotics Telemetry",
     "author": "Autonomous Dynamics Lab",
-    "merkleRoot": "a7c29e1f...04b9"
+    "merkleRoot": "cf5e973d96c1f2eebbf1f6e31a2cec3ab3293ece187e984e4273d086560e203d"
   },
   "blocks": [
     {
@@ -701,12 +662,19 @@ const homeHtml = `<!DOCTYPE html>
     {
       "id": "block-02",
       "type": "3d_model",
-      "asset": "models/vanguard7.glb",
-      "fov": 45,
+      "asset": "models/telemetry.glb",
+      "actuatorTorque": 340,
       "interactive": true
     }
   ]
 }</code></pre>
+          </div>
+          <div id="ide-3d-view" style="display: none; height: 320px; position: relative; background: #080A10; align-items: center; justify-content: center;">
+            <canvas id="ide-mini-3d-canvas" style="width: 100%; height: 100%; display: block;"></canvas>
+            <div style="position: absolute; bottom: 12px; left: 16px; font-size: 11px; font-family: var(--font-mono); color: #38bdf8; background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 6px;">
+              ✓ glTF 2.0 Binary Mesh • 60 FPS Orbit Active
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -718,49 +686,55 @@ const homeHtml = `<!DOCTYPE html>
       <div class="section-header ldoc-reveal">
         <span class="section-tag">COMPETITIVE ARCHITECTURE</span>
         <h2 class="section-h2">Why PDF &amp; DOCX Fail Modern Computing</h2>
-        <p class="section-sub">A definitive engineering breakdown of text measurement, 3D execution, and security models.</p>
+        <p class="section-sub">Documents must run as sovereign code. Here is how LDOC surpasses legacy formats on every metric.</p>
       </div>
 
-      <div class="bench-table-wrap ldoc-reveal">
-        <table class="bench-table">
+      <div class="ldoc-table-container ldoc-reveal">
+        <table class="ldoc-table">
           <thead>
             <tr>
-              <th>Capability</th>
-              <th class="col-ldoc">.ldocx (Living Document)</th>
-              <th>Adobe PDF (ISO 32000)</th>
-              <th>Microsoft Word (.docx)</th>
+              <th>Capability &amp; Invariant</th>
+              <th class="col-highlight">LDOC (.ldocx)</th>
+              <th>Adobe PDF</th>
+              <th>Microsoft DOCX</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>Text Measurement Architecture</strong></td>
-              <td class="col-ldoc"><span class="badge-check">✓ Pretext Arithmetic (0 Drift)</span></td>
-              <td><span class="badge-cross">Fixed Vector Glyphs (No Reflow)</span></td>
-              <td><span class="badge-cross">GDI / DirectWrite (Device Drift)</span></td>
+              <td class="feature-name">Cross-Surface Layout Drift</td>
+              <td class="col-highlight ok">0.00px (Bit-for-Bit Pretext)</td>
+              <td class="bad">Static Fixed Grid (Unreflowable)</td>
+              <td class="bad">High Reflow Drift (Printer Dependent)</td>
             </tr>
             <tr>
-              <td><strong>Executable Reactive Code</strong></td>
-              <td class="col-ldoc"><span class="badge-check">✓ Sandboxed AST DAG (&lt;0.2ms)</span></td>
-              <td><span class="badge-cross">Limited AcroJS (Vulnerable)</span></td>
-              <td><span class="badge-cross">VBA Macros (Malware Risk)</span></td>
+              <td class="feature-name">Embedded 3D Spatial Models</td>
+              <td class="col-highlight ok">Native 120Hz WebGL &amp; Draco</td>
+              <td class="bad">Deprecated U3D / Insecure Plugins</td>
+              <td class="bad">Flat 2D Raster Screenshots</td>
             </tr>
             <tr>
-              <td><strong>Interactive 3D Spatial Models</strong></td>
-              <td class="col-ldoc"><span class="badge-check">✓ WebGL 2.0 / glTF 120 FPS</span></td>
-              <td><span class="badge-cross">Legacy U3D / PRC (Deprecated)</span></td>
-              <td><span class="badge-cross">Static 2D Preview Only</span></td>
+              <td class="feature-name">Topological Reactive DAG</td>
+              <td class="col-highlight ok">Sub-millisecond Reactive AST</td>
+              <td class="bad">Static Text Only</td>
+              <td class="bad">Unsafe Macros / Broken Sandboxing</td>
             </tr>
             <tr>
-              <td><strong>Cryptographic Provenance</strong></td>
-              <td class="col-ldoc"><span class="badge-check">✓ Merkle SHA-256 &amp; Ed25519</span></td>
-              <td><span class="badge-cross">X.509 Certificate bloat</span></td>
-              <td><span class="badge-cross">Unsigned ZIP Archive</span></td>
+              <td class="feature-name">Cryptographic Provenance</td>
+              <td class="col-highlight ok">RFC 6962 Merkle SHA-256 + Ed25519</td>
+              <td class="warn">Fragile X.509 Adobe Certs</td>
+              <td class="bad">Easily Tampered XML Without Trace</td>
             </tr>
             <tr>
-              <td><strong>Air-Gapped Sovereign Execution</strong></td>
-              <td class="col-ldoc"><span class="badge-check">✓ 100% Zero-Telemetry Egress</span></td>
-              <td><span class="badge-cross">Adobe Cloud Pingbacks</span></td>
-              <td><span class="badge-cross">Office 365 Cloud Telemetry</span></td>
+              <td class="feature-name">Air-Gapped Sovereign Execution</td>
+              <td class="col-highlight ok">100% Offline (Zero Network Calls)</td>
+              <td class="warn">Calls Home for Cloud Fonts</td>
+              <td class="bad">Office 365 Cloud Dependent</td>
+            </tr>
+            <tr>
+              <td class="feature-name">20-Year Archival Longevity</td>
+              <td class="col-highlight ok">Self-Contained fallback.html</td>
+              <td class="warn">Requires Proprietary PDF Viewers</td>
+              <td class="bad">Format Version Drift &amp; Deprecation</td>
             </tr>
           </tbody>
         </table>
@@ -769,71 +743,59 @@ const homeHtml = `<!DOCTYPE html>
 
     <hr class="ldoc-section-divider" />
 
-    <!-- 4. TRANSPARENT PRICING GRID -->
+    <!-- 4. TRANSPARENT PRICING CARDS -->
     <section class="section-wrap" id="pricing">
       <div class="section-header ldoc-reveal">
-        <span class="section-tag">TRANSPARENT LICENSING</span>
-        <h2 class="section-h2">Simple, Developer-First Pricing</h2>
-        <p class="section-sub">One-time lifetime workstation licenses. No subscription locks or hidden royalties.</p>
+        <span class="section-tag">PREDICTABLE WORKSTATION LICENSING</span>
+        <h2 class="section-h2">One Fair Price. Perpetual Ownership.</h2>
+        <p class="section-sub">No forced subscription fees. Run forever on your local workstation with air-gapped sovereignty.</p>
       </div>
 
-      <div class="pricing-grid">
-        <!-- Community ($0) -->
-        <div class="price-card ldoc-reveal" data-delay="0ms">
-          <h3 style="font-size: 18px; font-weight: 700; color: #FFF;">Community</h3>
-          <div class="price-num">$0</div>
-          <div class="price-unit">Free forever for researchers &amp; open source</div>
-          <ul class="plan-perks">
-            <li><span>✓</span> Full .ldocx specification &amp; AST schema</li>
-            <li><span>✓</span> Web studio browser demo</li>
-            <li><span>✓</span> Core @ldoc/sdk developer engine</li>
-            <li><span>✓</span> Apache 2.0 open license</li>
+      <div class="pricing-cards-grid">
+        <!-- Community Tier -->
+        <div class="pricing-card ldoc-reveal" data-delay="60ms">
+          <span class="plan-name">Community Free</span>
+          <div class="plan-price">$0</div>
+          <div class="plan-period">Free forever for personal use</div>
+          <p class="plan-desc">Full access to the web editor, local .ldocx parsing, and Pretext layout inspection.</p>
+          <ul class="plan-features">
+            <li><span>✓</span> Full Browser Web Studio Access</li>
+            <li><span>✓</span> Core .ldocx Reader &amp; Exporter</li>
+            <li><span>✓</span> 25/25 Zero-Drift Pretext Engine</li>
+            <li><span>✓</span> Merkle SHA-256 Integrity Verification</li>
           </ul>
-          <a href="/live-studio" class="ldoc-btn-ghost" style="text-align: center; justify-content: center;">Use Free in Browser</a>
+          <a href="/live-studio" class="ldoc-btn-ghost" style="text-align: center; justify-content: center;">Launch Web Demo</a>
         </div>
 
-        <!-- Studio Pro ($19 Lifetime) -->
-        <div class="price-card featured ldoc-reveal" data-delay="80ms">
-          <div class="featured-tag">MOST POPULAR • LIFETIME</div>
-          <h3 style="font-size: 18px; font-weight: 700; color: #FFF;">Studio Pro</h3>
-          <div class="price-num">$19</div>
-          <div class="price-unit">One-time purchase • Perpetual lifetime license</div>
-          <ul class="plan-perks">
-            <li><span>✓</span> <strong>Everything in Community</strong></li>
-            <li><span>✓</span> <strong>100% Air-Gapped Desktop Suite</strong> (Win, Mac, Linux)</li>
-            <li><span>✓</span> <strong>Discrete GPU Engine</strong> (120Hz Unbounded VRAM)</li>
-            <li><span>✓</span> <strong>Vector PDF Flattener</strong> &amp; Print Engine</li>
-            <li><span>✓</span> <strong>Commercial Rights</strong> &amp; Lifetime Updates</li>
+        <!-- Studio Pro Tier (Featured) -->
+        <div class="pricing-card featured ldoc-reveal" data-delay="120ms">
+          <div class="plan-tag">MOST POPULAR • LIFETIME OWNERSHIP</div>
+          <span class="plan-name">Studio Pro Workstation</span>
+          <div class="plan-price">$19</div>
+          <div class="plan-period">One-time payment • Lifetime license</div>
+          <p class="plan-desc">Standalone desktop suite for Windows, macOS, and Linux. Unlimited air-gapped living document authoring.</p>
+          <ul class="plan-features">
+            <li><span>✓</span> Perpetual Local Desktop License</li>
+            <li><span>✓</span> Discrete 120Hz GPU 3D Mesh Acceleration</li>
+            <li><span>✓</span> Unlimited Multi-Slide &amp; Document Output</li>
+            <li><span>✓</span> Headless CLI PDF Flattener Included</li>
+            <li><span>✓</span> Ed25519 Cryptographic Document Signing</li>
+            <li><span>✓</span> Commercial Apache-2.0 Royalty-Free</li>
           </ul>
-          <a href="${directBuyUrl}" target="_blank" class="ldoc-btn-primary" style="text-align: center; justify-content: center;">
-            <span>Buy Pro Lifetime ($19)</span>
-            <span>&rarr;</span>
-          </a>
+          <a href="${directBuyUrl}" target="_blank" class="ldoc-btn-primary" style="text-align: center; justify-content: center; width: 100%; box-sizing: border-box;">Buy Pro Lifetime ($19)</a>
         </div>
 
-        <!-- Cloud Workspace ($79/year) -->
-        <div class="price-card ldoc-reveal" data-delay="160ms">
-          <h3 style="font-size: 18px; font-weight: 700; color: #FFF;">Cloud Workspace</h3>
-          <div class="price-num">$79</div>
-          <div class="price-unit">per year • Multi-device collaboration</div>
-          <ul class="plan-perks">
-            <li><span>✓</span> Cloud Document Sync Relay</li>
-            <li><span>✓</span> AI Document Intelligence Copilot</li>
-            <li><span>✓</span> Web Sharing &amp; Access Links</li>
-            <li><span>✓</span> Priority Support Channels</li>
-          </ul>
-          <a href="${directBuyUrl}" target="_blank" class="ldoc-btn-ghost" style="text-align: center; justify-content: center;">Start Cloud ($79/yr)</a>
-        </div>
-
-        <!-- Enterprise Fleet ($499/year) -->
-        <div class="price-card ldoc-reveal" data-delay="240ms">
-          <h3 style="font-size: 18px; font-weight: 700; color: #FFF;">Enterprise Fleet</h3>
-          <div class="price-num">$499</div>
-          <div class="price-unit">per year • Custom compliance &amp; SLA</div>
-          <ul class="plan-perks">
-            <li><span>✓</span> Silent MSI/RPM Fleet Deployment</li>
-            <li><span>✓</span> 99.9% Uptime SLA Agreement</li>
-            <li><span>✓</span> Custom CAD &amp; Telemetry AST Schemas</li>
+        <!-- Enterprise Fleet Tier -->
+        <div class="pricing-card ldoc-reveal" data-delay="180ms">
+          <span class="plan-name">Enterprise Fleet</span>
+          <div class="plan-price">$499</div>
+          <div class="plan-period">Per organization / year</div>
+          <p class="plan-desc">For defense, aerospace, financial engineering, and automated documentation pipelines.</p>
+          <ul class="plan-features">
+            <li><span>✓</span> Unlimited Seat Organization License</li>
+            <li><span>✓</span> Headless Server-Side Rendering SDK</li>
+            <li><span>✓</span> Custom Merkle Hardware Enclave HSM Signer</li>
+            <li><span>✓</span> Air-gapped SCIF Deployment Packages</li>
             <li><span>✓</span> Dedicated Solutions Engineering</li>
           </ul>
           <a href="mailto:jayaramankalidasan@gmail.com" class="ldoc-btn-ghost" style="text-align: center; justify-content: center;">Contact Enterprise</a>
@@ -961,6 +923,7 @@ const homeHtml = `<!DOCTYPE html>
     </div>
   </footer>
 
+  <script src="/design-system.js"></script>
   <script>
     function toggleFaq(el) {
       const item = el.closest('.faq-item');
@@ -968,12 +931,120 @@ const homeHtml = `<!DOCTYPE html>
       const icon = el.querySelector('span:last-child');
       if (icon) icon.textContent = item.classList.contains('active') ? '✕' : '+';
     }
-  </script>
 
-  <script src="/design-system.js"></script>
+    // Initialize Bento Grid 3D Preview
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initMini3DPreview === 'function') {
+        initMini3DPreview('bento-3d-canvas', 'robotics');
+      }
+    });
+
+    // Inside .ldocx Container Interactive File Tree Logic
+    const IDE_FILES = {
+      ast: {
+        tab: 'document.ast.json',
+        sub: 'JSON AST Pretext Hierarchy',
+        type: 'code',
+        content: JSON.stringify({
+          "$schema": "https://ldoc.io/spec/v2.5.0/document.schema.json",
+          "version": "2.5.0",
+          "meta": {
+            "title": "Vanguard-7 Hypercar & Robotics Telemetry",
+            "author": "Autonomous Dynamics Lab",
+            "merkleRoot": "cf5e973d96c1f2eebbf1f6e31a2cec3ab3293ece187e984e4273d086560e203d"
+          },
+          "blocks": [
+            {
+              "id": "block-01",
+              "type": "heading",
+              "level": 1,
+              "text": "Telemetry Specification"
+            },
+            {
+              "id": "block-02",
+              "type": "3d_model",
+              "asset": "models/telemetry.glb",
+              "actuatorTorque": 340,
+              "interactive": true
+            }
+          ]
+        }, null, 2)
+      },
+      model: {
+        tab: 'models/telemetry.glb',
+        sub: 'glTF 2.0 Binary 3D Mesh • Draco Compressed',
+        type: '3d'
+      },
+      manifest: {
+        tab: 'manifest.json',
+        sub: 'Package Identity & Merkle Tree Root',
+        type: 'code',
+        content: JSON.stringify({
+          "ldocVersion": "2.5.0",
+          "docId": "vanguard_7_telemetry",
+          "created": "2026-10-10T00:00:00Z",
+          "generator": "LDOC Studio Pro Compiler",
+          "hashAlgorithm": "SHA-256",
+          "signature": "ed25519_valid",
+          "entrypoints": {
+            "ast": "document.ast.json",
+            "fallback": "fallback.html"
+          }
+        }, null, 2)
+      },
+      sig: {
+        tab: 'signatures/ed25519.sig',
+        sub: 'Asymmetric Cryptographic Attestation',
+        type: 'code',
+        content: "-----BEGIN ED25519 SIGNATURE-----\\nMCowBQYDK2VwAyEAX5p5F9jOQ0lV4D6G5M3w5X9nZ8aK9bJ3yC1s7vW2rQ0=\\n-----END ED25519 SIGNATURE-----\\nHash Digest: cf5e973d96c1f2eebbf1f6e31a2cec3ab3293ece187e984e4273d086560e203d\\nStatus: 100% Verified Match against Root Certificate"
+      },
+      fallback: {
+        tab: 'fallback.html',
+        sub: '20-Year Standalone Longevity Viewer',
+        type: 'code',
+        content: "<!DOCTYPE html>\\n<html>\\n<head><title>Vanguard-7 Telemetry</title></head>\\n<body>\\n  <h1>Vanguard-7 Telemetry Specification</h1>\\n  <p>Self-contained archival container.</p>\\n</body>\\n</html>"
+      }
+    };
+
+    function selectIdeFile(key, el) {
+      document.querySelectorAll('.ide-tree-item').forEach(item => {
+        item.style.background = 'transparent';
+        item.style.color = '#94A3B8';
+      });
+      if (el) {
+        el.style.background = 'rgba(245, 158, 11, 0.15)';
+        el.style.color = '#FFF';
+      }
+
+      const file = IDE_FILES[key];
+      if (!file) return;
+
+      document.getElementById('ide-tab-label').textContent = file.tab;
+      document.getElementById('ide-sub-label').textContent = file.sub;
+
+      const codeView = document.getElementById('ide-code-view');
+      const modelView = document.getElementById('ide-3d-view');
+
+      if (file.type === '3d') {
+        if (codeView) codeView.style.display = 'none';
+        if (modelView) {
+          modelView.style.display = 'flex';
+          if (typeof initMini3DPreview === 'function') {
+            initMini3DPreview('ide-mini-3d-canvas', 'actuator');
+          }
+        }
+      } else {
+        if (modelView) modelView.style.display = 'none';
+        if (codeView) codeView.style.display = 'block';
+        const codeEl = document.getElementById('ide-code-content');
+        if (codeEl) codeEl.textContent = file.content;
+      }
+    }
+    window.selectIdeFile = selectIdeFile;
+  </script>
 </body>
 </html>
 `;
 
 fs.writeFileSync(path.join(__dirname, '..', 'index.html'), homeHtml, 'utf8');
-console.log('Successfully rebuilt index.html with premium design system!');
+console.log('Successfully rebuilt index.html with Vanguard-7 3D Telemetry & WebGL Engine!');
