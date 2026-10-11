@@ -38,7 +38,7 @@ const assets = [
   'gt6-velocity-unleashed.ldocx', 'ldoc-showcase.ldocx', 'all-features-showcase.ldocx',
   'jszip.min.js', 'ldoc_background_image.png', 'ldoc_logo.png', 'manifest.json',
   'video-poster.jpg', 'video-poster.webp', 'ai-brain.webp', 'ldoc_background_image.webp', 'ldoc_logo.webp',
-  'robots.txt', 'sitemap.xml',
+  'robots.txt', 'sitemap.xml', 'vanguard-3d-telemetry.js', 'vanguard-7-telemetry.ldocx',
   'ldoc-config.js', 'ldoc-toast.js', 'ldoc-text-layout.js', 'ldoc-shape-engine.js', 'ldoc-reactive-engine.js', 'ldoc-3d-inspector.js', 'ldoc-quiz-engine.js', 'ldoc-validator.js', 'ldoc-parser.js', 'ldoc-editor-core.js', 'ldoc-shared-modals.js', 'ldoc-export-engine.js',
   'ldoc-template-engine.js', 'ldoc-vector-editor.js', 'ldoc-image-engine.js', 'ldoc-diagram-engine.js', 'ldoc-timeline-engine.js', 'ldoc-plugin-api.js', 'ldoc-presentation-runtime.js',
   'LDOCX_ARCHITECTURE_AND_SECURITY_GUIDE.pdf', 'LDOCX_TECHNICAL_SPECIFICATION.pdf',
