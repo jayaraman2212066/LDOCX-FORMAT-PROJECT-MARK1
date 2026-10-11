@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy & Sovereign Data Autonomy — LDOC Studio</title>
+  <meta name="description" content="Official Privacy Policy for LDOC Studio. 100% air-gapped autonomy, zero document telemetry, and strict client-side data ownership.">
+  <link rel="icon" type="image/png" href="/ldoc_logo.png">
+  <link rel="shortcut icon" href="/app.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/design-system.css">
+  <style>
+    :root {
+      --bg: #08090d;
+      --bg-alt: #0c0e14;
+      --card-bg: rgba(14, 18, 28, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #f59e0b;
+      --primary-light: #fbbf24;
+      --cobalt: #3b82f6;
+      --azure: #38bdf8;
+      --emerald: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .ambient-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(245, 158, 11, 0.05) 0%, transparent 45%);
+    }
+
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* Hero */
+    .policy-hero {
+      padding: 64px 0 32px;
+      text-align: center;
+    }
+    .policy-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: 99px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: #fbbf24;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .policy-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .policy-hero p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 680px;
+      margin: 0 auto 20px;
+    }
+    .meta-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      color: var(--text-sub);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      flex-wrap: wrap;
+    }
+
+    /* Layout: 70ch Centered Article + Sticky TOC */
+    .legal-layout {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 48px;
+      padding: 24px 0 80px;
+      align-items: start;
+    }
+    .legal-article {
+      max-width: 72ch;
+      width: 100%;
+    }
+
+    /* Plain English Summary Box */
+    .plain-summary-card {
+      background: rgba(18, 24, 38, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 36px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .summary-tag {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #38bdf8;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .summary-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .summary-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .summary-list li span.chk {
+      color: #34d399;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* Sections */
+    .policy-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 32px 36px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(12px);
+      scroll-margin-top: 100px;
+    }
+    .policy-h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sec-num {
+      color: var(--primary-light);
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+    }
+    .policy-card p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .policy-card ul {
+      margin: 12px 0 16px 20px;
+      color: #cbd5e1;
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+    .policy-card li { margin-bottom: 6px; }
+    .highlight-box {
+      background: rgba(245, 158, 11, 0.08);
+      border-left: 3px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      color: #fef3c7;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* Security Architecture Diagram */
+    .security-diagram-card {
+      background: linear-gradient(180deg, rgba(14, 20, 32, 0.9) 0%, rgba(8, 12, 20, 0.95) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 36px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+    .diagram-header { margin-bottom: 20px; }
+    .diagram-tag {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .diagram-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .diagram-layers {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .diagram-layer {
+      border-radius: 10px;
+      padding: 16px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .layer-airgap { background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.25); }
+    .layer-sandbox { background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.25); }
+    .layer-merkle { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.25); }
+    .layer-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.05em;
+    }
+    .layer-title {
+      font-family: var(--font-display);
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .layer-desc {
+      font-size: 12.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* Sticky TOC */
+    .legal-toc {
+      position: sticky;
+      top: 90px;
+      background: rgba(14, 18, 28, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .toc-title {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toc-item a {
+      color: #94a3b8;
+      font-size: 12.5px;
+      text-decoration: none;
+      transition: color 0.15s ease;
+      display: block;
+      line-height: 1.4;
+    }
+    .toc-item a:hover { color: #ffffff; }
+    .toc-item a.active {
+      color: #f59e0b;
+      font-weight: 700;
+    }
+
+    /* Print Styles */
+    @media print {
+      .ambient-bg, .ldoc-pill-banner, .ldoc-navbar, .legal-toc, .site-footer, .ldoc-btn {
+        display: none !important;
+      }
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .legal-layout { display: block !important; }
+      .legal-article { max-width: 100% !important; }
+      .policy-card {
+        border: 1px solid #cccccc !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+      .policy-h2, .policy-card p, .policy-card li {
+        color: #000000 !important;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .legal-layout { grid-template-columns: 1fr; }
+      .legal-toc { display: none; }
+      .policy-card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-bg"></div>
+
+  <div class="page-wrap">
+    <!-- Top Dismissible Pill Banner -->
+    <div class="ldoc-pill-banner" id="ldoc-pill-banner">
+      <span class="ldoc-pill-tag">SPEC v2.5.0</span>
+      <span>Living Document Format (.ldocx) open architecture released.</span>
+      <a href="/format">Explore Open Spec &rarr;</a>
+      <button class="ldoc-pill-close" onclick="dismissPillBanner()" aria-label="Dismiss banner">&times;</button>
+    </div>
+
+    <!-- Sticky Glass Navbar -->
+    <nav class="ldoc-navbar" id="ldoc-navbar">
+      <div class="ldoc-navbar-inner">
+        <div class="ldoc-nav-left">
+          <a href="/" class="ldoc-nav-logo">
+            <img src="/ldoc_logo.png" alt="LDOC Studio Logo" width="28" height="28" />
+            <span>LDOC STUDIO</span>
+            <span class="ldoc-nav-badge">.ldocx</span>
+          </a>
+          <div class="ldoc-nav-links">
+            <a href="/format" class="ldoc-nav-link">Format</a>
+            <a href="/features" class="ldoc-nav-link">Features</a>
+            <a href="/live-studio" class="ldoc-nav-link">Live Studio</a>
+            <a href="/models" class="ldoc-nav-link">Models Hub</a>
+            <a href="/pricing" class="ldoc-nav-link">Pricing</a>
+            <a href="/docs" class="ldoc-nav-link">Docs</a>
+            <a href="/changelog" class="ldoc-nav-link">Changelog</a>
+          </div>
+        </div>
+        <div class="ldoc-nav-right">
+          <button class="ldoc-nav-search-btn" onclick="openCmdPalette()" title="Command Palette (Ctrl+K)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Search...</span>
+            <kbd class="ldoc-kbd">Ctrl K</kbd>
+          </button>
+          <button class="ldoc-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
+            <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="12" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="moon-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="ldoc-btn ldoc-btn-ghost" style="padding: 6px 12px; font-size: 0.8rem;" onclick="showAuthModal()">Sign In</button>
+          <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="padding: 7px 14px; font-size: 0.82rem;">Launch Studio &rarr;</a>
+          <button class="ldoc-hamburger" id="ldoc-hamburger" onclick="toggleMobileMenu()" aria-label="Open mobile navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div class="ldoc-mobile-drawer" id="ldoc-mobile-drawer">
+      <div class="ldoc-drawer-links">
+        <a href="/format" class="ldoc-drawer-link">Format Spec</a>
+        <a href="/features" class="ldoc-drawer-link">Features</a>
+        <a href="/live-studio" class="ldoc-drawer-link">Live Studio IDE</a>
+        <a href="/models" class="ldoc-drawer-link">Models Hub</a>
+        <a href="/pricing" class="ldoc-drawer-link">Pricing</a>
+        <a href="/docs" class="ldoc-drawer-link">Documentation</a>
+        <a href="/changelog" class="ldoc-drawer-link">Changelog</a>
+      </div>
+      <div class="ldoc-drawer-actions">
+        <a href="/live-studio" class="ldoc-btn ldoc-btn-primary" style="width:100%; justify-content:center;">Launch Studio</a>
+        <button class="ldoc-btn ldoc-btn-secondary" style="width:100%; justify-content:center;" onclick="showAuthModal()">Sign In</button>
+      </div>
+    </div>
+
+    <!-- MAIN ARTICLE -->
+    <main class="container">
+      <header class="policy-hero">
+        <div class="policy-tag">AIR-GAPPED TRUST GUARANTEE</div>
+        <h1>Privacy Policy</h1>
+        <p>Your documents, models, and computational formulas belong exclusively to you. Learn how LDOC Studio guarantees 100% air-gapped autonomy and zero data leakage.</p>
+        <div class="meta-bar">
+          <span>Last Updated: October 10, 2026</span>
+          <span>•</span>
+          <span>Standard Version v2.5.0</span>
+          <span>•</span>
+          <span>J AI ENTERPRISES</span>
+        </div>
+      </header>
+
+      <div class="legal-layout">
+        <article class="legal-article">
+          <!-- Plain English Summary Box -->
+          <div class="plain-summary-card">
+            <span class="summary-tag">SUMMARY IN PLAIN ENGLISH</span>
+            <ul class="summary-list">
+              <li><span class="chk">✓</span> <span>We collect zero document content, zero AST structures, and zero telemetry from your local files.</span></li><li><span class="chk">✓</span> <span>Payment transactions are processed securely via verified gateways (Lemon Squeezy / Stripe). We never store raw card numbers.</span></li><li><span class="chk">✓</span> <span>Local drafts and signing keys are cached strictly in your browser or local device storage.</span></li>
+            </ul>
+          </div>
+
+          
+
+          <!-- Policy Sections -->
+          
+    <section class="policy-card" id="sec-1">
+      <h2 class="policy-h2"><span class="sec-num">01.</span> Zero-Telemetry & Air-Gapped Autonomy</h2>
+      
+        <p>At <strong>J AI ENTERPRISES</strong>, our foundational architectural principle is that <strong>Living Documents (.ldocx) are sovereign files</strong>. Unlike cloud-locked document platforms, LDOC Studio operates entirely client-side inside your browser or native desktop application.</p>
+        <div class="highlight-box"><strong>The Air-Gap Guarantee:</strong> LDOC Studio executes zero cloud telemetry on your document contents, AST structures, embedded 3D models (GLB/OBJ), or live JavaScript calculations. When running disconnected or within classified SCIF environments, zero packets egress your local device.</div>
+      
+    </section>
+  
+    <section class="policy-card" id="sec-2">
+      <h2 class="policy-h2"><span class="sec-num">02.</span> Information We Collect & Process</h2>
+      
+        <p>We do not sell, rent, or trade your personal information. The limited categories of data we process include:</p>
+        <ul>
+          <li><strong>Account Registration:</strong> If you create an account on our cloud portal, we store your email address, hashed password, and user identifier to authenticate you.</li>
+          <li><strong>Commercial Transactions:</strong> Payment processing is handled securely by verified gateways. We do not store raw credit card numbers or banking credentials on our servers.</li>
+          <li><strong>Enterprise Inquiries:</strong> Contact information submitted via enterprise lead forms is used solely to respond to your inquiry and provide quotes.</li>
+          <li><strong>Zero Payload Ingestion:</strong> Your .ldocx packages, presentation slides, code sandboxes, and cryptographic keys are NEVER uploaded to our servers unless you explicitly configure a custom webhook.</li>
+        </ul>
+      
+    </section>
+  
+    <section class="policy-card" id="sec-3">
+      <h2 class="policy-h2"><span class="sec-num">03.</span> Local Storage & Cryptographic Keys</h2>
+      
+        <p>LDOC Studio uses standard web storage technologies (<code>localStorage</code>, <code>IndexedDB</code>, and the File System Access API) strictly on your local machine to:</p>
+        <ul>
+          <li>Cache your working document drafts locally so you never lose work on reload.</li>
+          <li>Store your personal ECDSA / Ed25519 public/private keypairs generated via WebCrypto for local document signing.</li>
+          <li>Preserve user interface settings, theme preferences, and editor keybindings.</li>
+        </ul>
+        <p>You can clear this data at any time through your browser settings or by invoking the local reset command in the Studio settings modal.</p>
+      
+    </section>
+  
+    <section class="policy-card" id="sec-4">
+      <h2 class="policy-h2"><span class="sec-num">04.</span> GDPR & CCPA Compliance</h2>
+      
+        <p>In accordance with global data protection laws (GDPR EU 2016/679 and CCPA/CPRA), you have the right to access, rectify, or request permanent deletion of your account metadata. Because document content is stored exclusively on your device, you maintain immediate physical sovereignty over all intellectual property created with LDOC Studio.</p>
+      
+    </section>
+  
+    <section class="policy-card" id="sec-5">
+      <h2 class="policy-h2"><span class="sec-num">05.</span> Contact Our Privacy Officer</h2>
+      
+        <p>If you have any questions or require custom compliance validation for defense, healthcare, or financial air-gapped deployments, contact our founding team directly:</p>
+        <ul>
+          <li><strong>Entity:</strong> J AI ENTERPRISES</li>
+          <li><strong>Founder &amp; Architect:</strong> Jayaraman K</li>
+          <li><strong>Direct Email:</strong> <a href="mailto:jayaramankalidasan@gmail.com" style="color:var(--primary-light)">jayaramankalidasan@gmail.com</a></li>
+        </ul>
+      
+    </section>
+  
+        </article>
+
+        <!-- Sticky TOC -->
+        <aside class="legal-toc">
+          <span class="toc-title">Sections</span>
+          <ul class="toc-list" id="legalTocList">
+            
+    <li class="toc-item"><a href="#sec-1" class="active">Zero-Telemetry & Air-Gapped Autonomy</a></li>
+  
+    <li class="toc-item"><a href="#sec-2" >Information We Collect & Process</a></li>
+  
+    <li class="toc-item"><a href="#sec-3" >Local Storage & Cryptographic Keys</a></li>
+  
+    <li class="toc-item"><a href="#sec-4" >GDPR & CCPA Compliance</a></li>
+  
+    <li class="toc-item"><a href="#sec-5" >Contact Our Privacy Officer</a></li>
+  
+          </ul>
+        </aside>
+      </div>
+    </main>
+
+    <!-- STANDARDIZED FOOTER -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="/" class="brand-logo">
+              <img src="/ldoc_logo.png" alt="LDOC Logo" width="28" height="28">
+              <span>LDOC STUDIO</span>
+            </a>
+            <p>The open living document architecture. Compute, render, and evolve beyond static PDFs.</p>
+          </div>
+
+          <div class="footer-col">
+            <h5>Product</h5>
+            <ul>
+              <li><a href="/live-studio">Live Studio IDE</a></li>
+              <li><a href="/models">Models &amp; Templates</a></li>
+              <li><a href="/creator">Visual Creator</a></li>
+              <li><a href="/pricing">Pricing Plans</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Specification</h5>
+            <ul>
+              <li><a href="/format">.ldocx Architecture</a></li>
+              <li><a href="/docs">AST Specification</a></li>
+              <li><a href="/docs">Draco 3D Geometry</a></li>
+              <li><a href="/security">Security &amp; Signing</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Developers</h5>
+            <ul>
+              <li><a href="/docs">SDK Architecture Guide</a></li>
+              <li><a href="/docs#sdk">Developer Integration</a></li>
+              <li><a href="/changelog">Release Changelog</a></li>
+              <li><a href="/format">Format Specification</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5>Trust &amp; Legal</h5>
+            <ul>
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Service</a></li>
+              <li><a href="/security">Security Architecture</a></li>
+              <li><a href="/refund">Refund Policy</a></li>
+              <li><a href="/license">Commercial SLA &amp; License</a></li>
+              <li><a href="mailto:jayaramankalidasan@gmail.com">Contact Founder</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>&copy; 2026 LDOC Studio. Designed and created by J AI ENTERPRISES. Open Living Document Standard.</div>
+          <div class="footer-legal-links" style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <a href="/privacy" style="color: var(--text-sub); text-decoration: none;">Privacy Policy</a>
+            <a href="/terms" style="color: var(--text-sub); text-decoration: none;">Terms of Service</a>
+            <a href="/security" style="color: var(--text-sub); text-decoration: none;">Security Architecture</a>
+            <a href="/refund" style="color: var(--text-sub); text-decoration: none;">Refund Policy</a>
+            <a href="/license" style="color: var(--text-sub); text-decoration: none;">Commercial SLA</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // ScrollSpy for TOC
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.policy-card');
+      const navLinks = document.querySelectorAll('.toc-item a');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            navLinks.forEach(link => {
+              link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+            });
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+
+      sections.forEach(sec => observer.observe(sec));
+    });
+  </script>
+
+  <script src="/design-system.js"></script>
+</body>
+</html>
